@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:#eceef1}
+::selection{background:#d6dbe0}
+button{font-family:inherit}
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:#eceef1;font-family:'Source Sans 3',system-ui,sans-serif;color:#23262b;">
+
+  <div style="background:#1f2937;color:#fff;">
+    <div style="max-width:1280px;margin:0 auto;padding:18px 28px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;">
+      <div>
+        <div style="font-family:'Source Serif 4',serif;font-weight:600;font-size:21px;letter-spacing:-0.01em;">Intro Physics II &middot; Interactive Web App Catalog</div>
+        <div style="font-size:13px;color:#aeb8c4;margin-top:3px;">Every sim called for in the semester map &middot; one card per app &middot; click a status pill to mark it built</div>
+      </div>
+      <div style="display:flex;gap:22px;">
+        <div style="text-align:center;"><div style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:500;">{{ stats.total }}</div><div style="font-size:11px;color:#aeb8c4;">apps</div></div>
+        <div style="text-align:center;"><div style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:500;color:#7fd1a4;">{{ stats.built }}</div><div style="font-size:11px;color:#aeb8c4;">built</div></div>
+        <div style="text-align:center;"><div style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:500;">{{ stats.todo }}</div><div style="font-size:11px;color:#aeb8c4;">to build</div></div>
+        <div style="text-align:center;"><div style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:500;">{{ stats.reused }}</div><div style="font-size:11px;color:#aeb8c4;">reused multi-day</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="max-width:1280px;margin:0 auto;padding:18px 28px;">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px;">
+      <div style="display:flex;flex-wrap:wrap;gap:7px;align-items:center;">
+        <sc-for list="{{ legend }}" as="u">
+          <button onClick="{{ u.onClick }}" style="{{ u.style }}"><span style="{{ u.dot }}"></span>{{ u.name }} <span style="opacity:0.6;font-family:'JetBrains Mono',monospace;font-size:11px;">{{ u.count }}</span></button>
+        </sc-for>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button onClick="{{ onAll }}" style="{{ allStyle }}">All</button>
+        <button onClick="{{ onBuilt }}" style="{{ builtStyle }}">&#10003; Built</button>
+        <button onClick="{{ onTodo }}" style="{{ todoStyle }}">&#9711; To build</button>
+      </div>
+    </div>
+
+    <sc-for list="{{ units }}" as="unit" hint-placeholder-count="6">
+      <div style="margin-bottom:26px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <span style="{{ unit.dot }}"></span>
+          <span style="font-family:'Source Serif 4',serif;font-weight:600;font-size:17px;color:{{ unit.ink }};">{{ unit.name }}</span>
+          <span style="font-size:12px;color:#9aa2ab;font-family:'JetBrains Mono',monospace;">{{ unit.tally }}</span>
+          <div style="flex:1;height:1px;background:#dfe3e7;"></div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+          <sc-for list="{{ unit.apps }}" as="app" hint-placeholder-count="3">
+            <div style="{{ app.cardStyle }}">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:7px;">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#aab2bb;">{{ app.num }}</span>
+                <button onClick="{{ app.onToggle }}" style="{{ app.pillStyle }}">{{ app.pillLabel }}</button>
+              </div>
+              <div style="font-family:'Source Serif 4',serif;font-weight:600;font-size:15.5px;line-height:1.2;color:{{ app.ink }};">{{ app.name }}</div>
+              <div style="font-size:12.5px;line-height:1.5;color:#525a63;margin-top:5px;">{{ app.blurb }}</div>
+
+              <sc-if value="{{ app.hasFamily }}" hint-placeholder-val="{{ false }}">
+                <div style="font-size:11.5px;font-style:italic;color:#8b949d;margin-top:6px;">{{ app.family }}</div>
+              </sc-if>
+
+              <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:9px;">
+                <sc-for list="{{ app.controls }}" as="c">
+                  <span style="font-size:10.5px;font-family:'JetBrains Mono',monospace;color:#5a636c;background:#f1f3f5;border:1px solid #e4e8ec;border-radius:4px;padding:1px 6px;">{{ c.t }}</span>
+                </sc-for>
+              </div>
+
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:11px;padding-top:9px;border-top:1px solid #eef0f2;">
+                <span style="font-size:11px;color:#8b949d;font-family:'JetBrains Mono',monospace;">{{ app.dateList }}</span>
+                <span style="{{ app.reuseStyle }}">{{ app.reuseLabel }}</span>
+              </div>
+              <sc-if value="{{ app.hasLink }}" hint-placeholder-val="{{ false }}">
+                <a href="{{ app.href }}" style="display:inline-flex;align-items:center;gap:5px;margin-top:9px;font-size:11.5px;font-weight:700;color:{{ app.linkColor }};text-decoration:none;">&#9654; Open the sim</a>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
+
+    <sc-if value="{{ empty }}" hint-placeholder-val="{{ false }}">
+      <div style="text-align:center;color:#9aa2ab;font-size:14px;padding:40px 0;">No apps match this filter.</div>
+    </sc-if>
+
+    <div style="text-align:center;color:#9aa2ab;font-size:12px;margin:24px 0 12px;">Status is saved in your browser &middot; filter by unit or build state &middot; reuse badges flag the workhorse sims worth building first</div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:1000}}">
+class Component extends DCLogic {
+  state = { built:null, unitFilter:null, statusFilter:'all' };
+
+  defaultBuilt(){ return { shm:true, 'wave-explorer':true, string:true, 'interference-1d':true, coulomb:true, 'point-charge':true, equipotential:true }; }
+
+  componentDidMount(){
+    let b = this.defaultBuilt();
+    try { const raw = localStorage.getItem('physApps.built'); if(raw) b = JSON.parse(raw); } catch(e){}
+    this.setState({ built:b });
+  }
+
+  toggle(id){
+    this.setState(s=>{ const b = {...(s.built||this.defaultBuilt())}; b[id]=!b[id]; try{ localStorage.setItem('physApps.built', JSON.stringify(b)); }catch(e){} return { built:b }; });
+  }
+
+  UNITS(){ return {
+    waves:{name:'Oscillations & Waves',accent:'#2b8a9e',tint:'#e7f3f5',ink:'#1c5f6d'},
+    estat:{name:'Electrostatics',accent:'#6d5bd0',tint:'#ece9fa',ink:'#473a8f'},
+    circ:{name:'Circuits',accent:'#bf8a1e',tint:'#f6f0db',ink:'#8a6310'},
+    mag:{name:'Magnetism',accent:'#c2576b',tint:'#f8e9ec',ink:'#8f3a4b'},
+    induc:{name:'Induction',accent:'#3f9460',tint:'#e7f3ea',ink:'#2a6b43'},
+    optics:{name:'Optics',accent:'#4b6bd6',tint:'#e8edfb',ink:'#324b9b'}
+  }; }
+
+  APPS(){ return [
+    {id:'shm',unit:'waves',name:'SHM / phasor explorer',blurb:'Sliders for amplitude, period and phase drive a live x(t) curve linked to a rotating phasor.',controls:['amplitude','period','phase \u03C6'],days:['Aug 26'],href:'Oscillation Explorer.dc.html'},
+    {id:'energy-shm',unit:'waves',name:'Energy-in-SHM sim',blurb:'Animated mass on a spring with live KE/PE energy bars trading as it oscillates.',controls:['mass','spring k','release'],days:['Aug 28'],href:'Energy in SHM.dc.html'},
+    {id:'pendulum',unit:'waves',name:'Pendulum sim',blurb:'Adjustable length and gravity with a period read-out and angle trace; test the small-angle limit.',controls:['length','gravity g','angle'],days:['Aug 31'],href:'Pendulum.dc.html'},
+    {id:'wave-explorer',unit:'waves',name:'Wave explorer',blurb:'Build a traveling wave from y(x,t)=A sin(kx\u2212\u03C9t), then add a second for standing waves and nodes.',controls:['A','k','\u03C9','add wave'],days:['Sep 2'],href:'Wave Explorer.dc.html'},
+    {id:'interference-1d',unit:'waves',name:'Interference Explorer \u2014 two waves',blurb:'Superpose a right-moving and left-moving wave in 1D; watch beats and standing waves emerge from y\u2081+y\u2082.',controls:['amplitudes','k','\u03C9'],days:['Sep 2'],href:'Interference Explorer.dc.html'},
+    {id:'string',unit:'waves',name:'String harmonics sim',blurb:'Standing-wave modes on a fixed string; pluck overtones and watch v=\u221A(T/\u03BC) play out.',controls:['tension','density \u03BC','mode n'],days:['Sep 4']},
+    {id:'two-source',unit:'waves',name:'Two-source interference',blurb:'Draggable sources over a live interference field; predict maxima and minima from path difference.',controls:['drag sources','wavelength','spacing'],days:['Sep 7'],family:'\u2192 extended into the diffraction sim in optics',href:'Two-Source Interference.dc.html'},
+
+    {id:'electroscope',unit:'estat',name:'Electroscope / charged-rod sim',blurb:'Charge by friction, contact and induction; predict the leaves, then test. Polarization made visible.',controls:['rub rod','bring near','ground'],days:['Sep 9'],href:'Electroscope.dc.html'},
+    {id:'coulomb',unit:'estat',name:'Electrostatics Explorer — Coulomb\'s law',blurb:'Drag a source and test charge; live r and F vectors with the inverse-square force on Q. Sign, magnitude and snap controls.',controls:['drag charges','sign ±','magnitude'],days:['Sep 11'],href:'Electrostatics Explorer.dc.html'},
+    {id:'field-super',unit:'estat',name:'Field Superposition Explorer',blurb:'Drop multiple charges and a field point; each charge\'s E vector and the resultant total E add up live by superposition.',controls:['add charges','drag','field point'],days:['Sep 11'],href:'Field Superposition Explorer.dc.html'},
+    {id:'point-charge',unit:'estat',name:'Point-charge field explorer',blurb:'Drop and drag +/\u2212 charges; field vectors and potential update live. The workhorse electrostatics sim.',controls:['add +/\u2212','drag','superpose'],days:['Sep 11'],family:'workhorse \u2014 feeds the potential & distribution modes'},
+    {id:'pe-sep',unit:'estat',name:'PE-vs-separation sim',blurb:'Plot U=kq\u2081q\u2082/r, release a charge and watch potential energy convert to kinetic.',controls:['separation','charges','release'],days:['Sep 16'],href:'PE vs Separation.dc.html'},
+    {id:'equipotential',unit:'estat',name:'Equipotential & potential map',blurb:'Field explorer in potential mode: equipotential contours \u22A5 field lines; read E=\u2212dV/dx off the gradient.',controls:['V / field','add charges','probe'],days:['Sep 18'],family:'mode of the point-charge explorer'},
+    {id:'distribution',unit:'estat',name:'Discrete Charge Builder — line / ring / disk',blurb:'Build a line, ring or disk from N point charges and sum dE on the axis in 3D; push N (and the size) to infinity to recover the continuous line, ring and infinite-plane fields.',controls:['shape','N charges','size → ∞'],days:['Sep 23'],href:'Discrete Charge Builder 3D.dc.html'},
+    {id:'gauss',unit:'estat',name:'Gauss\u2019s Law \u2014 flux visualizer',blurb:'Enclose charges in a Gaussian sphere or cube and read the flux \u03a6=Q_enc/\u03b5\u2080 live; toggle between a 2D cross-section and a full 3D orbitable surface with field vectors piercing it.',controls:['2D / 3D','sphere / cube','move & resize'],days:['Sep 25','Sep 28'],href:'Gauss Flux.dc.html'},
+
+    {id:'circuit',unit:'circ',name:'Circuit builder',blurb:'Drag batteries, resistors and wires; live current/voltage meters. Series/parallel, internal resistance, meter placement.',controls:['topology','values','probe'],days:['Oct 5','Oct 7','Oct 12'],href:'Circuit Builder.dc.html'},
+    {id:'rc',unit:'circ',name:'RC charging sim',blurb:'Capacitor charge and voltage vs time with adjustable R, C and a marker at one time constant \u03C4=RC.',controls:['R','C','switch'],days:['Oct 14'],href:'RC Charging.dc.html'},
+
+    {id:'magfield',unit:'mag',name:'Magnetic field of currents',blurb:'B field circling wires and loops; superpose multiple currents and hunt the null point. Biot\u2013Savart made visual.',controls:['add wires','current dir','loop'],days:['Oct 19','Oct 21'],href:'Magnetic Field of Currents.dc.html'},
+    {id:'discrete-current',unit:'mag',name:'Discrete Current Builder \u2014 wire / loop / solenoid',blurb:'Build a straight wire, loop or solenoid from N current elements and sum Biot\u2013Savart on the axis in 3D; push to the infinite-wire, ideal-loop and infinite-solenoid limits.',controls:['shape','N elements','length/size \u2192 \u221e'],days:['Oct 21'],href:'Discrete Current Builder 3D.dc.html'},
+    {id:'ampere',unit:'mag',name:'Amp\u00E8re loop sim',blurb:'Pick an Amperian loop around currents and read the circulation \u222EB\u00B7dl; justify the loop choice.',controls:['choose loop','currents','solenoid'],days:['Oct 23'],href:'Ampere Loop.dc.html'},
+    {id:'dipole',unit:'mag',name:'Dipole field + torque',blurb:'Compare electric vs magnetic dipole patterns, then rotate one in a field for torque \u03C4 and energy U=\u2212\u03BC\u00B7B.',controls:['dipole type','rotate','field'],days:['Oct 26'],href:'Dipole Field and Torque.dc.html'},
+    {id:'lorentz',unit:'mag',name:'Lorentz-force particle',blurb:'Launch a charge into adjustable E and B; trace circles and helices. Velocity selector and cyclotron radius.',controls:['charge','velocity','E','B'],days:['Oct 28','Nov 2'],href:'Lorentz Force.dc.html'},
+    {id:'currentloop',unit:'mag',name:'Current-loop / motor',blurb:'Force and torque on a current-carrying loop in a field \u2014 spin a simple electric motor from F=IL\u00D7B.',controls:['current','field','loop angle'],days:['Oct 30','Nov 2'],href:'Current Loop Motor.dc.html'},
+
+    {id:'faraday',unit:'induc',name:'Faraday / induction sim',blurb:'Push a magnet through a loop or change the field; live flux, EMF and induced current with Lenz, graph and eddy-brake modes.',controls:['move magnet','change B','area'],days:['Nov 9','Nov 11','Nov 13'],href:'Faraday Induction.dc.html'},
+    {id:'railflux',unit:'induc',name:'Rail flux bar \u2014 motional EMF',blurb:'Slide a conducting bar along rails through a magnetic field; the changing enclosed area drives \u03b5=B\u2113v, with induced current opposing by Lenz and a live \u03a6 read-out.',controls:['slide bar','field B','rail spacing'],days:['Nov 13'],href:'Rail Flux Bar.dc.html'},
+
+    {id:'ray-optics',unit:'optics',name:'Ray-optics sim',blurb:'Refraction and TIR at an interface, plus a dispersion mode that fans white light through a prism.',controls:['angle','n\u2081 / n\u2082','white light'],days:['Nov 16'],family:'\u2192 reused for lenses & mirrors',href:'Ray Optics.dc.html'},
+    {id:'lens',unit:'optics',name:'Lens ray-tracer',blurb:'Converging and diverging lenses with principal rays; move the object and watch the image form (1/f=1/s+1/s\u2032).',controls:['object pos','focal length','lens type'],days:['Nov 18'],href:'Lens Ray Tracer.dc.html'},
+    {id:'mirror',unit:'optics',name:'Mirror ray-tracer',blurb:'Concave and convex mirrors with principal-ray construction; locate, size and orient the image.',controls:['object pos','mirror type','f'],days:['Nov 20'],href:'Mirror Ray Tracer.dc.html'},
+    {id:'diffraction',unit:'optics',name:'Diffraction / slit pattern',blurb:'Single, double and many-slit intensity patterns; vary spacing and wavelength, then add slits for grating maxima.',controls:['slit spacing','wavelength','# slits'],days:['Nov 30','Dec 7'],family:'extends the two-source interference sim',href:'Diffraction Pattern.dc.html'},
+    {id:'polar',unit:'optics',name:'Polarization (Malus) sim',blurb:'Stacked rotatable polarizers with live transmitted intensity following cos\u00B2\u03B8.',controls:['rotate polarizer','add polarizer'],days:['Dec 9'],href:'Polarization Malus.dc.html'}
+  ]; }
+
+  setUnit(u){ this.setState(s=>({unitFilter:s.unitFilter===u?null:u})); }
+  setStatus(f){ this.setState({statusFilter:f}); }
+
+  renderVals(){
+    const U=this.UNITS(), APPS=this.APPS(), st=this.state;
+    const built = st.built || this.defaultBuilt();
+    const isBuilt = (a)=> !!built[a.id];
+
+    const out = {
+      onAll:()=>this.setStatus('all'), onBuilt:()=>this.setStatus('built'), onTodo:()=>this.setStatus('todo')
+    };
+
+    out.stats = {
+      total: APPS.length,
+      built: APPS.filter(isBuilt).length,
+      todo: APPS.filter(a=>!isBuilt(a)).length,
+      reused: APPS.filter(a=>a.days.length>1).length
+    };
+
+    const fbtn=(active)=>'font-size:12.5px;font-weight:600;padding:7px 13px;border-radius:8px;cursor:pointer;border:1px solid '+(active?'#3a414a':'#d3d8dd')+';background:'+(active?'#3a414a':'#fff')+';color:'+(active?'#fff':'#525a63')+';';
+    out.allStyle=fbtn(st.statusFilter==='all'); out.builtStyle=fbtn(st.statusFilter==='built'); out.todoStyle=fbtn(st.statusFilter==='todo');
+
+    out.legend = Object.keys(U).map(k=>{ const u=U[k]; const active=st.unitFilter===k;
+      return { name:u.name, count:APPS.filter(a=>a.unit===k).length, onClick:()=>this.setUnit(k),
+        dot:'display:inline-block;width:10px;height:10px;border-radius:3px;background:'+u.accent+';',
+        style:'display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:5px 11px;border-radius:7px;cursor:pointer;border:1px solid '+(active?u.accent:'#dde1e5')+';background:'+(active?u.tint:'#fff')+';color:'+(active?u.ink:'#525a63')+';' };
+    });
+
+    const statusOk=(a)=> st.statusFilter==='all'?true: st.statusFilter==='built'?isBuilt(a):!isBuilt(a);
+
+    out.units = Object.keys(U).filter(k=> !st.unitFilter || st.unitFilter===k ).map(k=>{
+      const u=U[k];
+      const apps = APPS.filter(a=>a.unit===k && statusOk(a)).map((a,i)=>{
+        const b=isBuilt(a); const reused=a.days.length>1;
+        return {
+          num:'APP '+(APPS.indexOf(a)+1).toString().padStart(2,'0'),
+          name:a.name, blurb:a.blurb, ink:u.ink,
+          hasLink:!!a.href, href:a.href||'', linkColor:u.accent,
+          hasFamily:!!a.family, family:a.family||'',
+          controls:a.controls.map(t=>({t})),
+          dateList:a.days.join('  \u00B7  '),
+          cardStyle:{background:'#fff',border:'1px solid #e2e6ea',borderLeft:'3px solid '+u.accent,borderRadius:'10px',padding:'12px 14px',display:'flex',flexDirection:'column',opacity:b?1:0.97},
+          pillLabel: b?'\u2713 Built':'\u25EF To build',
+          pillStyle:'cursor:pointer;font-size:10.5px;font-weight:700;letter-spacing:0.02em;padding:3px 9px;border-radius:20px;border:1px solid '+(b?'#bfe3cd':'#d8dde2')+';background:'+(b?'#e3f1e8':'#fff')+';color:'+(b?'#2a6b43':'#9aa2ab')+';',
+          onToggle:()=>this.toggle(a.id),
+          reuseLabel: reused?('REUSED \u00D7'+a.days.length):(a.days.length+' day'),
+          reuseStyle: reused
+            ? 'font-size:9.5px;font-weight:700;letter-spacing:0.03em;color:'+u.ink+';background:'+u.tint+';border-radius:4px;padding:2px 7px;white-space:nowrap;'
+            : 'font-size:9.5px;font-weight:600;letter-spacing:0.03em;color:#9aa2ab;background:#f1f3f5;border-radius:4px;padding:2px 7px;white-space:nowrap;'
+        };
+      });
+      const totalInUnit=APPS.filter(a=>a.unit===k).length;
+      const builtInUnit=APPS.filter(a=>a.unit===k&&isBuilt(a)).length;
+      return { name:u.name, ink:u.ink, apps,
+        dot:'display:inline-block;width:12px;height:12px;border-radius:3px;background:'+u.accent+';',
+        tally:builtInUnit+' / '+totalInUnit+' built' };
+    }).filter(g=>g.apps.length>0);
+
+    out.empty = out.units.length===0;
+    return out;
+  }
+}
+</script>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="16" fill="#2a6b43"/><text x="50" y="52" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="34" fill="#ffffff" text-anchor="middle" dominant-baseline="central">WA</text></svg></template>
+</body>
+</html>
