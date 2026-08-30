@@ -1,6 +1,6 @@
 # Intro Physics Sims
 
-A collection of 43 interactive simulations for introductory (algebra/calculus) physics,
+A collection of 44 interactive simulations for introductory (algebra/calculus) physics,
 spanning mechanics, waves, thermal physics, electromagnetism, and optics. Each sim is a
 single self-contained HTML page — React and KaTeX are vendored inline, nothing is fetched
 at runtime, and every page works offline. They are designed to be embedded in a Moodle
@@ -56,6 +56,7 @@ serve step needed to run one — open the file, or serve the folder statically.
 | [Wave Explorer](wave-explorer/) | The space picture of a traveling wave y = A sin(kx − ωt): amplitude, wavelength, wave number. |
 | [Interference Explorer — Two Traveling Waves](interference-explorer/) | Two waves superposing — crests reinforcing into bright bands, crests meeting troughs canceling. |
 | [Standing Waves — Strings & Pipes](standing-waves/) | Reflections interfering into fixed nodes and antinodes at harmonics fₙ = n·v/2L. |
+| [String Harmonics — v = √(T/μ)](string-harmonics/) | Wave speed on a stretched string is set only by tension and mass per length; tighten it or lighten it and every harmonic's pitch rises. |
 | [Two-Source Interference](two-source-interference/) | Two in-phase sources produce fringes: bright where the path difference is a whole wavelength (d·sinθ = mλ), dark at half-wavelengths. |
 
 ### Electrostatics
