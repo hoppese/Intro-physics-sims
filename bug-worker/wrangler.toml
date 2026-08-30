@@ -1,0 +1,26 @@
+name = "sethhopper-bug-worker"
+main = "src/index.js"
+compatibility_date = "2024-11-01"
+workers_dev = false
+
+# Custom domain — created after sethhopper.com is active on Cloudflare.
+routes = [
+  { pattern = "sims-api.sethhopper.com", custom_domain = true },
+]
+
+[vars]
+REPO = "hoppese/Intro-physics-sims"
+BRANCH = "main"
+# Tighten once the Moodle origin is known, e.g.:
+# ALLOWED_ORIGINS = "https://sims.sethhopper.com,https://<moodle-host>"
+ALLOWED_ORIGINS = "*"
+
+# Optional IP rate-limiting. Create with:
+#   npx wrangler kv namespace create RL
+# then paste the id below and uncomment.
+# [[kv_namespaces]]
+# binding = "RL"
+# id = "PASTE_KV_ID_HERE"
+
+# GITHUB_TOKEN is a secret, not a var:
+#   npx wrangler secret put GITHUB_TOKEN
