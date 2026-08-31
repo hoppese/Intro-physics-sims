@@ -310,7 +310,7 @@
 <!-- ==================== PREP 3 ==================== -->
 <question type="category">
   <category><text>$course$/top/Class Prep/Prep 3</text></category>
-  <info format="html"><text><![CDATA[<p>Due Wed Sep 2 at class time. Traveling waves, standing waves and superposition (Knight 16.1–16.3).</p><p>Sim: <a href="https://hoppese.github.io/Intro-physics-sims/wave-explorer/index.html">Wave explorer</a> — equation-driven traveling and standing waves.</p>]]></text></info>
+  <info format="html"><text><![CDATA[<p>Due Wed Sep 2 at class time. Traveling waves, standing waves and superposition (Knight 16.1–16.3).</p><p>Sim: <a href="https://hoppese.github.io/Intro-physics-sims/wave-explorer/index.html">Wave explorer</a> — equation-driven single traveling wave (A, &lambda;, k, &phi;, f, with a Traveling-wave toggle).</p>]]></text></info>
 </question>
 
 <question type="multichoice">
@@ -351,12 +351,12 @@
 </question>
 
 <question type="multichoice">
-  <name><text>Prep3-B · Node spacing</text></name>
+  <name><text>Prep3-B · What moves in a traveling wave</text></name>
   <questiontext format="html">
-    <text><![CDATA[<div style="width: 800px; max-width: 96vw; margin: 0 0 14px 0;"><iframe style="border: 1px solid #ccc; border-radius: 8px; display: block; width: 100%;" title="Wave explorer" src="https://hoppese.github.io/Intro-physics-sims/wave-explorer/index.html" width="100%" height="570" allowfullscreen="allowfullscreen"></iframe><p style="font-size: 0.9em; color: #666; margin: 6px 0 0;">Sim not loading? <a href="https://hoppese.github.io/Intro-physics-sims/wave-explorer/index.html" target="_blank" rel="noopener">Open the Wave explorer in a new tab</a>.</p></div><p>Add a second, oppositely-directed wave in the sim to build a standing wave. Measure along it.</p><p>The distance between two adjacent nodes is…</p>]]></text>
+    <text><![CDATA[<div style="width: 800px; max-width: 96vw; margin: 0 0 14px 0;"><iframe style="border: 1px solid #ccc; border-radius: 8px; display: block; width: 100%;" title="Wave explorer" src="https://hoppese.github.io/Intro-physics-sims/wave-explorer/index.html" width="100%" height="570" allowfullscreen="allowfullscreen"></iframe><p style="font-size: 0.9em; color: #666; margin: 6px 0 0;">Sim not loading? <a href="https://hoppese.github.io/Intro-physics-sims/wave-explorer/index.html" target="_blank" rel="noopener">Open the Wave explorer in a new tab</a>.</p></div><p>Turn on the <strong>Traveling wave</strong> toggle in the Wave explorer and press <strong>Play</strong>. First follow a single crest as it moves across the screen. Then shift your attention to <em>one fixed location</em>: pick a vertical gridline and watch only the height of the curve where it crosses that line.</p><p>As the wave passes, the string at that fixed location…</p>]]></text>
   </questiontext>
   <generalfeedback format="html">
-    <text><![CDATA[<p><strong>λ/2.</strong></p><p>Nodes occur wherever the two traveling waves are permanently out of step, and that happens twice per wavelength. So the nodes are spaced half a wavelength apart, with an antinode sitting halfway between each pair.</p><p>Keep this: on Friday it becomes the reason a string fixed at both ends can only hold certain wavelengths.</p>]]></text>
+    <text><![CDATA[<p><strong>It moves up and down about its rest position, repeating every period <em>T</em>.</strong></p><p>A traveling wave carries a disturbance — and the energy in it — from one place to another, but the medium itself stays put. Each point of the string performs simple harmonic motion about its own rest position, perpendicular to the direction the wave travels, with the same period <em>T</em> as the wave. What sweeps across the screen is the <em>shape</em> <em>y</em>(<em>x</em>,<em>t</em>) = <em>A</em> sin(<em>kx</em> − ω<em>t</em>), not the material.</p><p>This is the core of the wave model, and the thing most often gotten backwards: the pattern travels, the medium does not.</p>]]></text>
   </generalfeedback>
   <defaultgrade>1.0000000</defaultgrade>
   <penalty>0.0000000</penalty>
@@ -368,22 +368,22 @@
   <showstandardinstruction>0</showstandardinstruction>
   <correctfeedback format="html"><text><![CDATA[<p>Correct.</p>]]></text></correctfeedback>
   <partiallycorrectfeedback format="html"><text><![CDATA[<p>Not quite.</p>]]></text></partiallycorrectfeedback>
-  <incorrectfeedback format="html"><text><![CDATA[<p>Not quite — count nodes per wavelength in the sim.</p>]]></text></incorrectfeedback>
+  <incorrectfeedback format="html"><text><![CDATA[<p>Not quite — watch one fixed gridline, not one crest.</p>]]></text></incorrectfeedback>
   <answer fraction="100" format="html">
-    <text><![CDATA[<p>λ/2</p>]]></text>
-    <feedback format="html"><text><![CDATA[<p>Correct — two nodes per wavelength.</p>]]></text></feedback>
+    <text><![CDATA[<p>moves up and down about its rest position, repeating every period <em>T</em></p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>Correct — the pattern travels; the material at each point just oscillates in place.</p>]]></text></feedback>
   </answer>
   <answer fraction="0" format="html">
-    <text><![CDATA[<p>λ</p>]]></text>
-    <feedback format="html"><text><![CDATA[<p>You counted one node per wavelength. Look at one full wavelength of the standing pattern in the sim and count the stationary points inside it.</p>]]></text></feedback>
+    <text><![CDATA[<p>travels to the right, keeping pace with the crests</p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>That is what the <em>pattern</em> does. Fix your eye on one gridline instead of following a crest — does the material at that line actually go anywhere, or does it only rise and fall in place?</p>]]></text></feedback>
   </answer>
   <answer fraction="0" format="html">
-    <text><![CDATA[<p>λ/4</p>]]></text>
-    <feedback format="html"><text><![CDATA[<p>That is the node-to-<em>antinode</em> distance. The question asks node to node — two of those quarter-steps.</p>]]></text></feedback>
+    <text><![CDATA[<p>shifts to the right until the wave has gone by, then stops</p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>Let the sim keep running. Fresh crests arrive at your chosen gridline again and again — does the disturbance there ever settle, and does that point drift sideways at all?</p>]]></text></feedback>
   </answer>
   <answer fraction="0" format="html">
-    <text><![CDATA[<p>2λ</p>]]></text>
-    <feedback format="html"><text><![CDATA[<p>Too far apart — the sim shows several nodes within each wavelength's worth of pattern, not one every two wavelengths.</p>]]></text></feedback>
+    <text><![CDATA[<p>stays flat; only the crests and troughs elsewhere are moving</p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>Watch the curve's height right at your chosen gridline as first a crest and then a trough reach it. If the whole waveform is passing through that spot, its height there cannot stay fixed.</p>]]></text></feedback>
   </answer>
 </question>
 
