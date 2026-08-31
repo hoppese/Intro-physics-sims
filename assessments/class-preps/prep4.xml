@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+
+<!--
+     Intro Physics II : Class Prep 4  (Fri Sep 4)
+     Waves on strings and musical instruments (Knight 17.1-17.2).
+     Four sim-based questions (String harmonics sim).
+
+     Prep 4 pulled out of prep1-5.xml as a standalone import.
+     Edit here OR in prep1-5.xml, then mirror the change so the two stay in sync.
+
+     Import into the course question bank -> the category marker creates
+     Class Prep / Prep 4. Then Quiz > Question bank > Prep 4 > add all four.
+
+     Feedback model: deferred feedback, 2 attempts. Specific feedback shown
+     between attempts (diagnoses, no answer); general feedback + right answer
+     withheld until the quiz closes. Max grade 3. Full settings at end of file.
+-->
+
+<question type="category">
+  <category><text>$course$/top/Class Prep/Prep 4</text></category>
+  <info format="html"><text><![CDATA[<p>Due Fri Sep 4 at class time. Waves on strings and musical instruments (Knight 17.1–17.2).</p><p>Sim: <a href="https://hoppese.github.io/Intro-physics-sims/string-harmonics/index.html">String harmonics sim</a> — standing-wave modes with tension and density controls.</p>]]></text></info>
+</question>
+
+<question type="multichoice">
+  <name><text>Prep4-A · Wavelength of the fundamental</text></name>
+  <questiontext format="html">
+    <text><![CDATA[<div style="width: 800px; max-width: 96vw; margin: 0 0 14px 0;"><iframe style="border: 1px solid #ccc; border-radius: 8px; display: block; width: 100%;" title="String harmonics sim" src="https://hoppese.github.io/Intro-physics-sims/string-harmonics/index.html" width="100%" height="570" allowfullscreen="allowfullscreen"></iframe><p style="font-size: 0.9em; color: #666; margin: 6px 0 0;">Sim not loading? <a href="https://hoppese.github.io/Intro-physics-sims/string-harmonics/index.html" target="_blank" rel="noopener">Open the String harmonics sim in a new tab</a>.</p></div><p>In the <strong>String harmonics sim</strong>, select the fundamental (<em>n</em> = 1) on a string of length <em>L</em> fixed at both ends.</p><p>Its wavelength is…</p>]]></text>
+  </questiontext>
+  <generalfeedback format="html">
+    <text><![CDATA[<p><strong>2<em>L</em>.</strong></p><p>Both ends are fixed, so both must be nodes, and adjacent nodes sit half a wavelength apart. The fundamental has nothing but those two end nodes and a single antinode in the middle — so the string holds exactly <em>half</em> a wavelength, and λ = 2<em>L</em>.</p><p>The general rule follows: λ<sub><em>n</em></sub> = 2<em>L</em>/<em>n</em>.</p>]]></text>
+  </generalfeedback>
+  <defaultgrade>1.0000000</defaultgrade>
+  <penalty>0.0000000</penalty>
+  <hidden>0</hidden>
+  <idnumber>prep-4-a</idnumber>
+  <single>true</single>
+  <shuffleanswers>true</shuffleanswers>
+  <answernumbering>abc</answernumbering>
+  <showstandardinstruction>0</showstandardinstruction>
+  <correctfeedback format="html"><text><![CDATA[<p>Correct.</p>]]></text></correctfeedback>
+  <partiallycorrectfeedback format="html"><text><![CDATA[<p>Not quite.</p>]]></text></partiallycorrectfeedback>
+  <incorrectfeedback format="html"><text><![CDATA[<p>Not quite — look at how much of a full wave shape the string actually holds.</p>]]></text></incorrectfeedback>
+  <answer fraction="100" format="html">
+    <text><![CDATA[<p>2<em>L</em></p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>Correct — the string holds half a wavelength.</p>]]></text></feedback>
+  </answer>
+  <answer fraction="0" format="html">
+    <text><![CDATA[<p><em>L</em></p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>A very common answer. Look closely at the fundamental in the sim: is that a <em>whole</em> wave shape between the ends, or half of one?</p>]]></text></feedback>
+  </answer>
+  <answer fraction="0" format="html">
+    <text><![CDATA[<p><em>L</em>/2</p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>You have the relation inverted. Recall that adjacent nodes are half a wavelength apart, then read off the distance between the two fixed ends.</p>]]></text></feedback>
+  </answer>
+  <answer fraction="0" format="html">
+    <text><![CDATA[<p>4<em>L</em></p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>That would fit a string fixed at one end and free at the other — a quarter-wave. Here both ends are held down, so both are nodes.</p>]]></text></feedback>
+  </answer>
+</question>
+
+<question type="multichoice">
+  <name><text>Prep4-B · Counting nodes</text></name>
+  <questiontext format="html">
+    <text><![CDATA[<div style="width: 800px; max-width: 96vw; margin: 0 0 14px 0;"><iframe style="border: 1px solid #ccc; border-radius: 8px; display: block; width: 100%;" title="String harmonics sim" src="https://hoppese.github.io/Intro-physics-sims/string-harmonics/index.html" width="100%" height="570" allowfullscreen="allowfullscreen"></iframe><p style="font-size: 0.9em; color: #666; margin: 6px 0 0;">Sim not loading? <a href="https://hoppese.github.io/Intro-physics-sims/string-harmonics/index.html" target="_blank" rel="noopener">Open the String harmonics sim in a new tab</a>.</p></div><p>Switch the sim to the third harmonic (<em>n</em> = 3).</p><p>How many nodes appear <strong>between</strong> the two fixed ends?</p>]]></text>
+  </questiontext>
+  <generalfeedback format="html">
+    <text><![CDATA[<p><strong>Two.</strong></p><p>The <em>n</em>th harmonic has <em>n</em> antinodes and <em>n</em> − 1 interior nodes, plus the two fixed ends. For <em>n</em> = 3 that is three bellies separated by two stationary points.</p><p>Counting nodes on screen is the fastest way to identify which mode you are looking at — no formula needed.</p>]]></text>
+  </generalfeedback>
+  <defaultgrade>1.0000000</defaultgrade>
+  <penalty>0.0000000</penalty>
+  <hidden>0</hidden>
+  <idnumber>prep-4-b</idnumber>
+  <single>true</single>
+  <shuffleanswers>true</shuffleanswers>
+  <answernumbering>abc</answernumbering>
+  <showstandardinstruction>0</showstandardinstruction>
+  <correctfeedback format="html"><text><![CDATA[<p>Correct.</p>]]></text></correctfeedback>
+  <partiallycorrectfeedback format="html"><text><![CDATA[<p>Not quite.</p>]]></text></partiallycorrectfeedback>
+  <incorrectfeedback format="html"><text><![CDATA[<p>Not quite — count the stationary points on screen again.</p>]]></text></incorrectfeedback>
+  <answer fraction="100" format="html">
+    <text><![CDATA[<p>Two</p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>Correct — three bellies, two interior nodes.</p>]]></text></feedback>
+  </answer>
+  <answer fraction="0" format="html">
+    <text><![CDATA[<p>Three</p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>You matched the node count to the harmonic number. Count the <em>bellies</em> (antinodes) instead — there are three of those, and the nodes sit between them.</p>]]></text></feedback>
+  </answer>
+  <answer fraction="0" format="html">
+    <text><![CDATA[<p>One</p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>That is the second harmonic. Check which mode the sim is actually showing, then count again.</p>]]></text></feedback>
+  </answer>
+  <answer fraction="0" format="html">
+    <text><![CDATA[<p>None</p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>Only the fundamental has no interior nodes. Look for points on the string that never move as the animation runs.</p>]]></text></feedback>
+  </answer>
+</question>
+
+<question type="multichoice">
+  <name><text>Prep4-C · A heavier string</text></name>
+  <questiontext format="html">
+    <text><![CDATA[<div style="width: 800px; max-width: 96vw; margin: 0 0 14px 0;"><iframe style="border: 1px solid #ccc; border-radius: 8px; display: block; width: 100%;" title="String harmonics sim" src="https://hoppese.github.io/Intro-physics-sims/string-harmonics/index.html" width="100%" height="570" allowfullscreen="allowfullscreen"></iframe><p style="font-size: 0.9em; color: #666; margin: 6px 0 0;">Sim not loading? <a href="https://hoppese.github.io/Intro-physics-sims/string-harmonics/index.html" target="_blank" rel="noopener">Open the String harmonics sim in a new tab</a>.</p></div><p>Swap to a heavier string — a larger linear density μ — at the same tension and length.</p><p>The fundamental frequency…</p>]]></text>
+  </questiontext>
+  <generalfeedback format="html">
+    <text><![CDATA[<p><strong>Goes down.</strong></p><p>The wave speed is <em>v</em> = √(<em>T</em>/μ), so more mass per metre means a slower wave. The wavelength of the fundamental is fixed at 2<em>L</em> by the string's length, so <em>f</em><sub>1</sub> = <em>v</em>/2<em>L</em> must fall.</p><p>This is why the low strings on a guitar or piano are the thick ones: same length, same rough tension, more mass per metre, lower pitch.</p>]]></text>
+  </generalfeedback>
+  <defaultgrade>1.0000000</defaultgrade>
+  <penalty>0.0000000</penalty>
+  <hidden>0</hidden>
+  <idnumber>prep-4-c</idnumber>
+  <single>true</single>
+  <shuffleanswers>true</shuffleanswers>
+  <answernumbering>abc</answernumbering>
+  <showstandardinstruction>0</showstandardinstruction>
+  <correctfeedback format="html"><text><![CDATA[<p>Correct.</p>]]></text></correctfeedback>
+  <partiallycorrectfeedback format="html"><text><![CDATA[<p>Not quite.</p>]]></text></partiallycorrectfeedback>
+  <incorrectfeedback format="html"><text><![CDATA[<p>Not quite — try the density control in the sim.</p>]]></text></incorrectfeedback>
+  <answer fraction="100" format="html">
+    <text><![CDATA[<p>goes down</p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>Correct — the same reason bass strings are thick.</p>]]></text></feedback>
+  </answer>
+  <answer fraction="0" format="html">
+    <text><![CDATA[<p>goes up</p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>Check where μ sits in the wave-speed expression — numerator or denominator? Then think of a real instrument: are its thick strings the high notes or the low ones?</p>]]></text></feedback>
+  </answer>
+  <answer fraction="0" format="html">
+    <text><![CDATA[<p>is unchanged</p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>The read-out moves when you change the density. The wavelength is pinned by the string's length, so any change in wave speed has to show up as a change in frequency.</p>]]></text></feedback>
+  </answer>
+  <answer fraction="0" format="html">
+    <text><![CDATA[<p>doubles</p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>Wrong direction, and the size is not right either — the dependence is a square root, so the factor is milder than that.</p>]]></text></feedback>
+  </answer>
+</question>
+
+<question type="matching">
+  <name><text>Prep4-D · Harmonics and wavelengths</text></name>
+  <questiontext format="html">
+    <text><![CDATA[<div style="width: 800px; max-width: 96vw; margin: 0 0 14px 0;"><iframe style="border: 1px solid #ccc; border-radius: 8px; display: block; width: 100%;" title="String harmonics sim" src="https://hoppese.github.io/Intro-physics-sims/string-harmonics/index.html" width="100%" height="570" allowfullscreen="allowfullscreen"></iframe><p style="font-size: 0.9em; color: #666; margin: 6px 0 0;">Sim not loading? <a href="https://hoppese.github.io/Intro-physics-sims/string-harmonics/index.html" target="_blank" rel="noopener">Open the String harmonics sim in a new tab</a>.</p></div><p>Step through the modes in the sim and match each harmonic to its wavelength on a string of length <em>L</em> fixed at both ends.</p>]]></text>
+  </questiontext>
+  <generalfeedback format="html">
+    <text><![CDATA[<p>λ<sub><em>n</em></sub> = 2<em>L</em>/<em>n</em>: the <em>n</em>th harmonic fits exactly <em>n</em> half-wavelengths between the fixed ends.</p><ul><li><em>n</em> = 1: half a wave on the string, λ = 2<em>L</em>.</li><li><em>n</em> = 2: one full wave, λ = <em>L</em>.</li><li><em>n</em> = 3: one and a half waves, λ = 2<em>L</em>/3.</li><li><em>n</em> = 4: two full waves, λ = <em>L</em>/2.</li></ul><p>The wavelengths get shorter as 1/<em>n</em>, so the frequencies climb as <em>n</em> — the harmonic series.</p>]]></text>
+  </generalfeedback>
+  <defaultgrade>1.0000000</defaultgrade>
+  <penalty>0.0000000</penalty>
+  <hidden>0</hidden>
+  <idnumber>prep-4-d</idnumber>
+  <shuffleanswers>true</shuffleanswers>
+  <correctfeedback format="html"><text><![CDATA[<p>Correct.</p>]]></text></correctfeedback>
+  <partiallycorrectfeedback format="html"><text><![CDATA[<p>Some rows are right. For each mode, count how many <em>half</em>-wavelengths fit between the fixed ends in the sim — that number is the harmonic.</p>]]></text></partiallycorrectfeedback>
+  <incorrectfeedback format="html"><text><![CDATA[<p>Step through the modes in the sim and count half-wavelengths on the string for each one. The pattern λ = 2<em>L</em>/<em>n</em> should become visible.</p>]]></text></incorrectfeedback>
+  <subquestion format="html"><text><![CDATA[<p><em>n</em> = 1</p>]]></text><answer><text>2L</text></answer></subquestion>
+  <subquestion format="html"><text><![CDATA[<p><em>n</em> = 2</p>]]></text><answer><text>L</text></answer></subquestion>
+  <subquestion format="html"><text><![CDATA[<p><em>n</em> = 3</p>]]></text><answer><text>2L/3</text></answer></subquestion>
+  <subquestion format="html"><text><![CDATA[<p><em>n</em> = 4</p>]]></text><answer><text>L/2</text></answer></subquestion>
+  <subquestion format="html"><text><![CDATA[]]></text><answer><text>L/4</text></answer></subquestion>
+</question>
+
+<!--
+     ===== QUIZ SETTINGS (Prep 4) =====
+     Timing        Open: end of Wed Sep 2 class    Close/Due: class start, Fri Sep 4
+     Grade         Max grade 3 | Attempts 2 | Grading method: Highest grade
+     Grade cat     Prep
+     Layout        All questions on one page (sim stays on screen)
+     Behaviour     Deferred feedback | Shuffle within questions: Yes
+     Review        during/immediately-after/later-while-open:
+                     attempt, whether correct, marks, specific feedback, overall feedback = YES
+                     general feedback, right answer = NO
+                   after the quiz closes: everything = YES
+     Access        Hidden entirely until the open date (Restrict access > Date, eye closed)
+     Sim URL       https://hoppese.github.io/Intro-physics-sims/string-harmonics/index.html
+-->
+
+</quiz>
