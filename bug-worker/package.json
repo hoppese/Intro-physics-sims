@@ -1,0 +1,17 @@
+{
+  "name": "sethhopper-bug-worker",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "tail": "wrangler tail"
+  },
+  "devDependencies": {
+    "wrangler": "^4.127.1"
+  },
+  "allowScripts": {
+    "workerd@1.20260828.1": true,
+    "esbuild@0.28.1": true
+  }
+}
