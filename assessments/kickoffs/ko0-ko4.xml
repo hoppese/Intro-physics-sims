@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+
+<!--
+     Intro Physics II : Kickoff questions, KO 0 to KO 4
+     Import once into the course question bank. The category
+     markers below create these categories automatically:
+       Kickoffs / KO 0 ... KO 4
+     Then in each quiz: Add > from question bank > pick the
+     matching KO category > select both > Add.
+
+     FEEDBACK MODEL (deferred feedback, 2 whole-quiz attempts)
+     Each question carries two distinct layers:
+       - Specific feedback, per wrong answer: diagnoses the actual
+         mistake and points at the method, WITHOUT stating the
+         answer. This is what students see between attempts.
+       - General feedback: the full worked solution, including the
+         number. Withhold this until the quiz closes.
+     Numerical questions include a catch-all "*" answer so that
+     unanticipated entries still get useful guidance.
+
+     REQUIRED QUIZ SETTINGS - see the notes at the end of this file.
+-->
+
+<!-- KO 0 -->
+<question type="category">
+  <category><text>$course$/top/Kickoffs/KO 0</text></category>
+  <info format="html"><text><![CDATA[<p>SHM introduction (Knight 15.1–15.2).</p>]]></text></info>
+</question>
+
+<question type="numerical">
+  <name><text>KO0-A · Period to frequency</text></name>
+  <questiontext format="html">
+    <text><![CDATA[<p>An oscillator completes one full cycle every 0.25 s.</p><p>What is its frequency, in <strong>Hz</strong>? (Enter a number only.)</p>]]></text>
+  </questiontext>
+  <generalfeedback format="html">
+    <text><![CDATA[<p><em>f</em> = 1/<em>T</em> = 1/(0.25 s) = <strong>4 Hz</strong>.</p><p>Period and frequency are reciprocals. The period answers &ldquo;how many seconds per cycle,&rdquo; the frequency answers &ldquo;how many cycles per second.&rdquo; A quarter-second per cycle means four cycles per second.</p>]]></text>
+  </generalfeedback>
+  <defaultgrade>1.0000000</defaultgrade>
+  <penalty>0.0000000</penalty>
+  <hidden>0</hidden>
+  <idnumber>ko-0-a</idnumber>
+  <answer fraction="100" format="moodle_auto_format">
+    <text>4</text>
+    <feedback format="html"><text><![CDATA[<p>Correct.</p>]]></text></feedback>
+    <tolerance>0.1</tolerance>
+  </answer>
+  <answer fraction="0" format="moodle_auto_format">
+    <text>0.25</text>
+    <feedback format="html"><text><![CDATA[<p>You gave back the period you were told &mdash; the number of <em>seconds per cycle</em>. Frequency asks the opposite question: how many <em>cycles per second</em>?</p>]]></text></feedback>
+    <tolerance>0.01</tolerance>
+  </answer>
+  <answer fraction="0" format="moodle_auto_format">
+    <text>*</text>
+    <feedback format="html"><text><![CDATA[<p>Period and frequency are reciprocals of one another. You were given seconds per cycle; the question asks for cycles per second.</p>]]></text></feedback>
+    <tolerance>0</tolerance>
+  </answer>
+  <unitgradingtype>0</unitgradingtype>
+  <unitpenalty>0.1000000</unitpenalty>
+  <showunits>3</showunits>
+  <unitsleft>0</unitsleft>
+</question>
+
+<question type="matching">
+  <name><text>KO0-B · SHM quantities and units</text></name>
+  <questiontext format="html">
+    <text><![CDATA[<p>A mass oscillates according to <em>x</em>(<em>t</em>) = <em>A</em> cos(<em>ωt</em> + <em>φ</em>), where <em>x</em> is measured in meters and <em>t</em> in seconds.</p><p>Match each quantity to its unit.</p>]]></text>
+  </questiontext>
+  <generalfeedback format="html">
+    <text><![CDATA[<p><em>T</em> &rarr; seconds (s). <em>f</em> &rarr; hertz (Hz). <em>ω</em> &rarr; radians per second (rad/s). <em>A</em> &rarr; meters (m). The unused option, N/m, is the unit of a spring constant.</p><p>Read them off the equation. <em>T</em> is a time. <em>f</em> counts cycles per second. <em>ω</em> is an angle per unit time. And <em>A</em> multiplies a cosine &mdash; which is just a number &mdash; so <em>A</em> must carry the same units as <em>x</em> itself.</p>]]></text>
+  </generalfeedback>
+  <defaultgrade>1.0000000</defaultgrade>
+  <penalty>0.0000000</penalty>
+  <hidden>0</hidden>
+  <idnumber>ko-0-b</idnumber>
+  <shuffleanswers>true</shuffleanswers>
+  <correctfeedback format="html"><text><![CDATA[<p>All four correct.</p>]]></text></correctfeedback>
+  <partiallycorrectfeedback format="html"><text><![CDATA[<p>Some matches are right, but not all of them.</p><p>For the amplitude, use this: the cosine of an angle is a pure number with no units, so whatever multiplies it must carry the units of the left-hand side. For the other three, sort them into &ldquo;a time,&rdquo; &ldquo;per time,&rdquo; and &ldquo;an angle per time.&rdquo; One option is left over on purpose.</p>]]></text></partiallycorrectfeedback>
+  <incorrectfeedback format="html"><text><![CDATA[<p>Work from the equation rather than from memory.</p><p>The cosine of an angle is a pure number, so whatever multiplies it must carry the units of the left-hand side &mdash; that pins down the amplitude. Then sort the remaining symbols into &ldquo;a time,&rdquo; &ldquo;per time,&rdquo; and &ldquo;an angle per time.&rdquo; One option is left over on purpose.</p>]]></text></incorrectfeedback>
+  <subquestion format="html">
+    <text><![CDATA[<p>Period <em>T</em></p>]]></text>
+    <answer><text>seconds (s)</text></answer>
+  </subquestion>
+  <subquestion format="html">
+    <text><![CDATA[<p>Frequency <em>f</em></p>]]></text>
+    <answer><text>hertz (Hz)</text></answer>
+  </subquestion>
+  <subquestion format="html">
+    <text><![CDATA[<p>Angular frequency <em>ω</em></p>]]></text>
+    <answer><text>radians per second (rad/s)</text></answer>
+  </subquestion>
+  <subquestion format="html">
+    <text><![CDATA[<p>Amplitude <em>A</em></p>]]></text>
+    <answer><text>meters (m)</text></answer>
+  </subquestion>
+  <subquestion format="html">
+    <text><![CDATA[]]></text>
+    <answer><text>newtons per meter (N/m)</text></answer>
+  </subquestion>
+</question>
+
+<!-- KO 1 -->
+<question type="category">
+  <category><text>$course$/top/Kickoffs/KO 1</text></category>
+  <info format="html"><text><![CDATA[<p>Energy and dynamics in SHM (Knight 15.3–15.4).</p>]]></text></info>
+</question>
+
+<question type="multichoice">
+  <name><text>KO1-A · Where kinetic energy is largest</text></name>
+  <questiontext format="html">
+    <text><![CDATA[<p>A mass on a spring oscillates in simple harmonic motion.</p><p>Where is its kinetic energy largest?</p>]]></text>
+  </questiontext>
+  <generalfeedback format="html">
+    <text><![CDATA[<p><strong>At the equilibrium position.</strong></p><p>The total energy stays constant while kinetic and potential energy trade back and forth. At maximum displacement the spring is stretched the most and the mass has momentarily stopped, so all the energy is potential. At equilibrium the spring is unstretched, so none of the energy is potential &mdash; it is all kinetic, and the speed is greatest there.</p>]]></text>
+  </generalfeedback>
+  <defaultgrade>1.0000000</defaultgrade>
+  <penalty>0.0000000</penalty>
+  <hidden>0</hidden>
+  <idnumber>ko-1-a</idnumber>
+  <single>true</single>
+  <shuffleanswers>true</shuffleanswers>
+  <answernumbering>abc</answernumbering>
+  <correctfeedback format="html"><text><![CDATA[<p>Correct.</p>]]></text></correctfeedback>
+  <partiallycorrectfeedback format="html"><text><![CDATA[<p>Partially correct.</p>]]></text></partiallycorrectfeedback>
+  <incorrectfeedback format="html"><text><![CDATA[<p>Kinetic energy tracks <em>speed</em>. Trace the mass through one full cycle and ask where it is moving fastest &mdash; and where it is not moving at all.</p>]]></text></incorrectfeedback>
+  <answer fraction="100" format="html">
+    <text><![CDATA[<p>At the equilibrium position</p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>Correct.</p>]]></text></feedback>
+  </answer>
+  <answer fraction="0" format="html">
+    <text><![CDATA[<p>At maximum displacement</p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>At the turning points the mass has momentarily stopped. If its speed is zero there, what is its kinetic energy? That location is where the <em>other</em> kind of energy peaks.</p>]]></text></feedback>
+  </answer>
+  <answer fraction="0" format="html">
+    <text><![CDATA[<p>Halfway between equilibrium and maximum displacement</p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>The mass is moving there, but it has not finished speeding up. It keeps accelerating for as long as the restoring force still pushes it toward the center &mdash; so where does it stop gaining speed?</p>]]></text></feedback>
+  </answer>
+  <answer fraction="0" format="html">
+    <text><![CDATA[<p>Kinetic energy is constant throughout the motion</p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>The <em>total</em> energy is constant. Kinetic energy on its own is not &mdash; the mass is briefly stationary at each turning point, so it must vary through the cycle.</p>]]></text></feedback>
+  </answer>
+</question>
+
+<question type="numerical">
+  <name><text>KO1-B · Angular frequency of a mass–spring system</text></name>
+  <questiontext format="html">
+    <text><![CDATA[<p>A 2.0 kg mass hangs on a spring with force constant <em>k</em> = 8.0 N/m.</p><p>What is the angular frequency <em>ω</em> of its oscillation, in <strong>rad/s</strong>? (Enter a number only.)</p>]]></text>
+  </questiontext>
+  <generalfeedback format="html">
+    <text><![CDATA[<p><em>ω</em> = √(<em>k</em>/<em>m</em>) = √(8.0 / 2.0) = √4 = <strong>2 rad/s</strong>.</p><p>Note the pattern: a stiffer spring oscillates faster, a heavier mass oscillates slower, and the square root means quadrupling either one only doubles the effect.</p>]]></text>
+  </generalfeedback>
+  <defaultgrade>1.0000000</defaultgrade>
+  <penalty>0.0000000</penalty>
+  <hidden>0</hidden>
+  <idnumber>ko-1-b</idnumber>
+  <answer fraction="100" format="moodle_auto_format">
+    <text>2</text>
+    <feedback format="html"><text><![CDATA[<p>Correct.</p>]]></text></feedback>
+    <tolerance>0.1</tolerance>
+  </answer>
+  <answer fraction="0" format="moodle_auto_format">
+    <text>4</text>
+    <feedback format="html"><text><![CDATA[<p>You have computed <em>k</em>/<em>m</em> correctly, but stopped one step early. Look again at where the square root sits in the formula for <em>ω</em>.</p>]]></text></feedback>
+    <tolerance>0.1</tolerance>
+  </answer>
+  <answer fraction="0" format="moodle_auto_format">
+    <text>0.318</text>
+    <feedback format="html"><text><![CDATA[<p>That is the ordinary frequency <em>f</em>, in Hz. The question asks for <em>angular</em> frequency, which differs from it by a factor of 2π.</p>]]></text></feedback>
+    <tolerance>0.02</tolerance>
+  </answer>
+  <answer fraction="0" format="moodle_auto_format">
+    <text>0.5</text>
+    <feedback format="html"><text><![CDATA[<p>You have <em>m</em>/<em>k</em> under the root, which is upside down. Which of the two belongs on top? Sanity-check it: a stiffer spring should oscillate <em>faster</em>.</p>]]></text></feedback>
+    <tolerance>0.02</tolerance>
+  </answer>
+  <answer fraction="0" format="moodle_auto_format">
+    <text>*</text>
+    <feedback format="html"><text><![CDATA[<p>Use <em>ω</em> = √(<em>k</em>/<em>m</em>): divide first, then take the square root. The numbers here were chosen to give a tidy whole-number answer, so if yours is messy, check the order of operations.</p>]]></text></feedback>
+    <tolerance>0</tolerance>
+  </answer>
+  <unitgradingtype>0</unitgradingtype>
+  <unitpenalty>0.1000000</unitpenalty>
+  <showunits>3</showunits>
+  <unitsleft>0</unitsleft>
+</question>
+
+<!-- KO 2 -->
+<question type="category">
+  <category><text>$course$/top/Kickoffs/KO 2</text></category>
+  <info format="html"><text><![CDATA[<p>Vertical oscillations and the simple pendulum (Knight 15.5–15.6).</p>]]></text></info>
+</question>
+
+<question type="multichoice">
+  <name><text>KO2-A · What the pendulum period does not depend on</text></name>
+  <questiontext format="html">
+    <text><![CDATA[<p>For small-angle oscillations, which of the following does the period of a simple pendulum <strong>not</strong> depend on?</p><p><em>Select all that apply.</em></p>]]></text>
+  </questiontext>
+  <generalfeedback format="html">
+    <text><![CDATA[<p>The period does not depend on <strong>the mass of the bob</strong> or <strong>the amplitude of the swing</strong>.</p><p><em>T</em> = 2π√(<em>L</em>/<em>g</em>). Only two quantities appear: the length and the local free-fall acceleration. Mass is absent &mdash; a heavy bob and a light bob on equal strings keep identical time. Amplitude is absent too, as long as the swing stays small, and that is exactly the property that made pendulums useful as clocks.</p>]]></text>
+  </generalfeedback>
+  <defaultgrade>1.0000000</defaultgrade>
+  <penalty>0.0000000</penalty>
+  <hidden>0</hidden>
+  <idnumber>ko-2-a</idnumber>
+  <single>false</single>
+  <shuffleanswers>true</shuffleanswers>
+  <answernumbering>abc</answernumbering>
+  <correctfeedback format="html"><text><![CDATA[<p>Correct on both counts.</p>]]></text></correctfeedback>
+  <partiallycorrectfeedback format="html"><text><![CDATA[<p>You have part of it, but there is more than one right answer here.</p><p>Write down <em>T</em> = 2π√(<em>L</em>/<em>g</em>) and check each option against it. Any listed quantity that is <em>missing</em> from that formula is something the period does not depend on.</p>]]></text></partiallycorrectfeedback>
+  <incorrectfeedback format="html"><text><![CDATA[<p>Write down <em>T</em> = 2π√(<em>L</em>/<em>g</em>) and compare each option against it, one at a time. More than one of the four is absent from that formula.</p>]]></text></incorrectfeedback>
+  <answer fraction="50" format="html">
+    <text><![CDATA[<p>The mass of the bob</p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>Correct &mdash; mass does not appear in the period formula at all.</p>]]></text></feedback>
+  </answer>
+  <answer fraction="50" format="html">
+    <text><![CDATA[<p>The amplitude of the swing</p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>Correct, for small angles &mdash; a wider small swing takes the same time as a narrower one.</p>]]></text></feedback>
+  </answer>
+  <answer fraction="-50" format="html">
+    <text><![CDATA[<p>The length of the string</p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>Check whether <em>L</em> appears in <em>T</em> = 2π√(<em>L</em>/<em>g</em>). Then picture a long pendulum beside a short one &mdash; do they swing at the same rate?</p>]]></text></feedback>
+  </answer>
+  <answer fraction="-50" format="html">
+    <text><![CDATA[<p>The local free-fall acceleration <em>g</em></p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>Check whether <em>g</em> appears in <em>T</em> = 2π√(<em>L</em>/<em>g</em>). Then ask whether you would expect this pendulum to keep the same time on the Moon.</p>]]></text></feedback>
+  </answer>
+</question>
+
+<question type="numerical">
+  <name><text>KO2-B · Angular frequency of a pendulum</text></name>
+  <questiontext format="html">
+    <text><![CDATA[<p>A pendulum of length 1.0 m swings where <em>g</em> = 9.8 m/s².</p><p>What is its angular frequency <em>ω</em>, in <strong>rad/s</strong>? (Enter a number only.)</p>]]></text>
+  </questiontext>
+  <generalfeedback format="html">
+    <text><![CDATA[<p><em>ω</em> = √(<em>g</em>/<em>L</em>) = √(9.8 / 1.0) = <strong>3.1 rad/s</strong>.</p><p>Compare with the mass&ndash;spring case, <em>ω</em> = √(<em>k</em>/<em>m</em>): same structure, with <em>g</em>/<em>L</em> playing the role of <em>k</em>/<em>m</em>. If you preferred to work from the period, <em>T</em> = 2π√(<em>L</em>/<em>g</em>) ≈ 2.0 s and then <em>ω</em> = 2π/<em>T</em> gives the same result.</p>]]></text>
+  </generalfeedback>
+  <defaultgrade>1.0000000</defaultgrade>
+  <penalty>0.0000000</penalty>
+  <hidden>0</hidden>
+  <idnumber>ko-2-b</idnumber>
+  <answer fraction="100" format="moodle_auto_format">
+    <text>3.13</text>
+    <feedback format="html"><text><![CDATA[<p>Correct.</p>]]></text></feedback>
+    <tolerance>0.1</tolerance>
+  </answer>
+  <answer fraction="0" format="moodle_auto_format">
+    <text>2.0</text>
+    <feedback format="html"><text><![CDATA[<p>You found the <em>period</em>, in seconds, rather than the angular frequency. The two are related by a factor of 2π &mdash; check which way round it goes.</p>]]></text></feedback>
+    <tolerance>0.1</tolerance>
+  </answer>
+  <answer fraction="0" format="moodle_auto_format">
+    <text>9.8</text>
+    <feedback format="html"><text><![CDATA[<p>You computed <em>g</em>/<em>L</em> and stopped. One operation remains.</p>]]></text></feedback>
+    <tolerance>0.1</tolerance>
+  </answer>
+  <answer fraction="0" format="moodle_auto_format">
+    <text>0.5</text>
+    <feedback format="html"><text><![CDATA[<p>That is the ordinary frequency <em>f</em>, in Hz. Angular frequency is larger by a factor of 2π.</p>]]></text></feedback>
+    <tolerance>0.03</tolerance>
+  </answer>
+  <answer fraction="0" format="moodle_auto_format">
+    <text>*</text>
+    <feedback format="html"><text><![CDATA[<p>For a pendulum, <em>ω</em> = √(<em>g</em>/<em>L</em>) &mdash; note that <em>g</em> sits on top, the mirror image of the <em>L</em>/<em>g</em> you see inside the period formula. Divide first, then take the square root.</p>]]></text></feedback>
+    <tolerance>0</tolerance>
+  </answer>
+  <unitgradingtype>0</unitgradingtype>
+  <unitpenalty>0.1000000</unitpenalty>
+  <showunits>3</showunits>
+  <unitsleft>0</unitsleft>
+</question>
+
+<!-- KO 3 -->
+<question type="category">
+  <category><text>$course$/top/Kickoffs/KO 3</text></category>
+  <info format="html"><text><![CDATA[<p>Traveling waves, standing waves, superposition (Knight 16.1–16.3).</p>]]></text></info>
+</question>
+
+<question type="numerical">
+  <name><text>KO3-A · Wave speed from f and λ</text></name>
+  <questiontext format="html">
+    <text><![CDATA[<p>A wave has frequency 50 Hz and wavelength 4.0 m.</p><p>What is its speed, in <strong>m/s</strong>? (Enter a number only.)</p>]]></text>
+  </questiontext>
+  <generalfeedback format="html">
+    <text><![CDATA[<p><em>v</em> = <em>f</em><em>λ</em> = (50 Hz)(4.0 m) = <strong>200 m/s</strong>.</p><p>The units are the quickest check: hertz is 1/s, so Hz × m gives m/s directly. If a combination does not come out in m/s, it is not a speed.</p>]]></text>
+  </generalfeedback>
+  <defaultgrade>1.0000000</defaultgrade>
+  <penalty>0.0000000</penalty>
+  <hidden>0</hidden>
+  <idnumber>ko-3-a</idnumber>
+  <answer fraction="100" format="moodle_auto_format">
+    <text>200</text>
+    <feedback format="html"><text><![CDATA[<p>Correct.</p>]]></text></feedback>
+    <tolerance>1</tolerance>
+  </answer>
+  <answer fraction="0" format="moodle_auto_format">
+    <text>12.5</text>
+    <feedback format="html"><text><![CDATA[<p>You divided the frequency by the wavelength. Check the units of what you did: hertz is 1/s, so Hz ÷ m cannot give m/s.</p>]]></text></feedback>
+    <tolerance>0.1</tolerance>
+  </answer>
+  <answer fraction="0" format="moodle_auto_format">
+    <text>0.08</text>
+    <feedback format="html"><text><![CDATA[<p>You divided the wavelength by the frequency. Check the units: which combination of Hz and m actually yields m/s?</p>]]></text></feedback>
+    <tolerance>0.005</tolerance>
+  </answer>
+  <answer fraction="0" format="moodle_auto_format">
+    <text>54</text>
+    <feedback format="html"><text><![CDATA[<p>You added the two numbers, but quantities with different units cannot be added. Check what operation gives m/s from Hz and m.</p>]]></text></feedback>
+    <tolerance>0.5</tolerance>
+  </answer>
+  <answer fraction="0" format="moodle_auto_format">
+    <text>*</text>
+    <feedback format="html"><text><![CDATA[<p>A wave advances exactly one wavelength in one period. Let the units decide the operation: hertz is 1/s, so which combination with meters gives m/s?</p>]]></text></feedback>
+    <tolerance>0</tolerance>
+  </answer>
+  <unitgradingtype>0</unitgradingtype>
+  <unitpenalty>0.1000000</unitpenalty>
+  <showunits>3</showunits>
+  <unitsleft>0</unitsleft>
+</question>
+
+<question type="matching">
+  <name><text>KO3-B · Wave symbols and meanings</text></name>
+  <questiontext format="html">
+    <text><![CDATA[<p>Match each wave symbol to what it measures.</p>]]></text>
+  </questiontext>
+  <generalfeedback format="html">
+    <text><![CDATA[<p><em>λ</em> &rarr; distance between successive crests. <em>T</em> &rarr; time for one full oscillation. <em>A</em> &rarr; maximum displacement from equilibrium. <em>v</em> &rarr; how fast the wave pattern travels. The unused option, &ldquo;number of crests passing per second,&rdquo; is the definition of frequency.</p><p>Sort them by what kind of quantity each one is: <em>λ</em> is a distance measured along the wave, <em>T</em> is a time measured at one place, <em>A</em> is a displacement measured from equilibrium, and <em>v</em> = <em>λ</em>/<em>T</em> combines the first two into a speed.</p>]]></text>
+  </generalfeedback>
+  <defaultgrade>1.0000000</defaultgrade>
+  <penalty>0.0000000</penalty>
+  <hidden>0</hidden>
+  <idnumber>ko-3-b</idnumber>
+  <shuffleanswers>true</shuffleanswers>
+  <correctfeedback format="html"><text><![CDATA[<p>All four correct.</p>]]></text></correctfeedback>
+  <partiallycorrectfeedback format="html"><text><![CDATA[<p>Some matches are right, but not all of them.</p><p>Two things to note: one of the five descriptions is the definition of <em>frequency</em>, and frequency is not among the symbols shown &mdash; so that description goes unused. For the four that remain, ask of each symbol whether it measures a distance, a time, or a speed.</p>]]></text></partiallycorrectfeedback>
+  <incorrectfeedback format="html"><text><![CDATA[<p>Ask of each symbol: is this a distance, a time, or a speed? Note also that one of the five descriptions defines <em>frequency</em>, which is not among the symbols listed &mdash; so it goes unused.</p>]]></text></incorrectfeedback>
+  <subquestion format="html">
+    <text><![CDATA[<p><em>λ</em></p>]]></text>
+    <answer><text>distance between successive crests</text></answer>
+  </subquestion>
+  <subquestion format="html">
+    <text><![CDATA[<p><em>T</em></p>]]></text>
+    <answer><text>time for one full oscillation</text></answer>
+  </subquestion>
+  <subquestion format="html">
+    <text><![CDATA[<p><em>A</em></p>]]></text>
+    <answer><text>maximum displacement from equilibrium</text></answer>
+  </subquestion>
+  <subquestion format="html">
+    <text><![CDATA[<p><em>v</em></p>]]></text>
+    <answer><text>how fast the wave pattern travels</text></answer>
+  </subquestion>
+  <subquestion format="html">
+    <text><![CDATA[]]></text>
+    <answer><text>number of crests passing per second</text></answer>
+  </subquestion>
+</question>
+
+<!-- KO 4 -->
+<question type="category">
+  <category><text>$course$/top/Kickoffs/KO 4</text></category>
+  <info format="html"><text><![CDATA[<p>Waves on strings and musical instruments (Knight 17.1–17.2).</p>]]></text></info>
+</question>
+
+<question type="multichoice">
+  <name><text>KO4-A · Tightening a guitar string</text></name>
+  <questiontext format="html">
+    <text><![CDATA[<p>You tighten a guitar string without changing its length.</p><p>The speed of waves on the string</p>]]></text>
+  </questiontext>
+  <generalfeedback format="html">
+    <text><![CDATA[<p>The wave speed <strong>increases</strong>.</p><p><em>v</em> = √(<em>T</em>/<em>μ</em>). Tightening raises the tension <em>T</em>, while the linear mass density <em>μ</em> depends only on the string itself and is unchanged. Since the fundamental is <em>f</em>₁ = <em>v</em>/2<em>L</em> and <em>L</em> is fixed, the pitch rises along with the speed &mdash; which is exactly what tuning a guitar does.</p>]]></text>
+  </generalfeedback>
+  <defaultgrade>1.0000000</defaultgrade>
+  <penalty>0.0000000</penalty>
+  <hidden>0</hidden>
+  <idnumber>ko-4-a</idnumber>
+  <single>true</single>
+  <shuffleanswers>true</shuffleanswers>
+  <answernumbering>abc</answernumbering>
+  <correctfeedback format="html"><text><![CDATA[<p>Correct.</p>]]></text></correctfeedback>
+  <partiallycorrectfeedback format="html"><text><![CDATA[<p>Partially correct.</p>]]></text></partiallycorrectfeedback>
+  <incorrectfeedback format="html"><text><![CDATA[<p>Use <em>v</em> = √(<em>T</em>/<em>μ</em>) and ask which of those two quantities you actually changed, and whether it sits above or below the line. Then sanity-check the result against a real instrument.</p>]]></text></incorrectfeedback>
+  <answer fraction="100" format="html">
+    <text><![CDATA[<p>increases</p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>Correct.</p>]]></text></feedback>
+  </answer>
+  <answer fraction="0" format="html">
+    <text><![CDATA[<p>decreases</p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>You have the right formula in mind but the wrong direction. Check whether tension sits in the numerator or the denominator of <em>v</em> = √(<em>T</em>/<em>μ</em>), then test it against experience: when you tighten a guitar string, does its pitch go up or down?</p>]]></text></feedback>
+  </answer>
+  <answer fraction="0" format="html">
+    <text><![CDATA[<p>stays the same</p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>Wave speed on a string is set by two things: the string's own mass per unit length, and the tension. If tension made no difference, a guitar could not be tuned at all.</p>]]></text></feedback>
+  </answer>
+  <answer fraction="0" format="html">
+    <text><![CDATA[<p>drops to zero</p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>A tightened string still carries waves &mdash; a tuned guitar is proof. Look at <em>v</em> = √(<em>T</em>/<em>μ</em>) and consider which way the speed moves.</p>]]></text></feedback>
+  </answer>
+</question>
+
+<question type="multichoice">
+  <name><text>KO4-B · Second harmonic on a fixed string</text></name>
+  <questiontext format="html">
+    <text><![CDATA[<p>A string fixed at both ends vibrates in its <strong>second harmonic</strong>.</p><p>Which of the following are true? <em>Select all that apply.</em></p>]]></text>
+  </questiontext>
+  <generalfeedback format="html">
+    <text><![CDATA[<p>Three are true: there is a node at the midpoint, the frequency is twice the fundamental, and the wavelength equals the string length. The false one is the claim about antinodes at the fixed ends.</p><p>Sketch it. The ends are clamped, so both are nodes. The second harmonic fits exactly one full wavelength between them, so <em>λ</em>₂ = <em>L</em>, which puts a third node at the midpoint and antinodes at the quarter points. Since <em>v</em> is fixed by the string, halving the wavelength from the fundamental's 2<em>L</em> doubles the frequency: <em>f</em>₂ = 2<em>f</em>₁.</p>]]></text>
+  </generalfeedback>
+  <defaultgrade>1.0000000</defaultgrade>
+  <penalty>0.0000000</penalty>
+  <hidden>0</hidden>
+  <idnumber>ko-4-b</idnumber>
+  <single>false</single>
+  <shuffleanswers>true</shuffleanswers>
+  <answernumbering>abc</answernumbering>
+  <correctfeedback format="html"><text><![CDATA[<p>Correct &mdash; you found all three true statements.</p>]]></text></correctfeedback>
+  <partiallycorrectfeedback format="html"><text><![CDATA[<p>You have some of them, but not the full set.</p><p>Draw the string. Put a node at each fixed end, since a clamped point cannot move. Now fit exactly one whole wavelength between those ends and read off the rest: how many nodes appear, where do they fall, and how does the wavelength compare with the string length?</p>]]></text></partiallycorrectfeedback>
+  <incorrectfeedback format="html"><text><![CDATA[<p>Draw the string with a node at each fixed end, then fit exactly one whole wavelength between them. Everything you need can be read off that sketch. More than one statement is true.</p>]]></text></incorrectfeedback>
+  <answer fraction="33.33333" format="html">
+    <text><![CDATA[<p>There is a node at the midpoint of the string</p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>Correct &mdash; the second harmonic has an interior node exactly halfway along.</p>]]></text></feedback>
+  </answer>
+  <answer fraction="33.33333" format="html">
+    <text><![CDATA[<p>Its frequency is twice the fundamental frequency</p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>Correct &mdash; that is what &ldquo;second harmonic&rdquo; means.</p>]]></text></feedback>
+  </answer>
+  <answer fraction="33.33333" format="html">
+    <text><![CDATA[<p>Its wavelength equals the length of the string</p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>Correct &mdash; one complete wavelength fits between the fixed ends.</p>]]></text></feedback>
+  </answer>
+  <answer fraction="-100" format="html">
+    <text><![CDATA[<p>There is an antinode at each fixed end</p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>The ends are clamped, so they cannot move at all. What do we call a point on a standing wave whose displacement is always zero? Antinodes have to fall somewhere else.</p>]]></text></feedback>
+  </answer>
+</question>
+
+<!--
+     ===== REQUIRED QUIZ SETTINGS =====
+
+     Goal: student answers both questions, submits, gets diagnostic
+     feedback, may reattempt the whole quiz once, and only sees the
+     right answers after the quiz closes.
+
+     Quiz settings > Grade
+       Attempts allowed .................. 2
+       Grading method .................... Highest grade
+
+     Quiz settings > Question behaviour
+       How questions behave .............. Deferred feedback
+       Shuffle within questions .......... Yes
+
+     Quiz settings > Review options
+       IMMEDIATELY AFTER THE ATTEMPT  (and the same for
+       "Later, while the quiz is still open")
+         The attempt ..................... yes
+         Whether correct ................. yes
+         Marks ........................... yes
+         Specific feedback ............... YES
+         General feedback ................ NO
+         Right answer .................... NO
+         Overall feedback ................ yes
+       AFTER THE QUIZ IS CLOSED
+         everything ...................... yes
+
+     That split is what makes this work: "Specific feedback" is the
+     per-answer diagnosis, safe to show between attempts. "General
+     feedback" and "Right answer" hold the solution, so they stay
+     off until the quiz closes.
+
+     Note: Moodle's review options are keyed to TIME, not to attempt
+     number, so there is no setting for "reveal after their second
+     try." Answers become visible when the quiz closes, whether a
+     student used one attempt or both. Give each kickoff a close
+     date and the behavior you want follows.
+
+     Leave "Whether correct" ON so students know which question to
+     revisit on attempt 2; with only two questions, turning it off
+     makes the retry guesswork.
+-->
+
+</quiz>
