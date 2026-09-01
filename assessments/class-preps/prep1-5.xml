@@ -9,7 +9,8 @@
      markers below create these categories automatically:
        Class Prep / Prep 1 ... Prep 5
      Then in each quiz: Add > from question bank > pick the
-     matching Prep category > select all four > Add.
+     matching Prep category > select all of them > Add.
+     (Prep 1-3 and Prep 5 have four questions each; Prep 4 has five.)
 
      SIM-BASED BY DESIGN
      Every question is answered by doing something in that day's
@@ -31,9 +32,9 @@
          quiz closes.
 
      GRADING
-     Four questions at 1.0 each. Set the quiz maximum grade to 3
-     so the set is worth 3 points, matching the Prep line in the
-     syllabus (3 x 31, drop 2 of 33).
+     Questions are 1.0 each (four per prep, five for Prep 4). Set
+     the quiz maximum grade to 3 so each set is worth 3 points,
+     matching the Prep line in the syllabus (3 x 31, drop 2 of 33).
 
      REQUIRED QUIZ SETTINGS - see the notes at the end of this file.
 -->
@@ -437,13 +438,13 @@
 <!-- ==================== PREP 4 ==================== -->
 <question type="category">
   <category><text>$course$/top/Class Prep/Prep 4</text></category>
-  <info format="html"><text><![CDATA[<p>Due Fri Sep 4 at class time. Waves on strings and musical instruments (Knight 17.1–17.2).</p><p>Sim: <a href="https://hoppese.github.io/Intro-physics-sims/string-harmonics/index.html">String harmonics sim</a> — standing-wave modes with tension and density controls.</p>]]></text></info>
+  <info format="html"><text><![CDATA[<p>Due Fri Sep 4 at class time. Waves on strings and musical instruments (Knight 17.1–17.2).</p><p>Sim: <a href="https://hoppese.github.io/Intro-physics-sims/string-harmonics/index.html">Standing Waves — Strings &amp; Pipes</a>. In <strong>String</strong> mode the wave speed comes from tension and linear density, <em>v</em> = √(<em>T</em>/μ); in <strong>Pipe</strong> mode it is the speed of sound and the boundary is set by how many ends are open.</p>]]></text></info>
 </question>
 
 <question type="multichoice">
   <name><text>Prep4-A · Wavelength of the fundamental</text></name>
   <questiontext format="html">
-    <text><![CDATA[<div style="width: 800px; max-width: 96vw; margin: 0 0 14px 0;"><iframe style="border: 1px solid #ccc; border-radius: 8px; display: block; width: 100%;" title="String harmonics sim" src="https://hoppese.github.io/Intro-physics-sims/string-harmonics/index.html" width="100%" height="570" allowfullscreen="allowfullscreen"></iframe><p style="font-size: 0.9em; color: #666; margin: 6px 0 0;">Sim not loading? <a href="https://hoppese.github.io/Intro-physics-sims/string-harmonics/index.html" target="_blank" rel="noopener">Open the String harmonics sim in a new tab</a>.</p></div><p>In the <strong>String harmonics sim</strong>, select the fundamental (<em>n</em> = 1) on a string of length <em>L</em> fixed at both ends.</p><p>Its wavelength is…</p>]]></text>
+    <text><![CDATA[<div style="width: 800px; max-width: 96vw; margin: 0 0 14px 0;"><iframe style="border: 1px solid #ccc; border-radius: 8px; display: block; width: 100%;" title="Standing Waves sim" src="https://hoppese.github.io/Intro-physics-sims/string-harmonics/index.html" width="100%" height="620" allowfullscreen="allowfullscreen"></iframe><p style="font-size: 0.9em; color: #666; margin: 6px 0 0;">Sim not loading? <a href="https://hoppese.github.io/Intro-physics-sims/string-harmonics/index.html" target="_blank" rel="noopener">Open the Standing Waves sim in a new tab</a>.</p></div><p>In the <strong>Standing Waves sim</strong>, keep <strong>Medium</strong> on <strong>String</strong> and <strong>Ends</strong> on <strong>Fixed–Fixed</strong>, and select the fundamental (<em>n</em> = 1) on a string of length <em>L</em>.</p><p>Its wavelength is…</p>]]></text>
   </questiontext>
   <generalfeedback format="html">
     <text><![CDATA[<p><strong>2<em>L</em>.</strong></p><p>Both ends are fixed, so both must be nodes, and adjacent nodes sit half a wavelength apart. The fundamental has nothing but those two end nodes and a single antinode in the middle — so the string holds exactly <em>half</em> a wavelength, and λ = 2<em>L</em>.</p><p>The general rule follows: λ<sub><em>n</em></sub> = 2<em>L</em>/<em>n</em>.</p>]]></text>
@@ -473,14 +474,14 @@
   </answer>
   <answer fraction="0" format="html">
     <text><![CDATA[<p>4<em>L</em></p>]]></text>
-    <feedback format="html"><text><![CDATA[<p>That would fit a string fixed at one end and free at the other — a quarter-wave. Here both ends are held down, so both are nodes.</p>]]></text></feedback>
+    <feedback format="html"><text><![CDATA[<p>That is the Fixed–Free case — a quarter-wave. Here both ends are held down, so both are nodes. Try switching Ends to Fixed–Free in the sim to see where 4<em>L</em> comes from.</p>]]></text></feedback>
   </answer>
 </question>
 
 <question type="multichoice">
   <name><text>Prep4-B · Counting nodes</text></name>
   <questiontext format="html">
-    <text><![CDATA[<div style="width: 800px; max-width: 96vw; margin: 0 0 14px 0;"><iframe style="border: 1px solid #ccc; border-radius: 8px; display: block; width: 100%;" title="String harmonics sim" src="https://hoppese.github.io/Intro-physics-sims/string-harmonics/index.html" width="100%" height="570" allowfullscreen="allowfullscreen"></iframe><p style="font-size: 0.9em; color: #666; margin: 6px 0 0;">Sim not loading? <a href="https://hoppese.github.io/Intro-physics-sims/string-harmonics/index.html" target="_blank" rel="noopener">Open the String harmonics sim in a new tab</a>.</p></div><p>Switch the sim to the third harmonic (<em>n</em> = 3).</p><p>How many nodes appear <strong>between</strong> the two fixed ends?</p>]]></text>
+    <text><![CDATA[<div style="width: 800px; max-width: 96vw; margin: 0 0 14px 0;"><iframe style="border: 1px solid #ccc; border-radius: 8px; display: block; width: 100%;" title="Standing Waves sim" src="https://hoppese.github.io/Intro-physics-sims/string-harmonics/index.html" width="100%" height="620" allowfullscreen="allowfullscreen"></iframe><p style="font-size: 0.9em; color: #666; margin: 6px 0 0;">Sim not loading? <a href="https://hoppese.github.io/Intro-physics-sims/string-harmonics/index.html" target="_blank" rel="noopener">Open the Standing Waves sim in a new tab</a>.</p></div><p>With <strong>Medium</strong> on <strong>String</strong> and <strong>Ends</strong> on <strong>Fixed–Fixed</strong>, step the sim to the third harmonic (<em>n</em> = 3).</p><p>How many nodes appear <strong>between</strong> the two fixed ends?</p>]]></text>
   </questiontext>
   <generalfeedback format="html">
     <text><![CDATA[<p><strong>Two.</strong></p><p>The <em>n</em>th harmonic has <em>n</em> antinodes and <em>n</em> − 1 interior nodes, plus the two fixed ends. For <em>n</em> = 3 that is three bellies separated by two stationary points.</p><p>Counting nodes on screen is the fastest way to identify which mode you are looking at — no formula needed.</p>]]></text>
@@ -517,7 +518,7 @@
 <question type="multichoice">
   <name><text>Prep4-C · A heavier string</text></name>
   <questiontext format="html">
-    <text><![CDATA[<div style="width: 800px; max-width: 96vw; margin: 0 0 14px 0;"><iframe style="border: 1px solid #ccc; border-radius: 8px; display: block; width: 100%;" title="String harmonics sim" src="https://hoppese.github.io/Intro-physics-sims/string-harmonics/index.html" width="100%" height="570" allowfullscreen="allowfullscreen"></iframe><p style="font-size: 0.9em; color: #666; margin: 6px 0 0;">Sim not loading? <a href="https://hoppese.github.io/Intro-physics-sims/string-harmonics/index.html" target="_blank" rel="noopener">Open the String harmonics sim in a new tab</a>.</p></div><p>Swap to a heavier string — a larger linear density μ — at the same tension and length.</p><p>The fundamental frequency…</p>]]></text>
+    <text><![CDATA[<div style="width: 800px; max-width: 96vw; margin: 0 0 14px 0;"><iframe style="border: 1px solid #ccc; border-radius: 8px; display: block; width: 100%;" title="Standing Waves sim" src="https://hoppese.github.io/Intro-physics-sims/string-harmonics/index.html" width="100%" height="620" allowfullscreen="allowfullscreen"></iframe><p style="font-size: 0.9em; color: #666; margin: 6px 0 0;">Sim not loading? <a href="https://hoppese.github.io/Intro-physics-sims/string-harmonics/index.html" target="_blank" rel="noopener">Open the Standing Waves sim in a new tab</a>.</p></div><p>In <strong>String</strong> mode, swap to a heavier string — a larger linear density <strong>μ</strong> — at the same <strong>Tension</strong> and <strong>Length</strong>.</p><p>The fundamental frequency…</p>]]></text>
   </questiontext>
   <generalfeedback format="html">
     <text><![CDATA[<p><strong>Goes down.</strong></p><p>The wave speed is <em>v</em> = √(<em>T</em>/μ), so more mass per metre means a slower wave. The wavelength of the fundamental is fixed at 2<em>L</em> by the string's length, so <em>f</em><sub>1</sub> = <em>v</em>/2<em>L</em> must fall.</p><p>This is why the low strings on a guitar or piano are the thick ones: same length, same rough tension, more mass per metre, lower pitch.</p>]]></text>
@@ -554,7 +555,7 @@
 <question type="matching">
   <name><text>Prep4-D · Harmonics and wavelengths</text></name>
   <questiontext format="html">
-    <text><![CDATA[<div style="width: 800px; max-width: 96vw; margin: 0 0 14px 0;"><iframe style="border: 1px solid #ccc; border-radius: 8px; display: block; width: 100%;" title="String harmonics sim" src="https://hoppese.github.io/Intro-physics-sims/string-harmonics/index.html" width="100%" height="570" allowfullscreen="allowfullscreen"></iframe><p style="font-size: 0.9em; color: #666; margin: 6px 0 0;">Sim not loading? <a href="https://hoppese.github.io/Intro-physics-sims/string-harmonics/index.html" target="_blank" rel="noopener">Open the String harmonics sim in a new tab</a>.</p></div><p>Step through the modes in the sim and match each harmonic to its wavelength on a string of length <em>L</em> fixed at both ends.</p>]]></text>
+    <text><![CDATA[<div style="width: 800px; max-width: 96vw; margin: 0 0 14px 0;"><iframe style="border: 1px solid #ccc; border-radius: 8px; display: block; width: 100%;" title="Standing Waves sim" src="https://hoppese.github.io/Intro-physics-sims/string-harmonics/index.html" width="100%" height="620" allowfullscreen="allowfullscreen"></iframe><p style="font-size: 0.9em; color: #666; margin: 6px 0 0;">Sim not loading? <a href="https://hoppese.github.io/Intro-physics-sims/string-harmonics/index.html" target="_blank" rel="noopener">Open the Standing Waves sim in a new tab</a>.</p></div><p>In <strong>String</strong> mode with <strong>Fixed–Fixed</strong> ends, step through the modes and match each harmonic to its wavelength on a string of length <em>L</em>.</p>]]></text>
   </questiontext>
   <generalfeedback format="html">
     <text><![CDATA[<p>λ<sub><em>n</em></sub> = 2<em>L</em>/<em>n</em>: the <em>n</em>th harmonic fits exactly <em>n</em> half-wavelengths between the fixed ends.</p><ul><li><em>n</em> = 1: half a wave on the string, λ = 2<em>L</em>.</li><li><em>n</em> = 2: one full wave, λ = <em>L</em>.</li><li><em>n</em> = 3: one and a half waves, λ = 2<em>L</em>/3.</li><li><em>n</em> = 4: two full waves, λ = <em>L</em>/2.</li></ul><p>The wavelengths get shorter as 1/<em>n</em>, so the frequencies climb as <em>n</em> — the harmonic series.</p>]]></text>
@@ -573,6 +574,44 @@
   <subquestion format="html"><text><![CDATA[<p><em>n</em> = 4</p>]]></text><answer><text>L/2</text></answer></subquestion>
   <subquestion format="html"><text><![CDATA[]]></text><answer><text>L/4</text></answer></subquestion>
 </question>
+
+<question type="multichoice">
+  <name><text>Prep4-E · A flute and a clarinet</text></name>
+  <questiontext format="html">
+    <text><![CDATA[<div style="width: 800px; max-width: 96vw; margin: 0 0 14px 0;"><iframe style="border: 1px solid #ccc; border-radius: 8px; display: block; width: 100%;" title="Standing Waves sim" src="https://hoppese.github.io/Intro-physics-sims/string-harmonics/index.html" width="100%" height="620" allowfullscreen="allowfullscreen"></iframe><p style="font-size: 0.9em; color: #666; margin: 6px 0 0;">Sim not loading? <a href="https://hoppese.github.io/Intro-physics-sims/string-harmonics/index.html" target="_blank" rel="noopener">Open the Standing Waves sim in a new tab</a>.</p></div><p>Switch <strong>Medium</strong> to <strong>Pipe (sound)</strong>. Set <strong>Ends</strong> to <strong>2 open</strong> (a flute) and note the fundamental frequency. Now set <strong>Ends</strong> to <strong>1 open</strong> — one end closed, like a clarinet — keeping the length the same.</p><p>Compared with the open–open pipe, the closed pipe's fundamental frequency is…</p>]]></text>
+  </questiontext>
+  <generalfeedback format="html">
+    <text><![CDATA[<p><strong>Half as large</strong> (about an octave lower).</p><p>A pipe open at both ends has a displacement antinode at each end, so it holds half a wavelength: λ<sub>1</sub> = 2<em>L</em> and <em>f</em><sub>1</sub> = <em>v</em>/2<em>L</em>. Closing one end forces a <em>node</em> there while the open end stays an antinode, so the pipe now holds only a <em>quarter</em> wavelength: λ<sub>1</sub> = 4<em>L</em> and <em>f</em><sub>1</sub> = <em>v</em>/4<em>L</em> — half the open pipe's value.</p><p>That octave drop is why a clarinet plays lower than a flute of similar length. The closed pipe also drops all the even harmonics (only <em>n</em> = 1, 3, 5… survive), which is a big part of why a clarinet sounds "hollower" than a flute.</p>]]></text>
+  </generalfeedback>
+  <defaultgrade>1.0000000</defaultgrade>
+  <penalty>0.0000000</penalty>
+  <hidden>0</hidden>
+  <idnumber>prep-4-e</idnumber>
+  <single>true</single>
+  <shuffleanswers>true</shuffleanswers>
+  <answernumbering>abc</answernumbering>
+  <showstandardinstruction>0</showstandardinstruction>
+  <correctfeedback format="html"><text><![CDATA[<p>Correct.</p>]]></text></correctfeedback>
+  <partiallycorrectfeedback format="html"><text><![CDATA[<p>Not quite.</p>]]></text></partiallycorrectfeedback>
+  <incorrectfeedback format="html"><text><![CDATA[<p>Not quite — compare the two fundamental read-outs in the sim, and look at how much of a wave fits in the tube each way.</p>]]></text></incorrectfeedback>
+  <answer fraction="100" format="html">
+    <text><![CDATA[<p>half as large</p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>Correct — a closed pipe holds a quarter-wave instead of a half-wave, so λ doubles and <em>f</em> halves.</p>]]></text></feedback>
+  </answer>
+  <answer fraction="0" format="html">
+    <text><![CDATA[<p>twice as large</p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>Wrong direction. Closing an end makes the standing wave <em>longer</em> (a quarter-wave now spans the tube), and a longer wavelength means a lower frequency.</p>]]></text></feedback>
+  </answer>
+  <answer fraction="0" format="html">
+    <text><![CDATA[<p>the same</p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>The two fundamental read-outs differ. The boundary condition at the closed end changes which standing waves fit, so the fundamental wavelength — and pitch — changes too.</p>]]></text></feedback>
+  </answer>
+  <answer fraction="0" format="html">
+    <text><![CDATA[<p>a quarter as large</p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>Right direction, wrong factor. Compare the fundamental wavelengths: 2<em>L</em> for open–open versus 4<em>L</em> for open–closed — a factor of two, not four.</p>]]></text></feedback>
+  </answer>
+</question>
+
 
 
 <!-- ==================== PREP 5 ==================== -->
@@ -754,7 +793,7 @@
        Show the sim in the quiz "Description"/intro as an iframe so
        it renders above question 1. Each question also embeds its own
        copy of the sim; the wrapper is 800px wide (capped at 96vw) and
-       570px tall.
+       570px tall (620px for Prep 4, which has an extra control row).
 
      Sim URLs
        Prep 1  https://hoppese.github.io/Intro-physics-sims/energy-in-shm/index.html
