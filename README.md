@@ -55,7 +55,7 @@ serve step needed to run one — open the file, or serve the folder statically.
 | [Simple Pendulum](pendulum/) | For small swings the period depends only on length and g — not on mass or amplitude. |
 | [Wave Explorer](wave-explorer/) | The space picture of a traveling wave y = A sin(kx − ωt): amplitude, wavelength, wave number. |
 | [Interference Explorer — Two Traveling Waves](interference-explorer/) | Two waves superposing — crests reinforcing into bright bands, crests meeting troughs canceling. |
-| [Standing Waves — Strings & Pipes](string-harmonics/) | Reflections interfering into fixed nodes and antinodes. A stretched string (v = √(T/μ), fixed–fixed or fixed–free) or a column of air (open or closed pipe), with harmonics fₙ = n·v/2L (or n·v/4L, n odd). |
+| [Standing Waves — Strings & Pipes](standing-waves/) | Reflections interfering into fixed nodes and antinodes. A stretched string (v = √(T/μ), fixed–fixed or fixed–free) or a column of air (open or closed pipe), with harmonics fₙ = n·v/2L (or n·v/4L, n odd). |
 | [Two-Source Interference](two-source-interference/) | Two in-phase sources produce fringes: bright where the path difference is a whole wavelength (d·sinθ = mλ), dark at half-wavelengths. |
 
 ### Electrostatics

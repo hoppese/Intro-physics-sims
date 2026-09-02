@@ -42,7 +42,7 @@ Kickoff `KO n` and Class Prep `Prep n` line up with these course-map days:
 | 1 | Fri Aug 28 | Fri Aug 28 | SHM — energy & dynamics | 15.3–4 | energy-in-shm |
 | 2 | Mon Aug 31 | Mon Aug 31 | Vertical oscillations + pendulum | 15.5–6 | pendulum |
 | 3 | Wed Sep 2 | Wed Sep 2 | Traveling / standing / superposition | 16.1–3 | wave-explorer |
-| 4 | Fri Sep 4 | Fri Sep 4 | Waves on strings + music | 17.1–2 | string-harmonics |
+| 4 | Fri Sep 4 | Fri Sep 4 | Waves on strings + music | 17.1–2 | standing-waves |
 | — / 5 | — | Mon Sep 7 | Interference | 17.3–5 | two-source-interference |
 
 (Kickoffs start at KO 0 on the first day; Class Preps start at Prep 1 and are due
