@@ -31,40 +31,40 @@
 </question>
 
 <question type="numerical">
-  <name><text>KO5-A · Bright-fringe spacing</text></name>
+  <name><text>KO5-A · Fringe spacing</text></name>
   <questiontext format="html">
-    <text><![CDATA[<p>Two loudspeakers driven in phase sit 4.0 cm apart and emit sound of wavelength 1.2 cm toward a wall 60 cm away.</p><p>What is the spacing between adjacent <strong>bright</strong> fringes along the wall, in <strong>cm</strong>? (Enter a number only.)</p>]]></text>
+    <text><![CDATA[<p>Two sources emit waves <strong>in phase</strong>. They sit 8.0 cm apart, their wavelength is 4.0 cm, and a screen stands 60 cm away &mdash; the setup in the <strong>Two-source interference</strong> sim.</p><p>What is the spacing between adjacent <strong>interference maxima</strong> on the screen, in <strong>cm</strong>? (Enter a number only.)</p>]]></text>
   </questiontext>
   <generalfeedback format="html">
-    <text><![CDATA[<p>&Delta;<em>y</em> = <em>&lambda;L</em>/<em>d</em> = (1.2 cm)(60 cm)/(4.0 cm) = <strong>18 cm</strong>.</p><p>The fringe spacing grows with the wavelength and with the distance to the wall, and shrinks as the sources are moved apart. Units check: cm &times; cm &divide; cm = cm, a length, as it must be.</p>]]></text>
+    <text><![CDATA[<p>&Delta;<em>y</em> = <em>&lambda;L</em>/<em>d</em> = (4.0 cm)(60 cm)/(8.0 cm) = <strong>30 cm</strong>.</p><p>The spacing grows with the wavelength and with the distance to the screen, and shrinks as the sources are moved apart. Units check: cm &times; cm &divide; cm = cm, a length, as it must be. (Set these values in the sim and read &Delta;<em>y</em> straight off the panel.)</p>]]></text>
   </generalfeedback>
   <defaultgrade>1.0000000</defaultgrade>
   <penalty>0.0000000</penalty>
   <hidden>0</hidden>
   <idnumber>ko-5-a</idnumber>
   <answer fraction="100" format="moodle_auto_format">
-    <text>18</text>
+    <text>30</text>
     <feedback format="html"><text><![CDATA[<p>Correct.</p>]]></text></feedback>
     <tolerance>0.5</tolerance>
   </answer>
   <answer fraction="0" format="moodle_auto_format">
-    <text>200</text>
-    <feedback format="html"><text><![CDATA[<p>You put the source spacing <em>d</em> in the numerator. In &Delta;<em>y</em> = <em>&lambda;L</em>/<em>d</em>, moving the sources <em>farther</em> apart should pack the fringes <em>closer</em> together &mdash; so <em>d</em> belongs underneath.</p>]]></text></feedback>
+    <text>120</text>
+    <feedback format="html"><text><![CDATA[<p>You put the source spacing <em>d</em> in the numerator. In &Delta;<em>y</em> = <em>&lambda;L</em>/<em>d</em>, moving the sources <em>farther</em> apart should pack the maxima <em>closer</em> together &mdash; so <em>d</em> belongs underneath.</p>]]></text></feedback>
     <tolerance>1</tolerance>
   </answer>
   <answer fraction="0" format="moodle_auto_format">
-    <text>0.08</text>
-    <feedback format="html"><text><![CDATA[<p>You swapped the roles of <em>L</em> and <em>d</em>. Which of the two is the distance to the wall, and where does it sit in &Delta;<em>y</em> = <em>&lambda;L</em>/<em>d</em>?</p>]]></text></feedback>
-    <tolerance>0.005</tolerance>
+    <text>0.53</text>
+    <feedback format="html"><text><![CDATA[<p>You swapped the roles of <em>L</em> and <em>d</em>. Which one is the distance to the screen, and where does it sit in &Delta;<em>y</em> = <em>&lambda;L</em>/<em>d</em>?</p>]]></text></feedback>
+    <tolerance>0.05</tolerance>
   </answer>
   <answer fraction="0" format="moodle_auto_format">
-    <text>15</text>
-    <feedback format="html"><text><![CDATA[<p>You divided the distance to the wall by the source spacing but left the wavelength out. &Delta;<em>y</em> scales with <em>&lambda;</em> as well &mdash; a longer wavelength spreads the fringes.</p>]]></text></feedback>
+    <text>7.5</text>
+    <feedback format="html"><text><![CDATA[<p>You divided the distance to the screen by the source spacing but left the wavelength out. &Delta;<em>y</em> scales with <em>&lambda;</em> as well &mdash; a longer wavelength spreads the maxima.</p>]]></text></feedback>
     <tolerance>0.3</tolerance>
   </answer>
   <answer fraction="0" format="moodle_auto_format">
     <text>*</text>
-    <feedback format="html"><text><![CDATA[<p>Use &Delta;<em>y</em> = <em>&lambda;L</em>/<em>d</em>: wavelength times the distance to the wall, divided by the separation of the sources. Keep every length in centimetres and the answer comes out in centimetres.</p>]]></text></feedback>
+    <feedback format="html"><text><![CDATA[<p>Use &Delta;<em>y</em> = <em>&lambda;L</em>/<em>d</em>: wavelength times the distance to the screen, divided by the separation of the sources. Keep every length in centimetres and the answer comes out in centimetres.</p>]]></text></feedback>
     <tolerance>0</tolerance>
   </answer>
   <unitgradingtype>0</unitgradingtype>
@@ -74,12 +74,12 @@
 </question>
 
 <question type="multichoice">
-  <name><text>KO5-B · Bright or dark at a point</text></name>
+  <name><text>KO5-B · Constructive or destructive at a point</text></name>
   <questiontext format="html">
     <text><![CDATA[<p>Two sources emit waves <strong>in phase</strong>. A point Q is 6.0 m from one source and 7.0 m from the other. The wavelength is 0.40 m.</p><p>Is Q a point of constructive or destructive interference?</p>]]></text>
   </questiontext>
   <generalfeedback format="html">
-    <text><![CDATA[<p><strong>Destructive &mdash; Q is dark.</strong></p><p>The path difference is &Delta;<em>r</em> = 7.0 m &minus; 6.0 m = 1.0 m. In wavelengths that is 1.0 m &divide; 0.40 m = <strong>2.5</strong> &mdash; a half-integer. Written as (<em>m</em> + &frac12;)<em>&lambda;</em> with <em>m</em> = 2, so the second wave arrives exactly half a cycle behind: crest meets trough and they cancel.</p><p>Only the leftover fraction of a wavelength matters: 0.5&lambda;, 1.5&lambda; and 2.5&lambda; all give complete cancellation; whole numbers of wavelengths give a maximum.</p>]]></text>
+    <text><![CDATA[<p><strong>Destructive &mdash; the waves cancel at Q.</strong></p><p>The path difference is &Delta;<em>r</em> = 7.0 m &minus; 6.0 m = 1.0 m. In wavelengths that is 1.0 m &divide; 0.40 m = <strong>2.5</strong> &mdash; a half-integer. Written as (<em>m</em> + &frac12;)<em>&lambda;</em> with <em>m</em> = 2, so the second wave arrives exactly half a cycle behind: crest meets trough and they cancel.</p><p>Only the leftover fraction of a wavelength matters: 0.5&lambda;, 1.5&lambda; and 2.5&lambda; all give complete cancellation; whole numbers of wavelengths give a maximum.</p>]]></text>
   </generalfeedback>
   <defaultgrade>1.0000000</defaultgrade>
   <penalty>0.0000000</penalty>
@@ -92,20 +92,20 @@
   <partiallycorrectfeedback format="html"><text><![CDATA[<p>Partially correct.</p>]]></text></partiallycorrectfeedback>
   <incorrectfeedback format="html"><text><![CDATA[<p>Find the path difference, divide by the wavelength, and look at the leftover fraction: a whole number is a maximum, a half is a cancellation.</p>]]></text></incorrectfeedback>
   <answer fraction="100" format="html">
-    <text><![CDATA[<p>Destructive &mdash; the waves arrive exactly out of step, so Q is dark</p>]]></text>
+    <text><![CDATA[<p>Destructive &mdash; the two waves arrive exactly out of step and cancel</p>]]></text>
     <feedback format="html"><text><![CDATA[<p>Correct &mdash; the path difference is 2.5 wavelengths, a half-integer.</p>]]></text></feedback>
   </answer>
   <answer fraction="0" format="html">
-    <text><![CDATA[<p>Constructive &mdash; the path difference is a whole number of wavelengths, so Q is bright</p>]]></text>
+    <text><![CDATA[<p>Constructive &mdash; the path difference is a whole number of wavelengths</p>]]></text>
     <feedback format="html"><text><![CDATA[<p>Work out the path difference in metres, then divide by 0.40 m. Is the result a whole number, or does it land halfway between two whole numbers?</p>]]></text></feedback>
   </answer>
   <answer fraction="0" format="html">
-    <text><![CDATA[<p>Neither &mdash; it falls halfway between a bright point and a dark point</p>]]></text>
+    <text><![CDATA[<p>Neither &mdash; it falls halfway between a maximum and a complete cancellation</p>]]></text>
     <feedback format="html"><text><![CDATA[<p>A path difference of exactly 2.5 wavelengths is not an in-between case: it is one of the two extremes. Which one happens when the waves are a half-cycle apart?</p>]]></text></feedback>
   </answer>
   <answer fraction="0" format="html">
-    <text><![CDATA[<p>Cannot tell without knowing how far Q is from a screen</p>]]></text>
-    <feedback format="html"><text><![CDATA[<p>Whether a given point is bright or dark depends only on the two path lengths to it and the wavelength &mdash; not on any screen. You already have all three numbers.</p>]]></text></feedback>
+    <text><![CDATA[<p>Cannot tell without knowing the distance from Q to the sources' midline</p>]]></text>
+    <feedback format="html"><text><![CDATA[<p>Constructive vs destructive at a point depends only on the two path lengths to it and the wavelength &mdash; and you already have all three numbers.</p>]]></text></feedback>
   </answer>
 </question>
 
