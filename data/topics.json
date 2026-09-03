@@ -1,0 +1,256 @@
+{
+  "_comment": [
+    "Source of truth for topic -> {readings, pre-class videos, sims}.",
+    "Consumed by tools/apply-learn-more.py (regenerates each sim's Info-overlay",
+    "'Learn more' block) and, from the course repo, by the course-map generator.",
+    "",
+    "video status: 'ok' = vetted, 'cav' = usable with caveats, 'unv' = candidate,",
+    "not yet reviewed. The sims show every listed video with no badge; the course",
+    "map badges by status. Promote to 'ok' once vetted."
+  ],
+
+  "topics": {
+    "shm-intro": {
+      "title": "SHM — Introduction",
+      "knight": "15.1–15.2",
+      "videos": [{ "id": "kLWXLbciobw", "status": "ok" }],
+      "sims": ["oscillation-explorer"]
+    },
+    "shm-energy": {
+      "title": "SHM — Energy & Dynamics",
+      "knight": "15.3–15.4",
+      "videos": [{ "id": "Hs_GeBx15Ws", "status": "cav" }],
+      "sims": ["energy-in-shm"]
+    },
+    "vertical-oscillations-pendulum": {
+      "title": "Vertical Oscillations & the Pendulum",
+      "knight": "15.5–15.6",
+      "videos": [
+        { "id": "RspnXkl18ck", "status": "cav" },
+        { "id": "WPa5IgLgDyQ", "status": "cav" }
+      ],
+      "sims": ["pendulum"]
+    },
+    "traveling-waves": {
+      "title": "Traveling, Standing & Superposition",
+      "knight": "16.1–16.3",
+      "videos": [{ "id": "9WZM68aVnGk", "status": "ok" }],
+      "sims": ["wave-explorer"]
+    },
+    "waves-on-strings": {
+      "title": "Waves on Strings & Music",
+      "knight": "17.1–17.2",
+      "videos": [{ "id": "XDsk6tZX55g", "status": "ok" }],
+      "sims": ["standing-waves"]
+    },
+    "interference": {
+      "title": "Interference",
+      "knight": "17.3–17.5",
+      "videos": [
+        { "id": "oTjTXS40pqs", "status": "ok" },
+        { "id": "DII-tbLRdGA", "status": "ok" }
+      ],
+      "sims": ["two-source-interference", "interference-explorer"]
+    },
+    "charge-conductors-insulators": {
+      "title": "Charges, Insulators & Conductors",
+      "knight": "22.1–22.3",
+      "videos": [{ "id": "TFlVWf8JX4A", "status": "unv" }],
+      "sims": ["electroscope", "e-fields-conductors-and-insulators"]
+    },
+    "coulomb-field": {
+      "title": "Coulomb's Law & the Electric Field",
+      "knight": "22.4–22.5",
+      "videos": [{ "id": "4ubqby1Id4g", "status": "unv" }],
+      "sims": ["electrostatics-explorer", "moving-charge-field"]
+    },
+    "field-superposition": {
+      "title": "Electric Field Superposition",
+      "knight": "23.1–23.3",
+      "videos": [{ "id": "S5yICTzMD6Y", "status": "unv" }],
+      "sims": ["field-superposition-explorer"]
+    },
+    "charge-distributions": {
+      "title": "Continuous Charge Distributions",
+      "knight": "23.4–23.6",
+      "videos": [{ "id": "bt46cqO1epw", "status": "unv" }],
+      "sims": ["discrete-charge-builder-3d", "field-line-density-3d"]
+    },
+    "gauss-law": {
+      "title": "Gauss's Law",
+      "knight": "24.1–24.3",
+      "videos": [],
+      "sims": ["gauss-flux"]
+    },
+    "electric-pe": {
+      "title": "Electric Potential Energy",
+      "knight": "25.1–25.3",
+      "videos": [{ "id": "m_Rq_Pzt9fo", "status": "unv" }],
+      "sims": ["pe-vs-separation"]
+    },
+    "electric-potential": {
+      "title": "Electric Potential",
+      "knight": "25.4–25.7",
+      "videos": [{ "id": "j3GrOKre__0", "status": "unv" }],
+      "sims": ["equipotential-explorer"]
+    }
+  },
+
+  "openstax_base": {
+    "up": "https://openstax.org/books/university-physics-volume-",
+    "cp": "https://openstax.org/books/college-physics-2e/pages/"
+  },
+
+  "sim_readings": {
+    "oscillation-explorer": {
+      "up": [
+        ["Vol 1 · 15.1 Simple Harmonic Motion", "1/pages/15-1-simple-harmonic-motion"],
+        ["Vol 1 · 15.3 SHM & Circular Motion", "1/pages/15-3-comparing-simple-harmonic-motion-and-circular-motion"]
+      ],
+      "cp": [
+        ["Ch 16.3 Simple Harmonic Motion", "16-3-simple-harmonic-motion-a-special-periodic-motion"],
+        ["Ch 16.6 Circular Motion & SHM", "16-6-uniform-circular-motion-and-simple-harmonic-motion"]
+      ]
+    },
+    "energy-in-shm": {
+      "up": [["Vol 1 · 15.2 Energy in Simple Harmonic Motion", "1/pages/15-2-energy-in-simple-harmonic-motion"]],
+      "cp": [["Ch 16.5 Energy & the Simple Harmonic Oscillator", "16-5-energy-and-the-simple-harmonic-oscillator"]]
+    },
+    "pendulum": {
+      "up": [["Vol 1 · 15.4 Pendulums", "1/pages/15-4-pendulums"]],
+      "cp": [["Ch 16.4 The Simple Pendulum", "16-4-the-simple-pendulum"]]
+    },
+    "wave-explorer": {
+      "up": [
+        ["Vol 1 · 16.1 Traveling Waves", "1/pages/16-1-traveling-waves"],
+        ["Vol 1 · 16.2 Mathematics of Waves", "1/pages/16-2-mathematics-of-waves"]
+      ],
+      "cp": [
+        ["Ch 16.9 Waves", "16-9-waves"],
+        ["Ch 16.10 Superposition & Interference", "16-10-superposition-and-interference"]
+      ]
+    },
+    "standing-waves": {
+      "up": [
+        ["Vol 1 · 16.3 Wave Speed on a Stretched String", "1/pages/16-3-wave-speed-on-a-stretched-string"],
+        ["Vol 1 · 16.6 Standing Waves and Resonance", "1/pages/16-6-standing-waves-and-resonance"],
+        ["Vol 1 · 17.5 Sources of Musical Sound", "1/pages/17-5-sources-of-musical-sound"]
+      ],
+      "cp": [
+        ["Ch 16.10 Superposition & Interference", "16-10-superposition-and-interference"],
+        ["Ch 17.5 Standing Waves in Air Columns", "17-5-sound-interference-and-resonance-standing-waves-in-air-columns"]
+      ]
+    },
+    "interference-explorer": {
+      "up": [
+        ["Vol 1 · 16.5 Interference of Waves", "1/pages/16-5-interference-of-waves"],
+        ["Vol 1 · 16.6 Standing Waves and Resonance", "1/pages/16-6-standing-waves-and-resonance"]
+      ],
+      "cp": [["Ch 16.10 Superposition & Interference", "16-10-superposition-and-interference"]]
+    },
+    "two-source-interference": {
+      "up": [
+        ["Vol 1 · 16.5 Interference of Waves", "1/pages/16-5-interference-of-waves"],
+        ["Vol 3 · 3.1 Young's Double-Slit Interference", "3/pages/3-1-youngs-double-slit-interference"]
+      ],
+      "cp": [
+        ["Ch 16.10 Superposition & Interference", "16-10-superposition-and-interference"],
+        ["Ch 27.3 Young's Double-Slit Experiment", "27-3-youngs-double-slit-experiment"]
+      ]
+    },
+    "electroscope": {
+      "up": [
+        ["Vol 2 · 5.1 Electric Charge", "2/pages/5-1-electric-charge"],
+        ["Vol 2 · 5.2 Conductors, Insulators, Charging by Induction", "2/pages/5-2-conductors-insulators-and-charging-by-induction"]
+      ],
+      "cp": [
+        ["Ch 18.1 Static Electricity & Charge", "18-1-static-electricity-and-charge-conservation-of-charge"],
+        ["Ch 18.2 Conductors and Insulators", "18-2-conductors-and-insulators"]
+      ]
+    },
+    "e-fields-conductors-and-insulators": {
+      "up": [
+        ["Vol 2 · 5.2 Conductors, Insulators, Charging by Induction", "2/pages/5-2-conductors-insulators-and-charging-by-induction"],
+        ["Vol 2 · 6.4 Conductors in Electrostatic Equilibrium", "2/pages/6-4-conductors-in-electrostatic-equilibrium"]
+      ],
+      "cp": [
+        ["Ch 18.2 Conductors and Insulators", "18-2-conductors-and-insulators"],
+        ["Ch 18.7 Conductors & Fields in Equilibrium", "18-7-conductors-and-electric-fields-in-static-equilibrium"]
+      ]
+    },
+    "electrostatics-explorer": {
+      "up": [
+        ["Vol 2 · 5.3 Coulomb's Law", "2/pages/5-3-coulombs-law"],
+        ["Vol 2 · 5.4 Electric Field", "2/pages/5-4-electric-field"]
+      ],
+      "cp": [
+        ["Ch 18.3 Coulomb's Law", "18-3-coulombs-law"],
+        ["Ch 18.4 Electric Field", "18-4-electric-field-concept-of-a-field-revisited"]
+      ]
+    },
+    "moving-charge-field": {
+      "up": [
+        ["Vol 2 · 5.4 Electric Field", "2/pages/5-4-electric-field"],
+        ["Vol 2 · 5.6 Electric Field Lines", "2/pages/5-6-electric-field-lines"]
+      ],
+      "cp": [
+        ["Ch 18.4 Electric Field", "18-4-electric-field-concept-of-a-field-revisited"],
+        ["Ch 18.5 Electric Field Lines", "18-5-electric-field-lines-multiple-charges"]
+      ]
+    },
+    "field-superposition-explorer": {
+      "up": [
+        ["Vol 2 · 5.4 Electric Field", "2/pages/5-4-electric-field"],
+        ["Vol 2 · 5.5 Fields of Charge Distributions", "2/pages/5-5-calculating-electric-fields-of-charge-distributions"]
+      ],
+      "cp": [
+        ["Ch 18.4 Electric Field", "18-4-electric-field-concept-of-a-field-revisited"],
+        ["Ch 18.5 Electric Field Lines: Multiple Charges", "18-5-electric-field-lines-multiple-charges"]
+      ]
+    },
+    "discrete-charge-builder-3d": {
+      "up": [
+        ["Vol 2 · 5.5 Fields of Charge Distributions", "2/pages/5-5-calculating-electric-fields-of-charge-distributions"],
+        ["Vol 2 · 5.6 Electric Field Lines", "2/pages/5-6-electric-field-lines"]
+      ],
+      "cp": [["Ch 18.5 Electric Field Lines: Multiple Charges", "18-5-electric-field-lines-multiple-charges"]]
+    },
+    "field-line-density-3d": {
+      "up": [
+        ["Vol 2 · 5.6 Electric Field Lines", "2/pages/5-6-electric-field-lines"],
+        ["Vol 2 · 6.1 Electric Flux", "2/pages/6-1-electric-flux"]
+      ],
+      "cp": [
+        ["Ch 18.5 Electric Field Lines: Multiple Charges", "18-5-electric-field-lines-multiple-charges"],
+        ["Ch 18.7 Conductors & Fields in Equilibrium", "18-7-conductors-and-electric-fields-in-static-equilibrium"]
+      ]
+    },
+    "gauss-flux": {
+      "up": [
+        ["Vol 2 · 6.1 Electric Flux", "2/pages/6-1-electric-flux"],
+        ["Vol 2 · 6.2 Explaining Gauss's Law", "2/pages/6-2-explaining-gausss-law"],
+        ["Vol 2 · 6.3 Applying Gauss's Law", "2/pages/6-3-applying-gausss-law"]
+      ],
+      "cp": [
+        ["Ch 18.5 Electric Field Lines: Multiple Charges", "18-5-electric-field-lines-multiple-charges"],
+        ["Ch 18.7 Conductors & Fields in Equilibrium", "18-7-conductors-and-electric-fields-in-static-equilibrium"]
+      ],
+      "cp_note": "College Physics has no separate Gauss's-law section."
+    },
+    "pe-vs-separation": {
+      "up": [["Vol 2 · 7.1 Electric Potential Energy", "2/pages/7-1-electric-potential-energy"]],
+      "cp": [["Ch 19.1 Electric Potential Energy: Potential Difference", "19-1-electric-potential-energy-potential-difference"]]
+    },
+    "equipotential-explorer": {
+      "up": [
+        ["Vol 2 · 7.2 Electric Potential and Potential Difference", "2/pages/7-2-electric-potential-and-potential-difference"],
+        ["Vol 2 · 7.4 Determining Field from Potential", "2/pages/7-4-determining-field-from-potential"],
+        ["Vol 2 · 7.5 Equipotential Surfaces and Conductors", "2/pages/7-5-equipotential-surfaces-and-conductors"]
+      ],
+      "cp": [
+        ["Ch 19.2 Potential in a Uniform Field", "19-2-electric-potential-in-a-uniform-electric-field"],
+        ["Ch 19.4 Equipotential Lines", "19-4-equipotential-lines"]
+      ]
+    }
+  }
+}
