@@ -43,14 +43,14 @@ Kickoff `KO n` and Class Prep `Prep n` line up with these course-map days:
 | 2 | Mon Aug 31 | Mon Aug 31 | Vertical oscillations + pendulum | 15.5–6 | pendulum |
 | 3 | Wed Sep 2 | Wed Sep 2 | Traveling / standing / superposition | 16.1–3 | wave-explorer |
 | 4 | Fri Sep 4 | Fri Sep 4 | Waves on strings + music | 17.1–2 | standing-waves |
-| — / 5 | — | Mon Sep 7 | Interference | 17.3–5 | two-source-interference |
+| 5 | Mon Sep 7 | Mon Sep 7 | Interference | 17.3–5 | two-source-interference |
 
 (Kickoffs start at KO 0 on the first day; Class Preps start at Prep 1 and are due
 *at* the class they prepare for. So on a given day, `KO n` and `Prep n` cover the
-same material — except the endpoints: there is no Prep for day 0, and Prep 5 runs
-one class ahead of KO 4.)
+same material — except day 0, which has a kickoff but no prep.)
 
-Add future files alongside these as `ko5-ko9.xml`, `prep6-10.xml`, etc.
+`kickoffs/ko5.xml` is its own file (KO 0–4 were already imported); import it the
+same way. Add further files alongside these as `ko6-ko9.xml`, `prep6-10.xml`, etc.
 
 ## Importing into Moodle
 
