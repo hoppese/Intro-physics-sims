@@ -101,6 +101,26 @@
     "cp": "https://openstax.org/books/college-physics-2e/pages/"
   },
 
+  "sim_titles": {
+    "oscillation-explorer": "Oscillation Explorer",
+    "energy-in-shm": "Energy in SHM — Mass on a Spring",
+    "pendulum": "Simple Pendulum",
+    "wave-explorer": "Wave Explorer",
+    "standing-waves": "Standing Waves — Strings & Pipes",
+    "interference-explorer": "Interference Explorer",
+    "two-source-interference": "Two-Source Interference",
+    "electroscope": "Electroscope & Charged Rod",
+    "e-fields-conductors-and-insulators": "E-Fields in Conductors & Insulators",
+    "electrostatics-explorer": "Electrostatics Explorer",
+    "moving-charge-field": "B of a Moving Charge",
+    "field-superposition-explorer": "Field Superposition Explorer",
+    "discrete-charge-builder-3d": "Building a Distribution from Point Charges",
+    "field-line-density-3d": "Counting Field Lines — Density Is Field Strength",
+    "gauss-flux": "Gauss’s Law — Flux Through a Closed Surface",
+    "pe-vs-separation": "Potential Energy vs Separation",
+    "equipotential-explorer": "Equipotential Explorer"
+  },
+
   "sim_readings": {
     "oscillation-explorer": {
       "up": [
