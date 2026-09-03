@@ -19,13 +19,17 @@ compute** on the other, a collapsible **Worked example**, and short **What this 
 | `Web App Catalog.dc.html` | Source for the catalog: a filterable grid of every sim, grouped by course unit, with build-status pills saved to the browser |
 | `<sim-name>/index.html` | One bundled, deployable sim per directory (see the list below) |
 | `support.js` | Shared `dc-runtime` — a small React-based template runtime (`<x-dc>`, `{{ }}` bindings, `<sc-for>` / `<sc-if>`) used by the `.dc.html` sources |
-| `data/topics.json` | Source of truth for topic → reading / pre-class video / sims; drives each sim's "Learn more" panel |
-| `tools/apply-learn-more.py` | Regenerates the "Learn more" panels from `data/topics.json` |
+| `course-map/course-map-fall-26.html` | Day-by-day schedule — reading, pre-class video, sim per class (embedded in Moodle) |
+| `assessments/equation-sheets/` | LaTeX + rendered-PDF reference sheets handed to students |
+| `assessments/in-class-practice/` | Practice problem sets (PDF) |
+| `data/topics.json` | Source of truth for topic → reading / pre-class video / sims |
+| `tools/apply-learn-more.py` | Regenerates each sim's "Learn more" panel from `data/topics.json` |
+| `tools/build-course-map.py` | Syncs the course map's per-topic video + sim name from `data/topics.json` |
 | `bug-worker/` | Cloudflare Worker behind the "Submit bug" menu item — commits reports to `<sim>/bugs/` |
 | `screenshots/` | Reference / QA screenshots of the sims |
 
-Course-specific materials (schedule, Moodle question banks, equation sheets) live
-in a separate repo,
+This repo holds everything students see. The Moodle question banks (with answer
+keys), the local-Moodle tooling, and the roadmap live in a **private** repo,
 [`intro-physics-ii`](https://github.com/hoppese/intro-physics-ii).
 
 The `<sim>/index.html` files are self-contained bundles (~1.4 MB each): the page unpacks an
