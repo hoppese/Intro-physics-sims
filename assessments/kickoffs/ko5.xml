@@ -31,40 +31,40 @@
 </question>
 
 <question type="numerical">
-  <name><text>KO5-A · Fringe spacing</text></name>
+  <name><text>KO5-A · How many maxima</text></name>
   <questiontext format="html">
-    <text><![CDATA[<p>Two sources emit waves <strong>in phase</strong>. They sit 8.0 cm apart, their wavelength is 4.0 cm, and a screen stands 60 cm away &mdash; the setup in the <strong>Two-source interference</strong> sim.</p><p>What is the spacing between adjacent <strong>interference maxima</strong> on the screen, in <strong>cm</strong>? (Enter a number only.)</p>]]></text>
+    <text><![CDATA[<p>Two sources emit waves <strong>in phase</strong>. They are 10 cm apart and their wavelength is 4.0 cm &mdash; a setup you can build in the <strong>Two-source interference</strong> sim.</p><p>How many <strong>interference maxima</strong> does the full pattern contain (both sides, plus the one straight ahead)? (Enter a whole number.)</p>]]></text>
   </questiontext>
   <generalfeedback format="html">
-    <text><![CDATA[<p>&Delta;<em>y</em> = <em>&lambda;L</em>/<em>d</em> = (4.0 cm)(60 cm)/(8.0 cm) = <strong>30 cm</strong>.</p><p>The spacing grows with the wavelength and with the distance to the screen, and shrinks as the sources are moved apart. Units check: cm &times; cm &divide; cm = cm, a length, as it must be. (Set these values in the sim and read &Delta;<em>y</em> straight off the panel.)</p>]]></text>
+    <text><![CDATA[<p><strong>5.</strong></p><p>Maxima occur where the path difference is a whole number of wavelengths, &Delta;<em>r</em> = <em>m&lambda;</em>. But &Delta;<em>r</em> can never exceed the source separation <em>d</em> &mdash; that is the most extra distance one path can have. So <em>m</em> is limited to |<em>m</em>| &le; <em>d</em>/&lambda; = 10/4.0 = 2.5, giving <em>m</em> = 0, &plusmn;1, &plusmn;2 &mdash; <strong>five</strong> maxima in all.</p><p>This is why a real two-source pattern is <em>not</em> an endless row of evenly spaced fringes: the number of orders is capped by <em>d</em>/&lambda;, and the ones near the edge (large angle) are spread much wider than the ones near the centre.</p>]]></text>
   </generalfeedback>
   <defaultgrade>1.0000000</defaultgrade>
   <penalty>0.0000000</penalty>
   <hidden>0</hidden>
   <idnumber>ko-5-a</idnumber>
   <answer fraction="100" format="moodle_auto_format">
-    <text>30</text>
+    <text>5</text>
     <feedback format="html"><text><![CDATA[<p>Correct.</p>]]></text></feedback>
-    <tolerance>0.5</tolerance>
+    <tolerance>0</tolerance>
   </answer>
   <answer fraction="0" format="moodle_auto_format">
-    <text>120</text>
-    <feedback format="html"><text><![CDATA[<p>You put the source spacing <em>d</em> in the numerator. In &Delta;<em>y</em> = <em>&lambda;L</em>/<em>d</em>, moving the sources <em>farther</em> apart should pack the maxima <em>closer</em> together &mdash; so <em>d</em> belongs underneath.</p>]]></text></feedback>
-    <tolerance>1</tolerance>
+    <text>2</text>
+    <feedback format="html"><text><![CDATA[<p>That is the highest <em>order</em>, <em>m</em> = 2 (since <em>d</em>/&lambda; = 2.5). The question asks how many maxima there are &mdash; don't forget <em>m</em> = 0 and the matching &minus;1, &minus;2 on the other side.</p>]]></text></feedback>
+    <tolerance>0</tolerance>
   </answer>
   <answer fraction="0" format="moodle_auto_format">
-    <text>0.53</text>
-    <feedback format="html"><text><![CDATA[<p>You swapped the roles of <em>L</em> and <em>d</em>. Which one is the distance to the screen, and where does it sit in &Delta;<em>y</em> = <em>&lambda;L</em>/<em>d</em>?</p>]]></text></feedback>
-    <tolerance>0.05</tolerance>
+    <text>3</text>
+    <feedback format="html"><text><![CDATA[<p>You counted <em>m</em> = 0, 1, 2 &mdash; one side of the pattern. It is symmetric about the centre line, so there is an <em>m</em> = &minus;1 and <em>m</em> = &minus;2 as well.</p>]]></text></feedback>
+    <tolerance>0</tolerance>
   </answer>
   <answer fraction="0" format="moodle_auto_format">
-    <text>7.5</text>
-    <feedback format="html"><text><![CDATA[<p>You divided the distance to the screen by the source spacing but left the wavelength out. &Delta;<em>y</em> scales with <em>&lambda;</em> as well &mdash; a longer wavelength spreads the maxima.</p>]]></text></feedback>
-    <tolerance>0.3</tolerance>
+    <text>6</text>
+    <feedback format="html"><text><![CDATA[<p>Close &mdash; but <em>d</em>/&lambda; = 2.5 is not itself an allowed order. <em>m</em> must be a whole number, so the largest is <em>m</em> = 2, and there is still the central <em>m</em> = 0.</p>]]></text></feedback>
+    <tolerance>0</tolerance>
   </answer>
   <answer fraction="0" format="moodle_auto_format">
     <text>*</text>
-    <feedback format="html"><text><![CDATA[<p>Use &Delta;<em>y</em> = <em>&lambda;L</em>/<em>d</em>: wavelength times the distance to the screen, divided by the separation of the sources. Keep every length in centimetres and the answer comes out in centimetres.</p>]]></text></feedback>
+    <feedback format="html"><text><![CDATA[<p>Maxima are at &Delta;<em>r</em> = <em>m&lambda;</em>, and &Delta;<em>r</em> cannot exceed the source separation <em>d</em>. Find the largest whole-number <em>m</em> with <em>m&lambda;</em> &le; <em>d</em>, then count <em>m</em> = 0 and both signs.</p>]]></text></feedback>
     <tolerance>0</tolerance>
   </answer>
   <unitgradingtype>0</unitgradingtype>
