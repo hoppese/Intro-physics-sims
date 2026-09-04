@@ -1,0 +1,138 @@
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=0.8in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+
+\definecolor{accent}{HTML}{0F6CBF}
+\definecolor{band}{HTML}{6B5BD0}
+
+\titleformat{\section}{\normalfont\large\bfseries\color{accent}}{\thesection.}{0.5em}{}
+\titlespacing*{\section}{0pt}{0.4em}{0.2em}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[C]{\footnotesize\color{gray} Intro Physics II \textbullet\ Optics \textbullet\ page \thepage\ of \pageref{LastPage}}
+
+\setlength{\parindent}{0pt}
+\raggedbottom
+\setlength{\extrarowheight}{2pt}
+\renewcommand{\arraystretch}{1.05}
+\setlength{\aboverulesep}{1pt}\setlength{\belowrulesep}{1pt}
+
+% two-column equation table: left = description, right = formula
+\newcolumntype{L}{>{\raggedright\arraybackslash}p{0.40\linewidth}}
+\newcolumntype{F}{>{\raggedright\arraybackslash}p{0.555\linewidth}}
+\newcommand{\eqtab}[1]{%
+  \par\vspace{0.15em}
+  \noindent
+  \begin{tabular}{@{}L F@{}}
+  \toprule
+  #1
+  \bottomrule
+  \end{tabular}
+  \par\vspace{0.1em}}
+\newcommand{\R}[2]{#1 & $\displaystyle #2$ \\}
+% sub-band label spanning both columns
+\newcommand{\band}[1]{%
+  \addlinespace[1.5pt]%
+  \multicolumn{2}{@{}l@{}}{\rule{0pt}{1.0em}\footnotesize\bfseries\color{band}\textsc{#1}}\\[2pt]}
+
+\begin{document}
+
+\begin{center}
+  {\LARGE\bfseries Equation Sheet: Optics}\\[2pt]
+  {\large Intro Physics II \quad\textbullet\quad Lectures 28--33 \quad\textbullet\quad Knight ch.\ 33--34}
+\end{center}
+\vspace{0.25em}
+
+\hrule
+\vspace{0.4em}
+{\small \textbf{\textsc{\textcolor{band}{fundamental}}} = know cold (your starting points); \textbf{\textsc{\textcolor{band}{derived}}} = a line or two from the fundamentals.}
+\vspace{0.25em}
+\hrule
+\vspace{0.25em}
+{\small\bfseries\color{band}\textsc{Symbols and constants}}\\[2pt]
+\begingroup
+\footnotesize
+\setlength{\extrarowheight}{0pt}\renewcommand{\arraystretch}{1.05}
+\begin{tabular}{@{}r@{\ \ }l@{\hspace{1.6em}}r@{\ \ }l@{\hspace{1.6em}}r@{\ \ }l@{}}
+$n$ & index of refraction ($n = c/v$) & $s,s'$ & object / image distance (m) & $\lambda$ & wavelength (m) \\
+$\theta$ & angle from the normal / axis & $f$ & focal length (m)              & $d$ & slit separation or grating spacing (m) \\
+$\theta_c$ & critical angle            & $m$ & image magnification            & $a$ & single-slit width (m) \\
+$R$ & radius of curvature (m)          & $L$ & slit-to-screen distance (m)    & $c$ & $3.00\times10^{8}$ m/s \\
+\end{tabular}
+\endgroup
+\vspace{0.1em}
+\hrule
+
+%========================================================
+\section{Reflection, refraction \& total internal reflection \quad {\normalfont\small (Knight 34.1--34.4)}}
+\eqtab{
+  \band{fundamental}
+  \R{Law of reflection}{\theta_{\text{incidence}} = \theta_{\text{reflection}}}
+  \R{Index of refraction\newline\footnotesize(light slows in a medium; $n \ge 1$; $\lambda_n = \lambda_{\text{vac}}/n$)}{n = \dfrac{c}{v}}
+  \R{Snell's law\newline\footnotesize(toward the normal entering a higher $n$; away entering a lower $n$)}{n_1 \sin\theta_1 = n_2 \sin\theta_2}
+  \band{derived}
+  \R{Critical angle\newline\footnotesize(only for $n_1 > n_2$; beyond $\theta_c$, total internal reflection)}{\sin\theta_c = \dfrac{n_2}{n_1}}
+  \R{Normal incidence ($\theta_1 = 0$)}{\theta_2 = 0 \quad(\text{no bending, any } n_1, n_2)}
+}
+
+%========================================================
+\section{Thin lenses \& mirrors \quad {\normalfont\small (Knight 34.5--34.7)}}
+\eqtab{
+  \band{fundamental}
+  \R{Thin-lens / mirror equation}{\dfrac{1}{s} + \dfrac{1}{s'} = \dfrac{1}{f}}
+  \R{Magnification\newline\footnotesize($m < 0$ inverted, $m > 0$ upright; $|m| > 1$ enlarged)}{m = -\dfrac{s'}{s} = \dfrac{h'}{h}}
+  \band{derived}
+  \R{Spherical mirror focal length}{f = \dfrac{R}{2}}
+  \R{Sign conventions\newline\footnotesize($s' > 0$ real image; $s' < 0$ virtual)}{f > 0:\ \text{converging lens / concave mirror};\ \ f < 0:\ \text{diverging / convex}}
+  \R{Object inside the focal point ($s < f$, converging)}{\text{virtual, upright, enlarged} \quad (m > 1)}
+}
+
+%========================================================
+\section{Interference of light \quad {\normalfont\small (Knight 33.1--33.3)}}
+\eqtab{
+  \band{fundamental}
+  \R{Constructive / destructive interference\newline\footnotesize(path-length difference $\Delta r$)}{\Delta r = m\lambda \ (\text{bright}),\qquad \Delta r = \left(m + \tfrac12\right)\lambda \ (\text{dark})}
+  \R{Double slit --- bright fringes at angle $\theta$}{d\sin\theta = m\lambda\,,\quad m = 0, 1, 2, \dots}
+  \band{derived}
+  \R{Fringe spacing on the screen (small angles)\newline\footnotesize(wider spacing for larger $\lambda$ or smaller $d$)}{\Delta y = \dfrac{\lambda L}{d}}
+  \R{Position of the $m$th bright fringe}{y_m = \dfrac{m\lambda L}{d}}
+}
+
+%========================================================
+\section{Diffraction gratings \& single-slit diffraction \quad {\normalfont\small (Knight 33.4--33.6)}}
+\eqtab{
+  \band{fundamental}
+  \R{Grating --- bright maxima\newline\footnotesize(same form as the double slit, but the maxima are sharp and narrow; $d = 1/(\text{lines per unit length})$)}{d\sin\theta = m\lambda}
+  \R{Single slit --- \emph{dark} fringes\newline\footnotesize($a$ is the slit width; the central bright band spans $\pm\lambda/a$)}{a\sin\theta = m\lambda\,,\quad m = 1, 2, 3, \dots}
+  \band{derived}
+  \R{Highest observable grating order}{m_{\max} \le \dfrac{d}{\lambda} \quad (\sin\theta \le 1)}
+  \R{White light through a grating}{\text{each order spreads into a spectrum; red bends most}}
+}
+
+%========================================================
+\section{Polarization \quad {\normalfont\small (Knight 33.7)}}
+\eqtab{
+  \band{fundamental}
+  \R{Malus's law --- polarized light through an analyzer\newline\footnotesize($\theta$ between the light's polarization and the axis; zero when crossed)}{I = I_0 \cos^{2}\theta}
+  \band{derived}
+  \R{Unpolarized light through one polarizer\newline\footnotesize(output is polarized along the axis; independent of the axis angle)}{I = \tfrac12 I_0}
+}
+
+\vfill
+{\footnotesize\color{gray}\raggedright
+Companion simulations at \texttt{hoppese.github.io/Intro-physics-sims/}\,:
+\texttt{ray-optics}, \texttt{lens-ray-tracer}, \texttt{mirror-ray-tracer},
+\texttt{diffraction-pattern}, \texttt{polarization-malus}.\par}
+
+\end{document}

@@ -1,0 +1,139 @@
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=0.8in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+
+\definecolor{accent}{HTML}{0F6CBF}
+\definecolor{band}{HTML}{6B5BD0}
+
+\titleformat{\section}{\normalfont\large\bfseries\color{accent}}{\thesection.}{0.5em}{}
+\titlespacing*{\section}{0pt}{0.4em}{0.2em}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[C]{\footnotesize\color{gray} Intro Physics II \textbullet\ Magnetism \textbullet\ page \thepage\ of \pageref{LastPage}}
+
+\setlength{\parindent}{0pt}
+\raggedbottom
+\setlength{\extrarowheight}{2pt}
+\renewcommand{\arraystretch}{1.05}
+\setlength{\aboverulesep}{1pt}\setlength{\belowrulesep}{1pt}
+
+% two-column equation table: left = description, right = formula
+\newcolumntype{L}{>{\raggedright\arraybackslash}p{0.40\linewidth}}
+\newcolumntype{F}{>{\raggedright\arraybackslash}p{0.555\linewidth}}
+\newcommand{\eqtab}[1]{%
+  \par\vspace{0.15em}
+  \noindent
+  \begin{tabular}{@{}L F@{}}
+  \toprule
+  #1
+  \bottomrule
+  \end{tabular}
+  \par\vspace{0.1em}}
+\newcommand{\R}[2]{#1 & $\displaystyle #2$ \\}
+% sub-band label spanning both columns
+\newcommand{\band}[1]{%
+  \addlinespace[1.5pt]%
+  \multicolumn{2}{@{}l@{}}{\rule{0pt}{1.0em}\footnotesize\bfseries\color{band}\textsc{#1}}\\[2pt]}
+
+\begin{document}
+
+\begin{center}
+  {\LARGE\bfseries Equation Sheet: Magnetism}\\[2pt]
+  {\large Intro Physics II \quad\textbullet\quad Lectures 18--27 \quad\textbullet\quad Knight ch.\ 29--30}
+\end{center}
+\vspace{0.25em}
+
+\hrule
+\vspace{0.4em}
+{\small \textbf{\textsc{\textcolor{band}{fundamental}}} = know cold (your starting points); \textbf{\textsc{\textcolor{band}{derived}}} = a line or two from the fundamentals.}
+\vspace{0.25em}
+\hrule
+\vspace{0.25em}
+{\small\bfseries\color{band}\textsc{Symbols and constants}}\\[2pt]
+\begingroup
+\footnotesize
+\setlength{\extrarowheight}{0pt}\renewcommand{\arraystretch}{1.05}
+\begin{tabular}{@{}r@{\ \ }l@{\hspace{1.6em}}r@{\ \ }l@{\hspace{1.6em}}r@{\ \ }l@{}}
+$\vec B$ & magnetic field (T $=$ N/A$\cdot$m) & $I$ & current (A)                   & $\Phi_B$ & magnetic flux (Wb $=$ T$\cdot$m$^2$) \\
+$q$ & charge (C)                    & $n$ & turns per unit length (1/m)   & $\mathcal{E}$ & induced emf (V) \\
+$\vec v$ & velocity (m/s)            & $N$ & number of turns               & $\vec\mu$ & magnetic dipole moment (A$\cdot$m$^2$) \\
+$\theta$ & angle between the two vectors & $r,d$ & distance (m)             & $\mu_0$ & $4\pi\times10^{-7}$ T$\cdot$m/A \\
+\end{tabular}
+\endgroup
+\vspace{0.1em}
+\hrule
+
+%========================================================
+\section{Magnetic force on charges \& currents \quad {\normalfont\small (Knight 29.1--29.3, 29.7--29.8)}}
+\eqtab{
+  \band{fundamental}
+  \R{Force on a moving charge\newline\footnotesize($\perp$ to both $\vec v$ and $\vec B$; use the right-hand rule; zero if $\vec v \parallel \vec B$)}{\vec F = q\,\vec v \times \vec B\,,\qquad |\vec F| = |q|\,vB\sin\theta}
+  \R{Force on a straight current-carrying wire}{\vec F = I\,\vec L \times \vec B\,,\qquad |\vec F| = BIL\sin\theta}
+  \band{derived}
+  \R{Charge in a uniform field ($\vec v \perp \vec B$)\newline\footnotesize(circular motion; magnetic force does no work, so $v$ is constant)}{r = \dfrac{mv}{|q|B}}
+  \R{Period / cyclotron frequency\newline\footnotesize(independent of $v$ and $r$)}{T = \dfrac{2\pi m}{|q|B}\,,\qquad f = \dfrac{|q|B}{2\pi m}}
+  \R{Velocity selector (crossed $\vec E$, $\vec B$)}{v = \dfrac{E}{B}}
+}
+
+%========================================================
+\section{Sources of magnetic field \quad {\normalfont\small (Knight 29.4--29.5)}}
+\eqtab{
+  \band{fundamental}
+  \R{Biot--Savart law --- field of a current element\newline\footnotesize(chop the wire into pieces $d\vec l$, add up)}{d\vec B = \dfrac{\mu_0}{4\pi}\,\dfrac{I\,d\vec l \times \hat r}{r^{2}}}
+  \band{derived}
+  \R{Long straight wire (distance $r$)\newline\footnotesize(field circles the wire; $B \propto 1/r$)}{B = \dfrac{\mu_0 I}{2\pi r}}
+  \R{Center of a circular loop (radius $R$, $N$ turns)}{B = \dfrac{\mu_0 N I}{2R}}
+  \R{Inside a long solenoid\newline\footnotesize(uniform; independent of radius; $\approx 0$ outside)}{B = \mu_0 n I}
+}
+
+%========================================================
+\section{Amp\`ere's law \quad {\normalfont\small (Knight 29.6)}}
+\eqtab{
+  \band{fundamental}
+  \R{Amp\`ere's law\newline\footnotesize(any closed loop; $I_{\text{enc}}$ is the \emph{signed} current through the loop)}{\oint \vec B \cdot d\vec l = \mu_0 I_{\text{enc}}}
+  \band{derived}
+  \R{Current entirely outside the loop}{\oint \vec B \cdot d\vec l = 0}
+}
+
+%========================================================
+\section{Magnetic dipoles \& torque \quad {\normalfont\small (Knight 29.5, 29.9)}}
+\eqtab{
+  \band{fundamental}
+  \R{Dipole moment of a current loop}{\vec\mu = N I \vec A \qquad (|\vec\mu| = NIA)}
+  \R{Torque on a dipole in a field\newline\footnotesize(twists $\vec\mu$ toward $\vec B$; max at $\theta = 90^\circ$, zero when aligned)}{\vec\tau = \vec\mu \times \vec B\,,\qquad |\vec\tau| = \mu B \sin\theta}
+  \band{derived}
+  \R{Orientation energy\newline\footnotesize(minimum when $\vec\mu \parallel \vec B$)}{U = -\vec\mu \cdot \vec B = -\mu B \cos\theta}
+  \R{Net force on a dipole in a \emph{uniform} field}{\vec F_{\text{net}} = 0 \quad (\text{torque only})}
+}
+
+%========================================================
+\section{Magnetic flux \& electromagnetic induction \quad {\normalfont\small (Knight 30.1--30.7)}}
+\eqtab{
+  \band{fundamental}
+  \R{Magnetic flux through a loop}{\Phi_B = \displaystyle\int \vec B \cdot d\vec A \quad\xrightarrow{\ \text{uniform}\ }\quad \Phi_B = BA\cos\theta}
+  \R{Faraday's law --- induced emf\newline\footnotesize(only a \emph{changing} flux induces an emf)}{\mathcal{E} = -N\,\dfrac{d\Phi_B}{dt}}
+  \R{Lenz's law}{\text{induced current opposes the change in flux}}
+  \band{derived}
+  \R{Motional emf (bar of length $L$, speed $v$, $\vec v \perp \vec B$)}{\mathcal{E} = BLv}
+  \R{Induced current and dissipated power}{I = \dfrac{\mathcal{E}}{R}\,,\qquad P = \dfrac{\mathcal{E}^{2}}{R} = F_{\text{pull}}\,v}
+}
+
+\vfill
+{\footnotesize\color{gray}\raggedright
+Companion simulations at \texttt{hoppese.github.io/Intro-physics-sims/}\,:
+\texttt{magnetic-field-of-currents}, \texttt{discrete-current-builder-3d}, \texttt{ampere-loop},
+\texttt{dipole-field-and-torque}, \texttt{lorentz-force}, \texttt{current-loop-motor},
+\texttt{faraday-induction}, \texttt{faraday-flux-explorer}, \texttt{rail-flux-bar}.\par}
+
+\end{document}
