@@ -229,10 +229,11 @@
     academic calendar (classes <b>Mon Jan 25</b>&ndash;<b>Fri May 7</b>, spring break
     <b>Mar 6&ndash;14</b>, Earlham Day <b>Wed Apr 21</b>, finals <b>May 10&ndash;13</b>). It carries over the Fall
     Physics 2 rhythm &mdash; <b>Prep</b> + <b>Kickoff</b> + <b>Online HW</b> +
-    <b>Written HW</b>, five tests and a cumulative final &mdash; and reworks the
-    topic sequence from your draft schedule into five test-bounded units. Every
-    lesson lists the <b>Knight</b> reading plus its <b>OpenStax</b> equivalent for
-    both the calculus and the algebra track. Click any day.
+    <b>Written HW</b>, four tests and a cumulative final &mdash; and reworks the
+    topic sequence from your draft schedule into five units, four of them
+    test-bounded (fluids &amp; thermal physics is covered on the final only).
+    Every lesson lists the <b>Knight</b> reading plus its <b>OpenStax</b>
+    equivalent for both the calculus and the algebra track. Click any day.
   </p>
 
   <div class="toolbar">
@@ -592,8 +593,8 @@ const WEEKS = [
      sim:{name:'Kinetic Theory — Molecular Speeds', slug:'kinetic-theory-speeds'}},
  ]},
  {n:15, u:'fluth', range:'May 10 – 13', days:[
-   {dow:'', d:'Finals week', u:'fluth', special:true, full:true, exam:true, topic:'Test 5 + cumulative final',
-     note:'Final-exam period runs Mon May 10, Wed May 12, Thu May 13. As drawn: Test 5 (Fluids & Thermal Physics) sits here alongside a cumulative final. If you’d rather keep all five tests on class days like Fall Physics 2, move Test 5 onto Fri May 7 and fold the thermal-physics survey into L34.'},
+   {dow:'', d:'Finals week', u:'fluth', special:true, full:true, exam:true, topic:'Cumulative final',
+     note:'Final-exam period runs Mon May 10, Wed May 12, Thu May 13. Only four in-term tests this spring — fluids & thermal physics (L33&ndash;L35) isn’t given its own unit test and is examined only on the cumulative final, so it&rsquo;s worth flagging to students that this material carries into the final at full weight despite the lighter in-term treatment.'},
  ]},
 ];
 
@@ -785,7 +786,7 @@ function panelRender(){
 
 function structRender(){
   const cards = [
-    ['Tests', '200', `5 unit tests × 50, best 4 count. Test 1&ndash;4 on class days; Test 5 in the exam period.`],
+    ['Tests', '200', `4 unit tests × 50, all on class days. No unit test for fluids &amp; thermal physics &mdash; it's covered only on the final.`],
     ['Cumulative final', '100', 'Exam week, after the last class day.'],
     ['Written HW', `${TOT.hw * 15}`, `${TOT.hw} sets × 15, drop the lowest. Due at class time.`],
     ['Online HW', `~${TOT.ohw * 6}`, `${TOT.ohw} sets × 6 (Mastering / MyLab), drop 2. Due at class time.`],
@@ -798,7 +799,7 @@ function structRender(){
       <div class="sdesc">${c[2]}</div>
     </div>`).join('');
   $('#notes').innerHTML = [
-    `<b>Five units, five tests.</b> Kinematics → Forces → Energy &amp; Momentum → Rotation &amp; Gravity → Fluids &amp; Thermal Physics. ${TOT.lec} lecture days, 2 flex days, 4 in-term tests, plus Test 5 and the final in exam week.`,
+    `<b>Five units, four tests.</b> Kinematics → Forces → Energy &amp; Momentum → Rotation &amp; Gravity → Fluids &amp; Thermal Physics. ${TOT.lec} lecture days, 2 flex days, 4 in-term tests (Test 1&ndash;4), and the cumulative final in exam week &mdash; fluids &amp; thermal physics has no unit test of its own.`,
     `<b>Sequence changes from your draft.</b> Gravity moves next to rotation (both are “Test 4” material) instead of sitting in the thermo weeks; energy comes before momentum; circular-motion <i>dynamics</i> lands in the forces unit while circular <i>kinematics</i> stays with kinematics.`,
     `<b>Thermal physics is compressed</b> to one survey day (L35), matching the light treatment in your draft. If you want a real 3&ndash;4 day thermo unit, we’d trim ~2 days from mechanics — flag which unit can give them up.`,
     `<b>Readings need a pass.</b> Knight sections past Ch. 11 and all OpenStax sections are a first mapping from the chapter structure, not checked line by line against the current editions.`,
