@@ -1,0 +1,144 @@
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=0.8in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+
+\definecolor{accent}{HTML}{0F6CBF}
+\definecolor{band}{HTML}{6B5BD0}
+
+\titleformat{\section}{\normalfont\large\bfseries\color{accent}}{\thesection.}{0.5em}{}
+\titlespacing*{\section}{0pt}{0.4em}{0.2em}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[C]{\footnotesize\color{gray} Intro Physics II \textbullet\ Electrostatics \textbullet\ page \thepage\ of \pageref{LastPage}}
+
+\setlength{\parindent}{0pt}
+\raggedbottom
+\setlength{\extrarowheight}{2pt}
+\renewcommand{\arraystretch}{1.05}
+\setlength{\aboverulesep}{1pt}\setlength{\belowrulesep}{1pt}
+
+% two-column equation table: left = description, right = formula
+\newcolumntype{L}{>{\raggedright\arraybackslash}p{0.40\linewidth}}
+\newcolumntype{F}{>{\raggedright\arraybackslash}p{0.555\linewidth}}
+\newcommand{\eqtab}[1]{%
+  \par\vspace{0.15em}
+  \noindent
+  \begin{tabular}{@{}L F@{}}
+  \toprule
+  #1
+  \bottomrule
+  \end{tabular}
+  \par\vspace{0.1em}}
+\newcommand{\R}[2]{#1 & $\displaystyle #2$ \\}
+% sub-band label spanning both columns
+\newcommand{\band}[1]{%
+  \addlinespace[1.5pt]%
+  \multicolumn{2}{@{}l@{}}{\rule{0pt}{1.0em}\footnotesize\bfseries\color{band}\textsc{#1}}\\[2pt]}
+
+\begin{document}
+
+\begin{center}
+  {\LARGE\bfseries Equation Sheet: Electrostatics}\\[2pt]
+  {\large Intro Physics II \quad\textbullet\quad Lectures 6--13 \quad\textbullet\quad Knight ch.\ 22--25}
+\end{center}
+\vspace{0.25em}
+
+\hrule
+\vspace{0.4em}
+{\small \textbf{\textsc{\textcolor{band}{fundamental}}} = know cold (your starting points); \textbf{\textsc{\textcolor{band}{derived}}} = a line or two from the fundamentals.}
+\vspace{0.25em}
+\hrule
+\vspace{0.25em}
+{\small\bfseries\color{band}\textsc{Symbols and constants}}\\[2pt]
+\begingroup
+\footnotesize
+\setlength{\extrarowheight}{0pt}\renewcommand{\arraystretch}{1.05}
+\begin{tabular}{@{}r@{\ \ }l@{\hspace{1.8em}}r@{\ \ }l@{\hspace{1.8em}}r@{\ \ }l@{}}
+$q,Q$ & charge (C)                & $\Phi$      & electric flux (N$\cdot$m$^2$/C) & $U$ & potential energy (J) \\
+$\vec E$ & electric field (N/C = V/m) & $\lambda,\sigma,\rho$ & line / area / volume charge density & $V$ & potential (V $=$ J/C) \\
+$r,d$ & distance / separation (m) & $A$        & area                            & $k$ & $8.99\times10^{9}$ N$\cdot$m$^2$/C$^2$ \\
+$\varepsilon_0$ & \multicolumn{5}{@{}l@{}}{$8.85\times10^{-12}$ C$^2$/(N$\cdot$m$^2$),\quad $k = 1/(4\pi\varepsilon_0)$ \qquad\qquad $e = 1.60\times10^{-19}$ C} \\
+\end{tabular}
+\endgroup
+\vspace{0.1em}
+\hrule
+
+%========================================================
+\section{Coulomb's law \& the electric field \quad {\normalfont\small (Knight 22.4--22.5, 23.1--23.2)}}
+\eqtab{
+  \band{fundamental}
+  \R{Force between two point charges\newline\footnotesize(along the line joining them; repulsive for like signs; $F \propto 1/r^2$)}{F = \dfrac{k\,|q_1 q_2|}{r^{2}}\,,\qquad k = \dfrac{1}{4\pi\varepsilon_0}}
+  \R{Field --- force per unit test charge}{\vec E = \dfrac{\vec F_{\text{on }q}}{q}\,,\qquad \vec F = q\vec E}
+  \R{Field of a point charge\newline\footnotesize(away from $+$, toward $-$)}{E = \dfrac{k\,|q|}{r^{2}}}
+  \R{Superposition (both are vector sums)}{\vec F_{\text{net}} = \textstyle\sum_i \vec F_i\,,\qquad \vec E_{\text{net}} = \textstyle\sum_i \vec E_i}
+}
+
+%========================================================
+\section{Continuous charge distributions \quad {\normalfont\small (Knight 23.3--23.6)}}
+\eqtab{
+  \band{fundamental}
+  \R{Chop into pieces, add up (integrate)}{\vec E = \displaystyle\int d\vec E,\qquad dE = \dfrac{k\,dq}{r^{2}}}
+  \R{Charge densities}{\lambda = \dfrac{Q}{L},\qquad \sigma = \dfrac{Q}{A},\qquad \rho = \dfrac{Q}{V}}
+  \band{derived}
+  \R{Infinite line of charge (distance $r$)}{E = \dfrac{\lambda}{2\pi\varepsilon_0\,r} = \dfrac{2k\lambda}{r}}
+  \R{Infinite plane / sheet of charge}{E = \dfrac{\sigma}{2\varepsilon_0} \quad(\text{uniform --- no }r)}
+}
+
+%========================================================
+\section{Electric flux \& Gauss's law \quad {\normalfont\small (Knight 24.1--24.3)}}
+\eqtab{
+  \band{fundamental}
+  \R{Electric flux through a surface}{\Phi = \displaystyle\oint \vec E \cdot d\vec A}
+  \R{Gauss's law\newline\footnotesize(any closed surface; only the \emph{enclosed} charge matters)}{\Phi = \dfrac{Q_{\text{enc}}}{\varepsilon_0}}
+  \band{derived}
+  \R{Uniform field through a flat area}{\Phi = E A \cos\theta \quad(\theta \text{ from the normal})}
+  \R{Charge \emph{outside} a closed surface}{\Phi_{\text{net}} = 0}
+  \R{Sphere / spherical shell, total charge $Q$ ($r > R$)}{E = \dfrac{kQ}{r^{2}} \quad(\text{same as a point charge})}
+}
+
+%========================================================
+\section{Conductors in equilibrium \quad {\normalfont\small (Knight 24.4--24.6)}}
+\eqtab{
+  \band{fundamental}
+  \R{Field inside the conducting material}{\vec E = 0}
+  \R{Excess charge}{\text{all on the outer surface}}
+  \R{Field at the outer surface}{\perp \text{ to the surface},\qquad E = \dfrac{\sigma}{\varepsilon_0}}
+  \band{derived}
+  \R{Empty cavity inside a conductor}{\vec E = 0 \text{ in the cavity} \quad(\text{Faraday shielding})}
+  \R{Charge $+q$ placed in the cavity}{-q \text{ on the inner wall},\ +q \text{ on the outer surface}}
+}
+
+%========================================================
+\section{Electric potential energy \& potential \quad {\normalfont\small (Knight 25.1--25.7)}}
+\eqtab{
+  \band{fundamental}
+  \R{Two point charges\newline\footnotesize(keep the signs; $U \to 0$ as $r \to \infty$; one power of $r$)}{U = \dfrac{k\,q_1 q_2}{r}}
+  \R{Energy conservation}{K_i + U_i = K_f + U_f\,,\qquad W_{\text{elec}} = -\Delta U}
+  \R{Potential --- energy per unit charge}{V = \dfrac{U}{q}\,,\qquad U = qV \qquad (1\ \text{V} = 1\ \text{J/C})}
+  \R{Point charge\newline\footnotesize(scalar; keep the sign; $V \to 0$ as $r \to \infty$)}{V = \dfrac{k\,q}{r}\,,\qquad V_{\text{net}} = \textstyle\sum_i \dfrac{k\,q_i}{r_i}}
+  \band{derived}
+  \R{Potential difference from the field}{\Delta V = -\displaystyle\int_i^f \vec E \cdot d\vec s \quad\xrightarrow{\ \text{uniform}\ }\quad \Delta V = -Ed}
+  \R{Field from the potential (the gradient)}{E_x = -\dfrac{dV}{dx}\,,\qquad \vec E = -\nabla V}
+  \R{Equipotentials}{\perp \text{ field lines};\ \ \vec E \text{ points toward decreasing } V}
+}
+
+\vfill
+{\footnotesize\color{gray}\raggedright
+Companion simulations at \texttt{hoppese.github.io/Intro-physics-sims/}\,:
+\texttt{electroscope}, \texttt{e-fields-conductors-and-insulators},
+\texttt{electrostatics-explorer}, \texttt{field-superposition-explorer},
+\texttt{discrete-charge-builder-3d}, \texttt{gauss-flux},
+\texttt{pe-vs-separation}, \texttt{equipotential-explorer}.\par}
+
+\end{document}
