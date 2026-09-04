@@ -1,0 +1,845 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Physics 1 Course Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --ground:#eceef0; --surface:#ffffff; --surface-2:#f6f7f9; --card:#fbfbfc;
+    --ink:#22262b; --ink-soft:#414852; --muted:#828b95; --hair:#e3e6ea; --hair-soft:#eceef1;
+    --on-accent:#ffffff;
+    --kin:#3a7d44;   --kin-tint:#e7f2e9;   --kin-ink:#255630;
+    --force:#c05a2c; --force-tint:#f8ebe2; --force-ink:#8c3d19;
+    --enmo:#2b7a8c;  --enmo-tint:#e4f1f3;  --enmo-ink:#1c5663;
+    --rot:#6d5192;   --rot-tint:#eee9f5;   --rot-ink:#4c376c;
+    --fluth:#b07d2b; --fluth-tint:#f6eddb; --fluth-ink:#805907;
+    --test:#c2576b;  --test-tint:#f8e8ec;  --test-ink:#8f3a4b;
+    --brk:#9aa4ac;   --brk-tint:#eef0f2;   --brk-ink:#5c666f;
+    --focus:#3a7d44;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --ground:#141619; --surface:#1e2126; --surface-2:#22262c; --card:#20242a;
+      --ink:#e6e8ea; --ink-soft:#c2c7cd; --muted:#8a939d; --hair:#31363d; --hair-soft:#2a2e34;
+      --on-accent:#14160f;
+      --kin:#6bb178;   --kin-tint:#1c3222;   --kin-ink:#a9d8b2;
+      --force:#e08a5c; --force-tint:#3a2418;  --force-ink:#f0b596;
+      --enmo:#63b3c4;  --enmo-tint:#152e34;   --enmo-ink:#a7dbe4;
+      --rot:#a98fca;   --rot-tint:#271d38;    --rot-ink:#cfbde6;
+      --fluth:#d9a95a; --fluth-tint:#33260f;  --fluth-ink:#eccf9c;
+      --test:#d97e90;  --test-tint:#372025;   --test-ink:#eeb9c3;
+      --brk:#8b95a0;   --brk-tint:#24282d;    --brk-ink:#aeb6bf;
+      --focus:#6bb178;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#141619; --surface:#1e2126; --surface-2:#22262c; --card:#20242a;
+    --ink:#e6e8ea; --ink-soft:#c2c7cd; --muted:#8a939d; --hair:#31363d; --hair-soft:#2a2e34;
+    --on-accent:#14160f;
+    --kin:#6bb178;   --kin-tint:#1c3222;   --kin-ink:#a9d8b2;
+    --force:#e08a5c; --force-tint:#3a2418;  --force-ink:#f0b596;
+    --enmo:#63b3c4;  --enmo-tint:#152e34;   --enmo-ink:#a7dbe4;
+    --rot:#a98fca;   --rot-tint:#271d38;    --rot-ink:#cfbde6;
+    --fluth:#d9a95a; --fluth-tint:#33260f;  --fluth-ink:#eccf9c;
+    --test:#d97e90;  --test-tint:#372025;   --test-ink:#eeb9c3;
+    --brk:#8b95a0;   --brk-tint:#24282d;    --brk-ink:#aeb6bf;
+    --focus:#6bb178;
+  }
+
+  *{box-sizing:border-box}
+  body{background:var(--ground);color:var(--ink);
+    font-family:'Source Sans 3',system-ui,-apple-system,sans-serif;
+    font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:'Source Serif 4',Georgia,serif;font-weight:600;text-wrap:balance;margin:0;}
+  a{color:inherit}
+  button{font-family:inherit;color:inherit}
+  .mono{font-family:'JetBrains Mono',ui-monospace,monospace}
+  ::selection{background:color-mix(in srgb,var(--kin) 26%,transparent)}
+  :focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:4px}
+
+  .wrap{max-width:1320px;margin:0 auto;padding:20px 20px 60px}
+
+  /* ---- masthead ---- */
+  .mast{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 20px;
+    border-bottom:2px solid var(--ink);padding-bottom:12px;margin-bottom:6px}
+  .mast h1{font-size:26px;letter-spacing:-0.01em}
+  .mast .term{font-size:13px;color:var(--muted);font-weight:600}
+  .mast .who{margin-left:auto;font-size:12px;color:var(--muted);text-align:right;line-height:1.4}
+  .lede{font-size:13.5px;color:var(--ink-soft);max-width:70ch;margin:12px 0 18px}
+  .lede b{color:var(--ink)}
+
+  /* ---- legend + filters ---- */
+  .toolbar{display:flex;flex-wrap:wrap;gap:16px 26px;align-items:flex-start;
+    background:var(--surface);border:1px solid var(--hair);border-radius:12px;padding:14px 16px;margin-bottom:18px}
+  .tgroup{display:flex;flex-direction:column;gap:7px;min-width:0}
+  .tgroup h2{font-family:'Source Sans 3',sans-serif;font-size:10.5px;font-weight:700;
+    letter-spacing:0.09em;text-transform:uppercase;color:var(--muted)}
+  .legend{display:flex;flex-wrap:wrap;gap:5px 12px}
+  .lk{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-soft)}
+  .sw{width:11px;height:11px;border-radius:3px;flex:none}
+  .filters{display:flex;flex-wrap:wrap;gap:7px}
+  .fbtn{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;
+    padding:6px 11px;border-radius:8px;cursor:pointer;
+    border:1px solid var(--hair);background:var(--surface);color:var(--ink-soft);transition:all .12s}
+  .fbtn:hover{border-color:var(--muted)}
+  .fbtn[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--surface)}
+  .fbtn .gl{font-size:11px}
+  .keycap{font-size:10.5px;color:var(--muted);border:1px solid var(--hair);border-radius:4px;padding:1px 5px;background:var(--surface-2)}
+
+  /* ---- main grid ---- */
+  .cols{display:grid;grid-template-columns:1fr 396px;gap:22px;align-items:start}
+  @media (max-width:1080px){ .cols{grid-template-columns:1fr} .panel{position:static !important} }
+
+  .weeks{display:flex;flex-direction:column;gap:10px}
+  .wrow{display:flex;gap:14px;background:var(--surface);border:1px solid var(--hair);
+    border-radius:12px;padding:12px 13px}
+  .wmeta{width:104px;flex:none;display:flex;gap:9px}
+  .wbar{width:4px;border-radius:3px;flex:none}
+  .wmeta .wk{font-size:10.5px;color:var(--muted)}
+  .wmeta .un{font-size:12.5px;font-weight:700;line-height:1.22;margin:3px 0;color:var(--ink);max-width:9em;text-wrap:balance}
+  .wmeta .rg{font-size:11px;color:var(--muted)}
+  .days{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+
+  .day{display:flex;flex-direction:column;gap:5px;min-height:96px;text-align:left;
+    padding:9px 10px;border-radius:9px;cursor:pointer;font:inherit;color:var(--ink);
+    border:1px solid var(--hair);background:var(--card);transition:box-shadow .13s,opacity .13s,border-color .13s}
+  .day:hover{border-color:var(--muted)}
+  .day.sel{box-shadow:0 0 0 2.5px color-mix(in srgb,var(--ac) 42%,transparent);border-color:var(--ac)}
+  .day.dim{opacity:.3}
+  .day.test{border-left:4px solid var(--test)}
+  .day.special{background:var(--surface-2)}
+  .drow{display:flex;justify-content:space-between;align-items:flex-start;gap:6px}
+  .ddate{font-size:10px;color:var(--muted)}
+  .dglyphs{display:flex;gap:4px;align-items:center;font-size:10px}
+  .dglyphs .g-sim{width:8px;height:8px;border-radius:50%;background:var(--kin)}
+  .dglyphs .g-vid{color:var(--force)}
+  .dglyphs .g-split{color:var(--test);font-size:11px}
+  .dtopic{font-size:12.5px;font-weight:600;line-height:1.25;color:var(--ac-ink)}
+  .day.special .dtopic{color:var(--brk-ink);font-style:italic}
+  .dtags{display:flex;flex-wrap:wrap;gap:3px;margin-top:auto}
+  .tag{font-size:9.5px;font-weight:600;border-radius:4px;padding:1px 5px;line-height:1.5;white-space:nowrap}
+  .tag.k{font-family:'JetBrains Mono',monospace;font-weight:400;color:var(--muted);background:var(--surface-2);border:1px solid var(--hair)}
+  .tag.prep{color:var(--enmo-ink);background:var(--enmo-tint)}
+  .tag.ohw{color:var(--fluth-ink);background:var(--fluth-tint)}
+  .tag.hw{color:var(--kin-ink);background:var(--kin-tint)}
+  .tag.test{color:var(--on-accent);background:var(--test)}
+
+  /* ---- detail panel ---- */
+  .panel{position:sticky;top:16px;background:var(--surface);border:1px solid var(--hair);
+    border-radius:14px;overflow:hidden}
+  .phead{padding:15px 17px;color:var(--on-accent);background:var(--ac)}
+  .phead .prow{display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .pbadge{font-size:10px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;
+    background:color-mix(in srgb,var(--on-accent) 20%,transparent);border-radius:5px;padding:3px 8px}
+  .pdate{font-size:11.5px;opacity:.9}
+  .ptopic{font-family:'Source Serif 4',serif;font-weight:600;font-size:19px;line-height:1.24;margin-top:9px}
+  .pbody{padding:15px 17px;display:flex;flex-direction:column;gap:14px}
+  .sec h3{font-family:'Source Sans 3',sans-serif;font-size:10.5px;font-weight:700;
+    letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+  .card-lite{background:var(--surface-2);border:1px solid var(--hair-soft);border-radius:9px;padding:10px 12px}
+  .vidcard{background:var(--force-tint);border:1px solid color-mix(in srgb,var(--force) 30%,transparent);border-radius:9px;padding:10px 12px}
+  .vidcard .vtop{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:var(--force-ink)}
+  .vidcard a{font-size:12.5px;font-weight:700;color:var(--enmo);text-decoration:none;display:inline-block;margin-top:5px}
+  .vidcard a:hover{text-decoration:underline}
+  .vidcard .vmeta{font-size:11.5px;color:var(--ink-soft);margin-top:2px}
+  .unv{font-size:9px;font-weight:700;letter-spacing:0.03em;text-transform:uppercase;
+    border-radius:4px;padding:2px 6px;color:var(--muted);background:var(--surface);border:1px solid var(--hair)}
+
+  .due{display:flex;flex-direction:column;gap:6px}
+  .dueitem{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;
+    background:var(--surface-2);border:1px solid var(--hair-soft);border-radius:8px;padding:7px 10px}
+  .chip{font-size:9.5px;font-weight:700;letter-spacing:0.03em;text-transform:uppercase;border-radius:4px;padding:2px 6px}
+  .chip.ko{color:var(--ink-soft);background:var(--hair)}
+  .chip.prep{color:var(--enmo-ink);background:var(--enmo-tint)}
+  .chip.ohw{color:var(--fluth-ink);background:var(--fluth-tint)}
+  .chip.hw{color:var(--kin-ink);background:var(--kin-tint)}
+  .dueitem span:not(.chip){font-size:12px;color:var(--ink-soft)}
+
+  table.read{width:100%;border-collapse:collapse;font-size:12px}
+  table.read th{text-align:left;font-weight:700;color:var(--muted);font-size:10px;
+    letter-spacing:0.05em;text-transform:uppercase;padding:0 8px 5px 0;vertical-align:bottom}
+  table.read td{padding:5px 8px 5px 0;border-top:1px solid var(--hair-soft);vertical-align:top;color:var(--ink-soft)}
+  table.read td.lbl{font-weight:600;color:var(--ink);white-space:nowrap;width:1%}
+  table.read .val{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink)}
+  table.read .none{color:var(--muted);font-style:italic;font-family:'Source Sans 3',sans-serif}
+
+  .simcard{background:color-mix(in srgb,var(--kin) 10%,var(--surface));
+    border:1px solid color-mix(in srgb,var(--kin) 28%,transparent);border-radius:9px;padding:10px 12px}
+  .simcard .stop{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:var(--kin-ink)}
+  .simcard .snote{font-size:11.5px;color:var(--ink-soft);margin-top:3px}
+  .simcard a{font-size:12px;font-weight:700;color:var(--enmo);text-decoration:none;display:inline-block;margin-top:5px}
+  .simcard a:hover{text-decoration:underline}
+  .simcard .cand{font-size:11px;color:var(--muted);font-style:italic}
+
+  .plan{display:flex;flex-direction:column;gap:0}
+  .step{display:flex;gap:10px}
+  .stepdot{display:flex;flex-direction:column;align-items:center;flex:none;width:12px}
+  .stepdot i{width:10px;height:10px;border-radius:50%;margin-top:4px;background:var(--muted)}
+  .step.hl .stepdot i{background:var(--ac)}
+  .step.sim .stepdot i{background:var(--kin)}
+  .stepdot .ln{width:2px;flex:1;background:var(--hair);margin:3px 0}
+  .step:last-child .stepdot .ln{background:transparent}
+  .stepbody{padding-bottom:11px;min-width:0}
+  .stepbody .st{font-size:10px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:var(--muted)}
+  .stepbody .stx{font-size:12.5px;color:var(--ink-soft);margin-top:1px}
+  .stepbody .stime{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-left:6px}
+
+  .cov{display:flex;flex-direction:column;gap:5px}
+  .cov li{font-size:12.5px;color:var(--ink-soft);list-style:none;padding-left:14px;position:relative}
+  .cov li::before{content:"";position:absolute;left:0;top:7px;width:5px;height:5px;border-radius:50%;background:var(--test)}
+  .specialnote{font-size:12.5px;color:var(--ink-soft);line-height:1.5}
+
+  /* ---- structure / grading footer ---- */
+  .struct{margin-top:22px;background:var(--surface);border:1px solid var(--hair);border-radius:12px;padding:16px 18px}
+  .struct h2{font-family:'Source Serif 4',serif;font-size:16px;margin-bottom:4px}
+  .struct .sub{font-size:12px;color:var(--muted);margin-bottom:14px}
+  .sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+  .scard{background:var(--surface-2);border:1px solid var(--hair-soft);border-radius:10px;padding:11px 13px}
+  .scard .sh{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+  .scard .sname{font-size:13px;font-weight:700}
+  .scard .spts{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)}
+  .scard .sdesc{font-size:11.5px;color:var(--ink-soft);margin-top:4px;line-height:1.45}
+  .notes{margin-top:14px;display:flex;flex-direction:column;gap:8px}
+  .note{font-size:12px;color:var(--ink-soft);line-height:1.5;padding-left:12px;border-left:2px solid var(--hair)}
+  .note b{color:var(--ink)}
+  .books{margin-top:14px;font-size:12px;color:var(--ink-soft);line-height:1.6}
+  .books a{color:var(--enmo);font-weight:600;text-decoration:none}
+  .books a:hover{text-decoration:underline}
+
+  @media (prefers-reduced-motion:reduce){*{transition:none !important}}
+</style>
+<style>
+  *{margin:0} img{max-width:100%} [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <h1>Physics 1 Course Map</h1>
+    <span class="term">Spring 2027 · Earlham College · MWF</span>
+    <span class="who">Draft for review<br>mechanics · fluids · thermal physics</span>
+  </header>
+
+  <p class="lede">
+    A day-by-day plan for next spring's <b>Physics 1</b>, mapped onto the Earlham
+    academic calendar (classes <b>Mon Jan 25</b>&ndash;<b>Fri May 7</b>, spring break
+    <b>Mar 6&ndash;14</b>, Earlham Day <b>Wed Apr 21</b>, finals <b>May 10&ndash;13</b>). It carries over the Fall
+    Physics 2 rhythm &mdash; <b>Prep</b> + <b>Kickoff</b> + <b>Online HW</b> +
+    <b>Written HW</b>, five tests and a cumulative final &mdash; and reworks the
+    topic sequence from your draft schedule into five test-bounded units. Every
+    lesson lists the <b>Knight</b> reading plus its <b>OpenStax</b> equivalent for
+    both the calculus and the algebra track. Click any day.
+  </p>
+
+  <div class="toolbar">
+    <div class="tgroup">
+      <h2>Units</h2>
+      <div class="legend" id="legend"></div>
+    </div>
+    <div class="tgroup">
+      <h2>Filter days</h2>
+      <div class="filters">
+        <button class="fbtn" data-filter="sim" aria-pressed="false"><span class="gl" style="color:var(--kin)">&#9679;</span> Has a sim</button>
+        <button class="fbtn" data-filter="video" aria-pressed="false"><span class="gl g-vid" style="color:var(--force)">&#9654;</span> Has a video</button>
+        <button class="fbtn" data-filter="assess" aria-pressed="false">Test days</button>
+      </div>
+    </div>
+    <div class="tgroup">
+      <h2>Navigate</h2>
+      <div class="legend">
+        <span class="lk"><span class="keycap">&larr;</span> <span class="keycap">&rarr;</span> move day</span>
+        <span class="lk"><span class="keycap">&darr;</span> next week</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cols">
+    <div class="weeks" id="weeks"></div>
+    <aside class="panel" id="panel" aria-live="polite"></aside>
+  </div>
+
+  <section class="struct">
+    <h2>Course structure</h2>
+    <div class="sub">Point values carried over from Fall Physics 2 &mdash; adjust to taste. Counts update from the map above.</div>
+    <div class="sgrid" id="sgrid"></div>
+    <div class="notes" id="notes"></div>
+    <div class="books">
+      <b>Readings.</b> Knight = <i>Physics for Scientists and Engineers</i> (4e/5e), your current book.
+      OpenStax calculus track = <a href="https://openstax.org/books/university-physics-volume-1/pages/1-introduction" target="_blank" rel="noopener">University Physics Vol.&nbsp;1</a>
+      (thermo from <a href="https://openstax.org/books/university-physics-volume-2/pages/1-introduction" target="_blank" rel="noopener">Vol.&nbsp;2</a>).
+      OpenStax algebra track = <a href="https://openstax.org/books/college-physics-2e/pages/1-introduction" target="_blank" rel="noopener">College Physics 2e</a>.
+      Section numbers are a first pass &mdash; worth a skim before you commit.
+    </div>
+  </section>
+</div>
+
+<script>
+const U = {
+  kin:  {name:'Kinematics',            ac:'kin'},
+  force:{name:'Forces & Newton’s Laws', ac:'force'},
+  enmo: {name:'Energy & Momentum',     ac:'enmo'},
+  rot:  {name:'Rotation & Gravity',    ac:'rot'},
+  fluth:{name:'Fluids & Thermal Physics', ac:'fluth'},
+  brk:  {name:'Break / no class',      ac:'brk'},
+};
+const acVars = u => {
+  const k = U[u] ? U[u].ac : 'brk';
+  return `--ac:var(--${k});--ac-ink:var(--${k}-ink);--ac-tint:var(--${k}-tint)`;
+};
+const yt = q => 'https://www.youtube.com/results?search_query=' + encodeURIComponent(q);
+const SIM = 'https://hoppese.github.io/Intro-physics-sims/';
+
+// ---- the schedule -----------------------------------------------------------
+// t: L# / TEST / FLEX / (special)   hw: written-HW marker
+const WEEKS = [
+ {n:1, u:'kin', range:'Jan 25 – 29', days:[
+   {dow:'Mon', d:'Jan 25', u:'kin', t:'L1', topic:'Motion, units & significant figures',
+     knight:'1.1–1.5', up:'1.1–1.6; 3.1', cp:'1.1–1.4; 2.1',
+     lec:'What Physics 1 covers and how the class runs; SI units, unit conversion, dimensional analysis, significant figures; the particle model and motion diagrams.',
+     exp:'Motion Diagram sim — step a moving particle and watch the position dots and the velocity arrows between them.',
+     syn:'Unit-conversion and sig-fig drills; sketch motion diagrams for a few simple trips.',
+     vid:{title:'Motion in a Straight Line', ch:'Crash Course Physics #1'},
+     sim:{name:'Motion Diagram', slug:'motion-diagram'}},
+   {dow:'Wed', d:'Jan 27', u:'kin', t:'L2', topic:'Position, velocity & the meaning of a slope',
+     knight:'2.1', up:'3.1–3.2', cp:'2.1–2.3, 2.8',
+     lec:'Position vs. time graphs; average vs. instantaneous velocity as slope; reading motion from a graph and vice versa.',
+     exp:'PhET “The Moving Man” — drive position or velocity and compare the three graphs.',
+     syn:'Graph-matching: given x(t), sketch v(t); given a story, sketch both.',
+     vid:{title:'Velocity and speed from graphs', ch:'Khan Academy'},
+     sim:{name:'The Moving Man', cand:'PhET (candidate)'}},
+   {dow:'Fri', d:'Jan 29', u:'kin', t:'L3', topic:'Acceleration & the constant-acceleration equations',
+     knight:'2.2–2.5', up:'3.3–3.4', cp:'2.4–2.6',
+     lec:'Acceleration as the slope of v(t); deriving and using the four kinematic equations; picking the right one.',
+     exp:'PhET “The Moving Man” — set a constant acceleration, predict the v(t) and x(t) shapes, then check.',
+     syn:'Worked constant-acceleration problems; identify knowns/unknowns first.',
+     vid:{title:'Uniformly Accelerated Motion', ch:'Professor Dave Explains'},
+     sim:{name:'The Moving Man', cand:'PhET (candidate)'}},
+ ]},
+ {n:2, u:'kin', range:'Feb 1 – 5', days:[
+   {dow:'Mon', d:'Feb 1', u:'kin', t:'L4', topic:'Free fall & problem-solving practice',
+     knight:'2.6', up:'3.5–3.6', cp:'2.7',
+     lec:'Free fall as constant acceleration g; sign conventions; symmetric up-and-down motion.',
+     exp:'Drop and Toss sim — drop vs. toss-up, compare the time in the air and the speed on return.',
+     syn:'Free-fall numericals; a multi-stage problem worked as a class.',
+     vid:{title:'Free Fall', ch:'Flipping Physics'},
+     sim:{name:'Drop and Toss', slug:'drop-and-toss'}},
+   {dow:'Wed', d:'Feb 3', u:'kin', t:'L5', topic:'Vectors & components',
+     knight:'3.1–3.4', up:'2.1–2.3', cp:'3.1–3.3',
+     lec:'Vectors vs. scalars; adding graphically and by components; unit vectors; magnitude and direction.',
+     exp:'PhET “Vector Addition” — build a resultant, read its components, check the tip-to-tail picture.',
+     syn:'Component drills; add three displacement vectors two ways and compare.',
+     vid:{title:'Vectors and 2D Motion', ch:'Crash Course Physics #4'},
+     sim:{name:'Vector Addition', cand:'PhET (candidate)'}},
+   {dow:'Fri', d:'Feb 5', u:'kin', t:'L6', topic:'Motion in two dimensions', hw:1,
+     knight:'4.1–4.2', up:'4.1–4.2', cp:'3.1',
+     lec:'Position, velocity and acceleration as vectors in 2D; independence of the x and y motions.',
+     exp:'PhET “Ladybug Motion 2D” — set separate x and y accelerations and watch the path that results.',
+     syn:'Break a 2D velocity into components and back; predict a trajectory shape.',
+     vid:{title:'Motion in 2D: an introduction', ch:'Khan Academy'},
+     sim:{name:'Ladybug Motion 2D', cand:'PhET (candidate)'}},
+ ]},
+ {n:3, u:'kin', range:'Feb 8 – 12', days:[
+   {dow:'Mon', d:'Feb 8', u:'kin', t:'L7', topic:'Projectile motion',
+     knight:'4.3', up:'4.3', cp:'3.4',
+     lec:'Projectiles as free fall + constant horizontal velocity; range, max height, time of flight; launch angle.',
+     exp:'Drop and Toss sim (or PhET “Projectile Motion”) — vary the launch angle and speed, find the range curve.',
+     syn:'Projectile problems: off a cliff, at an angle, hitting a target.',
+     vid:{title:'Introduction to Projectile Motion', ch:'Flipping Physics'},
+     sim:{name:'Drop and Toss', slug:'drop-and-toss'}},
+   {dow:'Wed', d:'Feb 10', u:'kin', t:'L8', topic:'Relative motion & circular-motion kinematics', hw:2,
+     knight:'4.4–4.5', up:'4.4–4.5', cp:'3.5, 6.1–6.2',
+     lec:'Reference frames and relative velocity (boats, planes, walkways); period, frequency, angular speed and centripetal acceleration for uniform circular motion.',
+     exp:'Relative Velocity sim — add the boat and river velocities, aim upstream to go straight across.',
+     syn:'Relative-velocity problems; compute a‑centripetal from radius and period.',
+     vid:{title:'Relative motion in 2D', ch:'Khan Academy'},
+     sim:{name:'Relative Velocity', slug:'relative-velocity'}},
+   {dow:'Fri', d:'Feb 12', u:'kin', t:'FLEX', topic:'Flex / review — Kinematics',
+     lec:'Open Q&A and worked problems across 1D, 2D, projectile and circular kinematics; the graph-to-equation translations people find hardest.',
+     exp:'Students pick sims to revisit — Motion Diagram, Drop and Toss, Relative Velocity.',
+     syn:'Timed mixed problem set as a dry run for Test 1.'},
+ ]},
+ {n:4, u:'force', range:'Feb 15 – 19', days:[
+   {dow:'Mon', d:'Feb 15', u:'kin', test:1, topic:'Test 1 — Kinematics',
+     cov:['1D kinematics: graphs and the constant-acceleration equations','Free fall','Vectors and components','Projectile motion','Relative velocity','Uniform circular motion (kinematics only)']},
+   {dow:'Wed', d:'Feb 17', u:'force', t:'L9', topic:'Force, Newton’s 1st law & free-body diagrams',
+     knight:'5.1–5.3, 5.7', up:'5.1–5.2, 5.6–5.7', cp:'4.1–4.2, 4.5',
+     lec:'Force as an interaction; identifying the forces on an object; inertia and Newton’s first law; drawing clean free-body diagrams.',
+     exp:'PhET “Forces and Motion: Basics” — stack applied forces and friction, read the net force.',
+     syn:'Draw free-body diagrams for a gallery of situations; find the net force.',
+     vid:{title:'Newton’s Laws', ch:'Crash Course Physics #5'},
+     sim:{name:'Forces and Motion: Basics', cand:'PhET (candidate)'}},
+   {dow:'Fri', d:'Feb 19', u:'force', t:'L10', topic:'Newton’s 2nd law: dynamics along a line',
+     knight:'5.4–5.6, 6.1', up:'5.3, 6.1', cp:'4.3, 4.6',
+     lec:'F_net = ma as a vector equation; the strategy for a dynamics problem; equilibrium as the a = 0 case.',
+     exp:'PhET “Forces and Motion: Basics” — predict the acceleration for a given net force and mass, then measure.',
+     syn:'One-body and simple two-body problems on a horizontal line.',
+     vid:{title:'Newton’s Second Law of Motion', ch:'Professor Dave Explains'},
+     sim:{name:'Forces and Motion: Basics', cand:'PhET (candidate)'}},
+ ]},
+ {n:5, u:'force', range:'Feb 22 – 26', days:[
+   {dow:'Mon', d:'Feb 22', u:'force', t:'L11', topic:'Mass, weight & apparent weight',
+     knight:'6.2', up:'5.4, 6.1', cp:'4.5',
+     lec:'Weight vs. mass; the normal force; apparent weight in elevators and on scales; free fall as “weightlessness”.',
+     exp:'PhET “Forces and Motion: Basics” — a mass on a scale in an accelerating frame; watch the reading change.',
+     syn:'Elevator problems; a scale in an accelerating car.',
+     vid:{title:'Apparent Weight and Elevator Problems', ch:'Flipping Physics'},
+     sim:{name:'Forces and Motion: Basics', cand:'PhET (candidate)'}},
+   {dow:'Wed', d:'Feb 24', u:'force', t:'L12', topic:'Friction', hw:3,
+     knight:'6.3', up:'6.2', cp:'5.1',
+     lec:'Static vs. kinetic friction; the model f = μN and its limits; friction on inclines.',
+     exp:'PhET “Friction” — push a book, feel the static threshold, then the steadier kinetic force.',
+     syn:'Block-on-incline and “will it slip?” problems.',
+     vid:{title:'Friction', ch:'Crash Course Physics #6'},
+     sim:{name:'Friction', cand:'PhET (candidate)'}},
+   {dow:'Fri', d:'Feb 26', u:'force', t:'L13', topic:'Drag & terminal speed',
+     knight:'6.4', up:'6.4', cp:'5.2',
+     lec:'Drag as a speed-dependent force; how terminal speed emerges when drag balances weight; why a feather and a hammer differ in air.',
+     exp:'PhET “Projectile Motion” with air resistance on — compare the trajectory to the vacuum case.',
+     syn:'Estimate a skydiver’s terminal speed; reason about the approach to it.',
+     vid:{title:'Air Resistance and Terminal Velocity', ch:'Flipping Physics'},
+     sim:{name:'Projectile Motion (air resistance)', cand:'PhET (candidate)'}},
+ ]},
+ {n:6, u:'force', range:'Mar 1 – 5', days:[
+   {dow:'Mon', d:'Mar 1', u:'force', t:'L14', topic:'Newton’s 3rd law & interacting objects',
+     knight:'7.1–7.3', up:'5.5', cp:'4.4',
+     lec:'Action–reaction pairs and how to tell them apart from balanced forces; analyzing two objects that push or pull on each other.',
+     exp:'PhET “Forces and Motion: Basics” tug-of-war — equal and opposite, yet someone still wins. Why?',
+     syn:'Two blocks pushed together; a person in an elevator; identify every 3rd-law pair.',
+     vid:{title:'Newton’s Third Law', ch:'Flipping Physics'},
+     sim:{name:'Forces and Motion: Basics', cand:'PhET (candidate)'}},
+   {dow:'Wed', d:'Mar 3', u:'force', t:'L15', topic:'Ropes, pulleys & connected systems', hw:4,
+     knight:'7.4–7.5', up:'6.1', cp:'4.7',
+     lec:'Tension in an ideal string; the massless-frictionless pulley; solving connected systems with a common acceleration.',
+     exp:'PhET pulley / “The Ramp” — an Atwood machine; vary the two masses and predict the acceleration.',
+     syn:'Atwood machines and block-and-incline-with-pulley problems.',
+     vid:{title:'Tension, Strings, and Pulleys', ch:'Professor Dave Explains'},
+     sim:{name:'Pulley System', cand:'PhET (candidate)'}},
+   {dow:'Fri', d:'Mar 5', u:'force', t:'L16', topic:'Circular-motion dynamics',
+     knight:'8.1–8.3', up:'6.3', cp:'6.3',
+     lec:'“Centripetal force” is a net force, not a new force; identifying what provides it; cars on curves, conical pendulum.',
+     exp:'PhET “Ladybug Revolution” — set the radius and rotation rate, read the required inward force.',
+     syn:'Flat and banked curves; the string-and-ball vertical circle set up.',
+     vid:{title:'Uniform Circular Motion', ch:'Crash Course Physics #7'},
+     sim:{name:'Ladybug Revolution', cand:'PhET (candidate)'}},
+ ]},
+ {n:0, u:'brk', range:'Mar 6 – 14', days:[
+   {dow:'', d:'Mar 6 – 14', u:'brk', special:true, full:true, topic:'Spring break — no class',
+     note:'Classes resume Monday, March 15. A good spot for a low-stakes “come back ready” Prep on circular-motion dynamics.'},
+ ]},
+ {n:7, u:'force', range:'Mar 15 – 19', days:[
+   {dow:'Mon', d:'Mar 15', u:'force', t:'L17', topic:'Circular motion: orbits, loops & apparent forces',
+     knight:'8.4', up:'6.3', cp:'6.4',
+     lec:'Vertical circles and the minimum speed at the top; the feeling of “centrifugal force” in a rotating frame; a first look at orbits as free fall.',
+     exp:'PhET “Gravity and Orbits” — launch a satellite; too slow falls in, too fast escapes.',
+     syn:'Loop-the-loop and roller-coaster-hill problems; qualitative orbit reasoning.',
+     vid:{title:'Centripetal force problems: loops and cars', ch:'Khan Academy'},
+     sim:{name:'Gravity and Orbits', cand:'PhET (candidate)'}},
+   {dow:'Wed', d:'Mar 17', u:'force', t:'FLEX', topic:'Flex / review — Newton’s laws',
+     lec:'Worked problems across FBDs, friction, connected systems and circular dynamics; the recurring “which force is centripetal?” confusion.',
+     exp:'Revisit Forces and Motion, Friction, and Ladybug Revolution as needed.',
+     syn:'Timed mixed force problem set as a dry run for Test 2.'},
+   {dow:'Fri', d:'Mar 19', u:'force', test:2, topic:'Test 2 — Forces & Newton’s Laws',
+     cov:['Free-body diagrams and Newton’s three laws','Newton’s 2nd law along a line','Weight, normal force and apparent weight','Static and kinetic friction; drag and terminal speed','Ropes, pulleys and connected systems','Circular-motion dynamics']},
+ ]},
+ {n:8, u:'enmo', range:'Mar 22 – 26', days:[
+   {dow:'Mon', d:'Mar 22', u:'enmo', t:'L18', topic:'Work & kinetic energy',
+     knight:'9.1–9.2', up:'7.1–7.3', cp:'7.1–7.2',
+     lec:'Work as force through a displacement (dot product); the work–energy theorem W_net = ΔKE; work by a variable force as an area.',
+     exp:'PhET “Energy Skate Park: Basics” — watch the KE bar track the skater’s speed.',
+     syn:'Compute work for forces at an angle; use W–KE to find a final speed.',
+     vid:{title:'Work, Energy, and Power', ch:'Crash Course Physics #9'},
+     sim:{name:'Energy Skate Park: Basics', cand:'PhET (candidate)'}},
+   {dow:'Wed', d:'Mar 24', u:'enmo', t:'L19', topic:'Potential energy & conservative forces', hw:5,
+     knight:'10.1–10.2', up:'8.1–8.2', cp:'7.3–7.5',
+     lec:'Gravitational PE; what makes a force conservative; the choice of reference level; conservative vs. dissipative.',
+     exp:'PhET “Energy Skate Park” — move the reference line, add friction, watch the energy bars respond.',
+     syn:'Identify conservative vs. non-conservative forces; set up PE for a track.',
+     vid:{title:'Conservative Forces and Potential Energy', ch:'Professor Dave Explains'},
+     sim:{name:'Energy Skate Park: Basics', cand:'PhET (candidate)'}},
+   {dow:'Fri', d:'Mar 26', u:'enmo', t:'L20', topic:'Conservation of energy & energy diagrams',
+     knight:'10.3–10.5', up:'8.3–8.4', cp:'7.6',
+     lec:'The full energy bookkeeping: KE + PE + E_thermal; energy bar charts; reading turning points and stability off a PE-vs-position graph.',
+     exp:'PhET “Energy Skate Park” — build a track, predict where the skater stops, check with the bar chart.',
+     syn:'Multi-step conservation problems with and without friction.',
+     vid:{title:'Conservation of Energy', ch:'Flipping Physics'},
+     sim:{name:'Energy Skate Park: Basics', cand:'PhET (candidate)'}},
+ ]},
+ {n:9, u:'enmo', range:'Mar 29 – Apr 2', days:[
+   {dow:'Mon', d:'Mar 29', u:'enmo', t:'L21', topic:'Elastic potential energy (Hooke’s law) & power',
+     knight:'9.3–9.4', up:'7.4, 8.1', cp:'5.3, 7.7',
+     lec:'The spring force F = −kx and the elastic PE ½kx²; power as the rate of doing work; average vs. instantaneous power.',
+     exp:'PhET “Masses and Springs” — stretch a spring, read the stored energy, set it oscillating.',
+     syn:'Spring-launch and spring-stop problems; horsepower and human-power estimates.',
+     vid:{title:'Hooke’s Law and Elastic Potential Energy', ch:'Professor Dave Explains'},
+     sim:{name:'Masses and Springs', cand:'PhET (candidate)'}},
+   {dow:'Wed', d:'Mar 31', u:'enmo', t:'L22', topic:'Impulse & momentum', hw:6,
+     knight:'11.1', up:'9.1–9.2', cp:'8.1–8.2',
+     lec:'Momentum p = mv; impulse J = FΔt = Δp; the impulse–momentum theorem; force from a collision time.',
+     exp:'PhET “Collision Lab” — read the momentum vectors before and after a bounce.',
+     syn:'Airbag / follow-through / catching problems using J = Δp.',
+     vid:{title:'Collisions: momentum and impulse', ch:'Crash Course Physics #10'},
+     sim:{name:'Collision Lab', cand:'PhET (candidate)'}},
+   {dow:'Fri', d:'Apr 2', u:'enmo', t:'L23', topic:'Conservation of momentum',
+     knight:'11.2', up:'9.3', cp:'8.3',
+     lec:'Why total momentum is conserved for an isolated system; choosing the system; recoil and rocket reasoning.',
+     exp:'PhET “Collision Lab” — turn off external forces, verify total p is unchanged through the collision.',
+     syn:'Recoil, ice-skater push-off, and “what speed after?” problems.',
+     vid:{title:'Conservation of Momentum', ch:'Flipping Physics'},
+     sim:{name:'Collision Lab', cand:'PhET (candidate)'}},
+ ]},
+ {n:10, u:'enmo', range:'Apr 5 – 9', days:[
+   {dow:'Mon', d:'Apr 5', u:'enmo', t:'L24', topic:'Collisions & explosions in one dimension', hw:7,
+     knight:'11.3', up:'9.4', cp:'8.4–8.5',
+     lec:'Elastic vs. perfectly inelastic vs. in-between; what is and isn’t conserved in each; explosions as collisions run backward.',
+     exp:'PhET “Collision Lab” — sweep the elasticity slider from 0 to 1 and watch KE before/after.',
+     syn:'1D collision problems both ways; the “stick together” shortcut.',
+     vid:{title:'Elastic and Inelastic Collisions', ch:'Professor Dave Explains'},
+     sim:{name:'Collision Lab', cand:'PhET (candidate)'}},
+   {dow:'Wed', d:'Apr 7', u:'enmo', t:'L25', topic:'Collisions in two dimensions & center of mass',
+     knight:'11.4', up:'9.5–9.6', cp:'8.6',
+     lec:'2D momentum conservation component by component; the center of mass and how it moves under no external force.',
+     exp:'Center of Mass sim — place masses, watch the balance point; PhET “Collision Lab” in 2D.',
+     syn:'Glancing-collision problems; find the CM of a system.',
+     vid:{title:'2D collisions and center of mass', ch:'Khan Academy'},
+     sim:{name:'Center of Mass', slug:'center-of-mass'}},
+   {dow:'Fri', d:'Apr 9', u:'enmo', test:3, topic:'Test 3 — Energy & Momentum',
+     cov:['Work and the work–energy theorem','Potential energy and conservative forces','Conservation of energy with and without friction','Springs (Hooke’s law), elastic PE and power','Impulse and conservation of momentum','1D and 2D collisions; center of mass']},
+ ]},
+ {n:11, u:'rot', range:'Apr 12 – 16', days:[
+   {dow:'Mon', d:'Apr 12', u:'rot', t:'L26', topic:'Rotational kinematics',
+     knight:'12.1–12.2', up:'10.1–10.3', cp:'10.1–10.2',
+     lec:'Angular position, velocity and acceleration; the constant-α equations as exact analogues of linear kinematics; linking θ, ω, α to arc length, v and a_t.',
+     exp:'PhET “Ladybug Revolution” — compare a bug near the center to one at the rim.',
+     syn:'Rev/min ↔ rad/s conversions; angular-to-linear translation problems.',
+     vid:{title:'Rotational Motion: kinematics', ch:'The Efficient Engineer'},
+     sim:{name:'Ladybug Revolution', cand:'PhET (candidate)'}},
+   {dow:'Wed', d:'Apr 14', u:'rot', t:'L27', topic:'Torque, moment of inertia & rotational energy', hw:8,
+     knight:'12.3–12.5', up:'10.4–10.6', cp:'10.3–10.4',
+     lec:'Torque as the rotational analogue of force (τ = rF sinθ); moment of inertia as rotational mass; ½Iω² and where I comes from.',
+     exp:'PhET “Torque” (legacy) — apply a force at different radii, watch the angular acceleration.',
+     syn:'Compute torque about a pivot; compare I for a hoop, disk and sphere.',
+     vid:{title:'Understanding Moment of Inertia', ch:'The Efficient Engineer'},
+     sim:{name:'Torque', cand:'PhET (candidate, legacy)'}},
+   {dow:'Fri', d:'Apr 16', u:'rot', t:'L28', topic:'Rotational dynamics (τ = Iα) & rolling motion',
+     knight:'12.6–12.7', up:'10.7, 11.1', cp:'10.3',
+     lec:'Newton’s second law for rotation; rolling without slipping as v = Rω; why a hoop loses a race to a sphere.',
+     exp:'PhET “Torque” / a rolling-race animation — same mass and radius, different I, different finish.',
+     syn:'Objects rolling down inclines; a yo-yo; a falling-mass-on-a-pulley with real I.',
+     vid:{title:'Torque and rotational dynamics', ch:'Crash Course Physics'},
+     sim:{name:'Torque', cand:'PhET (candidate, legacy)'}},
+ ]},
+ {n:12, u:'rot', range:'Apr 19 – 23', days:[
+   {dow:'Mon', d:'Apr 19', u:'rot', t:'L29', topic:'Angular momentum & its conservation', hw:9,
+     knight:'12.10–12.11', up:'11.2–11.3', cp:'10.5',
+     lec:'Angular momentum L = Iω; torque as the rate of change of L; why the spinning skater speeds up when she pulls her arms in.',
+     exp:'PhET “Torque” angular-momentum tab, or a rotating-stool demo video.',
+     syn:'Skater / merry-go-round / collapsing-star problems; a disk dropped onto a spinning disk.',
+     vid:{title:'Angular Momentum', ch:'Crash Course Physics'},
+     sim:{name:'Torque', cand:'PhET (candidate, legacy)'}},
+   {dow:'Wed', d:'Apr 21', u:'brk', special:true, topic:'Earlham Day — no class',
+     note:'Earlham Day and Spring Academic Fair; classes are not in session (calendar notes this as tentative). No Prep, Kickoff or HW due.'},
+   {dow:'Fri', d:'Apr 23', u:'rot', t:'L30', topic:'Static equilibrium',
+     knight:'12.8', up:'12.1–12.2', cp:'9.1–9.4',
+     lec:'The two conditions for equilibrium (ΣF = 0 and Στ = 0); choosing a pivot to kill an unknown; ladders, beams and signs.',
+     exp:'PhET “Balancing Act” — place masses on a plank, find the balance, then support forces.',
+     syn:'Ladder-against-wall and loaded-beam problems; find the support reactions.',
+     vid:{title:'Static Equilibrium', ch:'The Efficient Engineer'},
+     sim:{name:'Balancing Act', cand:'PhET (candidate)'}},
+ ]},
+ {n:13, u:'rot', range:'Apr 26 – 30', days:[
+   {dow:'Mon', d:'Apr 26', u:'rot', t:'L31', topic:'Newton’s law of universal gravitation',
+     knight:'13.3–13.4', up:'13.1–13.2', cp:'6.5',
+     lec:'F = Gm₁m₂/r²; why g ≈ 9.8 and how it changes with altitude; the shell theorem stated; measuring G.',
+     exp:'Universal Gravitation sim — vary the masses and separation, watch the force; PhET “Gravity Force Lab”.',
+     syn:'Compute g on other planets; a “weigh yourself on a mountain” estimate.',
+     vid:{title:'Newtonian Gravity', ch:'Crash Course Physics #8'},
+     sim:{name:'Universal Gravitation', slug:'universal-gravitation'}},
+   {dow:'Wed', d:'Apr 28', u:'rot', t:'L32', topic:'Orbits, Kepler’s laws & gravitational energy',
+     knight:'13.5–13.6', up:'13.3–13.5', cp:'6.6',
+     lec:'Circular-orbit speed and period; Kepler’s three laws and where they come from; gravitational PE = −GMm/r and orbital energy; escape speed.',
+     exp:'Kepler’s Laws sim — sweep equal areas in equal times; PhET “Gravity and Orbits” for the energy view.',
+     syn:'Satellite and planet problems; derive T² ∝ r³ for a circular orbit.',
+     vid:{title:'Kepler’s Laws of Planetary Motion', ch:'Khan Academy'},
+     sim:{name:'Kepler’s Laws', slug:'keplers-laws'}},
+   {dow:'Fri', d:'Apr 30', u:'rot', test:4, topic:'Test 4 — Rotation & Gravity',
+     cov:['Rotational kinematics','Torque, moment of inertia and rotational energy','Rotational dynamics and rolling motion','Angular momentum and its conservation','Static equilibrium','Universal gravitation, orbits and Kepler’s laws']},
+ ]},
+ {n:14, u:'fluth', range:'May 3 – 7', days:[
+   {dow:'Mon', d:'May 3', u:'fluth', t:'L33', topic:'Fluid statics: pressure, depth & buoyancy',
+     knight:'15.1–15.4', up:'14.1–14.4', cp:'11.1–11.7',
+     lec:'Density and pressure; P = P₀ + ρgh; Pascal’s principle and hydraulics; Archimedes’ principle and why things float.',
+     exp:'PhET “Buoyancy” / “Under Pressure” — submerge blocks of different density, read the buoyant force.',
+     syn:'Manometer and hydraulic-lift problems; “what fraction floats above water?”',
+     vid:{title:'Buoyancy', ch:'The Efficient Engineer'},
+     sim:{name:'Buoyancy', cand:'PhET (candidate)'}},
+   {dow:'Wed', d:'May 5', u:'fluth', t:'L34', topic:'Fluid dynamics: continuity & Bernoulli', hw:10,
+     knight:'15.5', up:'14.5–14.6', cp:'12.1–12.2',
+     lec:'The continuity equation (Av = const); Bernoulli’s equation as energy conservation for a flowing fluid; lift, venturi, and why a shower curtain billows in.',
+     exp:'PhET “Fluid Pressure and Flow” — pinch the pipe and watch speed and pressure trade off.',
+     syn:'Pipe-narrowing, water-tower and airspeed problems.',
+     vid:{title:'Understanding Bernoulli’s Equation', ch:'The Efficient Engineer'},
+     sim:{name:'Fluid Pressure and Flow', cand:'PhET (candidate)'}},
+   {dow:'Fri', d:'May 7', u:'fluth', t:'L35', topic:'Thermal physics: temperature, heat & the laws of thermodynamics',
+     knight:'16–19 (survey)', up:'Vol 2: 1.1–1.4, 2.1–2.2, 3.1–3.3, 4.1–4.4', cp:'13.1–13.4, 14.1–14.2, 15.1–15.3',
+     lec:'Temperature vs. heat; the ideal-gas law; specific heat and calorimetry; the kinetic-theory picture of pressure; the first law ΔE_int = Q − W; the second law and why heat flows one way.',
+     exp:'Kinetic Theory sim — the Maxwell–Boltzmann speed distribution shifting with temperature; PhET “Gas Properties”.',
+     syn:'Ideal-gas and calorimetry numericals; a first-law process table (isothermal, isobaric, adiabatic).',
+     vid:{title:'Temperature, heat, and the laws of thermodynamics', ch:'Crash Course Physics'},
+     sim:{name:'Kinetic Theory — Molecular Speeds', slug:'kinetic-theory-speeds'}},
+ ]},
+ {n:15, u:'fluth', range:'May 10 – 13', days:[
+   {dow:'', d:'Finals week', u:'fluth', special:true, full:true, exam:true, topic:'Test 5 + cumulative final',
+     note:'Final-exam period runs Mon May 10, Wed May 12, Thu May 13. As drawn: Test 5 (Fluids & Thermal Physics) sits here alongside a cumulative final. If you’d rather keep all five tests on class days like Fall Physics 2, move Test 5 onto Fri May 7 and fold the thermal-physics survey into L34.'},
+ ]},
+];
+
+// ---- flatten + derive assignment numbers -----------------------------------
+const FLAT = [];
+WEEKS.forEach((wk, wi) => wk.days.forEach((d, di) => FLAT.push({...d, wi, di, wkn: wk.n})));
+
+let pn = 0, kn = 0, on = 0;
+FLAT.forEach((d, idx) => {
+  const first = idx === 0;
+  const prevTest = idx > 0 && !!FLAT[idx - 1].test;
+  d.isFirst = first;
+  if (!first && !d.test && !d.special) d.ko = ++kn;
+  if (!first && !d.test && !d.special && d.t !== 'FLEX') d.prep = ++pn;
+  if (!first && !d.test && !d.special && !d.hw && !prevTest && d.t !== 'FLEX') d.ohw = ++on;
+});
+const TOT = {prep: pn, ko: kn, ohw: on,
+  hw: FLAT.filter(d => d.hw).length,
+  lec: FLAT.filter(d => d.t && d.t.startsWith('L')).length,
+  test: FLAT.filter(d => d.test).length};
+
+// ---- render ---------------------------------------------------------------
+let selIdx = 0, filter = null;
+const $ = s => document.querySelector(s);
+
+function legendRender(){
+  $('#legend').innerHTML = Object.keys(U).filter(k => k !== 'brk').map(k =>
+    `<span class="lk"><span class="sw" style="background:var(--${U[k].ac})"></span>${U[k].name}</span>`
+  ).join('') + `<span class="lk"><span class="sw" style="background:var(--test)"></span>Test</span>`;
+}
+
+function matches(d){
+  if (!filter) return true;
+  if (d.special) return false;
+  if (filter === 'sim') return !!d.sim;
+  if (filter === 'video') return !!d.vid;
+  if (filter === 'assess') return !!d.test;
+  return true;
+}
+
+function weeksRender(){
+  const host = $('#weeks');
+  host.innerHTML = '';
+  WEEKS.forEach((wk, wi) => {
+    const row = document.createElement('div');
+    row.className = 'wrow';
+    row.style = acVars(wk.u);
+    row.innerHTML = `
+      <div class="wmeta">
+        <div class="wbar" style="background:var(--ac)"></div>
+        <div>
+          <div class="wk mono">${wk.n ? 'WEEK ' + wk.n : '&nbsp;'}</div>
+          <div class="un">${U[wk.u].name}</div>
+          <div class="rg mono">${wk.range}</div>
+        </div>
+      </div>
+      <div class="days"></div>`;
+    const dayWrap = row.querySelector('.days');
+    wk.days.forEach((d, di) => {
+      const idx = FLAT.findIndex(f => f.wi === wi && f.di === di);
+      const f = FLAT[idx];
+      const btn = document.createElement('button');
+      btn.className = 'day' + (idx === selIdx ? ' sel' : '') + (f.test ? ' test' : '') +
+        (f.special ? ' special' : '') + (filter && !matches(f) ? ' dim' : '');
+      btn.style = acVars(f.u || wk.u);
+      if (f.full) btn.style.gridColumn = '1 / -1';
+      else if (di === 0 && f.dow === 'Wed') btn.style.gridColumnStart = '2';
+      else if (di === 0 && f.dow === 'Fri') btn.style.gridColumnStart = '3';
+      const tags = [];
+      if (f.knight) tags.push(`<span class="tag k">K ${f.knight}</span>`);
+      if (f.prep) tags.push(`<span class="tag prep">Prep ${f.prep}</span>`);
+      if (f.ohw) tags.push(`<span class="tag ohw">OHW ${f.ohw}</span>`);
+      if (f.hw) tags.push(`<span class="tag hw">HW ${f.hw}</span>`);
+      if (f.test) tags.push(`<span class="tag test">TEST ${f.test}</span>`);
+      const glyphs = [];
+      if (f.vid) glyphs.push('<span class="g-vid">&#9654;</span>');
+      if (f.sim) glyphs.push('<span class="g-sim"></span>');
+      btn.innerHTML = `
+        <div class="drow">
+          <span class="ddate mono">${(f.dow ? f.dow + ' ' : '') + f.d}</span>
+          <span class="dglyphs">${glyphs.join('')}</span>
+        </div>
+        <div class="dtopic">${f.topic}</div>
+        <div class="dtags">${tags.join('')}</div>`;
+      btn.addEventListener('click', () => { selIdx = idx; render(); });
+      dayWrap.appendChild(btn);
+    });
+    host.appendChild(row);
+  });
+}
+
+function readRow(lbl, val){
+  return `<tr><td class="lbl">${lbl}</td><td>${
+    val ? `<span class="val">${val}</span>` : `<span class="none">&mdash;</span>`
+  }</td></tr>`;
+}
+
+function panelRender(){
+  const d = FLAT[selIdx];
+  const host = $('#panel');
+  host.style = acVars(d.u);
+  const badge = d.test ? 'Test' : d.special ? 'Calendar' : d.t === 'FLEX' ? 'Flex day' : U[d.u].name;
+
+  let body = '';
+  if (d.special){
+    body = `<div class="sec"><div class="specialnote">${d.note || ''}</div></div>`;
+  } else if (d.test){
+    body = `
+      <div class="sec">
+        <h3>Covers</h3>
+        <ul class="cov">${d.cov.map(c => `<li>${c}</li>`).join('')}</ul>
+      </div>
+      <div class="sec">
+        <div class="specialnote">50-minute in-class test. Same model as Fall Physics 2:
+        two attempts on the online portion, deferred feedback; the written portion hand-graded.</div>
+      </div>`;
+  } else {
+    // video
+    if (d.vid){
+      body += `
+        <div class="sec"><div class="vidcard">
+          <div class="vtop"><span>&#9654;</span> Pre-class video <span class="unv">unvetted</span></div>
+          <div class="vmeta">${d.vid.ch} &mdash; &ldquo;${d.vid.title}&rdquo;</div>
+          <a href="${yt(d.vid.ch + ' ' + d.vid.title + ' physics')}" target="_blank" rel="noopener">Find it on YouTube &rarr;</a>
+        </div></div>`;
+    }
+    // due
+    const due = [];
+    if (d.ko)  due.push(['ko','KO ' + d.ko,'Kickoff &mdash; in class, retrieval warm-up']);
+    if (d.prep)due.push(['prep','Prep ' + d.prep,'Class prep &mdash; due at class time']);
+    if (d.ohw) due.push(['ohw','OHW ' + d.ohw,'Online HW set &mdash; due at class time']);
+    if (d.hw)  due.push(['hw','HW ' + d.hw,'Written HW &mdash; due at class time']);
+    if (due.length){
+      body += `<div class="sec"><h3>Due this day</h3><div class="due">${
+        due.map(x => `<div class="dueitem"><span class="chip ${x[0]}">${x[1]}</span><span>${x[2]}</span></div>`).join('')
+      }</div></div>`;
+    }
+    // readings
+    body += `
+      <div class="sec"><h3>Readings</h3>
+        <table class="read">
+          <tr><th>Track</th><th>Sections</th></tr>
+          ${readRow('Knight', d.knight)}
+          ${readRow('OpenStax &middot; Calculus', d.up)}
+          ${readRow('OpenStax &middot; Algebra', d.cp)}
+        </table>
+      </div>`;
+    // sim
+    if (d.sim){
+      const href = d.sim.slug ? SIM + d.sim.slug + '/index.html' : null;
+      body += `
+        <div class="sec"><div class="simcard">
+          <div class="stop"><span>&#9670;</span> ${d.sim.name}</div>
+          ${d.sim.cand ? `<div class="cand">${d.sim.cand} &mdash; not yet built for this repo</div>` : ''}
+          ${d.exp ? `<div class="snote">${d.exp}</div>` : ''}
+          ${href ? `<a href="${href}" target="_blank" rel="noopener">Open the sim &rarr;</a>` : ''}
+        </div></div>`;
+    }
+    // plan
+    const steps = [
+      ['0&ndash;5','Kickoff','Retrieval warm-up: 1&ndash;2 questions on last class and today&rsquo;s reading.', 'ko'],
+      ['5&ndash;20','Mini-lecture', d.lec || '', 'hl'],
+      ['20&ndash;40','Explore', d.exp || '', d.sim ? 'sim' : ''],
+      ['40&ndash;50','Synthesize', d.syn || '', ''],
+    ];
+    body += `<div class="sec"><h3>50-minute class plan</h3><div class="plan">${
+      steps.map(s => `
+        <div class="step ${s[3] === 'hl' ? 'hl' : ''} ${s[3] === 'sim' ? 'sim' : ''}">
+          <div class="stepdot"><i></i><span class="ln"></span></div>
+          <div class="stepbody">
+            <div class="st">${s[1]}<span class="stime mono">${s[0]} min</span></div>
+            <div class="stx">${s[2]}</div>
+          </div>
+        </div>`).join('')
+    }</div></div>`;
+  }
+
+  host.innerHTML = `
+    <div class="phead">
+      <div class="prow">
+        <span class="pbadge">${badge}</span>
+        <span class="pdate mono">${(d.dow ? d.dow + ' ' : '') + d.d}</span>
+      </div>
+      <div class="ptopic">${d.topic}</div>
+      ${(d.knight || d.up) ? `<div class="pdate" style="margin-top:6px">Reading &middot; Knight ${d.knight || '&mdash;'}</div>` : ''}
+    </div>
+    <div class="pbody">${body}</div>`;
+}
+
+function structRender(){
+  const cards = [
+    ['Tests', '200', `5 unit tests × 50, best 4 count. Test 1&ndash;4 on class days; Test 5 in the exam period.`],
+    ['Cumulative final', '100', 'Exam week, after the last class day.'],
+    ['Written HW', `${TOT.hw * 15}`, `${TOT.hw} sets × 15, drop the lowest. Due at class time.`],
+    ['Online HW', `~${TOT.ohw * 6}`, `${TOT.ohw} sets × 6 (Mastering / MyLab), drop 2. Due at class time.`],
+    ['Prep', `~${TOT.prep * 3}`, `${TOT.prep} class preps × 3, drop 2. Sim-based, due before class.`],
+    ['Kickoff', `~${TOT.ko * 2}`, `${TOT.ko} in-class retrieval quizzes × 2, drop 2. None on day 1.`],
+  ];
+  $('#sgrid').innerHTML = cards.map(c => `
+    <div class="scard">
+      <div class="sh"><span class="sname">${c[0]}</span><span class="spts mono">${c[1]} pts</span></div>
+      <div class="sdesc">${c[2]}</div>
+    </div>`).join('');
+  $('#notes').innerHTML = [
+    `<b>Five units, five tests.</b> Kinematics → Forces → Energy &amp; Momentum → Rotation &amp; Gravity → Fluids &amp; Thermal Physics. ${TOT.lec} lecture days, 2 flex days, 4 in-term tests, plus Test 5 and the final in exam week.`,
+    `<b>Sequence changes from your draft.</b> Gravity moves next to rotation (both are “Test 4” material) instead of sitting in the thermo weeks; energy comes before momentum; circular-motion <i>dynamics</i> lands in the forces unit while circular <i>kinematics</i> stays with kinematics.`,
+    `<b>Thermal physics is compressed</b> to one survey day (L35), matching the light treatment in your draft. If you want a real 3&ndash;4 day thermo unit, we’d trim ~2 days from mechanics — flag which unit can give them up.`,
+    `<b>Readings need a pass.</b> Knight sections past Ch. 11 and all OpenStax sections are a first mapping from the chapter structure, not checked line by line against the current editions.`,
+    `<b>Videos are all unvetted.</b> Each links a YouTube search for the title and channel I have in mind — same vetting workflow as the fall map.`,
+    `<b>Sims:</b> a &#9670; with an <i>Open the sim</i> link already exists in your repo. “PhET (candidate)” marks a lesson where a named PhET sim fits but nothing is built yet.`,
+  ].map(n => `<div class="note">${n}</div>`).join('');
+}
+
+function render(){
+  weeksRender();
+  panelRender();
+  const sel = document.querySelector('.day.sel');
+  if (sel) sel.scrollIntoView({block:'nearest'});
+}
+
+document.querySelectorAll('.fbtn').forEach(b => b.addEventListener('click', () => {
+  const f = b.dataset.filter;
+  filter = filter === f ? null : f;
+  document.querySelectorAll('.fbtn').forEach(x =>
+    x.setAttribute('aria-pressed', x.dataset.filter === filter ? 'true' : 'false'));
+  render();
+}));
+
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT') return;
+  if (e.key === 'ArrowRight'){ selIdx = Math.min(FLAT.length - 1, selIdx + 1); render(); e.preventDefault(); }
+  if (e.key === 'ArrowLeft'){ selIdx = Math.max(0, selIdx - 1); render(); e.preventDefault(); }
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp'){
+    const cur = FLAT[selIdx];
+    const step = e.key === 'ArrowDown' ? 1 : -1;
+    let i = selIdx;
+    while (i + step >= 0 && i + step < FLAT.length && FLAT[i + step].wi === cur.wi) i += step;
+    if (i + step >= 0 && i + step < FLAT.length) selIdx = i + step;
+    render(); e.preventDefault();
+  }
+});
+
+legendRender();
+structRender();
+render();
+</script>
+
+</body>
+</html>
