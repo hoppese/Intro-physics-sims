@@ -1,6 +1,6 @@
 # Intro Physics Sims
 
-A collection of 44 interactive simulations for introductory (algebra/calculus) physics,
+A collection of 43 interactive simulations for introductory (algebra/calculus) physics,
 spanning mechanics, waves, thermal physics, electromagnetism, and optics. Each sim is a
 single self-contained HTML page — React and KaTeX are vendored inline, nothing is fetched
 at runtime, and every page works offline. They are designed to be embedded in a Moodle
@@ -15,10 +15,8 @@ compute** on the other, a collapsible **Worked example**, and short **What this 
 
 | Path | What it is |
 |---|---|
-| `index.html` | Entry point — a bundled build of the catalog page below |
-| `Web App Catalog.dc.html` | Source for the catalog: a filterable grid of every sim, grouped by course unit, with build-status pills saved to the browser |
-| `<sim-name>/index.html` | One bundled, deployable sim per directory (see the list below) |
-| `support.js` | Shared `dc-runtime` — a small React-based template runtime (`<x-dc>`, `{{ }}` bindings, `<sc-for>` / `<sc-if>`) used by the `.dc.html` sources |
+| `index.html` | The catalog page: a filterable grid of every sim, grouped by course unit, with build-status pills saved to the browser |
+| `<sim-name>/index.html` | One self-contained, deployable sim per directory (see the list below) |
 | `course-map/course-map-fall-26.html` | Day-by-day schedule — reading, pre-class video, sim per class (embedded in Moodle) |
 | `assessments/equation-sheets/` | LaTeX + rendered-PDF reference sheets handed to students |
 | `assessments/in-class-practice/` | Practice problem sets (PDF) |
@@ -123,6 +121,10 @@ serve step needed to run one — open the file, or serve the folder statically.
 
 ## Editing
 
-The runnable sims are generated bundles. `support.js` is likewise generated — its header
-points to the `dc-runtime` source (`cd dc-runtime && bun run build`), which lives outside
-this repo. Treat the `<sim>/index.html` files and `support.js` as build artifacts.
+Each `<sim>/index.html` is edited directly in place. The file unpacks an embedded,
+compressed manifest of its own vendored JS, CSS, and fonts on load; the sim's actual
+markup and logic live as a plain (uncompressed, readable) template string inside a
+`<script type="__bundler/template">` tag partway through the file. Edit that string in
+place — carefully preserving its JSON string-escaping — then reload the file directly in
+a browser to check the change. There is no separate source format, build step, or
+external tool involved: what's in the repo is what runs.
