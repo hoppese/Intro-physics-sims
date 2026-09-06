@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="mp-tools.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
 <style>
   * { box-sizing: border-box; }
@@ -65,6 +66,7 @@
 </head>
 <body>
 <div class="wrap">
+  <div id="dc-root">
   <div class="card">
     <div class="header">
       <div class="title">
@@ -78,7 +80,7 @@
     </div>
     <div class="body">
       <div class="canvasCol">
-        <canvas id="cv" width="440" height="440"></canvas>
+        <canvas id="cv" width="440" height="440" data-mp-canvas></canvas>
         <div class="stat-row">
           <div class="stat"><div class="n" id="streakN">0</div><div class="l">Streak</div></div>
           <div class="stat"><div class="n" id="correctN">0</div><div class="l">Correct</div></div>
@@ -103,6 +105,7 @@
       </div>
     </div>
     <div class="footer-note">Special angles only (multiples of 15°/30°/45°) so every answer has a clean closed form.</div>
+  </div>
   </div>
 </div>
 
@@ -209,6 +212,7 @@ function buildAnswerFields() {
 }
 
 function newProblem() {
+  if (window.MP) requestAnimationFrame(()=>MP.previewTick());
   problem = genProblem(level);
   checked = false;
   revealed = false;
@@ -302,7 +306,7 @@ $('stepsBtn').addEventListener('click', () => {
 
 function draw() {
   const ctx = $('cv').getContext('2d');
-  const W = 440, H = 440;
+  const _cv=$('cv'); const W = _cv.width||440, H = _cv.height||440;
   ctx.clearRect(0,0,W,H);
   ctx.fillStyle = '#181225'; ctx.fillRect(0,0,W,H);
   if (!problem) return;
@@ -372,6 +376,16 @@ $('infoBtn').addEventListener('click', () => $('infoModal').classList.add('show'
 $('infoClose').addEventListener('click', () => $('infoModal').classList.remove('show'));
 $('infoModal').addEventListener('click', e => { if (e.target.id==='infoModal') $('infoModal').classList.remove('show'); });
 
+if (window.MP) {
+  MP.onResize(typeof draw==='function'?draw:function(){});
+  MP.register({
+    levels: 4,
+    setLevel: n => { level = n; newProblem(); },
+    currentLevel: () => level,
+    nextProblem: newProblem,
+    answerText: () => { if(!problem) return '\u2014'; return problem.type==='given-value' ? ('\u03b8='+problem.deg+'\u00b0') : problem.ask.map(fn=>fn+'\u03b8='+trueVal(fn,problem.deg).toFixed(3)).join('  '); },
+  });
+}
 window.addEventListener('load', () => { katexAll(); newProblem(); });
 </script>
 </body>

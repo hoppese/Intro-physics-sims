@@ -30,16 +30,14 @@
 
   /* ---------- responsive canvas ---------- */
   function wireCanvas(cv) {
-    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    // backing store = CSS pixel size (dpr 1) so every sim can just read
+    // cv.width / cv.height as its drawing surface. Slight softness on retina,
+    // in exchange for zero per-sim coordinate math.
     function fit() {
       var r = cv.getBoundingClientRect();
       var w = Math.max(1, Math.round(r.width)), h = Math.max(1, Math.round(r.height));
-      var bw = Math.round(w * dpr), bh = Math.round(h * dpr);
-      if (cv.width !== bw || cv.height !== bh) {
-        cv.width = bw; cv.height = bh;
-      }
-      // sims read cv.width / cv.height as their drawing surface; expose the dpr
-      cv._mpDpr = dpr;
+      if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
+      cv._mpDpr = 1;
     }
     MP._fitCanvas = fit;
     fit();
@@ -128,26 +126,34 @@
     nx.addEventListener('click', function () { for (var k = 0; k < 10; k++) sim.nextProblem(); refreshKey(); });
     bar.appendChild(nx);
     var card = document.querySelector('.card');
-    card.parentNode.insertBefore(bar, card);
+    if (card && card.parentNode) card.parentNode.insertBefore(bar, card);
 
     var key = document.createElement('div');
     key.id = 'mp-answer-key';
     key.style.cssText = 'background:#eef6ef;border:1px solid #b9dbc3;border-radius:9px;margin:10px 14px 0;padding:9px 12px;font:600 12.5px "JetBrains Mono",monospace;color:#1f7a45;';
-    document.querySelector('.ctlCol').appendChild(key);
+    (document.querySelector('.ctlCol') || document.querySelector('.body') || document.body).appendChild(key);
 
     function markLevel() {
       [].forEach.call(bar.querySelectorAll('button'), function (b) {
         if (b._n) b.style.background = b._n === sim.currentLevel() ? 'rgba(255,255,255,.28)' : 'rgba(255,255,255,.08)';
       });
     }
-    function refreshKey() { key.textContent = 'answer key ▸ ' + sim.answerText(); markLevel(); }
+    function refreshKey() {
+      var t = '—';
+      try { t = sim.answerText(); } catch (e) {}
+      key.textContent = 'answer key ▸ ' + t;
+      markLevel();
+    }
     MP._previewRefresh = refreshKey;
     refreshKey();
+    // the page drives its own first problem and its "New problem" button; poll so
+    // the key always reflects what's on screen without wiring every sim's newProblem
+    setInterval(refreshKey, 400);
   }
 
   MP.register = function (iface) {
     sim = iface;   // { levels, setLevel(n), currentLevel(), answerText(), nextProblem() }
-    buildPreview();
+    try { buildPreview(); } catch (e) { if (window.console) console.warn('mp-tools preview:', e); }
   };
   MP.previewTick = function () { if (MP._previewRefresh) MP._previewRefresh(); };
 
