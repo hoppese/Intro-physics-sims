@@ -138,8 +138,9 @@ footer{margin-top:64px; padding-top:24px; border-top:1px solid var(--line); font
       <li><a href="#newsims"><span class="n">03</span> New sims — drafted &amp; delivered</a></li>
       <li><a href="#pedagogy"><span class="n">04</span> Interactivity &amp; pedagogy</a></li>
       <li><a href="#graphics"><span class="n">05</span> Graphics pass</a></li>
-      <li><a href="#future"><span class="n">06</span> Future sims — upper-level &amp; intro astro</a></li>
-      <li><a href="#nextsteps"><span class="n">07</span> Next steps — pick of the litter</a></li>
+      <li><a href="#uistandard"><span class="n">06</span> UI standardization — button resizing</a></li>
+      <li><a href="#future"><span class="n">07</span> Future sims — upper-level &amp; intro astro</a></li>
+      <li><a href="#nextsteps"><span class="n">08</span> Next steps — pick of the litter</a></li>
     </ol>
   </nav>
 
@@ -194,7 +195,7 @@ footer{margin-top:64px; padding-top:24px; border-top:1px solid var(--line); font
   <section id="newsims">
     <span class="num">03</span>
     <h2>New sims — drafted and delivered</h2>
-    <p class="lead">All three sims suggested earlier are now built as standalone drafts, sent to you as files (not committed to the repo/catalog yet). Each has a working Info panel, Worked Example, and the same visual language as the production sims.</p>
+    <p class="lead">All three sims suggested earlier are now built as standalone drafts, committed to the repo under <code>drafts/</code> — not yet wired into the catalog page or converted to the production bundler format. Each has a working Info panel, Worked Example, and the same visual language as the production sims.</p>
 
     <div class="new-sim shipped">
       <h3>Parallel-Plate Capacitor <span class="pill done">✓ built</span></h3>
@@ -274,8 +275,44 @@ footer{margin-top:64px; padding-top:24px; border-top:1px solid var(--line); font
     <p style="margin-top:12px; font-size:13.5px;">The coil-spring technique built for the SHM preview (layered drop shadow, perpendicular gradient, thin highlight stroke, all parametrized by direction so it works at any angle) is the reusable template for this pass — apply it anywhere a sim draws a mechanical object (blocks, strings, rods, pulleys, carts) with a flat fill today. Center of Mass and Relative Velocity's vector diagrams are the next clearest candidates in Mechanics.</p>
   </section>
 
-  <section id="future">
+  <section id="uistandard">
     <span class="num">06</span>
+    <h2>UI standardization — buttons that resized on click</h2>
+    <p class="lead">A separate bug hunt, prompted by "buttons change size when clicked, or are too wide, or the whole sim resizes." Root-caused and fixed across 39 sims, verified in-browser (button width before/after click, delta ≈ 0px) and with a full 43-sim load/no-console-error regression.</p>
+    <div class="stack">
+      <div class="item">
+        <span class="idx">01</span>
+        <div>
+          <h3>Buttons resizing on click</h3>
+          <p>Play/Pause, "Hide values"/"Values hidden", and several one-off toggles (Ghost, Forces on/off, the worked-solution reveal, Field/Waves, the share-link Copy button) had no <code>min-width</code>, so the button's own footprint changed every time its label text changed. Pendulum was the one sim that already had this right — used as the reference for the fix everywhere else. Standardized Play/Pause to a fixed width (104px, one 92px variant), "Hide values" to 136px across all 38 sims that have it (including two shared helper functions used to build several other buttons, parametrized with an optional min-width rather than hardcoded), and the smaller one-offs individually.</p>
+        </div>
+      </div>
+      <div class="item">
+        <span class="idx">02</span>
+        <div>
+          <h3>Buttons stretching to fill blank space</h3>
+          <p>Five sims (drop-and-toss, keplers-laws, motion-diagram, relative-velocity, faraday-flux-explorer) had a lone Play button set to <code>flex:1</code> next to a fixed-width Reset button, so Play grabbed 100% of whatever space was left in the row instead of sizing to its own content. Removed <code>flex:1</code> from all of them so every control row now sizes to content, matching the majority pattern.</p>
+        </div>
+      </div>
+      <div class="item">
+        <span class="idx">03</span>
+        <div>
+          <h3>Left alone — not bugs</h3>
+          <p>Buttons already using <code>width:100%</code> by design (radiation-wiggling-charge's stacked sidebar controls), menu-item-based play/pause controls that live inside an already fixed-width dropdown (current-loop-motor, e-fields-conductors, faraday-induction, lorentz-force, rc-charging), and balanced <code>flex:1</code> pairs with short static labels (phase-select and source on/off in two-source-interference).</p>
+        </div>
+      </div>
+      <div class="item">
+        <span class="idx">04</span>
+        <div>
+          <h3>Remaining — not done yet</h3>
+          <p>The "Submit bug" button's label also changes ("Send report" → "Sending…") with no min-width, in all 43 sims — but it's inside the rarely-opened "Report a problem" modal, so it's cosmetic rather than the disruptive bug that was flagged. Same fix pattern, just lower priority; a five-minute follow-up whenever you want it done.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="future">
+    <span class="num">07</span>
     <h2>Looking further out — upper-level &amp; intro astro</h2>
     <p class="lead">Brainstorm only, per your ask — nothing here is scoped or started. Checked against the current 43 to avoid suggesting a duplicate; a few explicitly build on a sim or draft that already exists.</p>
 
@@ -310,17 +347,17 @@ footer{margin-top:64px; padding-top:24px; border-top:1px solid var(--line); font
   </section>
 
   <section id="nextsteps">
-    <span class="num">07</span>
+    <span class="num">08</span>
     <h2>Next steps — pick of the litter</h2>
     <p class="lead">Roughly in priority order. Pick any and say go.</p>
     <div class="next-list">
-      <div class="next-item"><span class="rank">1</span><div class="body"><h3>Review and merge the 3 new sim drafts</h3><p>Open the files, try the toggles, and say what needs to change before they're wired into the repo, given the new-sim naming/id/manifest conventions.</p></div></div>
+      <div class="next-item"><span class="rank">1</span><div class="body"><h3>Review and wire in the 3 new sim drafts <span class="pill good" style="margin-left:8px;">now in repo — drafts/</span></h3><p>Committed as standalone files under <code>drafts/</code>. Try the toggles, say what needs to change, then they need converting to the production bundler/manifest format and adding to the catalog page, given the new-sim naming/id/manifest conventions.</p></div></div>
       <div class="next-item"><span class="rank">2</span><div class="body"><h3>Fix gauss-flux's pan/zoom</h3><p>Deferred tonight rather than rushed: its 2D mode uses one coordinate system for rendering (a projection function shared with the 3D view) and a separate, simpler one for hit-testing clicks/drags on charges and the Gaussian surface. Adding pan+zoom means reconciling both without breaking the existing drag-a-charge / resize-the-surface interactions — worth a dedicated session rather than a rushed patch late at night.</p></div></div>
       <div class="next-item"><span class="rank">3</span><div class="body"><h3>Roll pan/zoom into the ray-tracer trio</h3><p>ray-optics, lens-ray-tracer, mirror-ray-tracer — one implementation, three sims, all optics.</p></div></div>
       <div class="next-item"><span class="rank">4</span><div class="body"><h3>Continue the content audit</h3><p>Waves/oscillations and electrostatics (17 of 43) are done. Magnetism, circuits, optics, mechanics, and gravitation are next — same OpenStax-comparison treatment, same odds of finding a real bug or two.</p></div></div>
       <div class="next-item"><span class="rank">5</span><div class="body"><h3>Keep going on the graphics pass</h3><p>Center of Mass and Relative Velocity next, then work down the Mechanics unit — it's the category furthest behind the electrostatics/3D sims' visual polish.</p></div></div>
       <div class="next-item"><span class="rank">6</span><div class="body"><h3>Design the HW-quiz feature</h3><p>You mentioned wanting graded quiz questions built into the sims eventually. Worth scoping before building: probably a new overlay type alongside Info/Worked-Example/Random-Problem, reusing each sim's existing random-problem generator as the question bank where one exists, plus some way to record/export results. Happy to draft a design doc + a first prototype on one sim once you want to point at it.</p></div></div>
-      <div class="next-item"><span class="rank">7</span><div class="body"><h3>Math-prerequisite practice activities <span class="pill gap" style="margin-left:8px;">not started — flagged only</span></h3><p>A separate track from the physics sims: students need to actually practice the underlying math, not just have it explained. Seven topics called out — algebraic manipulation, geometry, trig, differentiation, integration, vector addition/subtraction, and dot &amp; cross products. Explicitly <em>not</em> all screen-based — some of this is better as paper/whiteboard/physical activities than a browser exercise, so this needs its own design pass rather than reusing the sim template. Assessment shape: a diagnostic to check whether a student already knows the material; if not, route them into an adaptive quiz or practice sequence that builds toward a badge on completion. Needs scoping (screen vs. non-screen split per topic, what "adaptive" means here, how a badge is tracked/displayed) before any building starts — holding until you're ready to prioritize it.</p></div></div>
+      <div class="next-item"><span class="rank">7</span><div class="body"><h3>Math-prerequisite practice activities <span class="pill done" style="margin-left:8px;">first drafts built — math-practice/</span></h3><p>A separate track from the physics sims: students need to actually practice the underlying math, not just have it explained. All seven topics called out — algebraic manipulation, geometry, trig, differentiation, integration, vector addition/subtraction, and dot &amp; cross products — now have a first-draft practice sim committed under <code>math-practice/</code>, each with 4 adaptive difficulty levels (up after 3 correct in a row, down after 2 wrong), a worked-solution reveal, and a canvas visualization. Not yet done: the diagnostic-then-route logic, badge tracking, or any non-screen activities — these drafts are screen-only practice tools, not the full assessment shape described originally. Needs review before going further: are these the right interaction model, and do you still want a paper/whiteboard component for some topics?</p></div></div>
       <div class="next-item"><span class="rank">8</span><div class="body"><h3>Mastering Physics exploration — export old assignments, auto-create new ones <span class="pill gap" style="margin-left:8px;">not started — flagged only</span></h3><p>Two separate capabilities to scope, both requiring you to be signed into Pearson's Mastering Physics in an interactive/browser session (not something doable headlessly with just an API key):</p><p style="margin-top:8px;"><strong>1. Export, old course.</strong> While signed in, navigate an old course and copy/download every assignment (problem sets, due dates, point values) so they can be mined for inspiration when rebuilding homework directly in Moodle after leaving Mastering Physics. This is read-only against your own course data, so the main open question is just mechanics — what the export/print/copy options in Mastering Physics's UI actually expose, and whether a browser-automation pass (e.g. Claude with computer use, or a Playwright script driven by you interactively logging in) is the right tool versus doing it by hand.</p><p style="margin-top:8px;"><strong>2. Auto-create, current course.</strong> Signed into the live course, read due dates from Moodle and create matching assignments in Mastering Physics automatically, with each one hidden from students until its scheduled open date. This is a write path against a live, currently-in-use gradebook — needs more care: confirming Mastering Physics actually supports a "visible from" / "invisible until" release-date field (not just a due date), and a dry-run or review step before anything goes live so a scripting mistake can't accidentally expose or misdate a real assignment.</p><p style="margin-top:8px;">For both: needs a working session to actually poke at the Mastering Physics UI together (screen-shared or with you driving the login) before committing to an approach — holding until you're ready to prioritize it.</p></div></div>
     </div>
   </section>
