@@ -73,7 +73,7 @@ serve step needed to run one — open the file, or serve the folder statically.
 | [Electrostatics Explorer](electrostatics-explorer/) | The force and field of point charges by Coulomb's law F = k|qQ|/r², in 3D. |
 | [Field Superposition Explorer](field-superposition-explorer/) | The total field at a point as the vector sum of every charge's field. |
 | [E-Fields in Conductors & Insulators](e-fields-conductors-and-insulators/) | E = 0 inside a conductor with all excess charge on its surface; an insulator holds charge throughout its volume. |
-| [Moving Charge Field](moving-charge-field/) | The field pattern of a point charge and how it distorts when the charge moves quickly. |
+| [Moving Charge Field](moving-charge-field/) | The magnetic field a moving charge creates, circling its velocity by the right-hand rule — magnetism as the relativistic sliver of a charge's electric field. |
 | [Potential Energy vs Separation](pe-vs-separation/) | U = kq₁q₂/r — positive for like charges, negative for unlike — converting to kinetic energy on release. |
 | [Equipotential Explorer](equipotential-explorer/) | The potential map V = Σ kqᵢ/rᵢ, and field lines crossing the equipotential contours at right angles (E = −∇V). |
 | [Counting Field Lines — Density Is Field Strength](field-line-density-3d/) | 3D field lines from point, line, and plane charges; the line density through a detector surface tracks E and falls off differently for each geometry. |
