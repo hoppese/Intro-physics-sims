@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="mp-tools.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
 <style>
   * { box-sizing: border-box; }
@@ -70,6 +71,7 @@
 </head>
 <body>
 <div class="wrap">
+  <div id="dc-root">
   <div class="card">
     <div class="header">
       <div class="title">
@@ -83,7 +85,7 @@
     </div>
     <div class="body">
       <div class="canvasCol">
-        <canvas id="cv" width="460" height="460"></canvas>
+        <canvas id="cv" width="460" height="460" data-mp-canvas></canvas>
         <div class="stat-row">
           <div class="stat"><div class="n" id="streakN">0</div><div class="l">Streak</div></div>
           <div class="stat"><div class="n" id="correctN">0</div><div class="l">Correct</div></div>
@@ -108,6 +110,7 @@
       </div>
     </div>
     <div class="footer-note">Adaptive: 3 in a row levels you up, 2 wrong levels you down. Revealing the worked solution skips scoring for that problem.</div>
+  </div>
   </div>
 </div>
 
@@ -465,6 +468,7 @@ function checkAnswer() {
   $('totalN').textContent = totalCount;
   levelTrack();
   draw();
+  if (window.MP) MP.previewTick();
 }
 
 function buildSteps() {
@@ -508,6 +512,7 @@ function newProblem() {
   renderProblem();
   levelTrack();
   draw();
+  if (window.MP) MP.previewTick();
 }
 
 $('checkBtn').addEventListener('click', checkAnswer);
@@ -516,7 +521,9 @@ $('nextBtn').addEventListener('click', newProblem);
 /* ================= drawing ================= */
 function draw() {
   const cv = $('cv'), ctx = cv.getContext('2d');
-  const W = cv.width, H = cv.height;
+  const dpr = cv._mpDpr || 1;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  const W = cv.width / dpr, H = cv.height / dpr;
   ctx.clearRect(0,0,W,H);
   ctx.fillStyle = '#181225'; ctx.fillRect(0,0,W,H);
   if (!problem) return;
@@ -679,32 +686,32 @@ function drawIncline(ctx,W,H) {
   }
 }
 
+let orbit = null;
 function draw3D(ctx,W,H) {
   const p = problem;
-  const ox = W*0.42, oy = H*0.56;
+  if (!orbit) orbit = MP.makeOrbit($('cv'), draw);
+  const cx = W/2, cy = H/2;
   const maxC = Math.max(4, ...[p.A,p.B,p.R].flatMap(v=>[Math.abs(v.x),Math.abs(v.y),Math.abs(v.z)]));
-  const u = Math.min(24, (Math.min(W,H)/2 - 40)/maxC);
-  // iso basis (screen px per unit)
-  const ex = [ u*0.94,  u*0.34];
-  const ey = [-u*0.94,  u*0.34];
-  const ez = [ 0,      -u*1.0 ];
-  const P = (x,y,z) => [ox + x*ex[0] + y*ey[0] + z*ez[0], oy + x*ex[1] + y*ey[1] + z*ez[1]];
-  // axes
-  ctx.strokeStyle = 'rgba(255,255,255,0.28)'; ctx.lineWidth = 1.4;
+  const u = Math.min(26, (Math.min(W,H)/2 - 34) / (maxC*1.25));
+  const P = (x,y,z) => { const q = orbit.project(x,y,z); return { x: cx + q.sx*u, y: cy + q.sy*u, d: q.depth }; };
   const L = maxC*1.15;
-  [['x',[L,0,0]],['y',[0,L,0]],['z',[0,0,L]]].forEach(([lab,v]) => {
-    const a = P(0,0,0), b = P(v[0],v[1],v[2]);
-    ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke();
-    ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.font = 'italic 12px "Source Serif 4",serif';
-    ctx.fillText(lab, b[0]+4, b[1]+4);
+  ctx.lineWidth = 1.3;
+  [['x',[1,0,0]],['y',[0,1,0]],['z',[0,0,1]]].forEach(function (e) {
+    var lab = e[0], d = e[1];
+    var a = P(-d[0]*L, -d[1]*L, -d[2]*L), b = P(d[0]*L, d[1]*L, d[2]*L);
+    ctx.strokeStyle = 'rgba(255,255,255,0.16)';
+    ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,0.55)'; ctx.font = 'italic 12px "Source Serif 4",serif';
+    ctx.fillText(lab, b.x + 4, b.y + 4);
   });
-  const o = P(0,0,0);
-  const A = P(p.A.x,p.A.y,p.A.z), B = P(p.B.x,p.B.y,p.B.z);
-  arrow(ctx,o[0],o[1],A[0],A[1],C.A,p.an.replace('_',''));
-  arrow(ctx,o[0],o[1],B[0],B[1],C.B,p.bn.replace('_',''));
-  if (checked) { const R = P(p.R.x,p.R.y,p.R.z); arrow(ctx,o[0],o[1],R[0],R[1],C.R,'R'); }
-  ctx.fillStyle = 'rgba(255,255,255,0.35)'; ctx.font = '11px "Source Sans 3",sans-serif';
-  ctx.fillText('isometric view — add component by component', 12, H-12);
+  var o = P(0,0,0);
+  var vs = [ { v:p.A, c:C.A, l:p.an.replace('_','') }, { v:p.B, c:C.B, l:p.bn.replace('_','') } ];
+  if (checked) vs.push({ v:p.R, c:C.R, l:'R' });
+  vs.map(function (o2) { o2.tip = P(o2.v.x, o2.v.y, o2.v.z); return o2; })
+    .sort(function (m, n) { return m.tip.d - n.tip.d; })
+    .forEach(function (o2) { arrow(ctx, o.x, o.y, o2.tip.x, o2.tip.y, o2.c, o2.l); });
+  ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.font = '11px "Source Sans 3",sans-serif';
+  ctx.fillText('drag to rotate · add component by component', 12, H - 12);
 }
 
 /* ================= info ================= */
@@ -717,6 +724,14 @@ $('infoBtn').addEventListener('click', () => $('infoModal').classList.add('show'
 $('infoClose').addEventListener('click', () => $('infoModal').classList.remove('show'));
 $('infoModal').addEventListener('click', e => { if (e.target.id === 'infoModal') $('infoModal').classList.remove('show'); });
 
+MP.onResize(draw);
+MP.register({
+  levels: MAXLVL,
+  setLevel: n => { level = n; newProblem(); },
+  currentLevel: () => level,
+  nextProblem: newProblem,
+  answerText: () => problem ? problem.fields.map(f => f.id + '=' + fmt(f.want)).join('  ') : '\u2014',
+});
 window.addEventListener('load', () => { infoFormulas(); newProblem(); });
 </script>
 </body>
