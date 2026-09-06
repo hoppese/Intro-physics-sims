@@ -1,0 +1,126 @@
+<title>Content Audit — EM, Optics & Mechanics</title>
+<style>
+:root{
+  --bg:#f4f6f8; --surface:#ffffff; --surface-2:#eef1f4;
+  --ink:#1b2836; --ink-soft:#5b6770; --ink-faint:#8a939b;
+  --accent:#1c6c7d; --accent-soft:#e4f1f3;
+  --line:#e1e6ea; --line-strong:#c9d0d6;
+  --good:#1c7a52; --good-soft:#e3f3ea;
+  --gap:#a9691f; --gap-soft:#f7ecdd;
+  --crit:#b13a3a; --crit-soft:#fbeaea;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1722; --surface:#16212e; --surface-2:#1b2836;
+    --ink:#eef2f6; --ink-soft:#aab6c0; --ink-faint:#7c8792;
+    --accent:#5fd0e0; --accent-soft:#173038;
+    --line:#2a3542; --line-strong:#3a4753;
+    --good:#5fd08a; --good-soft:#153024;
+    --gap:#e0aa5c; --gap-soft:#2e2415;
+    --crit:#e08a8a; --crit-soft:#3a1f1f;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1722; --surface:#16212e; --surface-2:#1b2836;
+  --ink:#eef2f6; --ink-soft:#aab6c0; --ink-faint:#7c8792;
+  --accent:#5fd0e0; --accent-soft:#173038;
+  --line:#2a3542; --line-strong:#3a4753;
+  --good:#5fd08a; --good-soft:#153024;
+  --gap:#e0aa5c; --gap-soft:#2e2415;
+  --crit:#e08a8a; --crit-soft:#3a1f1f;
+}
+*{box-sizing:border-box;}
+body{background:var(--bg); color:var(--ink); font-family:'Source Sans 3',system-ui,sans-serif; margin:0;}
+.wrap{max-width:820px; margin:0 auto; padding:52px 24px 100px;}
+h1,h2,h3{font-family:'Source Serif 4',Georgia,serif; text-wrap:balance; margin:0;}
+h1{font-size:32px; font-weight:600; letter-spacing:-0.01em;}
+h2{font-size:21px; font-weight:600;}
+p{line-height:1.6; color:var(--ink-soft); margin:0;}
+code{font-family:'JetBrains Mono',ui-monospace,monospace; font-size:0.92em;}
+.eyebrow{font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent);}
+.dek{font-size:16px; color:var(--ink-soft); max-width:64ch; line-height:1.6; margin-top:10px;}
+.meta{display:flex; gap:14px; flex-wrap:wrap; font-size:12.5px; color:var(--ink-faint); font-family:'JetBrains Mono',monospace; margin-top:12px;}
+section{margin-top:48px;}
+section > .num{font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--accent); font-weight:700; margin-bottom:6px; display:block;}
+section > p.lead{margin-top:12px; font-size:15px;}
+.callout{margin-top:16px; padding:14px 16px; border-radius:10px; border:1px solid var(--line); background:var(--surface); font-size:14px; line-height:1.55; color:var(--ink-soft);}
+.callout.good{border-color:var(--good); background:var(--good-soft);}
+.callout.gap{border-color:var(--gap); background:var(--gap-soft);}
+.callout strong{color:var(--ink);}
+.tbl-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:12px; background:var(--surface); margin-top:18px;}
+table{width:100%; border-collapse:collapse; font-size:13px;}
+th{text-align:left; font-size:10.5px; letter-spacing:0.05em; text-transform:uppercase; color:var(--ink-faint); font-weight:700; padding:10px 12px 8px; border-bottom:1px solid var(--line-strong);}
+td{padding:8px 12px; border-bottom:1px solid var(--line); color:var(--ink-soft); vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+td.sim{color:var(--ink); font-family:'JetBrains Mono',monospace; font-size:12px; white-space:nowrap;}
+.pill{display:inline-block; font-size:11px; font-weight:700; padding:2px 8px; border-radius:100px; font-family:'JetBrains Mono',monospace;}
+.pill.good{background:var(--good-soft); color:var(--good);}
+.pill.gap{background:var(--gap-soft); color:var(--gap);}
+ul{margin:10px 0 0; padding-left:20px;}
+li{line-height:1.6; color:var(--ink-soft); margin-bottom:7px; font-size:14px;}
+li b{color:var(--ink);}
+footer{margin-top:60px; padding-top:22px; border-top:1px solid var(--line); font-size:12.5px; color:var(--ink-faint); font-family:'JetBrains Mono',monospace;}
+</style>
+
+<div class="wrap">
+  <span class="eyebrow">Intro Physics Sims — working notes</span>
+  <h1>Content Audit — Magnetism, Induction, Circuits, Optics, Mechanics, Gravitation</h1>
+  <p class="dek">Third pass in the series, after waves/oscillations and electrostatics. Pulled every Info-panel formula and every Worked-Example step from 26 sims, checked the arithmetic by hand, and checked notation against OpenStax.</p>
+  <div class="meta">
+    <span>26 sims audited</span><span>·</span>
+    <span>0 arithmetic errors</span><span>·</span>
+    <span>2 wording fixes applied</span><span>·</span>
+    <span>1 content gap</span>
+  </div>
+
+  <section id="summary">
+    <span class="num">00</span>
+    <h2>Bottom line</h2>
+    <p class="lead">The worked examples are in good shape. Every numeric result in all 26 sims reproduces correctly by hand, and the Info-panel formulas match OpenStax conventions. This is a cleaner result than the electrostatics pass (which turned up one real physics bug). Nothing here rises to that level — the findings are two descriptive-text mismatches and one missing worked example.</p>
+    <div class="callout good">
+      <strong>Verified correct, end to end:</strong> Ampère's-law B=40&nbsp;µT; loop-motor τ=0.15&nbsp;N·m; grating θ₁=1.58° with the red/violet spread; B at a loop centre ≈31&nbsp;µT; drop-and-toss t=2.75&nbsp;s / v=18.9&nbsp;m/s; Faraday ε=4&nbsp;V; Kepler T<sub>Mars</sub>=1.87&nbsp;yr; v<sub>rms</sub>(N₂)≈517&nbsp;m/s; lens s′=18.7&nbsp;cm / M=−1.33; mirror s′=13.3&nbsp;cm; motion-diagram v=2,3,4,5&nbsp;m/s and a=2&nbsp;m/s²; Lorentz F=1.6×10⁻¹⁴&nbsp;N; two-wire B<sub>net</sub>=(−12,&nbsp;80)&nbsp;µT ⇒ 80.9&nbsp;µT; moving-charge E=2.2×10⁴&nbsp;N/C and B=2.5×10⁻⁷&nbsp;T; rail-bar ε=0.6&nbsp;V / I=0.3&nbsp;A; Snell θ₂=74.6° and θ<sub>c</sub>=41.8°; RC τ=1&nbsp;s, V(1τ)=5.7&nbsp;V; relative-velocity t=20&nbsp;s / drift=40&nbsp;m; thin-film t=λ/4n≈96&nbsp;nm; universal-gravitation F=687&nbsp;N vs mg=686&nbsp;N; centre-of-mass COM=(6,&nbsp;4); circuit-builder I=1&nbsp;A, V₁=4&nbsp;V, V₂=8&nbsp;V.
+    </div>
+  </section>
+
+  <section id="fixed">
+    <span class="num">01</span>
+    <h2>Fixed this pass</h2>
+    <div class="callout gap">
+      <strong>diffraction-pattern — Info blurb described the wrong thing.</strong> "What this shows" read: <em>"Light passing a single slit spreads into a diffraction pattern … (a·sinθ = mλ)."</em> But <code>a·sinθ = mλ</code> is the single-slit <em>minima</em> condition, not "the pattern," and the sim actually defaults to Double mode with Single / Double / Grating tabs — its primary Info formula and its worked example are the multi-slit <code>d·sinθ = mλ</code> maxima. Rewritten to cover all three modes without presenting the minima formula as the pattern.
+    </div>
+    <div class="callout gap">
+      <strong>faraday-flux-explorer — "flip" contradicted its own arithmetic.</strong> Worked-example step 4 was titled "Flip it in 0.25&nbsp;s" but computed <code>ΔΦ = 0.010&nbsp;Wb</code> — a 90° quarter-turn from face-on to edge-on, not a 180° flip (which is ΔΦ&nbsp;=&nbsp;0.020). Retitled "Turn it edge-on in 0.25&nbsp;s" to match the number. (0.010/0.25 = 0.04&nbsp;V is right for the edge-on case.)
+    </div>
+  </section>
+
+  <section id="open">
+    <span class="num">02</span>
+    <h2>Still open</h2>
+    <ul>
+      <li><b>polarization-malus has no Worked Example.</b> Every other sim in scope has one; this is the only gap. It also has the on-screen <code>r.sym</code> label quirk already noted in the roadmap. A worked example would be short — <code>I = I₀cos²θ</code> through one analyzer, plus the <code>½I₀</code> unpolarized-input step.</li>
+      <li><b>Notation split in the ray-tracer pair (cosmetic).</b> lens-ray-tracer and mirror-ray-tracer write the thin-lens/mirror equation as <code>1/f = 1/dₒ + 1/dᵢ</code> in "What this shows" but <code>1/f = 1/s + 1/s′</code> in the Info panel and worked example. Each sim is internally consistent; only a reader comparing the two would notice.</li>
+      <li><b>Live readouts not exhaustively recomputed.</b> This pass covered Info-panel formulas and Worked-Example steps (same scope as the earlier two audits). The "hidden values" readouts are driven by each sim's physics engine; their governing formulas are correct, but I did not hand-check every slider combination's displayed number.</li>
+    </ul>
+  </section>
+
+  <section id="coverage">
+    <span class="num">03</span>
+    <h2>Coverage</h2>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>Unit</th><th>Sims</th><th>Result</th></tr>
+        <tr><td class="sim">magnetism</td><td>ampere-loop, current-loop-motor, lorentz-force, magnetic-field-of-currents, discrete-current-builder-3d, moving-charge-field</td><td><span class="pill good">clean</span></td></tr>
+        <tr><td class="sim">induction</td><td>faraday-induction, faraday-flux-explorer, rail-flux-bar</td><td><span class="pill gap">1 wording fix</span></td></tr>
+        <tr><td class="sim">circuits</td><td>circuit-builder, circuit-lab, rc-charging</td><td><span class="pill good">clean</span></td></tr>
+        <tr><td class="sim">optics</td><td>ray-optics, lens-ray-tracer, mirror-ray-tracer, diffraction-pattern, thin-film-interference, polarization-malus</td><td><span class="pill gap">1 wording fix · 1 gap</span></td></tr>
+        <tr><td class="sim">mechanics</td><td>center-of-mass, drop-and-toss, motion-diagram, relative-velocity</td><td><span class="pill good">clean</span></td></tr>
+        <tr><td class="sim">gravitation</td><td>keplers-laws, universal-gravitation</td><td><span class="pill good">clean</span></td></tr>
+        <tr><td class="sim">thermal</td><td>kinetic-theory-speeds</td><td><span class="pill good">clean</span></td></tr>
+        <tr><td class="sim">radiation</td><td>radiation-wiggling-charge</td><td><span class="pill good">clean</span></td></tr>
+      </table>
+    </div>
+    <p style="margin-top:14px; font-size:13px;">With waves/oscillations (pass 1) and electrostatics (pass 2), every sim's Info panel and worked example has now been checked.</p>
+  </section>
+
+  <footer>Intro Physics Sims — content audit, pass 3 · magnetism / induction / circuits / optics / mechanics / gravitation</footer>
+</div>
