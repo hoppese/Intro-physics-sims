@@ -1,0 +1,235 @@
+<title>HW-Quiz Feature Design</title>
+<style>
+:root{
+  --bg:#f4f6f8; --surface:#ffffff; --surface-2:#eef1f4;
+  --ink:#1b2836; --ink-soft:#5b6770; --ink-faint:#8a939b;
+  --accent:#1c6c7d; --accent-soft:#e4f1f3;
+  --line:#e1e6ea; --line-strong:#c9d0d6;
+  --good:#1c7a52; --good-soft:#e3f3ea;
+  --gap:#a9691f; --gap-soft:#f7ecdd;
+  --crit:#b13a3a; --crit-soft:#fbeaea;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1722; --surface:#16212e; --surface-2:#1b2836;
+    --ink:#eef2f6; --ink-soft:#aab6c0; --ink-faint:#7c8792;
+    --accent:#5fd0e0; --accent-soft:#173038;
+    --line:#2a3542; --line-strong:#3a4753;
+    --good:#5fd08a; --good-soft:#153024;
+    --gap:#e0aa5c; --gap-soft:#2e2415;
+    --crit:#e08a8a; --crit-soft:#3a1f1f;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1722; --surface:#16212e; --surface-2:#1b2836;
+  --ink:#eef2f6; --ink-soft:#aab6c0; --ink-faint:#7c8792;
+  --accent:#5fd0e0; --accent-soft:#173038;
+  --line:#2a3542; --line-strong:#3a4753;
+  --good:#5fd08a; --good-soft:#153024;
+  --gap:#e0aa5c; --gap-soft:#2e2415;
+  --crit:#e08a8a; --crit-soft:#3a1f1f;
+}
+*{box-sizing:border-box;}
+body{background:var(--bg); color:var(--ink); font-family:'Source Sans 3',system-ui,sans-serif; margin:0;}
+.wrap{max-width:820px; margin:0 auto; padding:52px 24px 110px;}
+h1,h2,h3{font-family:'Source Serif 4',Georgia,serif; text-wrap:balance; margin:0;}
+h1{font-size:31px; font-weight:600; letter-spacing:-0.01em;}
+h2{font-size:20px; font-weight:600;}
+h3{font-size:15.5px; font-weight:600; margin-top:22px;}
+p{line-height:1.62; color:var(--ink-soft); margin:10px 0 0;}
+code{font-family:'JetBrains Mono',ui-monospace,monospace; font-size:0.9em; background:var(--surface-2); padding:1px 4px; border-radius:4px;}
+.eyebrow{font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent);}
+.dek{font-size:16px; color:var(--ink-soft); max-width:64ch; line-height:1.6; margin-top:10px;}
+.meta{display:flex; gap:14px; flex-wrap:wrap; font-size:12.5px; color:var(--ink-faint); font-family:'JetBrains Mono',monospace; margin-top:12px;}
+nav.toc{margin:32px 0 44px; padding:16px 20px; background:var(--surface); border:1px solid var(--line); border-radius:12px;}
+nav.toc .label{font-size:11px; font-weight:700; letter-spacing:0.07em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:9px; display:block;}
+nav.toc ol{margin:0; padding:0; list-style:none; display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:5px 18px;}
+nav.toc a{color:var(--ink); text-decoration:none; font-size:13.5px; display:flex; gap:8px;}
+nav.toc a:hover{color:var(--accent);}
+nav.toc .n{color:var(--ink-faint); font-family:'JetBrains Mono',monospace; font-size:12px; flex:none;}
+section{margin-top:50px; scroll-margin-top:18px;}
+section > .num{font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--accent); font-weight:700; margin-bottom:6px; display:block;}
+.callout{margin-top:16px; padding:14px 16px; border-radius:10px; border:1px solid var(--line); background:var(--surface); font-size:14px; line-height:1.55; color:var(--ink-soft);}
+.callout.good{border-color:var(--good); background:var(--good-soft);}
+.callout.gap{border-color:var(--gap); background:var(--gap-soft);}
+.callout.q{border-color:var(--accent); background:var(--accent-soft);}
+.callout strong{color:var(--ink);}
+ul,ol.body{margin:10px 0 0; padding-left:20px;}
+li{line-height:1.6; color:var(--ink-soft); margin-bottom:7px; font-size:14px;}
+li b, li strong{color:var(--ink);}
+.tbl-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:12px; background:var(--surface); margin-top:18px;}
+table{width:100%; border-collapse:collapse; font-size:13px;}
+th{text-align:left; font-size:10.5px; letter-spacing:0.05em; text-transform:uppercase; color:var(--ink-faint); font-weight:700; padding:10px 12px 8px; border-bottom:1px solid var(--line-strong);}
+td{padding:9px 12px; border-bottom:1px solid var(--line); color:var(--ink-soft); vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+td.k{color:var(--ink); font-weight:600; white-space:nowrap;}
+pre{margin-top:14px; background:var(--surface-2); border:1px solid var(--line); border-radius:10px; padding:13px 15px; overflow-x:auto; font-family:'JetBrains Mono',monospace; font-size:12px; line-height:1.6; color:var(--ink);}
+.phase{display:flex; gap:14px; padding:14px 16px; background:var(--surface); border:1px solid var(--line); border-radius:10px; margin-top:12px;}
+.phase .p{font-family:'JetBrains Mono',monospace; font-weight:700; color:var(--accent); flex:none; width:64px; font-size:12.5px; padding-top:2px;}
+.phase h3{margin:0 0 3px; font-size:14px;}
+.phase p{margin:0; font-size:13px;}
+.rec{font-weight:700; color:var(--good);}
+footer{margin-top:60px; padding-top:22px; border-top:1px solid var(--line); font-size:12.5px; color:var(--ink-faint); font-family:'JetBrains Mono',monospace;}
+</style>
+
+<div class="wrap">
+  <span class="eyebrow">Intro Physics Sims — design note</span>
+  <h1>Sim-Embedded Homework Quizzes</h1>
+  <p class="dek">A design for turning the sims into graded practice surfaces: a question posed against the live sim, a checked answer, a recorded score. Scoping document — no code written yet beyond what already ships.</p>
+  <div class="meta">
+    <span>drafted 2026-09-06</span><span>·</span>
+    <span>improvement-plan item #6</span><span>·</span>
+    <span>feeds the "replace Mastering Physics" goal</span>
+  </div>
+
+  <nav class="toc">
+    <span class="label">Contents</span>
+    <ol>
+      <li><a href="#goal"><span class="n">01</span> Goal</a></li>
+      <li><a href="#have"><span class="n">02</span> What already ships</a></li>
+      <li><a href="#gap"><span class="n">03</span> The gap</a></li>
+      <li><a href="#overlay"><span class="n">04</span> The Quiz overlay</a></li>
+      <li><a href="#spec"><span class="n">05</span> Per-sim question spec</a></li>
+      <li><a href="#types"><span class="n">06</span> Question types</a></li>
+      <li><a href="#grades"><span class="n">07</span> Getting grades to Moodle</a></li>
+      <li><a href="#phases"><span class="n">08</span> Rollout</a></li>
+      <li><a href="#questions"><span class="n">09</span> Decisions needed</a></li>
+    </ol>
+  </nav>
+
+  <section id="goal">
+    <span class="num">01</span>
+    <h2>Goal</h2>
+    <p>Online homework that runs on our own stack — the sims plus a lightweight question layer — with scores that land in Moodle. Target framing from the roadmap: this is the path off Mastering Physics for next spring. The near-term win is smaller: give students a way to <em>practice against a sim and know whether they got it right</em>, which nothing currently does.</p>
+    <p>Related notes: the roadmap's "Native Moodle vs. external + LTI" question (this doc takes a position on it in §07), and the parked idea to "generalise Random problem into a real question engine" — that idea <em>is</em> this feature.</p>
+  </section>
+
+  <section id="have">
+    <span class="num">02</span>
+    <h2>What already ships</h2>
+    <p>More of the machinery exists than you might expect:</p>
+    <ul>
+      <li><b>Random-problem generators — 40 of 43 sims.</b> Each <code>doRandom()</code> / <code>randomSetup()</code> / <code>__menuRandom()</code> picks fresh slider values and sets <code>hide:true</code>. The three without: circuit-lab (Beta), radiation-wiggling-charge, e-fields-conductors-and-insulators.</li>
+      <li><b>The Random&nbsp;problem&nbsp;→&nbsp;Show&nbsp;solution loop.</b> The header button already runs a three-click cycle: randomize + hide answers → reveal → new problem. This is the quiz loop, minus the question text and the answer box.</li>
+      <li><b>The sim is its own answer key.</b> Generators only randomize <em>inputs</em>; the sim's physics engine then computes every derived quantity and simply masks it while <code>hide</code> is true. There is a correct number for every readout at every moment — it just isn't checked against anything.</li>
+      <li><b>Predict-then-reveal worked examples.</b> oscillation-explorer already asks the student to read A, T, φ₀ off a random curve before revealing. The interaction pattern for "answer, then check" is proven in-codebase.</li>
+      <li><b>A POST-to-Worker pattern.</b> The "Submit bug" feature POSTs from every sim to a Cloudflare Worker (<code>sims-api.sethhopper.com</code>) that writes to the repo. A quiz-results endpoint is the same shape.</li>
+      <li><b>Sims already embed in Moodle.</b> Class-prep questions run the sims full-size in an iframe. Whatever the quiz layer does, it has to work inside that iframe too.</li>
+    </ul>
+  </section>
+
+  <section id="gap">
+    <span class="num">03</span>
+    <h2>The gap</h2>
+    <p>Between "randomize and hide" and "graded quiz question" there are five missing pieces:</p>
+    <div class="tbl-wrap"><table>
+      <tr><th>Piece</th><th>Status</th></tr>
+      <tr><td class="k">A prompt</td><td>Missing. The sim hides numbers but never says "find the impact speed."</td></tr>
+      <tr><td class="k">An answer input</td><td>Missing. No field to type a value or pick a choice.</td></tr>
+      <tr><td class="k">A check</td><td>Missing, but trivial — compare the typed value to the sim's own computed value with a tolerance.</td></tr>
+      <tr><td class="k">A score + attempt record</td><td>Missing. No notion of correct/incorrect, attempts used, or time.</td></tr>
+      <tr><td class="k">A path to the gradebook</td><td>Missing. This is the real work — see §07.</td></tr>
+    </table></div>
+  </section>
+
+  <section id="overlay">
+    <span class="num">04</span>
+    <h2>The Quiz overlay</h2>
+    <p>A fourth overlay type alongside Info / Worked&nbsp;example / Random&nbsp;problem, opened from the ☰ menu and (in quiz mode) from a header button. It does not replace the free-play sim — it wraps it.</p>
+    <p>Layout, top to bottom:</p>
+    <ol class="body">
+      <li><b>Prompt.</b> One question, tied to the current randomized scenario. "The ball is tossed from a 15&nbsp;m ledge at 8&nbsp;m/s. How fast is it moving when it lands?"</li>
+      <li><b>The live sim.</b> Still fully interactive — the student can drag, play the animation, read the <em>input</em> sliders. Only the quantity being asked about (and anything that would give it away) stays hidden.</li>
+      <li><b>Answer row.</b> A numeric field with a unit label, or a set of multiple-choice buttons, or an angle/vector entry (§06).</li>
+      <li><b>Check.</b> Compares to the sim's computed value within tolerance. Shows correct / close / not-yet, and on the final attempt reveals the worked steps (reuse the existing Worked-example content).</li>
+      <li><b>Next.</b> New random scenario, same question template.</li>
+    </ol>
+    <div class="callout q"><strong>Why wrap the sim rather than build separate questions:</strong> the sim already renders the scenario, computes the answer, and randomizes cleanly. A standalone question bank would duplicate all three and drift out of sync. The sim stays the single source of truth; the quiz layer is thin.</div>
+  </section>
+
+  <section id="spec">
+    <span class="num">05</span>
+    <h2>Per-sim question spec</h2>
+    <p>Each sim gains one small method describing what it can ask. Everything else (rendering, physics, randomizing) is already there.</p>
+    <pre>quiz() {
+  return {
+    // reuse the existing generator for the scenario
+    randomize: () => this.doRandom(),
+    questions: [
+      {
+        id: 'impact-v',
+        prompt: 'How fast is the ball moving when it lands?',
+        answer: () => this.impactV(),      // the sim's own computed value
+        unit: 'm/s',
+        tol:  { type: 'percent', value: 3 },
+        hideWhileAsked: ['v', 'vGraph'],   // readouts to mask
+      },
+      {
+        id: 'apex',
+        prompt: 'What is the peak height above the ground?',
+        answer: () => this.maxH(),
+        unit: 'm', tol: { type: 'percent', value: 3 },
+        hideWhileAsked: ['apex'],
+      },
+    ],
+  };
+}</pre>
+    <p>Authoring one of these is ~15 minutes per sim once the overlay exists. Start with the sims that have a single clean numeric answer: drop-and-toss, center-of-mass, universal-gravitation, kinetic-theory-speeds, rc-charging, lens-/mirror-ray-tracer, ray-optics, ampere-loop, lorentz-force, faraday-induction, rail-flux-bar, polarization-malus, kepler's-laws. That is ~15 sims — a full problem set — without touching the harder field-map sims.</p>
+  </section>
+
+  <section id="types">
+    <span class="num">06</span>
+    <h2>Question types</h2>
+    <div class="tbl-wrap"><table>
+      <tr><th>Type</th><th>Check</th><th>Example</th></tr>
+      <tr><td class="k">Numeric</td><td>|answer − key| within tolerance (percent, absolute, or sig-fig count — set per question)</td><td>impact speed, capacitance, image distance</td></tr>
+      <tr><td class="k">Multiple choice</td><td>exact match; this is the "conceptual checkpoint" idea — pose it after the Info panel</td><td>"Which way does the induced current flow?" · "Is the image real or virtual?"</td></tr>
+      <tr><td class="k">Angle</td><td>circular tolerance (handles 359° vs 1°)</td><td>refraction angle, net-field direction</td></tr>
+      <tr><td class="k">Vector / components</td><td>both components within tolerance, or magnitude + angle</td><td>B<sub>net</sub> at a point, resultant velocity</td></tr>
+      <tr><td class="k">Read-the-graph</td><td>click a point on the canvas within a target radius</td><td>"click the amplitude" on oscillation-explorer</td></tr>
+    </table></div>
+    <p>Numeric and multiple-choice cover the first rollout. The others are natural extensions once the overlay exists.</p>
+  </section>
+
+  <section id="grades">
+    <span class="num">07</span>
+    <h2>Getting grades to Moodle</h2>
+    <p>Three options, cheapest to most robust:</p>
+
+    <h3>C · Results Worker + CSV import <span class="rec">(recommended to start)</span></h3>
+    <p>The sim POSTs each finished attempt <code>{ student, sim, questionId, seed, correct, attempts, score, ts }</code> to a Cloudflare Worker — the same pattern as the bug reporter. The Worker appends to storage (KV, D1, or a Google Sheet). You download a CSV and import into the Moodle gradebook, or read the sheet directly. <b>Identity</b> comes from a token in the iframe URL that the Moodle question template fills in with the student's ID. No real-time gradebook, but it unblocks a graded pilot this term with a few days of work.</p>
+
+    <h3>B · LTI 1.3 tool <span class="rec">(the real target)</span></h3>
+    <p>Wrap the quiz in an LTI 1.3 launch. Moodle launches the sim as an external tool; the tool pushes the score back through Assignment &amp; Grade Services and it lands in the gradebook automatically, hidden until the due date. This is what actually replaces Mastering Physics. Needs an LTI service (a small always-on app or a Worker with the LTI libraries) and per-course tool registration. Weeks, not days — but it is the spring-term goal.</p>
+
+    <h3>A · Native Moodle embedded question</h3>
+    <p>Make the quiz a Moodle question type (or a STACK / custom JS question) that reads the sim's score out of the iframe via <code>postMessage</code>. Grading is then fully built in. The catch: bridging an arbitrary iframe's internal state into a Moodle question's grade is fiddly and version-fragile. Not recommended as the primary path, though the <code>postMessage</code> hook is worth building anyway — option A and option C can share it.</p>
+
+    <div class="callout"><strong>Recommendation:</strong> build the Quiz overlay + a <code>postMessage</code> "attempt finished" event + option C now, for a graded pilot this term. Design the overlay's score-reporting so that swapping option C's Worker POST for option B's LTI grade push is a one-function change. Do the LTI work over winter break, aimed at spring.</div>
+  </section>
+
+  <section id="phases">
+    <span class="num">08</span>
+    <h2>Rollout</h2>
+    <div class="phase"><span class="p">Phase 0</span><div><h3>Prototype on one sim</h3><p>Quiz overlay on drop-and-toss. Numeric answer, tolerance check, self-check only — no recording. Proves the interaction and the "sim is the answer key" approach. ~2 days.</p></div></div>
+    <div class="phase"><span class="p">Phase 1</span><div><h3>A problem set + recording</h3><p><code>quiz()</code> specs for the ~15 clean-numeric sims. <code>postMessage</code> attempt event. Results Worker + CSV. Run one graded assignment. ~1–2 weeks.</p></div></div>
+    <div class="phase"><span class="p">Phase 2</span><div><h3>Concept questions + graph clicks</h3><p>Multiple-choice checkpoints tied to Info panels; read-the-graph on the wave sims. Widen coverage toward all 40 randomizable sims.</p></div></div>
+    <div class="phase"><span class="p">Phase 3</span><div><h3>LTI 1.3</h3><p>Grades auto-land in the Moodle gradebook. Retire Mastering Physics. Winter build, spring launch.</p></div></div>
+  </section>
+
+  <section id="questions">
+    <span class="num">09</span>
+    <h2>Decisions needed</h2>
+    <ol class="body">
+      <li><b>Graded for credit, or practice-only to start?</b> Class preps are currently completion-based. Is the quiz a new graded assignment, or a self-check bolted onto the existing preps?</li>
+      <li><b>Attempts and penalties.</b> One shot, or unlimited with decreasing credit? Does opening "Show solution" forfeit the question?</li>
+      <li><b>Tolerance policy.</b> Flat percent (3%? 5%?), significant figures, or per-question in the spec? Students will ask.</li>
+      <li><b>Unit of assignment.</b> One sim = one question, or an assignment that chains several sims' questions into a set?</li>
+      <li><b>Question mix for v1.</b> Numeric only, or numeric + a concept MC per sim from the start?</li>
+      <li><b>Pilot grade path.</b> Is a CSV / Google Sheet acceptable for a first graded run, or does it need to hit the Moodle gradebook directly (which means starting on LTI)?</li>
+      <li><b>Identity.</b> Confirm the Moodle question template can inject the student's ID into the iframe URL — the whole recording story depends on it.</li>
+    </ol>
+  </section>
+
+  <footer>Intro Physics Sims — HW-quiz design note · pairs with docs/sims-improvement-plan.html §6</footer>
+</div>
