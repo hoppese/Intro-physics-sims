@@ -289,12 +289,20 @@ function draw() {
   const W = 500, H = 420;
   ctx.clearRect(0,0,W,H);
   ctx.fillStyle = '#181225'; ctx.fillRect(0,0,W,H);
-  const cx = W/2, cy = H/2, scale = 18;
+  const cx = W/2, cy = H/2;
+  // scale so A, B and R all fit with a margin
+  let maxComp = 3;
+  if (problem) maxComp = Math.max(maxComp,
+    Math.abs(problem.A.x), Math.abs(problem.A.y),
+    Math.abs(problem.B.x), Math.abs(problem.B.y),
+    Math.abs(problem.Rx),  Math.abs(problem.Ry));
+  const scale = Math.min(18, (Math.min(W,H)/2 - 26) / maxComp);
   const toPx = (x,y) => [cx + x*scale, cy - y*scale];
 
   // grid
   ctx.strokeStyle = 'rgba(255,255,255,0.06)'; ctx.lineWidth = 1;
-  for (let i=-12;i<=12;i++) {
+  const gmax = Math.ceil((W/2)/scale) + 1;
+  for (let i=-gmax;i<=gmax;i++) {
     const [gx] = toPx(i,0);
     if (gx>=0 && gx<=W) { ctx.beginPath(); ctx.moveTo(gx,0); ctx.lineTo(gx,H); ctx.stroke(); }
     const [,gy] = toPx(0,i);
@@ -318,13 +326,12 @@ function draw() {
   }
 
   if (!problem) return;
-  const [ax,ay] = toPx(problem.A.x, problem.A.y);
   const [ox,oy] = toPx(0,0);
+  // both given vectors from the origin, as stated
+  const [ax,ay] = toPx(problem.A.x, problem.A.y);
+  const [bx,by] = toPx(problem.B.x, problem.B.y);
   arrow(ox,oy,ax,ay,COLORS.A,'A');
-
-  const sign = problem.op === 'add' ? 1 : -1;
-  const [bx,by] = toPx(problem.A.x + sign*problem.B.x, problem.A.y + sign*problem.B.y);
-  arrow(ax,ay,bx,by, COLORS.B, problem.op==='add' ? 'B' : '−B');
+  arrow(ox,oy,bx,by,COLORS.B,'B');
 
   if (checked) {
     const [rx,ry] = toPx(problem.Rx, problem.Ry);

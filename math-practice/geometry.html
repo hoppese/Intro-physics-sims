@@ -302,9 +302,12 @@ function draw() {
     ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(ox+ax,oy); ctx.lineTo(ox+ax,oy-by); ctx.closePath(); ctx.stroke();
     ctx.strokeStyle='#fff'; ctx.lineWidth=1.4; ctx.strokeRect(ox+ax-10,oy-10,10,10);
     ctx.fillStyle = '#5da9ff'; ctx.fillText(`a=${p.a}`, ox+ax/2, oy+20);
-    ctx.fillText(`b=${p.b}`, ox+ax+26, oy-by/2);
+    // b — given when finding the hypotenuse, unknown otherwise
+    ctx.fillStyle = p.findHyp ? '#5da9ff' : '#ff9f5d';
+    ctx.fillText(p.findHyp ? `b=${p.b}` : (checked ? `b=${fmtNum(p.ans)}` : 'b = ?'), ox+ax+26, oy-by/2);
+    // c — unknown when finding the hypotenuse, given otherwise
     ctx.fillStyle = p.findHyp ? '#ff9f5d' : '#5dffa0';
-    ctx.fillText(p.findHyp ? 'c = ?' : `c=${p.c}`, ox+ax/2-20, oy-by/2-10);
+    ctx.fillText(p.findHyp ? (checked ? `c=${fmtNum(p.ans)}` : 'c = ?') : `c=${p.c}`, ox+ax/2-20, oy-by/2-10);
   } else if (p.kind === 'shape2d') {
     ctx.lineWidth = 2.4;
     if (p.shape === 'rectangle') {
@@ -328,21 +331,31 @@ function draw() {
       ctx.fillStyle='#5da9ff'; ctx.fillText(`r=${p.r}`, W/2+p.r*s/2, H/2-8);
     }
   } else if (p.kind === 'similar') {
-    // small triangle
-    const s1 = 12;
-    const ox1 = 90, oy1 = 240;
-    ctx.strokeStyle = '#5da9ff'; ctx.lineWidth=2.2;
-    ctx.beginPath(); ctx.moveTo(ox1,oy1); ctx.lineTo(ox1+p.a*s1,oy1); ctx.lineTo(ox1,oy1-p.b*s1); ctx.closePath(); ctx.stroke();
-    ctx.fillStyle='#5da9ff'; ctx.fillText(`${p.a}`, ox1+p.a*s1/2, oy1+18);
-    ctx.save(); ctx.translate(ox1-18, oy1-p.b*s1/2); ctx.fillText(`${p.b}`,0,0); ctx.restore();
-    // large triangle
-    const s2 = s1 * (p.ka/p.a) * 0.7;
-    const ox2 = 300, oy2 = 300;
+    // both triangles at ONE scale so the large one fits; small looks proportionally smaller
+    const bigW = p.ka, bigH = p.ans;               // large triangle's two legs
+    const S = Math.min(200 / bigW, 225 / bigH, 24); // px per unit
+    const baseY = 292;
+    const vlabel = (txt, x, y, col) => {
+      ctx.save(); ctx.translate(x, y); ctx.rotate(-Math.PI/2);
+      ctx.fillStyle = col; ctx.textAlign = 'center'; ctx.fillText(txt, 0, 0); ctx.restore();
+      ctx.textAlign = 'center';
+    };
+    // small triangle, left
+    const sox = 64;
+    ctx.strokeStyle = '#5da9ff'; ctx.lineWidth = 2.2;
+    ctx.beginPath();
+    ctx.moveTo(sox, baseY); ctx.lineTo(sox + p.a*S, baseY); ctx.lineTo(sox, baseY - p.b*S);
+    ctx.closePath(); ctx.stroke();
+    ctx.fillStyle = '#5da9ff'; ctx.fillText(`${p.a}`, sox + p.a*S/2, baseY + 18);
+    vlabel(`${p.b}`, sox - 14, baseY - p.b*S/2, '#5da9ff');
+    // large triangle, right
+    const lox = Math.min(W - 24 - bigW*S, sox + p.a*S + 70);
     ctx.strokeStyle = '#ff9f5d';
-    ctx.beginPath(); ctx.moveTo(ox2,oy2); ctx.lineTo(ox2+p.ka*s2,oy2); ctx.lineTo(ox2,oy2-p.b*(p.ka/p.a)*s2); ctx.closePath(); ctx.stroke();
-    ctx.fillStyle='#ff9f5d'; ctx.fillText(`${p.ka}`, ox2+p.ka*s2/2, oy2+18);
-    ctx.fillStyle = checked ? '#5dffa0' : '#ff9f5d';
-    ctx.save(); ctx.translate(ox2-18, oy2-p.b*(p.ka/p.a)*s2/2); ctx.fillText(checked?fmtNum(p.ans):'?',0,0); ctx.restore();
+    ctx.beginPath();
+    ctx.moveTo(lox, baseY); ctx.lineTo(lox + bigW*S, baseY); ctx.lineTo(lox, baseY - bigH*S);
+    ctx.closePath(); ctx.stroke();
+    ctx.fillStyle = '#ff9f5d'; ctx.fillText(`${p.ka}`, lox + bigW*S/2, baseY + 18);
+    vlabel(checked ? fmtNum(p.ans) : '?', lox - 14, baseY - bigH*S/2, checked ? '#5dffa0' : '#ff9f5d');
   } else if (p.kind === 'volume3d') {
     ctx.strokeStyle = '#5da9ff'; ctx.lineWidth = 2;
     if (p.shape === 'box') {
@@ -361,8 +374,16 @@ function draw() {
       ctx.beginPath(); ctx.moveTo(ox+r,oy); ctx.lineTo(ox+r,oy+h); ctx.stroke();
       ctx.beginPath(); ctx.ellipse(ox,oy+h,r,r*0.35,0,0,Math.PI); ctx.stroke();
       ctx.setLineDash([3,3]); ctx.beginPath(); ctx.ellipse(ox,oy+h,r,r*0.35,0,Math.PI,Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
-      ctx.fillStyle='#5da9ff'; ctx.fillText(`r=${p.r}`, ox+r/2, oy-8);
-      ctx.fillText(`h=${p.h}`, ox+r+26, oy+h/2);
+      // radius line across the top face + centre dot
+      ctx.strokeStyle='#7fbcf5'; ctx.lineWidth=1.6;
+      ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(ox+r,oy); ctx.stroke();
+      ctx.fillStyle='#7fbcf5'; ctx.beginPath(); ctx.arc(ox,oy,2.3,0,Math.PI*2); ctx.fill();
+      ctx.strokeStyle='#5da9ff'; ctx.lineWidth=2;
+      // height line down the right side
+      ctx.beginPath(); ctx.moveTo(ox+r+14,oy); ctx.lineTo(ox+r+14,oy+h); ctx.strokeStyle='rgba(93,169,255,0.5)'; ctx.lineWidth=1.4; ctx.stroke(); ctx.strokeStyle='#5da9ff'; ctx.lineWidth=2;
+      ctx.fillStyle='#5da9ff';
+      ctx.fillText(`r=${p.r}`, ox+r/2, oy - r*0.35 - 6);
+      ctx.fillText(`h=${p.h}`, ox+r+40, oy+h/2);
     } else {
       const s = 15, r=p.r*s, ox=W/2, oy=H/2;
       ctx.beginPath(); ctx.arc(ox,oy,r,0,Math.PI*2); ctx.stroke();

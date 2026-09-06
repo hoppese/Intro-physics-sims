@@ -12,37 +12,45 @@
 <style>
   * { box-sizing: border-box; }
   body { margin:0; background:#eef0f4; font-family:'Source Sans 3',system-ui,sans-serif; color:#20262b; }
-  .wrap { max-width:960px; margin:0 auto; padding:20px; }
+  .wrap { max-width:640px; margin:0 auto; padding:20px; }
   .card { background:#fff; border:1px solid #e1e3ea; border-radius:12px; overflow:hidden; }
-  .header { background:#241b3d; color:#fff; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:13px 18px; flex-wrap:wrap; }
+  .header { background:#241b3d; color:#fff; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:13px 18px; flex-wrap:wrap; }
   .header .title { display:flex; align-items:center; gap:10px; }
   .header .dot { width:11px; height:11px; border-radius:3px; background:#6a55c9; flex:none; }
   .header .name { font-family:'Source Serif 4',serif; font-weight:600; font-size:16px; }
   .header .sub { font-weight:400; color:#a99fce; font-size:12px; }
   .headbtn { font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:9px; cursor:pointer; border:1px solid rgba(255,255,255,0.22); background:rgba(255,255,255,0.06); color:#e6e1f5; }
   .track-pill { font-size:10.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.18); border-radius:20px; padding:4px 10px; color:#cfc3ef; }
-  .body { display:flex; gap:0; align-items:stretch; flex-wrap:wrap; }
-  .canvasCol { padding:14px; display:flex; flex-direction:column; gap:10px; flex:1 1 480px; min-width:0; }
-  .ctlCol { width:320px; flex:none; border-left:1px solid #e8e9ee; padding:15px 17px; display:flex; flex-direction:column; gap:12px; }
-  canvas { display:block; width:100%; height:auto; aspect-ratio:500/340; border-radius:10px; background:#181225; }
-  .section-label { font-size:10.5px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; color:#9aa2ab; margin-bottom:4px; }
-  .problem-box { background:#f4f1fb; border-radius:9px; padding:11px 13px; font-size:14.5px; line-height:1.6; text-align:center; }
-  .ans-grid { display:grid; grid-template-columns:1fr; gap:8px; }
-  .ans-field label { font-size:11.5px; font-weight:600; color:#525a63; display:block; margin-bottom:3px; }
-  .ans-field input { width:100%; font:600 14px 'JetBrains Mono',monospace; padding:7px 9px; border-radius:7px; border:1px solid #d3d3dc; color:#241b3d; }
-  .ans-field input:focus { outline:2px solid #6a55c9; border-color:#6a55c9; }
-  .btnrow { display:flex; gap:7px; flex-wrap:wrap; }
-  .checkbtn { font-size:12.5px; font-weight:600; padding:9px 16px; border-radius:9px; cursor:pointer; border:1px solid #4b3a99; background:#4b3a99; color:#fff; }
-  .checkbtn:disabled { opacity:0.5; cursor:default; }
+  .body { padding:18px; display:flex; flex-direction:column; gap:14px; }
+  .section-label { font-size:10.5px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; color:#9aa2ab; }
+  .prompt { font-size:13.5px; color:#4a4560; }
+  .prompt b { color:#241b3d; }
+  .problem-box { background:#f4f1fb; border:1px solid #e7e1f5; border-radius:10px; padding:16px 14px; text-align:center; font-size:19px; overflow-x:auto; }
+  .ans-num input { width:100%; font:600 15px 'JetBrains Mono',monospace; padding:9px 11px; border-radius:8px; border:1px solid #d3d3dc; color:#241b3d; }
+  .ans-num input:focus { outline:2px solid #6a55c9; border-color:#6a55c9; }
+  .ans-num .hint { font-size:11px; color:#9aa2ab; margin-top:4px; }
+  .choices { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  @media (max-width:520px){ .choices { grid-template-columns:1fr; } }
+  .choice { display:flex; align-items:center; justify-content:center; min-height:52px; padding:10px 12px; border-radius:9px; border:1.5px solid #d8d4e6; background:#faf9fd; cursor:pointer; font-size:15px; transition:border-color .1s, background .1s; }
+  .choice:hover { border-color:#a99fce; }
+  .choice.picked { border-color:#6a55c9; background:#efeafc; }
+  .choice.correct { border-color:#3fae6b; background:#e5f6ec; }
+  .choice.incorrect { border-color:#d76a5c; background:#fbebea; }
+  .choice.disabled { cursor:default; }
+  .btnrow { display:flex; gap:8px; flex-wrap:wrap; }
+  .checkbtn { font-size:12.5px; font-weight:600; padding:9px 18px; border-radius:9px; cursor:pointer; border:1px solid #4b3a99; background:#4b3a99; color:#fff; }
+  .checkbtn:disabled { opacity:0.45; cursor:default; }
   .nextbtn { font-size:12.5px; font-weight:600; padding:9px 16px; border-radius:9px; cursor:pointer; border:1px solid #d3d8dd; background:#fff; color:#525a63; }
   .feedback { border-radius:9px; padding:10px 12px; font-size:13px; font-weight:600; display:none; }
   .feedback.show { display:block; }
   .feedback.correct { background:#e5f6ec; color:#1f7a45; }
   .feedback.wrong { background:#fbebea; color:#a53a30; }
-  .stepsbtn { font-size:12px; font-weight:600; color:#4b3a99; cursor:pointer; background:none; border:none; padding:0; text-align:left; text-decoration:underline; }
-  .steps { display:none; background:#f4f1fb; border-radius:9px; padding:10px 12px; font-size:12.5px; line-height:1.65; margin-top:4px; }
+  .feedback.neutral { background:#f0eef6; color:#5b5470; }
+  .stepsbtn { font-size:12px; font-weight:600; color:#4b3a99; cursor:pointer; background:none; border:none; padding:0; text-align:left; text-decoration:underline; align-self:flex-start; }
+  .steps { display:none; background:#f4f1fb; border:1px solid #e7e1f5; border-radius:9px; padding:12px 14px; font-size:13.5px; line-height:1.9; }
   .steps.show { display:block; }
-  .steps .formula { display:block; margin:4px 0; }
+  .steps .ln { display:block; margin:3px 0; }
+  .steps .note { font-size:12px; color:#6b6580; font-weight:400; }
   .stat-row { display:flex; gap:10px; }
   .stat { flex:1; background:#f4f1fb; border-radius:9px; padding:8px 10px; text-align:center; }
   .stat .n { font-family:'JetBrains Mono',monospace; font-weight:700; font-size:17px; color:#4b3a99; }
@@ -56,8 +64,10 @@
   .modal { max-width:720px; width:100%; max-height:90vh; overflow:auto; background:rgba(24,18,37,0.96); border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:22px 26px; color:#eee8f6; }
   .modal h2 { font-family:'Source Serif 4',serif; font-weight:600; font-size:20px; margin:0 0 16px; display:flex; justify-content:space-between; align-items:baseline; }
   .modal .close { cursor:pointer; width:26px; height:26px; border-radius:7px; border:1px solid rgba(255,255,255,0.2); background:rgba(255,255,255,0.06); color:#dce6f2; display:flex; align-items:center; justify-content:center; }
-  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:0 24px; }
-  .yellow { color:#e5c86b; font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:9px; }
+  .modal p { font-size:12.5px; line-height:1.55; }
+  .modal .yellow { color:#e5c86b; font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin:14px 0 7px; }
+  .modal .lvl { font-size:12.5px; line-height:1.6; }
+  .modal .lvl b { color:#fff; }
 </style>
 </head>
 <body>
@@ -74,272 +84,394 @@
       </div>
     </div>
     <div class="body">
-      <div class="canvasCol">
-        <canvas id="cv" width="500" height="340"></canvas>
-        <div class="stat-row">
-          <div class="stat"><div class="n" id="streakN">0</div><div class="l">Streak</div></div>
-          <div class="stat"><div class="n" id="correctN">0</div><div class="l">Correct</div></div>
-          <div class="stat"><div class="n" id="totalN">0</div><div class="l">Attempted</div></div>
-        </div>
-        <div class="level-track" id="levelTrack"></div>
-      </div>
-      <div class="ctlCol">
-        <div class="section-label" id="problemLabel">Solve for x</div>
-        <div class="problem-box" id="problemBox"></div>
+      <div class="section-label" id="problemLabel">Solve for x</div>
+      <div class="prompt" id="promptText"></div>
+      <div class="problem-box" id="problemBox"></div>
 
-        <div class="section-label" style="margin-top:4px;" id="answerSectionLabel">Your answer</div>
-        <div class="ans-grid" id="answerFields"></div>
+      <div class="section-label" style="margin-top:2px;" id="answerSectionLabel">Your answer</div>
+      <div id="answerArea"></div>
 
-        <div class="btnrow">
-          <button class="checkbtn" id="checkBtn">Check</button>
-          <button class="nextbtn" id="nextBtn">New problem ↻</button>
-        </div>
-        <div class="feedback" id="feedback"></div>
-        <button class="stepsbtn" id="stepsBtn">Show worked solution</button>
-        <div class="steps" id="steps"></div>
+      <div class="btnrow">
+        <button class="checkbtn" id="checkBtn">Check</button>
+        <button class="nextbtn" id="nextBtn">New problem ↻</button>
       </div>
+      <div class="feedback" id="feedback"></div>
+      <button class="stepsbtn" id="stepsBtn">Show worked solution</button>
+      <div class="steps" id="steps"></div>
+
+      <div class="stat-row" style="margin-top:4px;">
+        <div class="stat"><div class="n" id="streakN">0</div><div class="l">Streak</div></div>
+        <div class="stat"><div class="n" id="correctN">0</div><div class="l">Correct</div></div>
+        <div class="stat"><div class="n" id="totalN">0</div><div class="l">Attempted</div></div>
+      </div>
+      <div class="level-track" id="levelTrack"></div>
     </div>
-    <div class="footer-note">The balance beam stays level as a reminder: whatever you do to one side, do to the other.</div>
+    <div class="footer-note">Levels 1–2 solve for a value; levels 3–6 rearrange a formula for the highlighted variable. Revealing the worked solution skips scoring for that problem.</div>
   </div>
 </div>
 
 <div class="modal-backdrop" id="infoModal">
   <div class="modal">
     <h2>Algebraic Manipulation <span class="close" id="infoClose">×</span></h2>
-    <div class="grid2">
-      <div style="padding-right:22px;">
-        <div class="yellow">What this practices</div>
-        <p style="font-size:12.5px;line-height:1.55;">Isolating a variable — the single most-used skill in physics problem-solving, since every formula eventually needs to be solved for whatever you're actually looking for. Levels move from one-step linear equations, to variables on both sides, to distributing, to rearranging an actual physics formula for a target variable.</p>
-      </div>
-      <div style="padding:0 22px;border-left:1px solid rgba(255,255,255,0.12);">
-        <div class="yellow">How to use</div>
-        <p style="font-size:12.5px;line-height:1.55;">Solve the equation shown and enter the numeric value. The balance beam is just a reminder of the rule underneath all of this: an equation stays true only if you do the same thing to both sides.</p>
-      </div>
-      <div style="grid-column:1/-1;border-top:1px solid rgba(255,255,255,0.12);margin-top:15px;padding-top:15px;">
-        <div class="yellow">Relevant moves</div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px 28px;">
-          <div><span class="formula" id="f1" style="font-family:'Source Serif 4',serif;font-style:italic;color:#fff;"></span><div style="font-size:11.5px;color:#b7c2cd;">undo addition/subtraction first</div></div>
-          <div><span class="formula" id="f2" style="font-family:'Source Serif 4',serif;font-style:italic;color:#fff;"></span><div style="font-size:11.5px;color:#b7c2cd;">collect the variable on one side</div></div>
-          <div><span class="formula" id="f3" style="font-family:'Source Serif 4',serif;font-style:italic;color:#fff;"></span><div style="font-size:11.5px;color:#b7c2cd;">distribute before combining</div></div>
-        </div>
-      </div>
+    <div class="yellow">What this practices</div>
+    <p>Rearranging equations — the single most-used skill in physics problem-solving, since every formula eventually has to be solved for whatever you're actually after. The unknown is not always <em>x</em>: read the "Solve for" label each time.</p>
+    <div class="yellow">Levels</div>
+    <div class="lvl">
+      <b>1</b> — one- and two-step linear equations, solve for a number.<br>
+      <b>2</b> — variable on both sides, and distributing, solve for a number.<br>
+      <b>3</b> — rearrange a formula (×, ÷, +, −) for a target variable — pick the correct form.<br>
+      <b>4</b> — rearrange with squares and square roots.<br>
+      <b>5</b> — rearrange with trig functions, logs, or exponentials.<br>
+      <b>6</b> — fractional and other powers, multi-step.
     </div>
+    <div class="yellow">Adaptive</div>
+    <p>Three correct in a row moves you up a level; two wrong in a row moves you down. Opening "Show worked solution" before you answer means that problem is not scored.</p>
+    <div class="yellow">Coming later</div>
+    <p>An advanced companion sim for complex numbers, and a separate one for Taylor and binomial series.</p>
   </div>
 </div>
 
 <script>
 const $ = id => document.getElementById(id);
+const MAXLVL = 6;
 
-let level = 1; // 1..4
+let level = 1;
 let streak = 0, wrongStreak = 0, correctCount = 0, totalCount = 0;
 let problem = null;
-let checked = false;
+let checked = false;    // an answer has been submitted
+let revealed = false;   // worked solution was opened before answering -> not scored
+let pickedIdx = -1;     // multiple-choice selection
 
 function randInt(lo, hi) { return Math.floor(Math.random()*(hi-lo+1))+lo; }
-function randNonZeroInt(lo, hi) { let v; do { v = randInt(lo,hi); } while (v===0); return v; }
-function fmtSigned(n) { return n >= 0 ? `+ ${n}` : `− ${Math.abs(n)}`; }
-function fmtCoef(n) { if (n===1) return 'x'; if (n===-1) return '−x'; return `${n}x`; }
+function randNZ(lo, hi) { let v; do { v = randInt(lo,hi); } while (v===0); return v; }
+function pick(a) { return a[Math.floor(Math.random()*a.length)]; }
+function shuffle(a) { a = a.slice(); for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
 
-const FORMULAS = [
-  { label:'Kinematics — solve for t', tex:'v = v_0 + a t', target:'t',
-    gen: () => { const v0=randInt(-10,10), a=randNonZeroInt(2,8), t=randInt(1,10); const v=v0+a*t; return {v0,a,v}; },
-    compute: (p) => (p.v - p.v0)/p.a,
-    plain: (p) => `v = ${p.v},  v0 = ${p.v0},  a = ${p.a}`,
-    steps: (p,ans) => [`t = (v − v0) / a`, `t = (${p.v} − (${p.v0})) / ${p.a} = ${ans.toFixed(2)}`] },
-  { label:"Newton's 2nd law — solve for m", tex:'F = m a', target:'m',
-    gen: () => { const a=randNonZeroInt(2,9), m=randInt(1,12); return {a, F:+(a*m).toFixed(1)}; },
-    compute: (p) => p.F/p.a,
-    plain: (p) => `F = ${p.F} N,  a = ${p.a} m/s²`,
-    steps: (p,ans) => [`m = F / a`, `m = ${p.F} / ${p.a} = ${ans.toFixed(2)}`] },
-  { label:"Ohm's law — solve for R", tex:'V = I R', target:'R',
-    gen: () => { const I=randNonZeroInt(1,9), R=randInt(1,20); return {I, V:+(I*R).toFixed(1)}; },
-    compute: (p) => p.V/p.I,
-    plain: (p) => `V = ${p.V} V,  I = ${p.I} A`,
-    steps: (p,ans) => [`R = V / I`, `R = ${p.V} / ${p.I} = ${ans.toFixed(2)}`] },
-  { label:'Density — solve for V', tex:'\\rho = m / V', target:'V',
-    gen: () => { const rho=randNonZeroInt(1,12), V=randInt(1,15); return {rho, m:+(rho*V).toFixed(1)}; },
-    compute: (p) => p.m/p.rho,
-    plain: (p) => `m = ${p.m} kg,  ρ = ${p.rho} kg/m³`,
-    steps: (p,ans) => [`V = m / ρ`, `V = ${p.m} / ${p.rho} = ${ans.toFixed(2)}`] },
-];
+// unknowns for the numeric levels (avoid e, i, l, o, pi)
+const VARS = ['x','y','t','n','k','a','b','r','m','p','u','w','s','h','d','q','z'];
 
-function genProblem(lvl) {
-  if (lvl === 1) {
-    const a = randNonZeroInt(-9,9), x = randInt(-10,10), b = randInt(-12,12);
-    const c = a*x + b;
-    return { kind:'linear1', a, b, c, x };
-  }
-  if (lvl === 2) {
-    let a,c; do { a = randNonZeroInt(-9,9); c = randNonZeroInt(-9,9); } while (a===c);
-    const x = randNonZeroInt(-10,10), b = randInt(-10,10);
-    const d = a*x + b - c*x;
-    return { kind:'bothsides', a, b, c, d, x };
-  }
-  if (lvl === 3) {
-    const a = randNonZeroInt(-8,8), b = randInt(-8,8), x = randInt(-8,8);
-    const c = a*(x+b);
-    return { kind:'distribute', a, b, c, x };
-  }
-  const f = FORMULAS[randInt(0, FORMULAS.length-1)];
-  const p = f.gen();
-  const ans = f.compute(p);
-  return { kind:'literal', formula:f, p, x: ans };
+function tex(el, s) {
+  if (window.katex) { try { katex.render(s, el, { throwOnError:false }); return; } catch(e) {} }
+  el.textContent = s.replace(/\\[a-zA-Z]+/g,'').replace(/[{}]/g,'');
 }
 
+/* ---------- numeric problem generators (levels 1-2) ---------- */
+function fmtSigned(n) { return n >= 0 ? `+ ${n}` : `- ${Math.abs(n)}`; }
+function coef(n, v) { if (n===1) return v; if (n===-1) return `-${v}`; return `${n}${v}`; }
+
+function genNumeric(lvl) {
+  const v = pick(VARS);
+  if (lvl === 1) {
+    const oneStep = Math.random() < 0.4;
+    const a = oneStep ? 1 : randNZ(-9,9);
+    const x = randInt(-10,10);
+    const b = randInt(-12,12);
+    const c = a*x + b;
+    return {
+      kind:'num', v, answer:x,
+      tex: `${coef(a,v)} ${fmtSigned(b)} = ${c}`,
+      steps: [
+        `${coef(a,v)} ${fmtSigned(b)} = ${c}`,
+        `${coef(a,v)} = ${c} ${fmtSigned(-b)} = ${c-b}` + (b!==0 ? `\\quad(\\text{${b>0?'subtract':'add'} } ${Math.abs(b)}\\text{ on both sides})` : ''),
+        a!==1 ? `${v} = \\dfrac{${c-b}}{${a}} = ${x}` : `${v} = ${x}`,
+      ],
+    };
+  }
+  // level 2: both sides OR distribute
+  if (Math.random() < 0.5) {
+    let a,c; do { a = randNZ(-8,8); c = randNZ(-8,8); } while (a===c);
+    const x = randNZ(-10,10), b = randInt(-10,10);
+    const d = a*x + b - c*x;
+    return {
+      kind:'num', v, answer:x,
+      tex: `${coef(a,v)} ${fmtSigned(b)} = ${coef(c,v)} ${fmtSigned(d)}`,
+      steps: [
+        `${coef(a,v)} ${fmtSigned(b)} = ${coef(c,v)} ${fmtSigned(d)}`,
+        `${coef(a-c,v)} = ${d-b}\\quad(\\text{collect } ${v}\\text{ left, constants right})`,
+        `${v} = \\dfrac{${d-b}}{${a-c}} = ${x}`,
+      ],
+    };
+  }
+  const a = randNZ(-7,7), b = randInt(-8,8), x = randInt(-8,8);
+  const c = a*(x+b);
+  return {
+    kind:'num', v, answer:x,
+    tex: `${a}(${v} ${fmtSigned(b)}) = ${c}`,
+    steps: [
+      `${a}(${v} ${fmtSigned(b)}) = ${c}`,
+      `${coef(a,v)} ${fmtSigned(a*b)} = ${c}\\quad(\\text{distribute the } ${a})`,
+      `${coef(a,v)} = ${c - a*b}`,
+      `${v} = \\dfrac{${c - a*b}}{${a}} = ${x}`,
+    ],
+  };
+}
+
+/* ---------- symbolic multiple-choice banks (levels 3-6) ---------- */
+const SYM = {
+3: [
+  { eq:'v = v_0 + a t', target:'t', right:'t = \\dfrac{v - v_0}{a}',
+    wrong:['t = \\dfrac{v_0 - v}{a}', 't = a(v - v_0)', 't = \\dfrac{v}{a} - v_0'],
+    steps:['v - v_0 = a t','\\dfrac{v - v_0}{a} = t'] },
+  { eq:'F = m a', target:'a', right:'a = \\dfrac{F}{m}',
+    wrong:['a = \\dfrac{m}{F}', 'a = F m', 'a = F - m'],
+    steps:['\\dfrac{F}{m} = a'] },
+  { eq:'\\rho = \\dfrac{m}{V}', target:'V', right:'V = \\dfrac{m}{\\rho}',
+    wrong:['V = \\dfrac{\\rho}{m}', 'V = \\rho m', 'V = m - \\rho'],
+    steps:['\\rho V = m','V = \\dfrac{m}{\\rho}'] },
+  { eq:'W = F d \\cos\\theta', target:'d', right:'d = \\dfrac{W}{F \\cos\\theta}',
+    wrong:['d = \\dfrac{W \\cos\\theta}{F}', 'd = \\dfrac{F \\cos\\theta}{W}', 'd = W F \\cos\\theta'],
+    steps:['\\dfrac{W}{F \\cos\\theta} = d'] },
+  { eq:'Q = m c\\,\\Delta T', target:'\\Delta T', right:'\\Delta T = \\dfrac{Q}{m c}',
+    wrong:['\\Delta T = \\dfrac{m c}{Q}', '\\Delta T = Q m c', '\\Delta T = \\dfrac{Q}{m} - c'],
+    steps:['\\dfrac{Q}{m c} = \\Delta T'] },
+  { eq:'P = \\dfrac{W}{t}', target:'t', right:'t = \\dfrac{W}{P}',
+    wrong:['t = \\dfrac{P}{W}', 't = P W', 't = W - P'],
+    steps:['P t = W','t = \\dfrac{W}{P}'] },
+  { eq:'p V = n R T', target:'T', right:'T = \\dfrac{p V}{n R}',
+    wrong:['T = \\dfrac{n R}{p V}', 'T = \\dfrac{p V n}{R}', 'T = \\dfrac{p R}{n V}'],
+    steps:['\\dfrac{p V}{n R} = T'] },
+  { eq:'y = \\dfrac{x - a}{b}', target:'x', right:'x = b y + a',
+    wrong:['x = \\dfrac{y}{b} + a', 'x = b(y + a)', 'x = \\dfrac{y - a}{b}'],
+    steps:['b y = x - a','b y + a = x'] },
+],
+4: [
+  { eq:'KE = \\tfrac{1}{2} m v^2', target:'v', right:'v = \\sqrt{\\dfrac{2\\,KE}{m}}',
+    wrong:['v = \\sqrt{\\dfrac{KE}{2 m}}', 'v = \\dfrac{2\\,KE}{m}', 'v = \\sqrt{2\\,KE\\,m}'],
+    steps:['2\\,KE = m v^2','\\dfrac{2\\,KE}{m} = v^2','v = \\sqrt{\\dfrac{2\\,KE}{m}}'] },
+  { eq:'F = \\dfrac{k q_1 q_2}{r^2}', target:'r', right:'r = \\sqrt{\\dfrac{k q_1 q_2}{F}}',
+    wrong:['r = \\dfrac{k q_1 q_2}{F}', 'r = \\sqrt{\\dfrac{F}{k q_1 q_2}}', 'r = \\left(\\dfrac{k q_1 q_2}{F}\\right)^2'],
+    steps:['F r^2 = k q_1 q_2','r^2 = \\dfrac{k q_1 q_2}{F}','r = \\sqrt{\\dfrac{k q_1 q_2}{F}}'] },
+  { eq:'a_c = \\dfrac{v^2}{r}', target:'v', right:'v = \\sqrt{a_c\\, r}',
+    wrong:['v = \\sqrt{\\dfrac{a_c}{r}}', 'v = a_c\\, r', 'v = \\sqrt{\\dfrac{r}{a_c}}'],
+    steps:['a_c\\, r = v^2','v = \\sqrt{a_c\\, r}'] },
+  { eq:'v^2 = v_0^2 + 2 a\\,\\Delta x', target:'\\Delta x', right:'\\Delta x = \\dfrac{v^2 - v_0^2}{2 a}',
+    wrong:['\\Delta x = \\dfrac{v^2 + v_0^2}{2 a}', '\\Delta x = \\dfrac{(v - v_0)^2}{2 a}', '\\Delta x = \\dfrac{v^2 - v_0^2}{a}'],
+    steps:['v^2 - v_0^2 = 2 a\\,\\Delta x','\\dfrac{v^2 - v_0^2}{2 a} = \\Delta x'] },
+  { eq:'d = \\tfrac{1}{2} g t^2', target:'t', right:'t = \\sqrt{\\dfrac{2 d}{g}}',
+    wrong:['t = \\sqrt{\\dfrac{d}{2 g}}', 't = \\dfrac{2 d}{g}', 't = \\dfrac{d}{g}'],
+    steps:['2 d = g t^2','\\dfrac{2 d}{g} = t^2','t = \\sqrt{\\dfrac{2 d}{g}}'] },
+  { eq:'E = m c^2', target:'c', right:'c = \\sqrt{\\dfrac{E}{m}}',
+    wrong:['c = \\dfrac{E}{m}', 'c = \\sqrt{E m}', 'c = \\dfrac{\\sqrt{E}}{m}'],
+    steps:['\\dfrac{E}{m} = c^2','c = \\sqrt{\\dfrac{E}{m}}'] },
+  { eq:'c^2 = a^2 + b^2', target:'b', right:'b = \\sqrt{c^2 - a^2}',
+    wrong:['b = c - a', 'b = \\sqrt{c^2 + a^2}', 'b = c^2 - a^2'],
+    steps:['b^2 = c^2 - a^2','b = \\sqrt{c^2 - a^2}'] },
+  { eq:'KE = \\dfrac{p^2}{2 m}', target:'p', right:'p = \\sqrt{2 m\\, KE}',
+    wrong:['p = \\sqrt{\\dfrac{2\\,KE}{m}}', 'p = 2 m\\, KE', 'p = \\sqrt{\\dfrac{KE}{2 m}}'],
+    steps:['2 m\\, KE = p^2','p = \\sqrt{2 m\\, KE}'] },
+],
+5: [
+  { eq:'y = A \\sin(\\omega t)', target:'t', right:'t = \\dfrac{1}{\\omega}\\sin^{-1}\\!\\left(\\dfrac{y}{A}\\right)',
+    wrong:['t = \\omega\\,\\sin^{-1}\\!\\left(\\dfrac{y}{A}\\right)', 't = \\dfrac{1}{\\omega}\\sin^{-1}(y A)', 't = \\dfrac{\\sin^{-1}(y/A)}{\\omega A}'],
+    steps:['\\dfrac{y}{A} = \\sin(\\omega t)','\\sin^{-1}\\!\\left(\\dfrac{y}{A}\\right) = \\omega t','t = \\dfrac{1}{\\omega}\\sin^{-1}\\!\\left(\\dfrac{y}{A}\\right)'] },
+  { eq:'n_1 \\sin\\theta_1 = n_2 \\sin\\theta_2', target:'\\theta_2', right:'\\theta_2 = \\sin^{-1}\\!\\left(\\dfrac{n_1}{n_2}\\sin\\theta_1\\right)',
+    wrong:['\\theta_2 = \\sin^{-1}\\!\\left(\\dfrac{n_2}{n_1}\\sin\\theta_1\\right)', '\\theta_2 = \\dfrac{n_1}{n_2}\\sin\\theta_1', '\\theta_2 = \\dfrac{\\sin^{-1}(n_1\\sin\\theta_1)}{n_2}'],
+    steps:['\\sin\\theta_2 = \\dfrac{n_1}{n_2}\\sin\\theta_1','\\theta_2 = \\sin^{-1}\\!\\left(\\dfrac{n_1}{n_2}\\sin\\theta_1\\right)'] },
+  { eq:'N = N_0\\, e^{-\\lambda t}', target:'t', right:'t = \\dfrac{1}{\\lambda}\\ln\\!\\left(\\dfrac{N_0}{N}\\right)',
+    wrong:['t = \\lambda\\,\\ln\\!\\left(\\dfrac{N_0}{N}\\right)', 't = \\dfrac{1}{\\lambda}\\ln\\!\\left(\\dfrac{N}{N_0}\\right)', 't = -\\lambda\\,\\ln\\!\\left(\\dfrac{N}{N_0}\\right)'],
+    steps:['\\dfrac{N}{N_0} = e^{-\\lambda t}','\\ln\\!\\left(\\dfrac{N}{N_0}\\right) = -\\lambda t','t = \\dfrac{1}{\\lambda}\\ln\\!\\left(\\dfrac{N_0}{N}\\right)'] },
+  { eq:'A = A_0\\, e^{-t/\\tau}', target:'\\tau', right:'\\tau = \\dfrac{t}{\\ln(A_0/A)}',
+    wrong:['\\tau = t\\,\\ln\\!\\left(\\dfrac{A_0}{A}\\right)', '\\tau = \\dfrac{\\ln(A_0/A)}{t}', '\\tau = -\\dfrac{t}{\\ln(A_0/A)}'],
+    steps:['\\ln\\!\\left(\\dfrac{A}{A_0}\\right) = -\\dfrac{t}{\\tau}','\\tau = \\dfrac{-t}{\\ln(A/A_0)} = \\dfrac{t}{\\ln(A_0/A)}'] },
+  { eq:'\\beta = 10\\log_{10}\\!\\left(\\dfrac{I}{I_0}\\right)', target:'I', right:'I = I_0\\, 10^{\\beta/10}',
+    wrong:['I = I_0\\, 10^{10\\beta}', 'I = I_0\\, e^{\\beta/10}', 'I = \\dfrac{I_0\\,\\beta}{10}'],
+    steps:['\\dfrac{\\beta}{10} = \\log_{10}\\!\\left(\\dfrac{I}{I_0}\\right)','10^{\\beta/10} = \\dfrac{I}{I_0}','I = I_0\\, 10^{\\beta/10}'] },
+  { eq:'\\text{pH} = -\\log_{10}[\\text{H}^+]', target:'[\\text{H}^+]', right:'[\\text{H}^+] = 10^{-\\text{pH}}',
+    wrong:['[\\text{H}^+] = 10^{\\text{pH}}', '[\\text{H}^+] = -10^{\\text{pH}}', '[\\text{H}^+] = e^{-\\text{pH}}'],
+    steps:['-\\text{pH} = \\log_{10}[\\text{H}^+]','[\\text{H}^+] = 10^{-\\text{pH}}'] },
+  { eq:'y = y_0\\, 2^{t/T}', target:'t', right:'t = T\\log_2\\!\\left(\\dfrac{y}{y_0}\\right)',
+    wrong:['t = \\dfrac{1}{T}\\log_2\\!\\left(\\dfrac{y}{y_0}\\right)', 't = T\\,\\ln\\!\\left(\\dfrac{y}{y_0}\\right)', 't = 2^{y/y_0}\\, T'],
+    steps:['\\dfrac{y}{y_0} = 2^{t/T}','\\log_2\\!\\left(\\dfrac{y}{y_0}\\right) = \\dfrac{t}{T}','t = T\\log_2\\!\\left(\\dfrac{y}{y_0}\\right)'] },
+],
+6: [
+  { eq:'T^2 = \\dfrac{4\\pi^2}{G M}\\, a^3', target:'a', right:'a = \\left(\\dfrac{G M\\, T^2}{4\\pi^2}\\right)^{1/3}',
+    wrong:['a = \\left(\\dfrac{4\\pi^2 T^2}{G M}\\right)^{1/3}', 'a = \\left(\\dfrac{G M\\, T^2}{4\\pi^2}\\right)^{3}', 'a = \\sqrt{\\dfrac{G M\\, T^2}{4\\pi^2}}'],
+    steps:['a^3 = \\dfrac{G M\\, T^2}{4\\pi^2}','a = \\left(\\dfrac{G M\\, T^2}{4\\pi^2}\\right)^{1/3}'] },
+  { eq:'P V^{\\gamma} = C', target:'V', right:'V = \\left(\\dfrac{C}{P}\\right)^{1/\\gamma}',
+    wrong:['V = \\left(\\dfrac{P}{C}\\right)^{1/\\gamma}', 'V = \\left(\\dfrac{C}{P}\\right)^{\\gamma}', 'V = \\dfrac{C}{P^{\\gamma}}'],
+    steps:['V^{\\gamma} = \\dfrac{C}{P}','V = \\left(\\dfrac{C}{P}\\right)^{1/\\gamma}'] },
+  { eq:'f = \\dfrac{1}{2\\pi}\\sqrt{\\dfrac{k}{m}}', target:'k', right:'k = m(2\\pi f)^2',
+    wrong:['k = \\dfrac{m}{(2\\pi f)^2}', 'k = \\sqrt{4\\pi^2 f^2 m}', 'k = 2\\pi f\\sqrt{m}'],
+    steps:['2\\pi f = \\sqrt{\\dfrac{k}{m}}','(2\\pi f)^2 = \\dfrac{k}{m}','k = m(2\\pi f)^2'] },
+  { eq:'T = 2\\pi\\sqrt{\\dfrac{L}{g}}', target:'g', right:'g = \\dfrac{4\\pi^2 L}{T^2}',
+    wrong:['g = \\dfrac{L T^2}{4\\pi^2}', 'g = \\sqrt{\\dfrac{4\\pi^2 L}{T^2}}', 'g = \\dfrac{4\\pi^2}{L T^2}'],
+    steps:['\\dfrac{T}{2\\pi} = \\sqrt{\\dfrac{L}{g}}','\\dfrac{T^2}{4\\pi^2} = \\dfrac{L}{g}','g = \\dfrac{4\\pi^2 L}{T^2}'] },
+  { eq:'P = \\sigma A T^4', target:'T', right:'T = \\left(\\dfrac{P}{\\sigma A}\\right)^{1/4}',
+    wrong:['T = \\left(\\dfrac{\\sigma A}{P}\\right)^{1/4}', 'T = \\left(\\dfrac{P}{\\sigma A}\\right)^{4}', 'T = \\sqrt{\\dfrac{P}{\\sigma A}}'],
+    steps:['T^4 = \\dfrac{P}{\\sigma A}','T = \\left(\\dfrac{P}{\\sigma A}\\right)^{1/4}'] },
+  { eq:'v = \\sqrt{\\dfrac{\\gamma R T}{M}}', target:'T', right:'T = \\dfrac{M v^2}{\\gamma R}',
+    wrong:['T = \\dfrac{\\gamma R}{M v^2}', 'T = \\sqrt{\\dfrac{M v^2}{\\gamma R}}', 'T = \\dfrac{M v}{\\gamma R}'],
+    steps:['v^2 = \\dfrac{\\gamma R T}{M}','M v^2 = \\gamma R T','T = \\dfrac{M v^2}{\\gamma R}'] },
+  { eq:'A = P(1 + r)^n', target:'n', right:'n = \\dfrac{\\ln(A/P)}{\\ln(1 + r)}',
+    wrong:['n = \\dfrac{\\ln(A/P)}{1 + r}', 'n = \\ln\\!\\left(\\dfrac{A/P}{1 + r}\\right)', 'n = \\dfrac{A/P}{\\ln(1 + r)}'],
+    steps:['\\dfrac{A}{P} = (1 + r)^n','\\ln\\!\\left(\\dfrac{A}{P}\\right) = n\\ln(1 + r)','n = \\dfrac{\\ln(A/P)}{\\ln(1 + r)}'] },
+],
+};
+
+function genSymbolic(lvl) {
+  const q = pick(SYM[lvl]);
+  const opts = shuffle([q.right, ...q.wrong]);
+  return {
+    kind:'mc', v:q.target, eq:q.eq,
+    options: opts,
+    correctIdx: opts.indexOf(q.right),
+    steps: [q.eq, ...q.steps],
+  };
+}
+
+/* ---------- flow ---------- */
 function levelTrack() {
   let html = '';
-  for (let i=1;i<=4;i++) html += `<div class="seg ${i<=level?'on':''}"></div>`;
+  for (let i=1;i<=MAXLVL;i++) html += `<div class="seg ${i<=level?'on':''}"></div>`;
   $('levelTrack').innerHTML = html;
   $('levelPill').textContent = 'Level ' + level;
 }
 
-function equationPlainText() {
-  if (problem.kind === 'linear1') return `${fmtCoef(problem.a)} ${fmtSigned(problem.b)} = ${problem.c}`;
-  if (problem.kind === 'bothsides') return `${fmtCoef(problem.a)} ${fmtSigned(problem.b)} = ${fmtCoef(problem.c)} ${fmtSigned(problem.d)}`;
-  if (problem.kind === 'distribute') return `${problem.a}(x ${fmtSigned(problem.b)}) = ${problem.c}`;
-  return problem.formula.plain(problem.p);
-}
-
 function newProblem() {
-  problem = genProblem(level);
-  checked = false;
+  problem = level <= 2 ? genNumeric(level) : genSymbolic(level);
+  checked = false; revealed = false; pickedIdx = -1;
+
   $('feedback').className = 'feedback'; $('feedback').textContent = '';
   $('steps').className = 'steps'; $('steps').innerHTML = '';
   $('stepsBtn').textContent = 'Show worked solution';
-  $('checkBtn').disabled = false;
+  $('stepsBtn').style.display = '';
+  $('checkBtn').disabled = false; $('checkBtn').style.display = '';
 
-  if (problem.kind === 'literal') {
-    $('problemLabel').textContent = problem.formula.label;
-    $('answerSectionLabel').textContent = `Your answer — ${problem.formula.target}`;
+  const label = problem.kind === 'mc'
+    ? 'Rearrange for the variable below'
+    : 'Solve for a value';
+  $('problemLabel').textContent = label;
+
+  if (problem.kind === 'mc') {
+    $('promptText').innerHTML = 'Solve this formula for <b id="tgt"></b>. Pick the correct rearrangement.';
+    tex($('tgt'), problem.v);
+    $('answerSectionLabel').textContent = 'Choose the correct form';
+    const box = $('problemBox'); box.innerHTML = ''; tex(box, problem.eq);
+    const area = $('answerArea');
+    area.innerHTML = '<div class="choices" id="choices"></div>';
+    const cg = $('choices');
+    problem.options.forEach((o, i) => {
+      const d = document.createElement('div');
+      d.className = 'choice'; d.dataset.idx = i;
+      const span = document.createElement('span'); tex(span, o); d.appendChild(span);
+      d.addEventListener('click', () => {
+        if (checked) return;
+        pickedIdx = i;
+        [...cg.children].forEach(c => c.classList.toggle('picked', +c.dataset.idx === i));
+      });
+      cg.appendChild(d);
+    });
   } else {
-    $('problemLabel').textContent = 'Solve for x';
-    $('answerSectionLabel').textContent = 'Your answer — x';
+    $('promptText').innerHTML = 'Find the value of <b id="tgt"></b>.';
+    tex($('tgt'), problem.v);
+    $('answerSectionLabel').textContent = 'Your answer';
+    const box = $('problemBox'); box.innerHTML = ''; tex(box, problem.tex);
+    $('answerArea').innerHTML =
+      `<div class="ans-num"><input type="number" step="any" id="ansVal" placeholder="${problem.v} = ?">` +
+      `<div class="hint">Enter a number (integer answer).</div></div>`;
+    $('ansVal').addEventListener('keydown', e => { if (e.key === 'Enter') checkAnswer(); });
   }
-  $('problemBox').textContent = equationPlainText();
-  $('answerFields').innerHTML = `<div class="ans-field"><label>Value</label><input type="number" step="any" id="ansVal"></div>`;
+
   levelTrack();
-  draw();
+}
+
+function applyResult(correct) {
+  totalCount++;
+  if (correct) {
+    correctCount++; streak++; wrongStreak = 0;
+    if (streak % 3 === 0 && level < MAXLVL) { level++; }
+  } else {
+    streak = 0; wrongStreak++;
+    if (wrongStreak >= 2 && level > 1) { level--; wrongStreak = 0; }
+  }
+  $('streakN').textContent = streak;
+  $('correctN').textContent = correctCount;
+  $('totalN').textContent = totalCount;
+  levelTrack();
 }
 
 function checkAnswer() {
-  if (checked) return;
-  const v = +$('ansVal').value;
-  if (Number.isNaN(v)) return;
-  const correct = Math.abs(v - problem.x) < 0.05;
+  if (checked || revealed) return;
 
-  checked = true; totalCount++;
+  let correct;
+  if (problem.kind === 'mc') {
+    if (pickedIdx < 0) return;
+    correct = pickedIdx === problem.correctIdx;
+    const cg = $('choices');
+    [...cg.children].forEach(c => {
+      const i = +c.dataset.idx;
+      c.classList.add('disabled'); c.classList.remove('picked');
+      if (i === problem.correctIdx) c.classList.add('correct');
+      else if (i === pickedIdx) c.classList.add('incorrect');
+    });
+  } else {
+    const raw = $('ansVal').value;
+    if (raw === '') return;
+    const v = Number(raw);
+    if (Number.isNaN(v)) return;
+    correct = Math.abs(v - problem.answer) < 0.01;
+    $('ansVal').disabled = true;
+  }
+
+  checked = true;
   $('checkBtn').disabled = true;
+
   const fb = $('feedback'); fb.classList.add('show');
   if (correct) {
-    correctCount++; streak++; wrongStreak = 0;
-    fb.classList.add('correct'); fb.classList.remove('wrong');
-    fb.textContent = '✓ Correct.' + (streak>0 && streak%3===0 && level<4 ? ' Leveling up!' : '');
-    if (streak > 0 && streak % 3 === 0 && level < 4) level++;
+    fb.className = 'feedback show correct';
+    fb.textContent = '✓ Correct.' + (streak > 0 && (streak + 1) % 3 === 0 && level < MAXLVL ? ' Leveling up.' : '');
   } else {
-    streak = 0; wrongStreak++;
-    fb.classList.add('wrong'); fb.classList.remove('correct');
-    fb.textContent = `✗ Not quite. Correct: ${problem.x.toFixed ? problem.x.toFixed(2) : problem.x}.`;
-    if (wrongStreak >= 2 && level > 1) { level--; wrongStreak = 0; }
+    fb.className = 'feedback show wrong';
+    fb.textContent = problem.kind === 'mc'
+      ? '✗ Not quite — the correct rearrangement is highlighted.'
+      : '✗ Not quite.';
   }
-  $('streakN').textContent = streak; $('correctN').textContent = correctCount; $('totalN').textContent = totalCount;
-  levelTrack();
-  draw();
+  applyResult(correct);
 }
 
 function buildSteps() {
-  let lines = [];
-  if (problem.kind === 'linear1') {
-    lines.push(`${fmtCoef(problem.a)} ${fmtSigned(problem.b)} = ${problem.c}`);
-    lines.push(`${fmtCoef(problem.a)} = ${problem.c} ${fmtSigned(-problem.b)}  (subtract ${problem.b} from both sides)`);
-    lines.push(`x = ${problem.c - problem.b} / ${problem.a} = ${problem.x}`);
-  } else if (problem.kind === 'bothsides') {
-    lines.push(`${fmtCoef(problem.a)} ${fmtSigned(problem.b)} = ${fmtCoef(problem.c)} ${fmtSigned(problem.d)}`);
-    lines.push(`${fmtCoef(problem.a-problem.c)} = ${fmtSigned(problem.d-problem.b)}  (move x-terms to one side, constants to the other)`);
-    lines.push(`x = ${problem.d-problem.b} / ${problem.a-problem.c} = ${problem.x}`);
-  } else if (problem.kind === 'distribute') {
-    lines.push(`${problem.a}(x ${fmtSigned(problem.b)}) = ${problem.c}`);
-    lines.push(`${fmtCoef(problem.a)} ${fmtSigned(problem.a*problem.b)} = ${problem.c}  (distribute the ${problem.a})`);
-    lines.push(`x = (${problem.c} ${fmtSigned(-problem.a*problem.b)}) / ${problem.a} = ${problem.x}`);
-  } else {
-    lines = problem.formula.steps(problem.p, problem.x);
-  }
-  $('steps').innerHTML = lines.map(l => `<div class="formula">${l}</div>`).join('');
+  const host = $('steps');
+  host.innerHTML = '';
+  problem.steps.forEach(s => {
+    const span = document.createElement('span');
+    span.className = 'ln';
+    tex(span, s);
+    host.appendChild(span);
+  });
 }
 
 $('stepsBtn').addEventListener('click', () => {
   const s = $('steps');
-  if (!s.classList.contains('show')) buildSteps();
+  const opening = !s.classList.contains('show');
+
+  if (opening && !checked && !revealed) {
+    // revealing before answering -> forfeit scoring for this problem
+    revealed = true;
+    checked = true;
+    $('checkBtn').disabled = true; $('checkBtn').style.display = 'none';
+    if (problem.kind === 'mc') {
+      [...$('choices').children].forEach(c => c.classList.add('disabled'));
+    } else if ($('ansVal')) {
+      $('ansVal').disabled = true;
+    }
+    const fb = $('feedback');
+    fb.className = 'feedback show neutral';
+    fb.textContent = 'Worked solution shown — this one is not scored. Try the next problem.';
+  }
+
+  if (opening && s.innerHTML === '') buildSteps();
   s.classList.toggle('show');
   $('stepsBtn').textContent = s.classList.contains('show') ? 'Hide worked solution' : 'Show worked solution';
 });
 
-function draw() {
-  const ctx = $('cv').getContext('2d');
-  const W = 500, H = 340;
-  ctx.clearRect(0,0,W,H);
-  ctx.fillStyle = '#181225'; ctx.fillRect(0,0,W,H);
-  if (!problem) return;
-
-  const cx = W/2, fulcrumY = 140, beamHalf = 190;
-  // fulcrum triangle
-  ctx.fillStyle = '#3a2f5c';
-  ctx.beginPath(); ctx.moveTo(cx-16,fulcrumY+20); ctx.lineTo(cx+16,fulcrumY+20); ctx.lineTo(cx,fulcrumY); ctx.closePath(); ctx.fill();
-  // stand
-  ctx.fillRect(cx-4, fulcrumY+20, 8, 60);
-  ctx.fillRect(cx-40, fulcrumY+78, 80, 8);
-
-  // beam (level, since equation is always balanced)
-  ctx.strokeStyle = '#6a55c9'; ctx.lineWidth = 5; ctx.lineCap='round';
-  ctx.beginPath(); ctx.moveTo(cx-beamHalf, fulcrumY); ctx.lineTo(cx+beamHalf, fulcrumY); ctx.stroke();
-
-  // pans
-  function pan(px, text) {
-    ctx.strokeStyle='rgba(255,255,255,0.5)'; ctx.lineWidth=1.6;
-    ctx.beginPath(); ctx.moveTo(px,fulcrumY); ctx.lineTo(px-38,fulcrumY+46); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(px,fulcrumY); ctx.lineTo(px+38,fulcrumY+46); ctx.stroke();
-    ctx.strokeStyle = '#5dffa0';
-    ctx.beginPath(); ctx.ellipse(px, fulcrumY+50, 42, 9, 0, 0, Math.PI*2); ctx.stroke();
-    ctx.fillStyle = '#eee8f6'; ctx.font = '15px "JetBrains Mono",monospace'; ctx.textAlign='center';
-    ctx.fillText(text, px, fulcrumY+95);
-  }
-
-  let leftText, rightText;
-  if (problem.kind === 'linear1') { leftText = `${fmtCoef(problem.a)} ${fmtSigned(problem.b)}`; rightText = `${problem.c}`; }
-  else if (problem.kind === 'bothsides') { leftText = `${fmtCoef(problem.a)} ${fmtSigned(problem.b)}`; rightText = `${fmtCoef(problem.c)} ${fmtSigned(problem.d)}`; }
-  else if (problem.kind === 'distribute') { leftText = `${problem.a}(x ${fmtSigned(problem.b)})`; rightText = `${problem.c}`; }
-  else { leftText = problem.formula.tex.split('=')[0].trim().replace(/\\rho/g,'ρ').replace(/_0/g,'0'); rightText = problem.formula.tex.split('=')[1].trim().replace(/\\rho/g,'ρ'); }
-
-  pan(cx-beamHalf, leftText);
-  pan(cx+beamHalf, rightText);
-
-  ctx.fillStyle = '#cfc3ef'; ctx.font = '18px "Source Serif 4",serif'; ctx.textAlign='center';
-  ctx.fillText('=', cx, fulcrumY-16);
-
-  ctx.fillStyle = '#8b8fa0'; ctx.font = '12px "Source Sans 3",sans-serif';
-  ctx.fillText('an equation is a balance — whatever you do to one side, do to the other', cx, H-18);
-}
-
 $('checkBtn').addEventListener('click', checkAnswer);
 $('nextBtn').addEventListener('click', newProblem);
 
-function katexAll() {
-  const specs = [
-    ['f1', "ax + b = c \\;\\Rightarrow\\; ax = c-b"],
-    ['f2', "ax+b=cx+d \\;\\Rightarrow\\; (a-c)x = d-b"],
-    ['f3', "a(x+b) = ax+ab"],
-  ];
-  const hasKatex = typeof window.katex !== 'undefined';
-  for (const [id, tex] of specs) {
-    if (hasKatex) { try { katex.render(tex, $(id), {throwOnError:false}); continue; } catch(e) {} }
-    $(id).textContent = tex.replace(/\\Rightarrow/g,'⇒').replace(/[{}\\;]/g,'');
-  }
-}
-
 $('infoBtn').addEventListener('click', () => $('infoModal').classList.add('show'));
 $('infoClose').addEventListener('click', () => $('infoModal').classList.remove('show'));
-$('infoModal').addEventListener('click', e => { if (e.target.id==='infoModal') $('infoModal').classList.remove('show'); });
+$('infoModal').addEventListener('click', e => { if (e.target.id === 'infoModal') $('infoModal').classList.remove('show'); });
 
-window.addEventListener('load', () => { katexAll(); newProblem(); });
+window.addEventListener('load', newProblem);
 </script>
 </body>
 </html>
