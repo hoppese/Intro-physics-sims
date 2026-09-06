@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Differentiation — Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<style>
+  * { box-sizing: border-box; }
+  body { margin:0; background:#eef0f4; font-family:'Source Sans 3',system-ui,sans-serif; color:#20262b; }
+  .wrap { max-width:960px; margin:0 auto; padding:20px; }
+  .card { background:#fff; border:1px solid #e1e3ea; border-radius:12px; overflow:hidden; }
+  .header { background:#241b3d; color:#fff; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:13px 18px; flex-wrap:wrap; }
+  .header .title { display:flex; align-items:center; gap:10px; }
+  .header .dot { width:11px; height:11px; border-radius:3px; background:#6a55c9; flex:none; }
+  .header .name { font-family:'Source Serif 4',serif; font-weight:600; font-size:16px; }
+  .header .sub { font-weight:400; color:#a99fce; font-size:12px; }
+  .headbtn { font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:9px; cursor:pointer; border:1px solid rgba(255,255,255,0.22); background:rgba(255,255,255,0.06); color:#e6e1f5; }
+  .track-pill { font-size:10.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.18); border-radius:20px; padding:4px 10px; color:#cfc3ef; }
+  .body { display:flex; gap:0; align-items:stretch; flex-wrap:wrap; }
+  .canvasCol { padding:14px; display:flex; flex-direction:column; gap:10px; flex:1 1 480px; min-width:0; }
+  .ctlCol { width:320px; flex:none; border-left:1px solid #e8e9ee; padding:15px 17px; display:flex; flex-direction:column; gap:12px; }
+  canvas { display:block; width:100%; height:auto; aspect-ratio:500/360; border-radius:10px; background:#181225; }
+  .section-label { font-size:10.5px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; color:#9aa2ab; margin-bottom:4px; }
+  .problem-box { background:#f4f1fb; border-radius:9px; padding:11px 13px; font-size:14px; line-height:1.6; }
+  .ans-grid { display:grid; grid-template-columns:1fr; gap:8px; }
+  .ans-grid.triple { grid-template-columns:1fr 1fr 1fr; }
+  .ans-field label { font-size:11.5px; font-weight:600; color:#525a63; display:block; margin-bottom:3px; }
+  .ans-field input { width:100%; font:600 14px 'JetBrains Mono',monospace; padding:7px 9px; border-radius:7px; border:1px solid #d3d3dc; color:#241b3d; }
+  .ans-field input:focus { outline:2px solid #6a55c9; border-color:#6a55c9; }
+  .btnrow { display:flex; gap:7px; flex-wrap:wrap; }
+  .checkbtn { font-size:12.5px; font-weight:600; padding:9px 16px; border-radius:9px; cursor:pointer; border:1px solid #4b3a99; background:#4b3a99; color:#fff; }
+  .checkbtn:disabled { opacity:0.5; cursor:default; }
+  .nextbtn { font-size:12.5px; font-weight:600; padding:9px 16px; border-radius:9px; cursor:pointer; border:1px solid #d3d8dd; background:#fff; color:#525a63; }
+  .feedback { border-radius:9px; padding:10px 12px; font-size:13px; font-weight:600; display:none; }
+  .feedback.show { display:block; }
+  .feedback.correct { background:#e5f6ec; color:#1f7a45; }
+  .feedback.wrong { background:#fbebea; color:#a53a30; }
+  .stepsbtn { font-size:12px; font-weight:600; color:#4b3a99; cursor:pointer; background:none; border:none; padding:0; text-align:left; text-decoration:underline; }
+  .steps { display:none; background:#f4f1fb; border-radius:9px; padding:10px 12px; font-size:12.5px; line-height:1.65; margin-top:4px; }
+  .steps.show { display:block; }
+  .steps .formula { display:block; margin:4px 0; }
+  .stat-row { display:flex; gap:10px; }
+  .stat { flex:1; background:#f4f1fb; border-radius:9px; padding:8px 10px; text-align:center; }
+  .stat .n { font-family:'JetBrains Mono',monospace; font-weight:700; font-size:17px; color:#4b3a99; }
+  .stat .l { font-size:10px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; color:#8b8fa0; }
+  .level-track { display:flex; gap:4px; }
+  .level-track .seg { flex:1; height:5px; border-radius:3px; background:#e3e1ee; }
+  .level-track .seg.on { background:#6a55c9; }
+  .footer-note { text-align:center; padding:14px; font-size:11.5px; color:#8b949d; }
+  .modal-backdrop { position:fixed; inset:0; background:rgba(15,10,26,0.86); backdrop-filter:blur(3px); display:none; align-items:center; justify-content:center; padding:30px; z-index:50; }
+  .modal-backdrop.show { display:flex; }
+  .modal { max-width:720px; width:100%; max-height:90vh; overflow:auto; background:rgba(24,18,37,0.96); border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:22px 26px; color:#eee8f6; }
+  .modal h2 { font-family:'Source Serif 4',serif; font-weight:600; font-size:20px; margin:0 0 16px; display:flex; justify-content:space-between; align-items:baseline; }
+  .modal .close { cursor:pointer; width:26px; height:26px; border-radius:7px; border:1px solid rgba(255,255,255,0.2); background:rgba(255,255,255,0.06); color:#dce6f2; display:flex; align-items:center; justify-content:center; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:0 24px; }
+  .yellow { color:#e5c86b; font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:9px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="header">
+      <div class="title">
+        <span class="dot"></span>
+        <span class="name">Differentiation <span class="sub">— math practice</span></span>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span class="track-pill" id="levelPill">Level 1</span>
+        <button class="headbtn" id="infoBtn">ⓘ Info</button>
+      </div>
+    </div>
+    <div class="body">
+      <div class="canvasCol">
+        <canvas id="cv" width="500" height="360"></canvas>
+        <div class="stat-row">
+          <div class="stat"><div class="n" id="streakN">0</div><div class="l">Streak</div></div>
+          <div class="stat"><div class="n" id="correctN">0</div><div class="l">Correct</div></div>
+          <div class="stat"><div class="n" id="totalN">0</div><div class="l">Attempted</div></div>
+        </div>
+        <div class="level-track" id="levelTrack"></div>
+      </div>
+      <div class="ctlCol">
+        <div class="section-label" id="ruleLabel">Power rule</div>
+        <div class="problem-box" id="problemBox"></div>
+
+        <div class="section-label" style="margin-top:4px;" id="answerSectionLabel">Your answer</div>
+        <div class="ans-grid" id="answerFields"></div>
+
+        <div class="btnrow">
+          <button class="checkbtn" id="checkBtn">Check</button>
+          <button class="nextbtn" id="nextBtn">New problem ↻</button>
+        </div>
+        <div class="feedback" id="feedback"></div>
+        <button class="stepsbtn" id="stepsBtn">Show worked solution</button>
+        <div class="steps" id="steps"></div>
+      </div>
+    </div>
+    <div class="footer-note">DRAFT — math-practice track, not yet in the sim catalog. f(x) in blue, f'(x) in green (levels 2–4 instead show the tangent line at x₀, revealed after you check).</div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="infoModal">
+  <div class="modal">
+    <h2>Differentiation <span class="close" id="infoClose">×</span></h2>
+    <div class="grid2">
+      <div style="padding-right:22px;">
+        <div class="yellow">What this practices</div>
+        <p style="font-size:12.5px;line-height:1.55;">Finding a derivative — the slope of the tangent line, and the rate-of-change machinery behind velocity, acceleration, and every "how fast is X changing" question in physics. Level 1 asks for the derivative polynomial's coefficients directly; levels 2–4 ask for the numeric slope at a given point, using the product, chain, and trig/exponential rules.</p>
+      </div>
+      <div style="padding:0 22px;border-left:1px solid rgba(255,255,255,0.12);">
+        <div class="yellow">How to use</div>
+        <p style="font-size:12.5px;line-height:1.55;">Read off f(x), apply the relevant rule, and enter your answer. Checking reveals the tangent line on the graph (levels 2–4) so you can see the slope you just computed.</p>
+      </div>
+      <div style="grid-column:1/-1;border-top:1px solid rgba(255,255,255,0.12);margin-top:15px;padding-top:15px;">
+        <div class="yellow">Relevant rules</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px 28px;">
+          <div><span class="formula" id="f1" style="font-family:'Source Serif 4',serif;font-style:italic;color:#fff;"></span><div style="font-size:11.5px;color:#b7c2cd;">power rule</div></div>
+          <div><span class="formula" id="f2" style="font-family:'Source Serif 4',serif;font-style:italic;color:#fff;"></span><div style="font-size:11.5px;color:#b7c2cd;">product rule</div></div>
+          <div><span class="formula" id="f3" style="font-family:'Source Serif 4',serif;font-style:italic;color:#fff;"></span><div style="font-size:11.5px;color:#b7c2cd;">chain rule</div></div>
+          <div><span class="formula" id="f4" style="font-family:'Source Serif 4',serif;font-style:italic;color:#fff;"></span><div style="font-size:11.5px;color:#b7c2cd;">sin, cos, exponential</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+
+let level = 1; // 1..4
+let streak = 0, wrongStreak = 0, correctCount = 0, totalCount = 0;
+let problem = null;
+let checked = false;
+
+function randInt(lo, hi) { return Math.floor(Math.random()*(hi-lo+1))+lo; }
+function randNonZeroInt(lo, hi) { let v; do { v = randInt(lo,hi); } while (v===0); return v; }
+function fmtSigned(n) { return n >= 0 ? `+ ${n}` : `− ${Math.abs(n)}`; }
+
+function genProblem(lvl) {
+  if (lvl === 1) {
+    const a = randNonZeroInt(-4,4), b = randNonZeroInt(-4,4), c = randInt(-6,6), d = randInt(-6,6);
+    return { kind:'poly', a, b, c, d, dA: 3*a, dB: 2*b, dC: c };
+  }
+  if (lvl === 2) {
+    const a = randNonZeroInt(-6,6), b = randInt(-6,6), c = randNonZeroInt(-6,6), d = randInt(-6,6);
+    const x0 = randInt(-3,3);
+    const ans = a*(c*x0+d) + c*(a*x0+b);
+    return { kind:'product', a, b, c, d, x0, ans };
+  }
+  if (lvl === 3) {
+    let a, base;
+    do { a = randNonZeroInt(-4,4); } while (false);
+    const b = randInt(-5,5);
+    const n = randInt(2,4);
+    let x0;
+    do { x0 = randInt(-3,3); base = a*x0+b; } while (base === 0);
+    const ans = n*a*Math.pow(base, n-1);
+    return { kind:'chain', a, b, n, x0, ans };
+  }
+  const type = ['sin','cos','exp'][randInt(0,2)];
+  const A = randNonZeroInt(-4,4), k = randNonZeroInt(1,3);
+  let x0, ans;
+  if (type === 'exp') {
+    x0 = randInt(-2,2);
+    ans = A*k*Math.exp(k*x0);
+  } else {
+    const specialFracs = [0, Math.PI/6, Math.PI/4, Math.PI/3, Math.PI/2];
+    x0 = specialFracs[randInt(0,specialFracs.length-1)] * (Math.random()<0.5?-1:1);
+    ans = type === 'sin' ? A*k*Math.cos(k*x0) : -A*k*Math.sin(k*x0);
+  }
+  return { kind:'trigexp', type, A, k, x0, ans };
+}
+
+function levelTrack() {
+  let html = '';
+  for (let i=1;i<=4;i++) html += `<div class="seg ${i<=level?'on':''}"></div>`;
+  $('levelTrack').innerHTML = html;
+  $('levelPill').textContent = 'Level ' + level;
+}
+
+function fOf(x) {
+  const p = problem;
+  if (p.kind === 'poly') return p.a*x**3 + p.b*x**2 + p.c*x + p.d;
+  if (p.kind === 'product') return (p.a*x+p.b)*(p.c*x+p.d);
+  if (p.kind === 'chain') return Math.pow(p.a*x+p.b, p.n);
+  if (p.kind === 'trigexp') {
+    if (p.type === 'sin') return p.A*Math.sin(p.k*x);
+    if (p.type === 'cos') return p.A*Math.cos(p.k*x);
+    return p.A*Math.exp(p.k*x);
+  }
+}
+function fPrimeOf(x) {
+  const p = problem;
+  if (p.kind === 'poly') return 3*p.a*x**2 + 2*p.b*x + p.c;
+  if (p.kind === 'product') return p.a*(p.c*x+p.d) + p.c*(p.a*x+p.b);
+  if (p.kind === 'chain') return p.n*p.a*Math.pow(p.a*x+p.b, p.n-1);
+  if (p.kind === 'trigexp') {
+    if (p.type === 'sin') return p.A*p.k*Math.cos(p.k*x);
+    if (p.type === 'cos') return -p.A*p.k*Math.sin(p.k*x);
+    return p.A*p.k*Math.exp(p.k*x);
+  }
+}
+
+function equationText() {
+  const p = problem;
+  if (p.kind === 'poly') return `f(x) = ${p.a}x³ ${fmtSigned(p.b)}x² ${fmtSigned(p.c)}x ${fmtSigned(p.d)}`;
+  if (p.kind === 'product') return `f(x) = (${p.a}x ${fmtSigned(p.b)})(${p.c}x ${fmtSigned(p.d)})\nFind f'(${p.x0})`;
+  if (p.kind === 'chain') return `f(x) = (${p.a}x ${fmtSigned(p.b)})^${p.n}\nFind f'(${p.x0})`;
+  if (p.kind === 'trigexp') {
+    const coef = p.A === 1 ? '' : (p.A === -1 ? '−' : String(p.A));
+    const label = p.type === 'exp' ? `${coef}e^(${p.k}x)` : `${coef}${p.type}(${p.k}x)`;
+    const x0label = p.type === 'exp' ? p.x0 : radLabel(p.x0);
+    return `f(x) = ${label}\nFind f'(${x0label})`;
+  }
+}
+
+function radLabel(x) {
+  if (Math.abs(x) < 1e-9) return '0';
+  const fracs = { [Math.PI/6]:'π/6', [Math.PI/4]:'π/4', [Math.PI/3]:'π/3', [Math.PI/2]:'π/2' };
+  const sign = x < 0 ? '−' : '';
+  const ax = Math.abs(x);
+  for (const key in fracs) { if (Math.abs(ax - key) < 1e-6) return sign + fracs[key]; }
+  return x.toFixed(2);
+}
+
+function buildAnswerFields() {
+  if (problem.kind === 'poly') {
+    $('answerSectionLabel').textContent = "Your answer — coefficients of f'(x)";
+    $('answerFields').className = 'ans-grid triple';
+    $('answerFields').innerHTML = `
+      <div class="ans-field"><label>x² coeff</label><input type="number" step="any" id="ansA"></div>
+      <div class="ans-field"><label>x coeff</label><input type="number" step="any" id="ansB"></div>
+      <div class="ans-field"><label>constant</label><input type="number" step="any" id="ansC"></div>`;
+  } else {
+    $('answerSectionLabel').textContent = "Your answer — f'(x₀)";
+    $('answerFields').className = 'ans-grid';
+    $('answerFields').innerHTML = `<div class="ans-field"><label>Value</label><input type="number" step="any" id="ansVal"></div>`;
+  }
+}
+
+function newProblem() {
+  problem = genProblem(level);
+  checked = false;
+  $('feedback').className = 'feedback'; $('feedback').textContent = '';
+  $('steps').className = 'steps'; $('steps').innerHTML = '';
+  $('stepsBtn').textContent = 'Show worked solution';
+  $('checkBtn').disabled = false;
+
+  const ruleNames = { poly:'Power rule', product:'Product rule', chain:'Chain rule', trigexp:'Trig / exponential rules' };
+  $('ruleLabel').textContent = ruleNames[problem.kind];
+  $('problemBox').innerHTML = equationText().replace(/\n/g,'<br>');
+  buildAnswerFields();
+  levelTrack();
+  draw();
+}
+
+function checkAnswer() {
+  if (checked) return;
+  let correct = true;
+  if (problem.kind === 'poly') {
+    const a = +$('ansA').value, b = +$('ansB').value, c = +$('ansC').value;
+    if ([a,b,c].some(Number.isNaN)) return;
+    correct = Math.abs(a-problem.dA)<0.05 && Math.abs(b-problem.dB)<0.05 && Math.abs(c-problem.dC)<0.05;
+  } else {
+    const v = +$('ansVal').value;
+    if (Number.isNaN(v)) return;
+    const tol = Math.max(0.05, Math.abs(problem.ans)*0.01);
+    correct = Math.abs(v - problem.ans) < tol;
+  }
+
+  checked = true; totalCount++;
+  $('checkBtn').disabled = true;
+  const fb = $('feedback'); fb.classList.add('show');
+  if (correct) {
+    correctCount++; streak++; wrongStreak = 0;
+    fb.classList.add('correct'); fb.classList.remove('wrong');
+    fb.textContent = '✓ Correct.' + (streak>0 && streak%3===0 && level<4 ? ' Leveling up!' : '');
+    if (streak > 0 && streak % 3 === 0 && level < 4) level++;
+  } else {
+    streak = 0; wrongStreak++;
+    fb.classList.add('wrong'); fb.classList.remove('correct');
+    const ansText = problem.kind==='poly' ? `${problem.dA}x² + ${problem.dB}x + ${problem.dC}` : problem.ans.toFixed(3);
+    fb.textContent = `✗ Not quite. Correct: ${ansText}.`;
+    if (wrongStreak >= 2 && level > 1) { level--; wrongStreak = 0; }
+  }
+  $('streakN').textContent = streak; $('correctN').textContent = correctCount; $('totalN').textContent = totalCount;
+  levelTrack();
+  draw();
+}
+
+function buildSteps() {
+  const p = problem;
+  let lines = [];
+  if (p.kind === 'poly') {
+    lines.push(`f(x) = ${p.a}x³ ${fmtSigned(p.b)}x² ${fmtSigned(p.c)}x ${fmtSigned(p.d)}`);
+    lines.push(`f'(x) = 3(${p.a})x² + 2(${p.b})x + ${p.c} = ${p.dA}x² ${fmtSigned(p.dB)}x ${fmtSigned(p.dC)}`);
+  } else if (p.kind === 'product') {
+    lines.push(`f'(x) = a·(cx+d) + c·(ax+b)  [product rule]`);
+    lines.push(`f'(${p.x0}) = ${p.a}(${p.c}(${p.x0})+${p.d}) + ${p.c}(${p.a}(${p.x0})+${p.b}) = ${p.ans}`);
+  } else if (p.kind === 'chain') {
+    lines.push(`f'(x) = n·a·(ax+b)^(n−1)  [chain rule]`);
+    lines.push(`f'(${p.x0}) = ${p.n}(${p.a})(${p.a}(${p.x0})+${p.b})^${p.n-1} = ${p.ans.toFixed(3)}`);
+  } else {
+    const ruleTxt = p.type==='sin' ? `f'(x) = A·k·cos(kx)` : (p.type==='cos' ? `f'(x) = −A·k·sin(kx)` : `f'(x) = A·k·e^(kx)`);
+    lines.push(ruleTxt);
+    lines.push(`f'(${radLabel(p.x0)}) = ${p.ans.toFixed(3)}`);
+  }
+  $('steps').innerHTML = lines.map(l => `<div class="formula">${l}</div>`).join('');
+}
+
+$('stepsBtn').addEventListener('click', () => {
+  const s = $('steps');
+  if (!s.classList.contains('show')) buildSteps();
+  s.classList.toggle('show');
+  $('stepsBtn').textContent = s.classList.contains('show') ? 'Hide worked solution' : 'Show worked solution';
+});
+
+function draw() {
+  const ctx = $('cv').getContext('2d');
+  const W = 500, H = 360;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle = '#181225'; ctx.fillRect(0,0,W,H);
+  if (!problem) return;
+  const cx = W/2, cy = H/2;
+
+  // determine a reasonable x-range and scale by sampling
+  let xr = 6;
+  if (problem.kind === 'trigexp' && problem.type === 'exp') xr = 3;
+  const scaleX = (W*0.42) / xr;
+
+  // sample to find y-range
+  let maxAbsY = 1;
+  for (let px=-xr; px<=xr; px+=xr/60) { const y = fOf(px); if (isFinite(y)) maxAbsY = Math.max(maxAbsY, Math.abs(y)); }
+  const scaleY = (H*0.42) / maxAbsY;
+
+  const toPx = (x,y) => [cx + x*scaleX, cy - y*scaleY];
+
+  ctx.strokeStyle = 'rgba(255,255,255,0.14)'; ctx.lineWidth = 1.2;
+  ctx.beginPath(); ctx.moveTo(0,cy); ctx.lineTo(W,cy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx,0); ctx.lineTo(cx,H); ctx.stroke();
+
+  ctx.strokeStyle = '#5da9ff'; ctx.lineWidth = 2.2; ctx.beginPath();
+  let started = false;
+  for (let px=-xr; px<=xr; px+=xr/100) {
+    const y = fOf(px);
+    if (!isFinite(y) || Math.abs(y) > maxAbsY*3) { started=false; continue; }
+    const [sx,sy] = toPx(px,y);
+    if (!started) { ctx.moveTo(sx,sy); started=true; } else ctx.lineTo(sx,sy);
+  }
+  ctx.stroke();
+
+  if (problem.kind === 'poly') {
+    ctx.strokeStyle = '#5dffa0'; ctx.lineWidth = 2; ctx.beginPath();
+    started = false;
+    let maxAbsDY = 1;
+    for (let px=-xr; px<=xr; px+=xr/60) { const y=fPrimeOf(px); if (isFinite(y)) maxAbsDY = Math.max(maxAbsDY, Math.abs(y)); }
+    const scaleDY = (H*0.42)/maxAbsDY;
+    for (let px=-xr; px<=xr; px+=xr/100) {
+      const y = fPrimeOf(px);
+      if (!isFinite(y) || Math.abs(y) > maxAbsDY*3) { started=false; continue; }
+      const sx = cx+px*scaleX, sy = cy - y*scaleDY;
+      if (!started) { ctx.moveTo(sx,sy); started=true; } else ctx.lineTo(sx,sy);
+    }
+    ctx.stroke();
+    ctx.fillStyle = '#5da9ff'; ctx.font='12px "Source Sans 3",sans-serif'; ctx.textAlign='left';
+    ctx.fillText('f(x)', 12, 20);
+    ctx.fillStyle = '#5dffa0'; ctx.fillText("f'(x)", 12, 38);
+  } else {
+    const x0 = problem.x0;
+    const y0 = fOf(x0);
+    const [px0,py0] = toPx(x0,y0);
+    ctx.fillStyle = '#ff9f5d';
+    ctx.beginPath(); ctx.arc(px0,py0,5,0,Math.PI*2); ctx.fill();
+    if (checked) {
+      const slope = fPrimeOf(x0);
+      ctx.strokeStyle = '#5dffa0'; ctx.lineWidth = 2; ctx.setLineDash([]);
+      const dx = xr*0.6;
+      const [ax,ay] = toPx(x0-dx, y0-slope*dx);
+      const [bx,by] = toPx(x0+dx, y0+slope*dx);
+      ctx.beginPath(); ctx.moveTo(ax,ay); ctx.lineTo(bx,by); ctx.stroke();
+      ctx.fillStyle = '#5dffa0'; ctx.font='12px "Source Sans 3",sans-serif'; ctx.textAlign='left';
+      ctx.fillText(`tangent, slope = ${slope.toFixed(2)}`, 12, 20);
+    }
+    ctx.fillStyle = '#5da9ff'; ctx.font='12px "Source Sans 3",sans-serif';
+    ctx.fillText('f(x)', 12, H-14);
+  }
+}
+
+$('checkBtn').addEventListener('click', checkAnswer);
+$('nextBtn').addEventListener('click', newProblem);
+
+function katexAll() {
+  const specs = [
+    ['f1', "\\dfrac{d}{dx}x^n = nx^{n-1}"],
+    ['f2', "(uv)' = u'v + uv'"],
+    ['f3', "\\dfrac{d}{dx}f(g(x)) = f'(g(x))g'(x)"],
+    ['f4', "\\dfrac{d}{dx}\\sin(kx)=k\\cos(kx),\\ \\dfrac{d}{dx}e^{kx}=ke^{kx}"],
+  ];
+  const hasKatex = typeof window.katex !== 'undefined';
+  for (const [id, tex] of specs) {
+    if (hasKatex) { try { katex.render(tex, $(id), {throwOnError:false}); continue; } catch(e) {} }
+    $(id).textContent = tex.replace(/\\dfrac\{([^}]*)\}\{([^}]*)\}/g,'($1)/($2)').replace(/\\cos/g,'cos').replace(/\\sin/g,'sin').replace(/[{}\\]/g,'').replace(/\^n/g,'ⁿ');
+  }
+}
+
+$('infoBtn').addEventListener('click', () => $('infoModal').classList.add('show'));
+$('infoClose').addEventListener('click', () => $('infoModal').classList.remove('show'));
+$('infoModal').addEventListener('click', e => { if (e.target.id==='infoModal') $('infoModal').classList.remove('show'); });
+
+window.addEventListener('load', () => { katexAll(); newProblem(); });
+</script>
+</body>
+</html>

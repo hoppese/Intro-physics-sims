@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Geometry — Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<style>
+  * { box-sizing: border-box; }
+  body { margin:0; background:#eef0f4; font-family:'Source Sans 3',system-ui,sans-serif; color:#20262b; }
+  .wrap { max-width:960px; margin:0 auto; padding:20px; }
+  .card { background:#fff; border:1px solid #e1e3ea; border-radius:12px; overflow:hidden; }
+  .header { background:#241b3d; color:#fff; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:13px 18px; flex-wrap:wrap; }
+  .header .title { display:flex; align-items:center; gap:10px; }
+  .header .dot { width:11px; height:11px; border-radius:3px; background:#6a55c9; flex:none; }
+  .header .name { font-family:'Source Serif 4',serif; font-weight:600; font-size:16px; }
+  .header .sub { font-weight:400; color:#a99fce; font-size:12px; }
+  .headbtn { font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:9px; cursor:pointer; border:1px solid rgba(255,255,255,0.22); background:rgba(255,255,255,0.06); color:#e6e1f5; }
+  .track-pill { font-size:10.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.18); border-radius:20px; padding:4px 10px; color:#cfc3ef; }
+  .body { display:flex; gap:0; align-items:stretch; flex-wrap:wrap; }
+  .canvasCol { padding:14px; display:flex; flex-direction:column; gap:10px; flex:1 1 480px; min-width:0; }
+  .ctlCol { width:320px; flex:none; border-left:1px solid #e8e9ee; padding:15px 17px; display:flex; flex-direction:column; gap:12px; }
+  canvas { display:block; width:100%; height:auto; aspect-ratio:500/360; border-radius:10px; background:#181225; }
+  .section-label { font-size:10.5px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; color:#9aa2ab; margin-bottom:4px; }
+  .problem-box { background:#f4f1fb; border-radius:9px; padding:11px 13px; font-size:14px; line-height:1.6; }
+  .ans-grid { display:grid; grid-template-columns:1fr; gap:8px; }
+  .ans-field label { font-size:11.5px; font-weight:600; color:#525a63; display:block; margin-bottom:3px; }
+  .ans-field input { width:100%; font:600 14px 'JetBrains Mono',monospace; padding:7px 9px; border-radius:7px; border:1px solid #d3d3dc; color:#241b3d; }
+  .ans-field input:focus { outline:2px solid #6a55c9; border-color:#6a55c9; }
+  .btnrow { display:flex; gap:7px; flex-wrap:wrap; }
+  .checkbtn { font-size:12.5px; font-weight:600; padding:9px 16px; border-radius:9px; cursor:pointer; border:1px solid #4b3a99; background:#4b3a99; color:#fff; }
+  .checkbtn:disabled { opacity:0.5; cursor:default; }
+  .nextbtn { font-size:12.5px; font-weight:600; padding:9px 16px; border-radius:9px; cursor:pointer; border:1px solid #d3d8dd; background:#fff; color:#525a63; }
+  .feedback { border-radius:9px; padding:10px 12px; font-size:13px; font-weight:600; display:none; }
+  .feedback.show { display:block; }
+  .feedback.correct { background:#e5f6ec; color:#1f7a45; }
+  .feedback.wrong { background:#fbebea; color:#a53a30; }
+  .stepsbtn { font-size:12px; font-weight:600; color:#4b3a99; cursor:pointer; background:none; border:none; padding:0; text-align:left; text-decoration:underline; }
+  .steps { display:none; background:#f4f1fb; border-radius:9px; padding:10px 12px; font-size:12.5px; line-height:1.65; margin-top:4px; }
+  .steps.show { display:block; }
+  .steps .formula { display:block; margin:4px 0; }
+  .stat-row { display:flex; gap:10px; }
+  .stat { flex:1; background:#f4f1fb; border-radius:9px; padding:8px 10px; text-align:center; }
+  .stat .n { font-family:'JetBrains Mono',monospace; font-weight:700; font-size:17px; color:#4b3a99; }
+  .stat .l { font-size:10px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; color:#8b8fa0; }
+  .level-track { display:flex; gap:4px; }
+  .level-track .seg { flex:1; height:5px; border-radius:3px; background:#e3e1ee; }
+  .level-track .seg.on { background:#6a55c9; }
+  .footer-note { text-align:center; padding:14px; font-size:11.5px; color:#8b949d; }
+  .modal-backdrop { position:fixed; inset:0; background:rgba(15,10,26,0.86); backdrop-filter:blur(3px); display:none; align-items:center; justify-content:center; padding:30px; z-index:50; }
+  .modal-backdrop.show { display:flex; }
+  .modal { max-width:720px; width:100%; max-height:90vh; overflow:auto; background:rgba(24,18,37,0.96); border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:22px 26px; color:#eee8f6; }
+  .modal h2 { font-family:'Source Serif 4',serif; font-weight:600; font-size:20px; margin:0 0 16px; display:flex; justify-content:space-between; align-items:baseline; }
+  .modal .close { cursor:pointer; width:26px; height:26px; border-radius:7px; border:1px solid rgba(255,255,255,0.2); background:rgba(255,255,255,0.06); color:#dce6f2; display:flex; align-items:center; justify-content:center; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:0 24px; }
+  .yellow { color:#e5c86b; font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:9px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="header">
+      <div class="title">
+        <span class="dot"></span>
+        <span class="name">Geometry <span class="sub">— math practice</span></span>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span class="track-pill" id="levelPill">Level 1</span>
+        <button class="headbtn" id="infoBtn">ⓘ Info</button>
+      </div>
+    </div>
+    <div class="body">
+      <div class="canvasCol">
+        <canvas id="cv" width="500" height="360"></canvas>
+        <div class="stat-row">
+          <div class="stat"><div class="n" id="streakN">0</div><div class="l">Streak</div></div>
+          <div class="stat"><div class="n" id="correctN">0</div><div class="l">Correct</div></div>
+          <div class="stat"><div class="n" id="totalN">0</div><div class="l">Attempted</div></div>
+        </div>
+        <div class="level-track" id="levelTrack"></div>
+      </div>
+      <div class="ctlCol">
+        <div class="section-label" id="ruleLabel">Pythagorean theorem</div>
+        <div class="problem-box" id="problemBox"></div>
+
+        <div class="section-label" style="margin-top:4px;" id="answerSectionLabel">Your answer</div>
+        <div class="ans-grid" id="answerFields"></div>
+
+        <div class="btnrow">
+          <button class="checkbtn" id="checkBtn">Check</button>
+          <button class="nextbtn" id="nextBtn">New problem ↻</button>
+        </div>
+        <div class="feedback" id="feedback"></div>
+        <button class="stepsbtn" id="stepsBtn">Show worked solution</button>
+        <div class="steps" id="steps"></div>
+      </div>
+    </div>
+    <div class="footer-note">DRAFT — math-practice track, not yet in the sim catalog. Shapes drawn roughly to scale from the given numbers.</div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="infoModal">
+  <div class="modal">
+    <h2>Geometry <span class="close" id="infoClose">×</span></h2>
+    <div class="grid2">
+      <div style="padding-right:22px;">
+        <div class="yellow">What this practices</div>
+        <p style="font-size:12.5px;line-height:1.55;">The geometry that shows up constantly in physics setup work: right-triangle sides (resolving vectors, ramps), areas and circumferences (pressure = force/area, flux through a loop), similar-triangle ratios (optics, shadows, lens diagrams), and volumes (density, buoyancy). Levels move from the Pythagorean theorem to 2D area/circumference, to similar triangles, to 3D volumes.</p>
+      </div>
+      <div style="padding:0 22px;border-left:1px solid rgba(255,255,255,0.12);">
+        <div class="yellow">How to use</div>
+        <p style="font-size:12.5px;line-height:1.55;">Read the labeled figure and compute the requested quantity. Figures are drawn roughly to scale (not exact) so you can sanity-check whether your answer's size makes sense.</p>
+      </div>
+      <div style="grid-column:1/-1;border-top:1px solid rgba(255,255,255,0.12);margin-top:15px;padding-top:15px;">
+        <div class="yellow">Relevant formulas</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px 28px;">
+          <div><span class="formula" id="f1" style="font-family:'Source Serif 4',serif;font-style:italic;color:#fff;"></span><div style="font-size:11.5px;color:#b7c2cd;">Pythagorean theorem</div></div>
+          <div><span class="formula" id="f2" style="font-family:'Source Serif 4',serif;font-style:italic;color:#fff;"></span><div style="font-size:11.5px;color:#b7c2cd;">area — rectangle, triangle, circle</div></div>
+          <div><span class="formula" id="f3" style="font-family:'Source Serif 4',serif;font-style:italic;color:#fff;"></span><div style="font-size:11.5px;color:#b7c2cd;">similar triangles</div></div>
+          <div><span class="formula" id="f4" style="font-family:'Source Serif 4',serif;font-style:italic;color:#fff;"></span><div style="font-size:11.5px;color:#b7c2cd;">volume — box, cylinder, sphere</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+
+let level = 1; // 1..4
+let streak = 0, wrongStreak = 0, correctCount = 0, totalCount = 0;
+let problem = null;
+let checked = false;
+
+function randInt(lo, hi) { return Math.floor(Math.random()*(hi-lo+1))+lo; }
+function fmtNum(n) { return Number.isInteger(+n.toFixed(4)) ? String(Math.round(n)) : n.toFixed(2); }
+
+const TRIPLES = [[3,4,5],[5,12,13],[6,8,10],[8,15,17],[7,24,25],[9,12,15]];
+
+function genProblem(lvl) {
+  if (lvl === 1) {
+    const [a0,b0,c0] = TRIPLES[randInt(0,TRIPLES.length-1)];
+    const k = randInt(1,3);
+    const a=a0*k, b=b0*k, c=c0*k;
+    const findHyp = Math.random() < 0.5;
+    return { kind:'pyth', a, b, c, findHyp, ans: findHyp ? c : b };
+  }
+  if (lvl === 2) {
+    const shape = ['rectangle','triangle','circle'][randInt(0,2)];
+    if (shape === 'rectangle') {
+      const w = randInt(3,15), h = randInt(3,15);
+      const askArea = Math.random()<0.7;
+      return { kind:'shape2d', shape, w, h, askArea, ans: askArea ? w*h : 2*(w+h) };
+    }
+    if (shape === 'triangle') {
+      const base = randInt(4,16), height = randInt(3,14);
+      return { kind:'shape2d', shape, base, height, askArea:true, ans: 0.5*base*height };
+    }
+    const r = randInt(2,10);
+    const askArea = Math.random()<0.6;
+    return { kind:'shape2d', shape, r, askArea, ans: askArea ? Math.PI*r*r : 2*Math.PI*r };
+  }
+  if (lvl === 3) {
+    // similar triangles: small triangle sides (a,b) similar to large triangle sides (ka, x) -- find x
+    const a = randInt(2,8), b = randInt(2,10);
+    const k = randInt(2,4) + (Math.random()<0.3 ? 0.5 : 0);
+    const ka = +(a*k).toFixed(1);
+    const x = +(b*k).toFixed(2);
+    return { kind:'similar', a, b, ka, ans: x, k };
+  }
+  const shape = ['box','cylinder','sphere'][randInt(0,2)];
+  if (shape === 'box') {
+    const w=randInt(2,8), h=randInt(2,8), d=randInt(2,8);
+    return { kind:'volume3d', shape, w, h, d, ans: w*h*d };
+  }
+  if (shape === 'cylinder') {
+    const r=randInt(2,6), h=randInt(3,10);
+    return { kind:'volume3d', shape, r, h, ans: Math.PI*r*r*h };
+  }
+  const r = randInt(2,7);
+  return { kind:'volume3d', shape, r, ans: (4/3)*Math.PI*r**3 };
+}
+
+function levelTrack() {
+  let html = '';
+  for (let i=1;i<=4;i++) html += `<div class="seg ${i<=level?'on':''}"></div>`;
+  $('levelTrack').innerHTML = html;
+  $('levelPill').textContent = 'Level ' + level;
+}
+
+function equationText() {
+  const p = problem;
+  if (p.kind === 'pyth') {
+    if (p.findHyp) return `Right triangle, legs a = ${p.a}, b = ${p.b}.\nFind the hypotenuse c.`;
+    return `Right triangle, leg a = ${p.a}, hypotenuse c = ${p.c}.\nFind the other leg b.`;
+  }
+  if (p.kind === 'shape2d') {
+    if (p.shape === 'rectangle') return `Rectangle, width = ${p.w}, height = ${p.h}.\nFind the ${p.askArea?'area':'perimeter'}.`;
+    if (p.shape === 'triangle') return `Triangle, base = ${p.base}, height = ${p.height}.\nFind the area.`;
+    return `Circle, radius = ${p.r}.\nFind the ${p.askArea?'area':'circumference'}.`;
+  }
+  if (p.kind === 'similar') {
+    return `Two similar triangles. Small triangle: legs ${p.a} and ${p.b}. Large triangle (scaled up): the leg corresponding to ${p.a} is ${p.ka}.\nFind the large triangle's other leg (corresponding to ${p.b}).`;
+  }
+  if (p.kind === 'volume3d') {
+    if (p.shape === 'box') return `Rectangular box: ${p.w} × ${p.h} × ${p.d}.\nFind the volume.`;
+    if (p.shape === 'cylinder') return `Cylinder: radius = ${p.r}, height = ${p.h}.\nFind the volume.`;
+    return `Sphere: radius = ${p.r}.\nFind the volume.`;
+  }
+}
+
+function newProblem() {
+  problem = genProblem(level);
+  checked = false;
+  $('feedback').className = 'feedback'; $('feedback').textContent = '';
+  $('steps').className = 'steps'; $('steps').innerHTML = '';
+  $('stepsBtn').textContent = 'Show worked solution';
+  $('checkBtn').disabled = false;
+
+  const ruleNames = { pyth:'Pythagorean theorem', shape2d:'Area & circumference', similar:'Similar triangles', volume3d:'Volume in 3D' };
+  $('ruleLabel').textContent = ruleNames[problem.kind];
+  $('problemBox').innerHTML = equationText().replace(/\n/g,'<br>');
+  $('answerSectionLabel').textContent = 'Your answer';
+  $('answerFields').innerHTML = `<div class="ans-field"><label>Value</label><input type="number" step="any" id="ansVal"></div>`;
+  levelTrack();
+  draw();
+}
+
+function checkAnswer() {
+  if (checked) return;
+  const v = +$('ansVal').value;
+  if (Number.isNaN(v)) return;
+  const tol = Math.max(0.05, Math.abs(problem.ans)*0.02);
+  const correct = Math.abs(v - problem.ans) < tol;
+
+  checked = true; totalCount++;
+  $('checkBtn').disabled = true;
+  const fb = $('feedback'); fb.classList.add('show');
+  if (correct) {
+    correctCount++; streak++; wrongStreak = 0;
+    fb.classList.add('correct'); fb.classList.remove('wrong');
+    fb.textContent = '✓ Correct.' + (streak>0 && streak%3===0 && level<4 ? ' Leveling up!' : '');
+    if (streak > 0 && streak % 3 === 0 && level < 4) level++;
+  } else {
+    streak = 0; wrongStreak++;
+    fb.classList.add('wrong'); fb.classList.remove('correct');
+    fb.textContent = `✗ Not quite. Correct: ${fmtNum(problem.ans)}.`;
+    if (wrongStreak >= 2 && level > 1) { level--; wrongStreak = 0; }
+  }
+  $('streakN').textContent = streak; $('correctN').textContent = correctCount; $('totalN').textContent = totalCount;
+  levelTrack();
+  draw();
+}
+
+function buildSteps() {
+  const p = problem;
+  let lines = [];
+  if (p.kind === 'pyth') {
+    if (p.findHyp) { lines.push(`c = √(a² + b²) = √(${p.a}² + ${p.b}²) = ${fmtNum(p.ans)}`); }
+    else { lines.push(`b = √(c² − a²) = √(${p.c}² − ${p.a}²) = ${fmtNum(p.ans)}`); }
+  } else if (p.kind === 'shape2d') {
+    if (p.shape === 'rectangle') lines.push(p.askArea ? `Area = w·h = ${p.w}·${p.h} = ${fmtNum(p.ans)}` : `Perimeter = 2(w+h) = 2(${p.w}+${p.h}) = ${fmtNum(p.ans)}`);
+    else if (p.shape === 'triangle') lines.push(`Area = ½·base·height = ½·${p.base}·${p.height} = ${fmtNum(p.ans)}`);
+    else lines.push(p.askArea ? `Area = πr² = π(${p.r})² = ${fmtNum(p.ans)}` : `Circumference = 2πr = 2π(${p.r}) = ${fmtNum(p.ans)}`);
+  } else if (p.kind === 'similar') {
+    lines.push(`Ratio = ${p.ka} / ${p.a} = ${(p.ka/p.a).toFixed(2)}`);
+    lines.push(`Other leg = ${p.b} × ${(p.ka/p.a).toFixed(2)} = ${fmtNum(p.ans)}`);
+  } else if (p.kind === 'volume3d') {
+    if (p.shape === 'box') lines.push(`V = w·h·d = ${p.w}·${p.h}·${p.d} = ${fmtNum(p.ans)}`);
+    else if (p.shape === 'cylinder') lines.push(`V = πr²h = π(${p.r})²(${p.h}) = ${fmtNum(p.ans)}`);
+    else lines.push(`V = (4/3)πr³ = (4/3)π(${p.r})³ = ${fmtNum(p.ans)}`);
+  }
+  $('steps').innerHTML = lines.map(l => `<div class="formula">${l}</div>`).join('');
+}
+
+$('stepsBtn').addEventListener('click', () => {
+  const s = $('steps');
+  if (!s.classList.contains('show')) buildSteps();
+  s.classList.toggle('show');
+  $('stepsBtn').textContent = s.classList.contains('show') ? 'Hide worked solution' : 'Show worked solution';
+});
+
+function draw() {
+  const ctx = $('cv').getContext('2d');
+  const W = 500, H = 360;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle = '#181225'; ctx.fillRect(0,0,W,H);
+  if (!problem) return;
+  ctx.strokeStyle = '#5dffa0'; ctx.fillStyle = '#eee8f6';
+  ctx.font = '13px "JetBrains Mono",monospace'; ctx.textAlign='center';
+
+  const p = problem;
+  if (p.kind === 'pyth') {
+    const legScale = 180 / Math.max(p.a, p.b, p.c);
+    const ax = p.a*legScale, by = p.b*legScale;
+    const ox = W/2 - ax/2, oy = H/2 + by/2;
+    ctx.strokeStyle = '#5da9ff'; ctx.lineWidth = 2.4;
+    ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(ox+ax,oy); ctx.lineTo(ox+ax,oy-by); ctx.closePath(); ctx.stroke();
+    ctx.strokeStyle='#fff'; ctx.lineWidth=1.4; ctx.strokeRect(ox+ax-10,oy-10,10,10);
+    ctx.fillStyle = '#5da9ff'; ctx.fillText(`a=${p.a}`, ox+ax/2, oy+20);
+    ctx.fillText(`b=${p.b}`, ox+ax+26, oy-by/2);
+    ctx.fillStyle = p.findHyp ? '#ff9f5d' : '#5dffa0';
+    ctx.fillText(p.findHyp ? 'c = ?' : `c=${p.c}`, ox+ax/2-20, oy-by/2-10);
+  } else if (p.kind === 'shape2d') {
+    ctx.lineWidth = 2.4;
+    if (p.shape === 'rectangle') {
+      const s = Math.min(180/p.w, 140/p.h);
+      const w=p.w*s, h=p.h*s, ox=W/2-w/2, oy=H/2-h/2;
+      ctx.strokeStyle='#5da9ff'; ctx.strokeRect(ox,oy,w,h);
+      ctx.fillStyle='#5da9ff'; ctx.fillText(`w=${p.w}`, ox+w/2, oy+h+22);
+      ctx.save(); ctx.translate(ox-24, oy+h/2); ctx.rotate(-Math.PI/2); ctx.fillText(`h=${p.h}`,0,0); ctx.restore();
+    } else if (p.shape === 'triangle') {
+      const s = Math.min(180/p.base, 140/p.height);
+      const b=p.base*s, h=p.height*s, ox=W/2-b/2, oy=H/2+h/2;
+      ctx.strokeStyle='#5da9ff';
+      ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(ox+b,oy); ctx.lineTo(ox+b*0.35,oy-h); ctx.closePath(); ctx.stroke();
+      ctx.setLineDash([3,3]); ctx.beginPath(); ctx.moveTo(ox+b*0.35,oy-h); ctx.lineTo(ox+b*0.35,oy); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle='#5da9ff'; ctx.fillText(`base=${p.base}`, ox+b/2, oy+22);
+      ctx.fillText(`height=${p.height}`, ox+b*0.35+45, oy-h/2);
+    } else {
+      const s = Math.min(140/p.r, 70);
+      ctx.strokeStyle='#5da9ff'; ctx.beginPath(); ctx.arc(W/2,H/2,p.r*s,0,Math.PI*2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(W/2,H/2); ctx.lineTo(W/2+p.r*s,H/2); ctx.stroke();
+      ctx.fillStyle='#5da9ff'; ctx.fillText(`r=${p.r}`, W/2+p.r*s/2, H/2-8);
+    }
+  } else if (p.kind === 'similar') {
+    // small triangle
+    const s1 = 12;
+    const ox1 = 90, oy1 = 240;
+    ctx.strokeStyle = '#5da9ff'; ctx.lineWidth=2.2;
+    ctx.beginPath(); ctx.moveTo(ox1,oy1); ctx.lineTo(ox1+p.a*s1,oy1); ctx.lineTo(ox1,oy1-p.b*s1); ctx.closePath(); ctx.stroke();
+    ctx.fillStyle='#5da9ff'; ctx.fillText(`${p.a}`, ox1+p.a*s1/2, oy1+18);
+    ctx.save(); ctx.translate(ox1-18, oy1-p.b*s1/2); ctx.fillText(`${p.b}`,0,0); ctx.restore();
+    // large triangle
+    const s2 = s1 * (p.ka/p.a) * 0.7;
+    const ox2 = 300, oy2 = 300;
+    ctx.strokeStyle = '#ff9f5d';
+    ctx.beginPath(); ctx.moveTo(ox2,oy2); ctx.lineTo(ox2+p.ka*s2,oy2); ctx.lineTo(ox2,oy2-p.b*(p.ka/p.a)*s2); ctx.closePath(); ctx.stroke();
+    ctx.fillStyle='#ff9f5d'; ctx.fillText(`${p.ka}`, ox2+p.ka*s2/2, oy2+18);
+    ctx.fillStyle = checked ? '#5dffa0' : '#ff9f5d';
+    ctx.save(); ctx.translate(ox2-18, oy2-p.b*(p.ka/p.a)*s2/2); ctx.fillText(checked?fmtNum(p.ans):'?',0,0); ctx.restore();
+  } else if (p.kind === 'volume3d') {
+    ctx.strokeStyle = '#5da9ff'; ctx.lineWidth = 2;
+    if (p.shape === 'box') {
+      const s = 12, w=p.w*s, h=p.h*s, d=p.d*s*0.5;
+      const ox=W/2-w/2-d/2, oy=H/2+h/2;
+      ctx.strokeRect(ox,oy-h,w,h);
+      ctx.beginPath(); ctx.moveTo(ox,oy-h); ctx.lineTo(ox+d,oy-h-d); ctx.lineTo(ox+w+d,oy-h-d); ctx.lineTo(ox+w,oy-h); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(ox+w,oy-h); ctx.lineTo(ox+w+d,oy-h-d); ctx.lineTo(ox+w+d,oy-d); ctx.lineTo(ox+w,oy); ctx.stroke();
+      ctx.fillStyle='#5da9ff'; ctx.fillText(`w=${p.w}`, ox+w/2, oy+20);
+      ctx.fillText(`h=${p.h}`, ox-22, oy-h/2);
+      ctx.fillText(`d=${p.d}`, ox+w+d/2+22, oy-h-d/2-14);
+    } else if (p.shape === 'cylinder') {
+      const s = 12, r=p.r*s, h=p.h*s, ox=W/2, oy=H/2-h/2;
+      ctx.beginPath(); ctx.ellipse(ox,oy,r,r*0.35,0,0,Math.PI*2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(ox-r,oy); ctx.lineTo(ox-r,oy+h); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(ox+r,oy); ctx.lineTo(ox+r,oy+h); ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(ox,oy+h,r,r*0.35,0,0,Math.PI); ctx.stroke();
+      ctx.setLineDash([3,3]); ctx.beginPath(); ctx.ellipse(ox,oy+h,r,r*0.35,0,Math.PI,Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle='#5da9ff'; ctx.fillText(`r=${p.r}`, ox+r/2, oy-8);
+      ctx.fillText(`h=${p.h}`, ox+r+26, oy+h/2);
+    } else {
+      const s = 15, r=p.r*s, ox=W/2, oy=H/2;
+      ctx.beginPath(); ctx.arc(ox,oy,r,0,Math.PI*2); ctx.stroke();
+      ctx.setLineDash([3,3]); ctx.beginPath(); ctx.ellipse(ox,oy,r,r*0.32,0,0,Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle='#5da9ff'; ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(ox+r,oy); ctx.strokeStyle='#5da9ff'; ctx.stroke();
+      ctx.fillText(`r=${p.r}`, ox+r/2, oy-8);
+    }
+  }
+
+  ctx.fillStyle = '#8b8fa0'; ctx.font = '11px "Source Sans 3",sans-serif'; ctx.textAlign='center';
+  ctx.fillText('figure drawn roughly to scale', W/2, H-14);
+}
+
+$('checkBtn').addEventListener('click', checkAnswer);
+$('nextBtn').addEventListener('click', newProblem);
+
+function katexAll() {
+  const specs = [
+    ['f1', "c^2 = a^2+b^2"],
+    ['f2', "A_{rect}=wh,\\ A_{tri}=\\tfrac12 bh,\\ A_{circ}=\\pi r^2"],
+    ['f3', "\\dfrac{a_1}{a_2}=\\dfrac{b_1}{b_2}"],
+    ['f4', "V_{box}=whd,\\ V_{cyl}=\\pi r^2h,\\ V_{sph}=\\tfrac43\\pi r^3"],
+  ];
+  const hasKatex = typeof window.katex !== 'undefined';
+  for (const [id, tex] of specs) {
+    if (hasKatex) { try { katex.render(tex, $(id), {throwOnError:false}); continue; } catch(e) {} }
+    $(id).textContent = tex.replace(/\\dfrac\{([^}]*)\}\{([^}]*)\}/g,'($1)/($2)').replace(/\\tfrac\{([^}]*)\}\{([^}]*)\}/g,'($1)/($2)').replace(/\\pi/g,'π').replace(/[{}\\,]/g,'').replace(/\^2/g,'²').replace(/\^3/g,'³');
+  }
+}
+
+$('infoBtn').addEventListener('click', () => $('infoModal').classList.add('show'));
+$('infoClose').addEventListener('click', () => $('infoModal').classList.remove('show'));
+$('infoModal').addEventListener('click', e => { if (e.target.id==='infoModal') $('infoModal').classList.remove('show'); });
+
+window.addEventListener('load', () => { katexAll(); newProblem(); });
+</script>
+</body>
+</html>

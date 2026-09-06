@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trig &amp; the Unit Circle — Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<style>
+  * { box-sizing: border-box; }
+  body { margin:0; background:#eef0f4; font-family:'Source Sans 3',system-ui,sans-serif; color:#20262b; }
+  .wrap { max-width:960px; margin:0 auto; padding:20px; }
+  .card { background:#fff; border:1px solid #e1e3ea; border-radius:12px; overflow:hidden; }
+  .header { background:#241b3d; color:#fff; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:13px 18px; flex-wrap:wrap; }
+  .header .title { display:flex; align-items:center; gap:10px; }
+  .header .dot { width:11px; height:11px; border-radius:3px; background:#6a55c9; flex:none; }
+  .header .name { font-family:'Source Serif 4',serif; font-weight:600; font-size:16px; }
+  .header .sub { font-weight:400; color:#a99fce; font-size:12px; }
+  .headbtn { font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:9px; cursor:pointer; border:1px solid rgba(255,255,255,0.22); background:rgba(255,255,255,0.06); color:#e6e1f5; }
+  .track-pill { font-size:10.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.18); border-radius:20px; padding:4px 10px; color:#cfc3ef; }
+  .body { display:flex; gap:0; align-items:stretch; flex-wrap:wrap; }
+  .canvasCol { padding:14px; display:flex; flex-direction:column; gap:10px; flex:1 1 480px; min-width:0; }
+  .ctlCol { width:320px; flex:none; border-left:1px solid #e8e9ee; padding:15px 17px; display:flex; flex-direction:column; gap:12px; }
+  canvas { display:block; width:100%; height:auto; aspect-ratio:1/1; border-radius:10px; background:#181225; }
+  .section-label { font-size:10.5px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; color:#9aa2ab; margin-bottom:4px; }
+  .problem-box { background:#f4f1fb; border-radius:9px; padding:11px 13px; font-size:13.5px; line-height:1.6; }
+  .ans-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .ans-grid.single { grid-template-columns:1fr; }
+  .ans-grid.triple { grid-template-columns:1fr 1fr 1fr; }
+  .ans-field label { font-size:11.5px; font-weight:600; color:#525a63; display:block; margin-bottom:3px; }
+  .ans-field input { width:100%; font:600 14px 'JetBrains Mono',monospace; padding:7px 9px; border-radius:7px; border:1px solid #d3d3dc; color:#241b3d; }
+  .ans-field input:focus { outline:2px solid #6a55c9; border-color:#6a55c9; }
+  .btnrow { display:flex; gap:7px; flex-wrap:wrap; }
+  .checkbtn { font-size:12.5px; font-weight:600; padding:9px 16px; border-radius:9px; cursor:pointer; border:1px solid #4b3a99; background:#4b3a99; color:#fff; }
+  .checkbtn:disabled { opacity:0.5; cursor:default; }
+  .nextbtn { font-size:12.5px; font-weight:600; padding:9px 16px; border-radius:9px; cursor:pointer; border:1px solid #d3d8dd; background:#fff; color:#525a63; }
+  .feedback { border-radius:9px; padding:10px 12px; font-size:13px; font-weight:600; display:none; }
+  .feedback.show { display:block; }
+  .feedback.correct { background:#e5f6ec; color:#1f7a45; }
+  .feedback.wrong { background:#fbebea; color:#a53a30; }
+  .stepsbtn { font-size:12px; font-weight:600; color:#4b3a99; cursor:pointer; background:none; border:none; padding:0; text-align:left; text-decoration:underline; }
+  .steps { display:none; background:#f4f1fb; border-radius:9px; padding:10px 12px; font-size:12.5px; line-height:1.65; margin-top:4px; }
+  .steps.show { display:block; }
+  .steps .formula { display:block; margin:4px 0; }
+  .stat-row { display:flex; gap:10px; }
+  .stat { flex:1; background:#f4f1fb; border-radius:9px; padding:8px 10px; text-align:center; }
+  .stat .n { font-family:'JetBrains Mono',monospace; font-weight:700; font-size:17px; color:#4b3a99; }
+  .stat .l { font-size:10px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; color:#8b8fa0; }
+  .level-track { display:flex; gap:4px; }
+  .level-track .seg { flex:1; height:5px; border-radius:3px; background:#e3e1ee; }
+  .level-track .seg.on { background:#6a55c9; }
+  .footer-note { text-align:center; padding:14px; font-size:11.5px; color:#8b949d; }
+  .modal-backdrop { position:fixed; inset:0; background:rgba(15,10,26,0.86); backdrop-filter:blur(3px); display:none; align-items:center; justify-content:center; padding:30px; z-index:50; }
+  .modal-backdrop.show { display:flex; }
+  .modal { max-width:720px; width:100%; max-height:90vh; overflow:auto; background:rgba(24,18,37,0.96); border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:22px 26px; color:#eee8f6; }
+  .modal h2 { font-family:'Source Serif 4',serif; font-weight:600; font-size:20px; margin:0 0 16px; display:flex; justify-content:space-between; align-items:baseline; }
+  .modal .close { cursor:pointer; width:26px; height:26px; border-radius:7px; border:1px solid rgba(255,255,255,0.2); background:rgba(255,255,255,0.06); color:#dce6f2; display:flex; align-items:center; justify-content:center; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:0 24px; }
+  .yellow { color:#e5c86b; font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:9px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="header">
+      <div class="title">
+        <span class="dot"></span>
+        <span class="name">Trig &amp; the Unit Circle <span class="sub">— math practice</span></span>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span class="track-pill" id="levelPill">Level 1</span>
+        <button class="headbtn" id="infoBtn">ⓘ Info</button>
+      </div>
+    </div>
+    <div class="body">
+      <div class="canvasCol">
+        <canvas id="cv" width="440" height="440"></canvas>
+        <div class="stat-row">
+          <div class="stat"><div class="n" id="streakN">0</div><div class="l">Streak</div></div>
+          <div class="stat"><div class="n" id="correctN">0</div><div class="l">Correct</div></div>
+          <div class="stat"><div class="n" id="totalN">0</div><div class="l">Attempted</div></div>
+        </div>
+        <div class="level-track" id="levelTrack"></div>
+      </div>
+      <div class="ctlCol">
+        <div class="section-label">Given</div>
+        <div class="problem-box" id="problemBox"></div>
+
+        <div class="section-label" style="margin-top:4px;" id="answerSectionLabel">Your answer</div>
+        <div class="ans-grid" id="answerFields"></div>
+
+        <div class="btnrow">
+          <button class="checkbtn" id="checkBtn">Check</button>
+          <button class="nextbtn" id="nextBtn">New problem ↻</button>
+        </div>
+        <div class="feedback" id="feedback"></div>
+        <button class="stepsbtn" id="stepsBtn">Show worked solution</button>
+        <div class="steps" id="steps"></div>
+      </div>
+    </div>
+    <div class="footer-note">DRAFT — math-practice track, not yet in the sim catalog. Special angles only (multiples of 15°/30°/45°) so every answer has a clean closed form.</div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="infoModal">
+  <div class="modal">
+    <h2>Trig &amp; the Unit Circle <span class="close" id="infoClose">×</span></h2>
+    <div class="grid2">
+      <div style="padding-right:22px;">
+        <div class="yellow">What this practices</div>
+        <p style="font-size:12.5px;line-height:1.55;">Reading sine, cosine, and tangent straight off the unit circle — the skill that underlies every projection, component, and phase calculation in physics (resolving a force into x/y, phase of an oscillator, AC voltage at time t). Levels move from degrees with sin/cos only, to adding tangent, to radians, to working backward from a trig value to the angle.</p>
+      </div>
+      <div style="padding:0 22px;border-left:1px solid rgba(255,255,255,0.12);">
+        <div class="yellow">How to use</div>
+        <p style="font-size:12.5px;line-height:1.55;">The terminal ray and its projections onto the axes are drawn for you — cosine is the horizontal projection, sine the vertical one. All angles are "nice" (multiples of 15°) so every answer is an exact value like ½ or √2/2 ≈ 0.707; enter decimals.</p>
+      </div>
+      <div style="grid-column:1/-1;border-top:1px solid rgba(255,255,255,0.12);margin-top:15px;padding-top:15px;">
+        <div class="yellow">Relevant formulas</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px 28px;">
+          <div><span class="formula" id="f1" style="font-family:'Source Serif 4',serif;font-style:italic;color:#fff;"></span><div style="font-size:11.5px;color:#b7c2cd;">a point on the unit circle</div></div>
+          <div><span class="formula" id="f2" style="font-family:'Source Serif 4',serif;font-style:italic;color:#fff;"></span><div style="font-size:11.5px;color:#b7c2cd;">tangent from sine &amp; cosine</div></div>
+          <div><span class="formula" id="f3" style="font-family:'Source Serif 4',serif;font-style:italic;color:#fff;"></span><div style="font-size:11.5px;color:#b7c2cd;">degrees ↔ radians</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+
+let level = 1; // 1..4
+let streak = 0, wrongStreak = 0, correctCount = 0, totalCount = 0;
+let problem = null;
+let checked = false;
+
+// special angles, multiples of 15, avoiding 90/270 when tangent is required
+const ALL_SPECIAL = [0,30,45,60,90,120,135,150,180,210,225,240,270,300,315,330];
+const NO_TAN_UNDEF = ALL_SPECIAL.filter(a => a % 90 !== 0 || a % 180 === 0); // keeps 0,180 (tan=0), drops 90,270
+
+function pick(arr) { return arr[Math.floor(Math.random()*arr.length)]; }
+
+function gcd(a,b) { a=Math.abs(a); b=Math.abs(b); while(b){[a,b]=[b,a%b];} return a||1; }
+function radFracString(deg) {
+  if (deg === 0) return '0';
+  const num = deg, den = 180;
+  const g = gcd(num, den);
+  const n = num/g, d = den/g;
+  if (d === 1) return n === 1 ? 'π' : n + 'π';
+  return (n===1?'':n) + 'π/' + d;
+}
+
+function quadrantOf(deg) {
+  const d = ((deg % 360)+360)%360;
+  if (d === 0 || d === 90 || d === 180 || d === 270) return 'axis';
+  if (d < 90) return 'I'; if (d < 180) return 'II'; if (d < 270) return 'III'; return 'IV';
+}
+
+function genProblem(lvl) {
+  if (lvl === 1) {
+    const deg = pick(ALL_SPECIAL);
+    return { type:'given-angle', deg, unit:'deg', ask:['sin','cos'] };
+  }
+  if (lvl === 2) {
+    const deg = pick(NO_TAN_UNDEF);
+    return { type:'given-angle', deg, unit:'deg', ask:['sin','cos','tan'] };
+  }
+  if (lvl === 3) {
+    const deg = pick(NO_TAN_UNDEF);
+    return { type:'given-angle', deg, unit:'rad', ask:['sin','cos','tan'] };
+  }
+  // level 4: given a trig value + quadrant, find the angle
+  const deg = pick(ALL_SPECIAL.filter(a => quadrantOf(a) !== 'axis'));
+  const fn = pick(['sin','cos']);
+  const val = +Math[fn](deg*Math.PI/180).toFixed(4);
+  return { type:'given-value', deg, fn, val, quadrant: quadrantOf(deg) };
+}
+
+function levelTrack() {
+  let html = '';
+  for (let i=1;i<=4;i++) html += `<div class="seg ${i<=level?'on':''}"></div>`;
+  $('levelTrack').innerHTML = html;
+  $('levelPill').textContent = 'Level ' + level;
+}
+
+function trueVal(fn, deg) {
+  const r = deg*Math.PI/180;
+  if (fn==='sin') return Math.sin(r);
+  if (fn==='cos') return Math.cos(r);
+  return Math.tan(r);
+}
+
+function buildAnswerFields() {
+  if (problem.type === 'given-value') {
+    $('answerSectionLabel').textContent = 'Your answer — θ in degrees [0, 360)';
+    $('answerFields').className = 'ans-grid single';
+    $('answerFields').innerHTML = `<div class="ans-field"><label>θ (degrees)</label><input type="number" step="any" id="ansTheta"></div>`;
+    return;
+  }
+  const n = problem.ask.length;
+  $('answerSectionLabel').textContent = 'Your answer';
+  $('answerFields').className = 'ans-grid' + (n===3?' triple':(n===1?' single':''));
+  $('answerFields').innerHTML = problem.ask.map(fn => `<div class="ans-field"><label>${fn}θ</label><input type="number" step="any" id="ans_${fn}"></div>`).join('');
+}
+
+function newProblem() {
+  problem = genProblem(level);
+  checked = false;
+  $('feedback').className = 'feedback'; $('feedback').textContent = '';
+  $('steps').className = 'steps'; $('steps').innerHTML = '';
+  $('stepsBtn').textContent = 'Show worked solution';
+  $('checkBtn').disabled = false;
+
+  if (problem.type === 'given-angle') {
+    const angleStr = problem.unit === 'rad' ? `θ = ${radFracString(problem.deg)} rad` : `θ = ${problem.deg}°`;
+    $('problemBox').innerHTML = `<div style="font-weight:600;">${angleStr}</div><div style="margin-top:6px;">Find: ${problem.ask.map(f=>f+'θ').join(', ')}</div>`;
+  } else {
+    $('problemBox').innerHTML = `<div style="font-weight:600;">${problem.fn}θ = ${problem.val}</div><div style="margin-top:6px;">θ is in Quadrant ${problem.quadrant}</div><div style="margin-top:6px;">Find θ (degrees, 0–360)</div>`;
+  }
+  buildAnswerFields();
+  levelTrack();
+  draw();
+}
+
+function checkAnswer() {
+  if (checked) return;
+  let correct = true;
+  if (problem.type === 'given-value') {
+    const t = +$('ansTheta').value;
+    if (Number.isNaN(t)) return;
+    let diff = Math.abs(((t - problem.deg + 540) % 360) - 180);
+    correct = diff < 2;
+  } else {
+    for (const fn of problem.ask) {
+      const v = +$(`ans_${fn}`).value;
+      if (Number.isNaN(v)) return;
+      if (Math.abs(v - trueVal(fn, problem.deg)) > 0.02) correct = false;
+    }
+  }
+
+  checked = true; totalCount++;
+  $('checkBtn').disabled = true;
+  const fb = $('feedback'); fb.classList.add('show');
+  if (correct) {
+    correctCount++; streak++; wrongStreak = 0;
+    fb.classList.add('correct'); fb.classList.remove('wrong');
+    fb.textContent = '✓ Correct.' + (streak>0 && streak%3===0 && level<4 ? ' Leveling up!' : '');
+    if (streak > 0 && streak % 3 === 0 && level < 4) level++;
+  } else {
+    streak = 0; wrongStreak++;
+    fb.classList.add('wrong'); fb.classList.remove('correct');
+    let ansText;
+    if (problem.type === 'given-value') ansText = `θ = ${problem.deg}°`;
+    else ansText = problem.ask.map(fn => `${fn}θ = ${trueVal(fn,problem.deg).toFixed(3)}`).join(', ');
+    fb.textContent = `✗ Not quite. Correct: ${ansText}.`;
+    if (wrongStreak >= 2 && level > 1) { level--; wrongStreak = 0; }
+  }
+  $('streakN').textContent = streak; $('correctN').textContent = correctCount; $('totalN').textContent = totalCount;
+  levelTrack();
+  draw();
+}
+
+function buildSteps() {
+  let html = '';
+  if (problem.type === 'given-angle') {
+    if (problem.unit === 'rad') html += `<div class="formula">θ = ${radFracString(problem.deg)} rad = ${problem.deg}°</div>`;
+    for (const fn of problem.ask) {
+      if (fn === 'tan') {
+        html += `<div class="formula">tanθ = sinθ/cosθ = ${trueVal('sin',problem.deg).toFixed(3)} / ${trueVal('cos',problem.deg).toFixed(3)} = ${trueVal('tan',problem.deg).toFixed(3)}</div>`;
+      } else {
+        html += `<div class="formula">${fn}(${problem.deg}°) = ${trueVal(fn,problem.deg).toFixed(3)}</div>`;
+      }
+    }
+  } else {
+    html += `<div class="formula">${problem.fn}⁻¹(${problem.val}) gives a reference angle</div>`;
+    html += `<div class="formula">Placed in Quadrant ${problem.quadrant} (where ${problem.fn} is ${problem.val>=0?'positive':'negative'}), θ = ${problem.deg}°</div>`;
+  }
+  $('steps').innerHTML = html;
+}
+
+$('stepsBtn').addEventListener('click', () => {
+  const s = $('steps');
+  if (!s.classList.contains('show')) buildSteps();
+  s.classList.toggle('show');
+  $('stepsBtn').textContent = s.classList.contains('show') ? 'Hide worked solution' : 'Show worked solution';
+});
+
+function draw() {
+  const ctx = $('cv').getContext('2d');
+  const W = 440, H = 440;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle = '#181225'; ctx.fillRect(0,0,W,H);
+  if (!problem) return;
+  const cx = W/2, cy = H/2, R = 160;
+
+  ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 1.2;
+  ctx.beginPath(); ctx.moveTo(20,cy); ctx.lineTo(W-20,cy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx,20); ctx.lineTo(cx,H-20); ctx.stroke();
+  ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 1.6;
+  ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2); ctx.stroke();
+
+  const deg = problem.deg;
+  const rad = deg*Math.PI/180;
+  const px = cx + R*Math.cos(rad), py = cy - R*Math.sin(rad);
+
+  // angle arc
+  ctx.strokeStyle = 'rgba(106,85,201,0.7)'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(cx,cy,34,-rad,0, rad>0); ctx.stroke();
+
+  // projections
+  ctx.setLineDash([4,4]);
+  ctx.strokeStyle = '#5da9ff'; ctx.lineWidth = 1.6;
+  ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(px,cy); ctx.stroke();
+  ctx.strokeStyle = '#ff9f5d';
+  ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(cx,py); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // terminal ray + point
+  ctx.strokeStyle = '#5dffa0'; ctx.lineWidth = 2.4;
+  ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(px,py); ctx.stroke();
+  ctx.fillStyle = '#5dffa0';
+  ctx.beginPath(); ctx.arc(px,py,4.5,0,Math.PI*2); ctx.fill();
+
+  ctx.fillStyle = '#cfc3ef'; ctx.font = '12px "Source Sans 3",sans-serif'; ctx.textAlign='center';
+  ctx.fillText('θ', cx + 46*Math.cos(rad/2), cy - 46*Math.sin(rad/2));
+  ctx.fillStyle = '#ff9f5d'; ctx.fillText('cosθ', (px+cx)/2, cy + (py>cy?18:-10));
+  ctx.fillStyle = '#5da9ff'; ctx.save(); ctx.translate(px + (px>cx?16:-16), (py+cy)/2); ctx.fillText('sinθ',0,0); ctx.restore();
+}
+
+$('checkBtn').addEventListener('click', checkAnswer);
+$('nextBtn').addEventListener('click', newProblem);
+
+function katexAll() {
+  const specs = [
+    ['f1', "(\\cos\\theta,\\ \\sin\\theta)"],
+    ['f2', "\\tan\\theta = \\dfrac{\\sin\\theta}{\\cos\\theta}"],
+    ['f3', "\\theta_{rad} = \\theta_{deg}\\cdot\\dfrac{\\pi}{180}"],
+  ];
+  const hasKatex = typeof window.katex !== 'undefined';
+  for (const [id, tex] of specs) {
+    if (hasKatex) { try { katex.render(tex, $(id), {throwOnError:false}); continue; } catch(e) {} }
+    $(id).textContent = tex.replace(/\\dfrac\{([^}]*)\}\{([^}]*)\}/g,'($1)/($2)').replace(/\\cos/g,'cos').replace(/\\sin/g,'sin').replace(/\\tan/g,'tan').replace(/\\theta/g,'θ').replace(/\\pi/g,'π').replace(/\\cdot/g,'·').replace(/[{}\\]/g,'');
+  }
+}
+
+$('infoBtn').addEventListener('click', () => $('infoModal').classList.add('show'));
+$('infoClose').addEventListener('click', () => $('infoModal').classList.remove('show'));
+$('infoModal').addEventListener('click', e => { if (e.target.id==='infoModal') $('infoModal').classList.remove('show'); });
+
+window.addEventListener('load', () => { katexAll(); newProblem(); });
+</script>
+</body>
+</html>
