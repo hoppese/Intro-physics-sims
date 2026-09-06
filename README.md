@@ -58,7 +58,7 @@ serve step needed to run one — open the file, or serve the folder statically.
 ### Oscillations & waves
 | Sim | What it shows |
 |---|---|
-| [Oscillation Explorer](oscillation-explorer/) | A mass on a spring in SHM: position, velocity, and acceleration as sinusoids, velocity leading position by a quarter cycle. |
+| [Oscillation Explorer](oscillation-explorer/) | A point in SHM traced two ways: x(t) = A cos(ωt + φ₀) as a live curve, and as the shadow of a rotating phasor. |
 | [Energy in SHM — Mass on a Spring](energy-in-shm/) | Total energy E = ½kA² stays fixed while it shifts between kinetic and potential. |
 | [Simple Pendulum](pendulum/) | For small swings the period depends only on length and g — not on mass or amplitude. |
 | [Wave Explorer](wave-explorer/) | The space picture of a traveling wave y = A sin(kx − ωt): amplitude, wavelength, wave number. |
