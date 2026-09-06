@@ -329,6 +329,52 @@ $('stepsBtn').addEventListener('click', () => {
   $('stepsBtn').textContent = s.classList.contains('show') ? 'Hide worked solution' : 'Show worked solution';
 });
 
+let orbit3d = null;
+function arrow3(ctx, x0, y0, x1, y1, color, label) {
+  ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = 2.6;
+  ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x1,y1); ctx.stroke();
+  const a = Math.atan2(y1-y0, x1-x0), hs = 10;
+  ctx.beginPath(); ctx.moveTo(x1,y1);
+  ctx.lineTo(x1 - hs*Math.cos(a-0.42), y1 - hs*Math.sin(a-0.42));
+  ctx.lineTo(x1 - hs*Math.cos(a+0.42), y1 - hs*Math.sin(a+0.42));
+  ctx.closePath(); ctx.fill();
+  if (label) { ctx.font = 'bold 13px "Source Sans 3",sans-serif'; ctx.fillText(label, x1+7, y1-5); }
+}
+function draw3Dview(ctx, W, H) {
+  const p = problem;
+  if (p.form !== 'comp') {
+    ctx.fillStyle = '#cfc3ef'; ctx.font = '13px "Source Sans 3",sans-serif'; ctx.textAlign = 'left';
+    ctx.fillText('3D magnitude/angle problem — compute from |A||B| and the angle.', 20, 30);
+    return;
+  }
+  if (!orbit3d) orbit3d = MP.makeOrbit($('cv'), draw);
+  const cx = W/2, cy = H/2;
+  const showX = opMode === 'cross' && checked && p.answer && typeof p.answer === 'object';
+  let maxC = 4;
+  ['x','y','z'].forEach(k => {
+    maxC = Math.max(maxC, Math.abs(p.A[k]), Math.abs(p.B[k]), showX ? Math.abs(p.answer[k]) : 0);
+  });
+  const u = Math.min(24, (Math.min(W,H)/2 - 34) / (maxC * 1.25));
+  const P = (x,y,z) => { const q = orbit3d.project(x,y,z); return { x: cx + q.sx*u, y: cy + q.sy*u, d: q.depth }; };
+  const L = maxC * 1.15;
+  [['x',[1,0,0]],['y',[0,1,0]],['z',[0,0,1]]].forEach(e => {
+    const d = e[1];
+    const a = P(-d[0]*L,-d[1]*L,-d[2]*L), b = P(d[0]*L,d[1]*L,d[2]*L);
+    ctx.strokeStyle = 'rgba(255,255,255,0.16)'; ctx.lineWidth = 1.3;
+    ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.font = 'italic 12px "Source Serif 4",serif';
+    ctx.fillText(e[0], b.x+4, b.y+4);
+  });
+  const o = P(0,0,0);
+  const items = [ { v:p.A, c:COLORS.A, l:'A' }, { v:p.B, c:COLORS.B, l:'B' } ];
+  if (showX) items.push({ v:p.answer, c:'#5dffa0', l:'A×B' });
+  items.map(it => { it.tip = P(it.v.x, it.v.y, it.v.z); return it; })
+    .sort((m,n) => m.tip.d - n.tip.d)
+    .forEach(it => arrow3(ctx, o.x, o.y, it.tip.x, it.tip.y, it.c, it.l));
+  ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.font = '11px "Source Sans 3",sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText('drag to rotate' + (opMode === 'cross' ? ' · A×B ⟂ both A and B' : ''), 12, H - 12);
+}
+
 function draw() {
   const ctx = $('cv').getContext('2d');
   const _cv=$('cv'); const W = _cv.width||500, H = _cv.height||420;
@@ -336,27 +382,7 @@ function draw() {
   ctx.fillStyle = '#181225'; ctx.fillRect(0,0,W,H);
   if (!problem) return;
 
-  if (problem.dim === 3) {
-    // simple labeled text view for 3D — full 3D projection is overkill for this practice tool
-    ctx.fillStyle = '#cfc3ef'; ctx.font = '13px "Source Sans 3",sans-serif'; ctx.textAlign='left';
-    ctx.fillText('3D vectors — component view', 20, 30);
-    ctx.fillStyle = COLORS.A; ctx.font = '16px "JetBrains Mono",monospace';
-    ctx.fillText('A = ' + (problem.form==='comp' ? fmtVec3(problem.A) : `|A|=${problem.magA}`), 20, 70);
-    ctx.fillStyle = COLORS.B;
-    ctx.fillText('B = ' + (problem.form==='comp' ? fmtVec3(problem.B) : `|B|=${problem.magB}`), 20, 100);
-    if (opMode === 'cross') {
-      ctx.fillStyle = '#5dffa0';
-      ctx.font = '12.5px "Source Sans 3",sans-serif';
-      ctx.fillText('A × B is perpendicular to both A and B (right-hand rule):', 20, 150);
-      ctx.fillText('point fingers along A, curl toward B, thumb points along A × B.', 20, 170);
-    } else {
-      ctx.fillStyle = '#8fe0c0';
-      ctx.font = '12.5px "Source Sans 3",sans-serif';
-      ctx.fillText('A · B is largest when A and B point the same way,', 20, 150);
-      ctx.fillText('zero when they are perpendicular, negative when opposed.', 20, 170);
-    }
-    return;
-  }
+  if (problem.dim === 3) { draw3Dview(ctx, W, H); return; }
 
   const cx = W/2, cy = H/2, scale = 18;
   const toPx = (x,y) => [cx + x*scale, cy - y*scale];

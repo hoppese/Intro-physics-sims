@@ -147,22 +147,25 @@ function randNonZeroInt(lo, hi) { let v; do { v = randInt(lo,hi); } while (v===0
 function fmtSigned(n) { return n >= 0 ? `+ ${n}` : `− ${Math.abs(n)}`; }
 function fmtNum(n) { return Number.isInteger(+n.toFixed(6)) ? String(Math.round(n)) : n.toFixed(3); }
 
+const IVARS = ['x','t','s','u'];
+function ico(n,v){ return n===1?v:(n===-1?'-'+v:n+v); }
 function genProblem(lvl) {
+  const v = IVARS[Math.floor(Math.random()*IVARS.length)];
   if (lvl === 1) {
     const a = randNonZeroInt(-4,4), b = randNonZeroInt(-4,4), c = randInt(-6,6);
-    return { kind:'polycoef', a, b, c, capA: a/3, capB: b/2, capC: c };
+    return { v, kind:'polycoef', a, b, c, capA: a/3, capB: b/2, capC: c };
   }
   if (lvl === 2) {
     const a = randNonZeroInt(-3,3), b = randInt(-5,5), c = randInt(-5,5);
     let x1,x2; do { x1 = randInt(-4,4); x2 = randInt(-4,4); } while (x1>=x2);
     const F = x => a/3*x**3 + b/2*x**2 + c*x;
-    return { kind:'definitePoly', a, b, c, x1, x2, ans: F(x2)-F(x1) };
+    return { v, kind:'definitePoly', a, b, c, x1, x2, ans: F(x2)-F(x1) };
   }
   if (lvl === 3) {
     const a = randNonZeroInt(-3,3), b = randNonZeroInt(-3,3), c = randInt(-4,4), n = randInt(2,3);
     let x1,x2; do { x1 = randInt(-3,3); x2 = randInt(-3,3); } while (x1>=x2);
     const F = x => a*Math.pow(b*x+c, n+1) / (b*(n+1));
-    return { kind:'definiteChain', a, b, c, n, x1, x2, ans: F(x2)-F(x1) };
+    return { v, kind:'definiteChain', a, b, c, n, x1, x2, ans: F(x2)-F(x1) };
   }
   const type = ['sin','cos','exp'][randInt(0,2)];
   const A = randNonZeroInt(-3,3), k = randNonZeroInt(1,2);
@@ -178,7 +181,7 @@ function genProblem(lvl) {
     const F = type==='sin' ? (x => -A/k*Math.cos(k*x)) : (x => A/k*Math.sin(k*x));
     ans = F(x2)-F(x1);
   }
-  return { kind:'definiteTrigExp', type, A, k, x1, x2, ans };
+  return { kind:'definiteTrigExp', type, A, k, x1, x2, ans , v };
 }
 
 function levelTrack() {
@@ -209,13 +212,15 @@ function radLabel(x) {
 
 function equationText() {
   const p = problem;
-  if (p.kind === 'polycoef') return `f(x) = ${p.a}x² ${fmtSigned(p.b)}x ${fmtSigned(p.c)}\nFind the antiderivative F(x) (drop +C)`;
-  if (p.kind === 'definitePoly') return `f(x) = ${p.a}x² ${fmtSigned(p.b)}x ${fmtSigned(p.c)}\nFind ∫ from ${p.x1} to ${p.x2}`;
-  if (p.kind === 'definiteChain') return `f(x) = ${p.a}(${p.b}x ${fmtSigned(p.c)})^${p.n}\nFind ∫ from ${p.x1} to ${p.x2}`;
+  const v = p.v;
+  if (p.kind === 'polycoef') return `f(${v}) = ${ico(p.a,v+'²')} ${fmtSigned(p.b)}${v} ${fmtSigned(p.c)}\nFind the antiderivative F(${v}) (drop +C)`;
+  if (p.kind === 'definitePoly') return `f(${v}) = ${p.a}${v}² ${fmtSigned(p.b)}${v} ${fmtSigned(p.c)}\nFind ∫ f d${v} from ${p.x1} to ${p.x2}`;
+  if (p.kind === 'definiteChain') return `f(${v}) = ${p.a}(${p.b}${v} ${fmtSigned(p.c)})^${p.n}\nFind ∫ f d${v} from ${p.x1} to ${p.x2}`;
   if (p.kind === 'definiteTrigExp') {
     const coef = p.A === 1 ? '' : (p.A === -1 ? '−' : String(p.A));
-    const label = p.type === 'exp' ? `${coef}e^(${p.k}x)` : `${coef}${p.type}(${p.k}x)`;
-    return `f(x) = ${label}\nFind ∫ from ${radLabel(p.x1)} to ${radLabel(p.x2)}`;
+    const kv = p.k === 1 ? v : p.k + v;
+    const label = p.type === 'exp' ? `${coef}e^(${kv})` : `${coef}${p.type}(${kv})`;
+    return `f(${v}) = ${label}\nFind ∫ f d${v} from ${radLabel(p.x1)} to ${radLabel(p.x2)}`;
   }
 }
 
@@ -224,9 +229,9 @@ function buildAnswerFields() {
     $('answerSectionLabel').textContent = 'Your answer — coefficients of F(x)';
     $('answerFields').className = 'ans-grid triple';
     $('answerFields').innerHTML = `
-      <div class="ans-field"><label>x³ coeff</label><input type="number" step="any" id="ansA"></div>
-      <div class="ans-field"><label>x² coeff</label><input type="number" step="any" id="ansB"></div>
-      <div class="ans-field"><label>x coeff</label><input type="number" step="any" id="ansC"></div>`;
+      <div class="ans-field"><label>${problem.v}³ coeff</label><input type="number" step="any" id="ansA"></div>
+      <div class="ans-field"><label>${problem.v}² coeff</label><input type="number" step="any" id="ansB"></div>
+      <div class="ans-field"><label>${problem.v} coeff</label><input type="number" step="any" id="ansC"></div>`;
   } else {
     $('answerSectionLabel').textContent = 'Your answer — definite integral value';
     $('answerFields').className = 'ans-grid';
@@ -418,7 +423,7 @@ if (window.MP) {
     setLevel: n => { level = n; newProblem(); },
     currentLevel: () => level,
     nextProblem: newProblem,
-    answerText: () => { if(!problem) return '\u2014'; return problem.kind==='polycoef' ? (fmtNum(problem.capA)+'x\u00b3 + '+fmtNum(problem.capB)+'x\u00b2 + '+fmtNum(problem.capC)+'x') : fmtNum(problem.ans); },
+    answerText: () => { if(!problem) return '\u2014'; const v=problem.v||'x'; return problem.kind==='polycoef' ? (fmtNum(problem.capA)+v+'\u00b3 + '+fmtNum(problem.capB)+v+'\u00b2 + '+fmtNum(problem.capC)+v) : fmtNum(problem.ans); },
   });
 }
 window.addEventListener('load', () => { katexAll(); newProblem(); });
