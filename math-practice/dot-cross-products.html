@@ -143,9 +143,12 @@
 const $ = id => document.getElementById(id);
 const COLORS = { A:'#5da9ff', B:'#ff9f5d' };
 
-let opMode = 'dot'; // 'dot' | 'cross'
-let level = 1; // 1..3
+let opMode = 'dot'; // 'dot' | 'cross' — level/streak tracked separately per mode
+const modeState = { dot:{level:1,streak:0,wrongStreak:0}, cross:{level:1,streak:0,wrongStreak:0} };
+let level = 1;
 let streak = 0, wrongStreak = 0, correctCount = 0, totalCount = 0;
+function saveMode() { modeState[opMode] = { level, streak, wrongStreak }; }
+function loadMode(m) { opMode = m; level = modeState[m].level; streak = modeState[m].streak; wrongStreak = modeState[m].wrongStreak; }
 let problem = null;
 let checked = false;
 let revealed = false;
@@ -270,6 +273,7 @@ function checkAnswer() {
     fb.textContent = `✗ Not quite. Correct answer: ${answerText}.`;
     if (wrongStreak >= 2 && level > 1) { level--; wrongStreak = 0; }
   }
+  saveMode();
   $('streakN').textContent = streak;
   $('correctN').textContent = correctCount;
   $('totalN').textContent = totalCount;
@@ -389,17 +393,19 @@ function draw() {
     const rad = problem.angBetween*Math.PI/180;
     const [bx,by] = toPx(problem.magB*Math.cos(rad), problem.magB*Math.sin(rad));
     arrow(ox,oy,bx,by,COLORS.B,'B');
-    // angle arc
-    ctx.strokeStyle='rgba(255,255,255,0.4)'; ctx.beginPath();
-    ctx.arc(ox,oy,26,-rad,0,true);
+    // angle arc — the angle between A (+x axis) and B, swept CCW from +x to B
+    ctx.strokeStyle='rgba(201,184,240,0.9)'; ctx.lineWidth=1.6; ctx.beginPath();
+    ctx.arc(ox,oy,26,0,-rad,true);
     ctx.stroke();
+    ctx.fillStyle='rgba(201,184,240,0.9)'; ctx.font='12px "Source Sans 3",sans-serif'; ctx.textAlign='left';
+    ctx.fillText(problem.angBetween+'°', ox + 32*Math.cos(-rad/2), oy + 32*Math.sin(-rad/2));
   }
 }
 
 $('checkBtn').addEventListener('click', checkAnswer);
 $('nextBtn').addEventListener('click', newProblem);
-$('modeDot').addEventListener('click', () => { opMode='dot'; $('modeDot').classList.add('on'); $('modeCross').classList.remove('on'); newProblem(); });
-$('modeCross').addEventListener('click', () => { opMode='cross'; $('modeCross').classList.add('on'); $('modeDot').classList.remove('on'); newProblem(); });
+$('modeDot').addEventListener('click', () => { if(opMode==='dot')return; saveMode(); loadMode('dot'); $('modeDot').classList.add('on'); $('modeCross').classList.remove('on'); newProblem(); });
+$('modeCross').addEventListener('click', () => { if(opMode==='cross')return; saveMode(); loadMode('cross'); $('modeCross').classList.add('on'); $('modeDot').classList.remove('on'); newProblem(); });
 
 function katexAll() {
   const specs = [
