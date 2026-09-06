@@ -223,7 +223,7 @@ function draw() {
     const speedPxPerSec = (W-2*trackMargin)/2 * 0.35; // matches animation pacing below
     for (const ring of rings) {
       const age = (performance.now() - ring.t) / 1000;
-      const r = age * 60; // px/sec expansion rate for sound rings
+      const r = Math.max(0, age * 60); // px/sec expansion rate for sound rings
       if (r > 260) continue;
       ctx.beginPath(); ctx.arc(ring.x, trackY, r, 0, Math.PI*2);
       ctx.strokeStyle = 'rgba(120,200,220,'+Math.max(0,0.55-age*0.12)+')'; ctx.lineWidth = 1.6;
@@ -239,7 +239,7 @@ function draw() {
     const sourcePxX = listenerX;
     for (const ring of rings) {
       const age = (performance.now() - ring.t) / 1000;
-      const r = age * 60;
+      const r = Math.max(0, age * 60);
       if (r > 260) continue;
       ctx.beginPath(); ctx.arc(sourcePxX, trackY, r, 0, Math.PI*2);
       ctx.strokeStyle = 'rgba(120,200,220,'+Math.max(0,0.55-age*0.12)+')'; ctx.lineWidth = 1.6;

@@ -142,7 +142,7 @@
     <div class="step"><div class="h">2 · Charge at 9.0 V</div><span class="formula" id="ex2"></span></div>
     <div class="step"><div class="h">3 · Insert the dielectric (κ = 5), battery still connected — V stays 9.0 V</div><span class="formula" id="ex3"></span></div>
     <div class="step"><div class="h">4 · New charge</div><span class="formula" id="ex4"></span><div style="font-size:11px;color:#e7d6e4;margin-top:4px;">5× the capacitance pulls 5× the charge onto the plates at the same voltage — the battery does work moving that extra charge.</div></div>
-    <div class="step" style="background:rgba(109,91,208,0.15);border:1px solid rgba(109,91,208,0.3);"><div class="h">If it had been disconnected first…</div><div style="font-size:11.5px;color:#e7d6e4;">Q would stay at 3.99 nC (nowhere for charge to go) and V would instead drop to 1/5 of 9.0 V = 1.8 V. Same dielectric, opposite thing changes — that's the pairing to remember.</div></div>
+    <div class="step" style="background:rgba(109,91,208,0.15);border:1px solid rgba(109,91,208,0.3);"><div class="h">If it had been disconnected first…</div><div style="font-size:11.5px;color:#e7d6e4;">Q would stay at 399 pC (nowhere for charge to go) and V would instead drop to 1/5 of 9.0 V = 1.8 V. Same dielectric, opposite thing changes — that's the pairing to remember.</div></div>
   </div>
 </div>
 
@@ -154,7 +154,7 @@ let isolatedQ = null; // stored charge when disconnected
 
 function state() {
   const A = +$('aSlider').value / 1e4;      // cm² -> m²
-  const d = +$('dSlider').value / 1000;     // mm -> m
+  const d = +$('dSlider').value / 1e4;      // slider = tenths of a mm -> m (value 20 = 2.0 mm)
   const kappa = +$('kSlider').value / 10;   // slider units of 0.1
   const Vbatt = +$('vSlider').value / 10;   // slider units of 0.1 V
   return {A, d, kappa, Vbatt};
@@ -222,16 +222,18 @@ function draw(A, d, kappa, Q, C) {
     ctx.stroke();
   }
 
-  // dielectric slab (fills the gap once kappa>1, animated width by kappa fraction)
-  const kFrac = Math.min(1, (kappa-1)/7); // full at kappa=8 slider max, but visually saturate a bit earlier
-  if (kFrac > 0.02) {
-    const slabW = plateW * Math.min(1, kFrac*1.15);
-    ctx.fillStyle = 'rgba(200,170,255,0.18)';
+  // dielectric slab — a fixed-size block that fills the gap whenever kappa>1.
+  // (kappa is a material property, so the slab's SIZE never changes; only its
+  // tint deepens with kappa to hint at "more polarizable".)
+  if (kappa > 1.02) {
+    const slabW = plateW - 20;
+    const tint = Math.min(0.32, 0.12 + (kappa-1)/8*0.2);
+    ctx.fillStyle = 'rgba(200,170,255,'+tint+')';
     ctx.strokeStyle = 'rgba(200,170,255,0.5)'; ctx.lineWidth = 1.5;
     const sx = cx - slabW/2;
     ctx.fillRect(sx, topY+3, slabW, gapPx-6);
     ctx.strokeRect(sx, topY+3, slabW, gapPx-6);
-    ctx.fillStyle = 'rgba(230,215,255,0.85)'; ctx.font = '11px "Source Sans 3",sans-serif'; ctx.textAlign='center';
+    ctx.fillStyle = 'rgba(230,215,255,0.9)'; ctx.font = '11px "Source Sans 3",sans-serif'; ctx.textAlign='center';
     ctx.fillText('dielectric κ='+kappa.toFixed(1), cx, topY+gapPx/2+4);
   }
 
