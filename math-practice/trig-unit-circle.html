@@ -324,10 +324,20 @@ function draw() {
   ctx.fillStyle = '#5dffa0';
   ctx.beginPath(); ctx.arc(px,py,4.5,0,Math.PI*2); ctx.fill();
 
-  ctx.fillStyle = '#cfc3ef'; ctx.font = '12px "Source Sans 3",sans-serif'; ctx.textAlign='center';
-  ctx.fillText('θ', cx + 46*Math.cos(rad/2), cy - 46*Math.sin(rad/2));
-  ctx.fillStyle = '#ff9f5d'; ctx.fillText('cosθ', (px+cx)/2, cy + (py>cy?18:-10));
-  ctx.fillStyle = '#5da9ff'; ctx.save(); ctx.translate(px + (px>cx?16:-16), (py+cy)/2); ctx.fillText('sinθ',0,0); ctx.restore();
+  ctx.font = '12px "Source Sans 3",sans-serif';
+  // θ — just above the +x axis, at the start of the sweep
+  ctx.fillStyle = '#cfc3ef'; ctx.textAlign = 'center';
+  ctx.fillText('θ', cx + 0.30 * R, cy - 12);
+  // cosθ — on the horizontal projection line (height py), midway to the y-axis
+  if (Math.abs(px - cx) > 22) {
+    ctx.fillStyle = '#ff9f5d'; ctx.textAlign = 'center';
+    ctx.fillText('cosθ', (px + cx) / 2, py + (py < cy ? -8 : 18));
+  }
+  // sinθ — beside the vertical projection line (at x px), midway to the x-axis
+  if (Math.abs(py - cy) > 22) {
+    ctx.fillStyle = '#5da9ff'; ctx.textAlign = px > cx ? 'left' : 'right';
+    ctx.fillText('sinθ', px + (px > cx ? 8 : -8), (py + cy) / 2 + 4);
+  }
 }
 
 $('checkBtn').addEventListener('click', checkAnswer);
