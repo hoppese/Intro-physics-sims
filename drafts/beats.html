@@ -176,7 +176,7 @@ function draw() {
 
   const {f1, f2} = state();
   const t0 = playing && startTime !== null ? (performance.now() - startTime)/1000 : 0;
-  const windowMs = 0.08; // seconds of waveform shown
+  const windowMs = 0.03; // seconds of waveform shown (≈13 cycles at 440 Hz — reads as a sine, not a blur)
   const rows = [
     {y: 55, color: '#e0844a', fn: t => Math.sin(2*Math.PI*f1*t), label: 'f₁ = '+f1+' Hz'},
     {y: 145, color: '#5b9bd5', fn: t => Math.sin(2*Math.PI*f2*t), label: 'f₂ = '+f2+' Hz'},
