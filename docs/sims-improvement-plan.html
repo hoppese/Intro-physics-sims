@@ -1,0 +1,330 @@
+<title>Sims Improvement Plan</title>
+<style>
+:root{
+  --bg:#f4f6f8; --surface:#ffffff; --surface-2:#eef1f4;
+  --ink:#1b2836; --ink-soft:#5b6770; --ink-faint:#8a939b;
+  --accent:#1c6c7d; --accent-soft:#e4f1f3;
+  --amber:#a9691f; --amber-soft:#f7ecdd;
+  --line:#e1e6ea; --line-strong:#c9d0d6;
+  --mono-bg:#0f1722; --mono-ink:#d7e0e8;
+  --good:#1c7a52; --good-soft:#e3f3ea;
+  --gap:#a9691f; --gap-soft:#f7ecdd;
+  --crit:#b13a3a; --crit-soft:#fbeaea;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1722; --surface:#16212e; --surface-2:#1b2836;
+    --ink:#eef2f6; --ink-soft:#aab6c0; --ink-faint:#7c8792;
+    --accent:#5fd0e0; --accent-soft:#173038;
+    --amber:#e0aa5c; --amber-soft:#2e2415;
+    --line:#2a3542; --line-strong:#3a4753;
+    --mono-bg:#0a1119; --mono-ink:#c7d2db;
+    --good:#5fd08a; --good-soft:#153024;
+    --gap:#e0aa5c; --gap-soft:#2e2415;
+    --crit:#e08a8a; --crit-soft:#3a1f1f;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1722; --surface:#16212e; --surface-2:#1b2836;
+  --ink:#eef2f6; --ink-soft:#aab6c0; --ink-faint:#7c8792;
+  --accent:#5fd0e0; --accent-soft:#173038;
+  --amber:#e0aa5c; --amber-soft:#2e2415;
+  --line:#2a3542; --line-strong:#3a4753;
+  --mono-bg:#0a1119; --mono-ink:#c7d2db;
+  --good:#5fd08a; --good-soft:#153024;
+  --gap:#e0aa5c; --gap-soft:#2e2415;
+  --crit:#e08a8a; --crit-soft:#3a1f1f;
+}
+*{box-sizing:border-box;}
+body{background:var(--bg); color:var(--ink); font-family:'Source Sans 3',system-ui,sans-serif; margin:0;}
+::selection{background:var(--accent-soft);}
+.wrap{max-width:860px; margin:0 auto; padding:56px 24px 100px;}
+h1,h2,h3{font-family:'Source Serif 4',Georgia,serif; text-wrap:balance; margin:0;}
+h1{font-size:34px; font-weight:600; letter-spacing:-0.01em;}
+h2{font-size:22px; font-weight:600; color:var(--ink);}
+h3{font-size:16px; font-weight:600;}
+p{line-height:1.6; color:var(--ink-soft); margin:0;}
+code, .mono{font-family:'JetBrains Mono',ui-monospace,monospace;}
+a{color:var(--accent);}
+
+header.top{display:flex; flex-direction:column; gap:10px; margin-bottom:8px;}
+.eyebrow{font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent);}
+.dek{font-size:16px; color:var(--ink-soft); max-width:62ch; line-height:1.6;}
+.meta{display:flex; gap:16px; flex-wrap:wrap; font-size:12.5px; color:var(--ink-faint); font-family:'JetBrains Mono',monospace; margin-top:6px;}
+
+nav.toc{margin:36px 0 48px; padding:18px 20px; background:var(--surface); border:1px solid var(--line); border-radius:12px;}
+nav.toc .label{font-size:11px; font-weight:700; letter-spacing:0.07em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:10px; display:block;}
+nav.toc ol{margin:0; padding:0; list-style:none; display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:6px 20px;}
+nav.toc a{color:var(--ink); text-decoration:none; font-size:14px; display:flex; gap:8px;}
+nav.toc a:hover{color:var(--accent);}
+nav.toc .n{color:var(--ink-faint); font-family:'JetBrains Mono',monospace; font-size:12.5px; flex:none;}
+
+section{margin-top:56px; padding-top:4px; scroll-margin-top:20px;}
+section > .num{font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--accent); font-weight:700; margin-bottom:6px; display:block;}
+section > p.lead{margin-top:12px; font-size:15px;}
+
+.callout{margin-top:18px; padding:14px 16px; border-radius:10px; border:1px solid var(--line); background:var(--surface); font-size:14px; line-height:1.55; color:var(--ink-soft);}
+.callout.done{border-color:var(--good); background:var(--good-soft);}
+.callout.crit{border-color:var(--crit); background:var(--crit-soft);}
+.callout strong{color:var(--ink);}
+
+table{width:100%; border-collapse:collapse; margin-top:18px; font-size:13.5px;}
+th{text-align:left; font-size:11px; letter-spacing:0.05em; text-transform:uppercase; color:var(--ink-faint); font-weight:700; padding:0 12px 8px; border-bottom:1px solid var(--line-strong);}
+td{padding:9px 12px; border-bottom:1px solid var(--line); color:var(--ink-soft); vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+td.sim{color:var(--ink); font-family:'JetBrains Mono',monospace; font-size:12.5px; white-space:nowrap;}
+.tbl-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:12px; background:var(--surface); padding:4px 8px;}
+
+.pill{display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700; padding:3px 9px; border-radius:100px; font-family:'JetBrains Mono',monospace; white-space:nowrap;}
+.pill.good{background:var(--good-soft); color:var(--good);}
+.pill.gap{background:var(--gap-soft); color:var(--gap);}
+.pill.na{background:var(--surface-2); color:var(--ink-faint);}
+.pill.done{background:var(--good-soft); color:var(--good);}
+.pill.crit{background:var(--crit-soft); color:var(--crit);}
+
+.stack{display:flex; flex-direction:column; gap:14px; margin-top:20px;}
+.item{display:grid; grid-template-columns:28px 1fr; gap:14px; padding:16px 18px; background:var(--surface); border:1px solid var(--line); border-radius:12px;}
+.item .idx{font-family:'JetBrains Mono',monospace; color:var(--ink-faint); font-size:13px; padding-top:2px;}
+.item h3{margin-bottom:5px;}
+.item p{font-size:13.5px;}
+.item .example{margin-top:8px; font-size:12.5px; color:var(--ink-faint); font-style:italic;}
+
+.new-sim{background:var(--surface); border:1px solid var(--line); border-left:4px solid var(--amber); border-radius:0 12px 12px 0; padding:18px 22px; margin-top:16px;}
+.new-sim.shipped{border-left-color:var(--good);}
+.new-sim h3{color:var(--ink); display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+.new-sim .formula{font-family:'JetBrains Mono',monospace; color:var(--accent); font-size:13px; margin:8px 0; display:block;}
+.new-sim p{font-size:13.5px; margin-top:6px;}
+
+.priority-badge{display:inline-block; font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; padding:3px 9px; border-radius:6px; background:var(--amber-soft); color:var(--amber); margin-bottom:10px;}
+.priority-badge.done{background:var(--good-soft); color:var(--good);}
+
+.next-list{display:flex; flex-direction:column; gap:10px; margin-top:18px; counter-reset:step;}
+.next-item{display:flex; gap:14px; padding:14px 16px; background:var(--surface); border:1px solid var(--line); border-radius:10px; align-items:flex-start;}
+.next-item .rank{font-family:'JetBrains Mono',monospace; font-weight:700; color:var(--amber); font-size:13px; flex:none; width:20px;}
+.next-item .body h3{font-size:14px; margin-bottom:3px;}
+.next-item .body p{font-size:13px;}
+
+.idea-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px; margin-top:16px;}
+.idea{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:13px 15px;}
+.idea h4{font-family:'Source Serif 4',serif; font-weight:600; font-size:14px; margin:0 0 4px; color:var(--ink);}
+.idea p{font-size:12.5px; line-height:1.5; margin:0;}
+.idea .link{font-size:11.5px; color:var(--accent); margin-top:5px; display:block;}
+.subhead{font-size:11px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--amber); margin-top:28px;}
+.subhead:first-of-type{margin-top:18px;}
+
+footer{margin-top:64px; padding-top:24px; border-top:1px solid var(--line); font-size:12.5px; color:var(--ink-faint); font-family:'JetBrains Mono',monospace;}
+</style>
+
+<div class="wrap">
+
+  <header class="top">
+    <span class="eyebrow">Intro Physics Sims — working notes</span>
+    <h1>Improvement Plan</h1>
+    <p class="dek">An overnight pass: the electrostatics content audit, a critical catalog fix, three new sim drafts built and verified, a graphics-polish start, and a prioritized list for what to pick up next.</p>
+    <div class="meta">
+      <span>43 sims, catalog now working</span><span>·</span>
+      <span>10/10 electrostatics audited</span><span>·</span>
+      <span>3 new sims drafted</span><span>·</span>
+      <span>updated overnight</span>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <span class="label">On this page</span>
+    <ol>
+      <li><a href="#catalog"><span class="n">00</span> Catalog was broken — fixed</a></li>
+      <li><a href="#estat"><span class="n">01</span> Electrostatics content audit</a></li>
+      <li><a href="#panzoom"><span class="n">02</span> Zoom &amp; pan audit</a></li>
+      <li><a href="#newsims"><span class="n">03</span> New sims — drafted &amp; delivered</a></li>
+      <li><a href="#pedagogy"><span class="n">04</span> Interactivity &amp; pedagogy</a></li>
+      <li><a href="#graphics"><span class="n">05</span> Graphics pass</a></li>
+      <li><a href="#future"><span class="n">06</span> Future sims — upper-level &amp; intro astro</a></li>
+      <li><a href="#nextsteps"><span class="n">07</span> Next steps — pick of the litter</a></li>
+    </ol>
+  </nav>
+
+  <section id="catalog">
+    <span class="num">00</span>
+    <h2>The catalog page was completely broken</h2>
+    <p class="lead">Found while adding the new electrostatics sims to the browse page. Two separate bugs, both pre-existing (not introduced this session), now fixed and pushed.</p>
+    <div class="callout crit">
+      <strong>index.html never rendered at all.</strong> Its bootstrap loader was a stale build that unconditionally fetches React from unpkg.com — every one of the 43 sim pages was already updated to vendor React locally and never touch the network, but the catalog page itself was left on the old loader. With no live connection to that CDN (exactly the kind of spotty-wifi situation that started this conversation), the homepage just showed a blank page with a red "[bundle] error" toast — nothing else. Replaced the loader with the modern one, vendored local React/ReactDOM copies into its manifest, and populated the resource map so it never touches the network. Verified booting with zero network requests.
+    </div>
+    <div class="callout crit" style="margin-top:10px;">
+      <strong>15 of 43 real, working sims were never added to the browse list</strong> — including 3 of the electrostatics sims just audited below (Equipotential Explorer, Moving Charge Field, E-Fields in Conductors), plus most of Mechanics and both Gravitation sims. Four whole unit categories (Mechanics &amp; Motion, Gravitation &amp; Orbits, Thermal Physics, EM Radiation) didn't even exist as filter buttons, despite being in the README's own sim list the whole time. Added the categories and all 15 cards. Also removed two dead placeholder cards left over from early planning that had never had a working link, and fixed a malformed URL on Standing Waves.
+    </div>
+    <p style="margin-top:14px; font-size:13.5px;">Net effect: the catalog now works offline, and every sim you've built is actually reachable from it. This was silently broken before tonight regardless of wifi — worth a five-minute look to confirm it matches what you expect.</p>
+  </section>
+
+  <section id="estat">
+    <span class="num">01</span>
+    <h2>Electrostatics content audit</h2>
+    <p class="lead">Same treatment as the earlier waves/oscillations pass: pulled every Info-panel formula and Worked-Example step out of all 10 electrostatics sims, checked the arithmetic by hand, and checked notation against OpenStax. Cleaner than expected — one real bug.</p>
+    <div class="callout done">
+      <strong>Moving Charge Field — fixed.</strong> The "What this shows" text described electric-field distortion at high speed, but the canvas only ever renders the B-field dot/cross grid (confirmed uniform even at 0.3c — no distortion is drawn at any speed). Corrected the description and the README to describe the B field it actually shows. Also fixed the Relevant Formulas list, which was missing E = kq/r² (the worked example's own first step) and had two non-formula text fragments sitting where formulas should be — replaced with the three formulas the example actually uses.
+    </div>
+    <p style="margin-top:14px; font-size:13.5px;">Everything else checked out: Electroscope's induction-charging sequence, Electrostatics Explorer's and Field Superposition's vector-addition examples, E-Fields in Conductors' cavity/Faraday-cage explanation, PE vs. Separation's U/r = F shortcut, Equipotential Explorer's scalar-sum example, Counting Field Lines' inverse-square derivation, the ring-of-charge on-axis field, and Gauss's Law's flux calculation all reproduce correctly by hand. Notation is consistent within each sim and matches OpenStax conventions.</p>
+  </section>
+
+  <section id="panzoom">
+    <span class="num">02</span>
+    <h2>Zoom &amp; pan audit</h2>
+    <p class="lead">Tested wheel-zoom, the corner +/− buttons, and drag-to-pan on all 43 sims (paused first, to rule out the animation loop itself from being mistaken for a pan). 30 sims already have real zoom; 13 have none at all. Of those 13, most are graphs or fixed two-object diagrams that don't need it — but a handful are genuine gaps.</p>
+
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>Sim</th><th>Zoom</th><th>Pan / orbit</th><th>Verdict</th></tr>
+        <tr><td class="sim">gauss-flux</td><td><span class="pill gap">none</span></td><td><span class="pill gap">none</span></td><td><strong>Add — electrostatics.</strong> Investigated tonight (see next-steps below) — it's a bigger job than the others because the 2D canvas uses one coordinate system for drawing and a separate one for click/drag hit-testing, and both would need to move together.</td></tr>
+        <tr><td class="sim">ray-optics</td><td><span class="pill gap">none</span></td><td><span class="pill gap">none</span></td><td><strong>Add.</strong> Optical-bench family (with lens/mirror tracers below) — zooming in on the image point would make convergence easy to read precisely.</td></tr>
+        <tr><td class="sim">lens-ray-tracer</td><td><span class="pill gap">none</span></td><td><span class="pill gap">none</span></td><td><strong>Add.</strong> Same family as ray-optics; same fix should roll out to all three together.</td></tr>
+        <tr><td class="sim">mirror-ray-tracer</td><td><span class="pill gap">none</span></td><td><span class="pill gap">none</span></td><td><strong>Add.</strong> Third of the ray-tracer family.</td></tr>
+        <tr><td class="sim">diffraction-pattern</td><td><span class="pill gap">none</span></td><td><span class="pill gap">none</span></td><td><strong>Add.</strong> Fine fringe spacing is exactly what a student would want to zoom into.</td></tr>
+        <tr><td class="sim">faraday-flux-explorer</td><td><span class="pill gap">none</span></td><td><span class="pill gap">none</span></td><td><strong>Worth adding.</strong> Spatial loop-through-field scene, same category as the electrostatics maps.</td></tr>
+        <tr><td class="sim">relative-velocity</td><td><span class="pill gap">none</span></td><td><span class="pill gap">none</span></td><td><strong>Nice to have.</strong> Vector diagram — zoom would help at extreme current/boat-speed ratios.</td></tr>
+        <tr><td class="sim">motion-diagram</td><td><span class="pill gap">none</span></td><td><span class="pill gap">none</span></td><td><span class="pill na">low priority</span> x/v/a‑vs‑t graphs; a time-axis zoom slider (like wave-explorer's) would be the natural fit if this gets revisited.</td></tr>
+        <tr><td class="sim">dipole-field-and-torque, electroscope, pe-vs-separation, rc-charging, thin-film-interference</td><td><span class="pill gap">none</span></td><td><span class="pill gap">none</span></td><td><span class="pill na">fine as-is</span> Fixed diagrams or graphs with a meaningful fixed range — panning/zooming wouldn't add anything.</td></tr>
+        <tr><td class="sim">equipotential-explorer, electrostatics-explorer, field-superposition-explorer</td><td><span class="pill good">buttons</span></td><td><span class="pill good">drag</span></td><td>Working — equipotential-explorer is the reference pattern gauss-flux should copy.</td></tr>
+        <tr><td class="sim">e-fields-conductors-and-insulators</td><td><span class="pill good">wheel + buttons</span></td><td><span class="pill good">drag (hinted)</span></td><td>Best-in-class: the only sim that spells out "drag empty space to pan" on-screen.</td></tr>
+        <tr><td class="sim">moving-charge-field, discrete-charge-builder-3d, field-line-density-3d</td><td><span class="pill good">wheel/buttons</span></td><td><span class="pill good">drag/orbit</span></td><td>Working (3D ones use orbit, confirmed via the axis gizmo rotating).</td></tr>
+        <tr><td class="sim">+ 25 more</td><td><span class="pill good">have it</span></td><td>—</td><td>Ampère's Law, both current-builder 3D sims, Kepler's Laws, both pendulum-family sims, both interference sims, and the rest of magnetism/circuits already pass.</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section id="newsims">
+    <span class="num">03</span>
+    <h2>New sims — drafted and delivered</h2>
+    <p class="lead">All three sims suggested earlier are now built as standalone drafts, sent to you as files (not committed to the repo/catalog yet). Each has a working Info panel, Worked Example, and the same visual language as the production sims.</p>
+
+    <div class="new-sim shipped">
+      <h3>Parallel-Plate Capacitor <span class="pill done">✓ built</span></h3>
+      <p>C = κε₀A/d, Q = CV, U = ½CV². The centerpiece is a Battery-connected / Disconnected toggle: with the battery connected, sliding in a dielectric grows Q at fixed V; disconnected, the same dielectric drops V at fixed Q — verified both directions numerically (5× the capacitance → 5× the charge at fixed V, or 1/5 the voltage at fixed Q, energy dropping to 1/5 as the dielectric is pulled in by the field). One known rough edge: the dielectric slab's on-screen width scales with κ, which could read as "bigger κ = physically bigger slab" — worth a quick fix before this goes live.</p>
+    </div>
+
+    <div class="new-sim shipped">
+      <h3>Doppler Effect <span class="pill done">✓ built</span></h3>
+      <p>f' = f·(v±v_o)/(v∓v_s), with a Source-moves / Observer-moves toggle. The wavefront-ring animation correctly bunches ahead of a moving source and stays symmetric (just swept through faster) for a moving observer — the key conceptual distinction between the two cases. Includes a real Web Audio tone that pitch-shifts live as the source crosses the listener. Found and fixed one bug while testing: the fixed "ear" icon was drawing on top of the walking-observer icon in observer mode.</p>
+    </div>
+
+    <div class="new-sim shipped">
+      <h3>Beats <span class="pill done">✓ built</span></h3>
+      <p>Plots the two pure tones, their sum (the actual pressure wave), and the envelope, plus a real 3-second loudness strip so the beat rate is countable by eye. Two-tone Web Audio playback lets you actually hear the "wa-wa-wa" pulsing. Found and fixed one bug while testing: the Info/Worked-example buttons were completely unwired (a genuine oversight, not a framework issue) — now fixed.</p>
+    </div>
+
+    <p style="margin-top:18px; font-size:13px; color:var(--ink-faint);">Checked and confirmed <em>not</em> a gap: conductor shielding / Faraday cages are already covered inside E-Fields in Conductors &amp; Insulators.</p>
+  </section>
+
+  <section id="pedagogy">
+    <span class="num">04</span>
+    <h2>Interactivity &amp; pedagogy</h2>
+    <p class="lead">The strongest pattern in this codebase is that several sims already do something great that the rest don't. The cheapest, lowest-risk improvement across the board is generalizing those, not inventing new mechanics.</p>
+
+    <div class="stack">
+      <div class="item">
+        <span class="idx">01</span>
+        <div>
+          <h3>Predict-then-reveal worked examples</h3>
+          <p>Oscillation Explorer's worked example draws a random curve, asks the student to read off A, T, and φ₀ themselves, <em>then</em> reveals the measurement. Most other sims' worked examples just show the solution immediately.</p>
+          <p class="example">Good candidates: Energy in SHM, Equipotential Explorer, Gauss's Law.</p>
+        </div>
+      </div>
+      <div class="item">
+        <span class="idx">02</span>
+        <div>
+          <h3>Ghost / comparison overlays</h3>
+          <p>Pendulum's "Ghost" toggle draws a dashed small-angle prediction alongside the real swing, so approximation error is something you <em>watch happen</em>. Reusable anywhere a sim has an exact model and a common approximation.</p>
+          <p class="example">Candidates: Equipotential Explorer (point-charge vs. exact V), Standing Waves (ideal vs. damped), Universal Gravitation (circular vs. elliptical).</p>
+        </div>
+      </div>
+      <div class="item">
+        <span class="idx">03</span>
+        <div>
+          <h3>Discoverability of pan</h3>
+          <p>E-Fields in Conductors is the only sim that prints "drag empty space to pan" on-screen. Every other sim with real pan support leaves it to be found by accident — a one-line addition, repeated everywhere pan already works.</p>
+        </div>
+      </div>
+      <div class="item">
+        <span class="idx">04</span>
+        <div>
+          <h3>Fill the Random-problem / Worked-example gaps</h3>
+          <p>Circuit Lab and Radiation — A Wiggling Charge have no Random Problem generator, E-Fields in Conductors has none either, and Polarization — Malus's Law has no Worked Example.</p>
+        </div>
+      </div>
+      <div class="item">
+        <span class="idx">05</span>
+        <div>
+          <h3>Sound for the sound sims</h3>
+          <p>Standing Waves and the new Beats/Doppler drafts are literally about audible phenomena. Doppler and Beats now have real Web Audio tones — Standing Waves and a future Resonance sim are the natural next candidates.</p>
+        </div>
+      </div>
+      <div class="item">
+        <span class="idx">06</span>
+        <div>
+          <h3>Conceptual checkpoint after Info</h3>
+          <p>Nothing currently tests <em>conceptual</em> understanding (e.g., "which way does the field point here?"). A single multiple-choice checkpoint tied to the Info panel would close that loop cheaply — see the HW-quiz note below, since this is the same underlying feature.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="graphics">
+    <span class="num">05</span>
+    <h2>Graphics pass</h2>
+    <p class="lead">Started tonight. Drop &amp; Toss's ball went from a flat fill to a radial-gradient glossy sphere (light source upper-left), matching the treatment already used for charges elsewhere — purely cosmetic, zero risk, shipped.</p>
+    <p style="margin-top:12px; font-size:13.5px;">The coil-spring technique built for the SHM preview (layered drop shadow, perpendicular gradient, thin highlight stroke, all parametrized by direction so it works at any angle) is the reusable template for this pass — apply it anywhere a sim draws a mechanical object (blocks, strings, rods, pulleys, carts) with a flat fill today. Center of Mass and Relative Velocity's vector diagrams are the next clearest candidates in Mechanics.</p>
+  </section>
+
+  <section id="future">
+    <span class="num">06</span>
+    <h2>Looking further out — upper-level &amp; intro astro</h2>
+    <p class="lead">Brainstorm only, per your ask — nothing here is scoped or started. Checked against the current 43 to avoid suggesting a duplicate; a few explicitly build on a sim or draft that already exists.</p>
+
+    <div class="subhead">Upper-level physics</div>
+    <div class="idea-grid">
+      <div class="idea"><h4>Special relativity — time dilation &amp; length contraction</h4><p>A light-clock animation in two frames side by side; γ slider shows the clock ticking slow / the ruler shrinking as v → c. Nothing in the current 43 touches relativity.</p></div>
+      <div class="idea"><h4>Relativistic Doppler &amp; redshift</h4><p>Extends the classical Doppler draft (already built, awaiting review) into the γ-corrected relativistic formula — natural bridge into the cosmological-redshift astro idea below.<span class="link">builds on: new-sims/doppler-effect.html</span></p></div>
+      <div class="idea"><h4>Photoelectric effect</h4><p>Stopping voltage vs. frequency across several metals; slope gives h, x-intercept gives each metal's work function. The classic "light is quantized" evidence sim.</p></div>
+      <div class="idea"><h4>Bohr model &amp; hydrogen spectrum</h4><p>Electron jumping between allowed orbits, energy released as a photon at the matching visible/Balmer-series wavelength — makes discrete spectral lines concrete.</p></div>
+      <div class="idea"><h4>Quantum tunneling &amp; particle in a box</h4><p>Wavefunction hitting a finite barrier — transmission probability vs. barrier height/width; a box-well version showing quantized standing-wave states and |ψ|².</p></div>
+      <div class="idea"><h4>Radioactive decay &amp; half-life</h4><p>N(t) = N₀e^(−λt) as a population of nuclei decaying one at a time (discrete, not just the smooth curve) — ties into a binding-energy-curve companion for why some nuclei are unstable.</p></div>
+      <div class="idea"><h4>Driven &amp; damped oscillator / RLC resonance</h4><p>Amplitude vs. driving frequency with a resonance peak that sharpens as damping (or R, for the electrical analog) drops — one sim, two skins (mechanical spring-mass, series RLC), since they're the same equation.</p></div>
+      <div class="idea"><h4>Coupled oscillators &amp; normal modes</h4><p>Two masses on three springs — sliders for coupling strength show the symmetric/antisymmetric normal modes and, for unequal initial conditions, beating between them (nice pairing with the Beats draft).</p></div>
+      <div class="idea"><h4>Entropy &amp; the second law</h4><p>Free expansion of a small number of particles into a larger box, replayed many times — counting microstates makes "entropy increase" feel like counting, not magic.</p></div>
+    </div>
+
+    <div class="subhead">Intro astronomy</div>
+    <div class="idea-grid">
+      <div class="idea"><h4>Celestial sphere &amp; coordinates</h4><p>RA/Dec and alt/az on a rotating sphere with the observer's latitude as a slider — the prerequisite mental model for everything else in the unit.</p></div>
+      <div class="idea"><h4>Phases of the Moon</h4><p>Sun–Earth–Moon geometry from a top-down orbit view and the corresponding Earth-sky view side by side — the single most common intro-astro misconception (it's geometry, not Earth's shadow) is easiest to fix by showing both views at once.</p></div>
+      <div class="idea"><h4>Eclipses — umbra &amp; penumbra</h4><p>Same three-body geometry as phases, but with the alignment tight enough to cast a shadow; slider for the Moon's orbital tilt shows why eclipses aren't monthly.</p></div>
+      <div class="idea"><h4>Seasons — axial tilt, not distance</h4><p>Earth orbiting with its axis fixed in space; a light-intensity-per-area readout at a chosen latitude, to directly kill the "closer to the Sun in summer" misconception.</p></div>
+      <div class="idea"><h4>Retrograde motion</h4><p>Same two-orbit geometry plotted from the Sun's frame and from Earth's sky at once — Mars looping backward stops being mysterious once you see both frames together.</p></div>
+      <div class="idea"><h4>Stellar parallax → distance ladder</h4><p>Baseline (Earth's orbit) and parallax angle set distance; chain it into a "distance ladder" sim that hands off from parallax to standard candles to Hubble's law as distance grows past each method's range.</p></div>
+      <div class="idea"><h4>H-R diagram &amp; blackbody color</h4><p>Wien's law linking a star's temperature to its peak-emission color, plotted live against luminosity on an H-R diagram as you drag a star along the main sequence. Shares its blackbody-curve machinery with the upper-level blackbody idea — one physics engine, two skins.</p></div>
+      <div class="idea"><h4>Cosmological redshift &amp; Hubble's law</h4><p>Recession velocity from redshift, v = H₀d — directly reuses the Doppler draft's frequency-shift visualization, relabeled for light instead of sound.<span class="link">builds on: new-sims/doppler-effect.html</span></p></div>
+      <div class="idea"><h4>Exoplanet detection — transit &amp; radial velocity</h4><p>A planet crossing its star dims the light curve by (r_planet/r_star)²; the star's own wobble shows up as a periodic Doppler shift in its spectrum — two real detection methods, one system.</p></div>
+      <div class="idea"><h4>Telescope resolving power</h4><p>Rayleigh criterion θ = 1.22λ/D — reuses the existing diffraction-pattern sim's single-slit/circular-aperture machinery, reframed as "can this telescope separate these two stars."<span class="link">builds on: diffraction-pattern/</span></p></div>
+    </div>
+
+    <p style="margin-top:16px; font-size:13px;">Quiz-wise, the upper-level topics lend themselves to derivation-style questions (show the algebra step that gets you from A to B) rather than just numeric plug-in, which the current Worked-Example format doesn't really support yet — worth keeping in mind if/when the HW-quiz feature (next-steps #6 below) gets designed, since upper-level and intro-astro quizzes will probably need a different question type than the intro sims do.</p>
+  </section>
+
+  <section id="nextsteps">
+    <span class="num">07</span>
+    <h2>Next steps — pick of the litter</h2>
+    <p class="lead">Roughly in priority order. Pick any and say go.</p>
+    <div class="next-list">
+      <div class="next-item"><span class="rank">1</span><div class="body"><h3>Review and merge the 3 new sim drafts</h3><p>Open the files, try the toggles, and say what needs to change before they're wired into the repo, given the new-sim naming/id/manifest conventions.</p></div></div>
+      <div class="next-item"><span class="rank">2</span><div class="body"><h3>Fix gauss-flux's pan/zoom</h3><p>Deferred tonight rather than rushed: its 2D mode uses one coordinate system for rendering (a projection function shared with the 3D view) and a separate, simpler one for hit-testing clicks/drags on charges and the Gaussian surface. Adding pan+zoom means reconciling both without breaking the existing drag-a-charge / resize-the-surface interactions — worth a dedicated session rather than a rushed patch late at night.</p></div></div>
+      <div class="next-item"><span class="rank">3</span><div class="body"><h3>Roll pan/zoom into the ray-tracer trio</h3><p>ray-optics, lens-ray-tracer, mirror-ray-tracer — one implementation, three sims, all optics.</p></div></div>
+      <div class="next-item"><span class="rank">4</span><div class="body"><h3>Continue the content audit</h3><p>Waves/oscillations and electrostatics (17 of 43) are done. Magnetism, circuits, optics, mechanics, and gravitation are next — same OpenStax-comparison treatment, same odds of finding a real bug or two.</p></div></div>
+      <div class="next-item"><span class="rank">5</span><div class="body"><h3>Keep going on the graphics pass</h3><p>Center of Mass and Relative Velocity next, then work down the Mechanics unit — it's the category furthest behind the electrostatics/3D sims' visual polish.</p></div></div>
+      <div class="next-item"><span class="rank">6</span><div class="body"><h3>Design the HW-quiz feature</h3><p>You mentioned wanting graded quiz questions built into the sims eventually. Worth scoping before building: probably a new overlay type alongside Info/Worked-Example/Random-Problem, reusing each sim's existing random-problem generator as the question bank where one exists, plus some way to record/export results. Happy to draft a design doc + a first prototype on one sim once you want to point at it.</p></div></div>
+      <div class="next-item"><span class="rank">7</span><div class="body"><h3>Math-prerequisite practice activities <span class="pill gap" style="margin-left:8px;">not started — flagged only</span></h3><p>A separate track from the physics sims: students need to actually practice the underlying math, not just have it explained. Seven topics called out — algebraic manipulation, geometry, trig, differentiation, integration, vector addition/subtraction, and dot &amp; cross products. Explicitly <em>not</em> all screen-based — some of this is better as paper/whiteboard/physical activities than a browser exercise, so this needs its own design pass rather than reusing the sim template. Assessment shape: a diagnostic to check whether a student already knows the material; if not, route them into an adaptive quiz or practice sequence that builds toward a badge on completion. Needs scoping (screen vs. non-screen split per topic, what "adaptive" means here, how a badge is tracked/displayed) before any building starts — holding until you're ready to prioritize it.</p></div></div>
+      <div class="next-item"><span class="rank">8</span><div class="body"><h3>Mastering Physics exploration — export old assignments, auto-create new ones <span class="pill gap" style="margin-left:8px;">not started — flagged only</span></h3><p>Two separate capabilities to scope, both requiring you to be signed into Pearson's Mastering Physics in an interactive/browser session (not something doable headlessly with just an API key):</p><p style="margin-top:8px;"><strong>1. Export, old course.</strong> While signed in, navigate an old course and copy/download every assignment (problem sets, due dates, point values) so they can be mined for inspiration when rebuilding homework directly in Moodle after leaving Mastering Physics. This is read-only against your own course data, so the main open question is just mechanics — what the export/print/copy options in Mastering Physics's UI actually expose, and whether a browser-automation pass (e.g. Claude with computer use, or a Playwright script driven by you interactively logging in) is the right tool versus doing it by hand.</p><p style="margin-top:8px;"><strong>2. Auto-create, current course.</strong> Signed into the live course, read due dates from Moodle and create matching assignments in Mastering Physics automatically, with each one hidden from students until its scheduled open date. This is a write path against a live, currently-in-use gradebook — needs more care: confirming Mastering Physics actually supports a "visible from" / "invisible until" release-date field (not just a due date), and a dry-run or review step before anything goes live so a scripting mistake can't accidentally expose or misdate a real assignment.</p><p style="margin-top:8px;">For both: needs a working session to actually poke at the Mastering Physics UI together (screen-shared or with you driving the login) before committing to an approach — holding until you're ready to prioritize it.</p></div></div>
+    </div>
+  </section>
+
+  <footer>Intro Physics Sims — improvement plan · updated overnight, session 2</footer>
+
+</div>

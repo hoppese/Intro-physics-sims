@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Parallel-Plate Capacitor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<style>
+  * { box-sizing: border-box; }
+  body { margin:0; background:#eef1f4; font-family:'Source Sans 3',system-ui,sans-serif; color:#20262b; }
+  .wrap { max-width:900px; margin:0 auto; padding:20px; }
+  .card { background:#fff; border:1px solid #e1e6ea; border-radius:12px; overflow:hidden; }
+  .header { background:#15212e; color:#fff; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:13px 18px; flex-wrap:wrap; }
+  .header .title { display:flex; align-items:center; gap:10px; }
+  .header .dot { width:11px; height:11px; border-radius:3px; background:#6d5bd0; flex:none; }
+  .header .name { font-family:'Source Serif 4',serif; font-weight:600; font-size:16px; }
+  .header .sub { font-weight:400; color:#9fb0bf; font-size:12px; }
+  .headbtn { font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:9px; cursor:pointer; border:1px solid rgba(255,255,255,0.22); background:rgba(255,255,255,0.06); color:#dfe8f0; }
+  .body { display:flex; gap:0; align-items:stretch; flex-wrap:wrap; }
+  .canvasCol { padding:14px; display:flex; flex-direction:column; gap:10px; flex:1 1 460px; min-width:0; }
+  .ctlCol { width:300px; flex:none; border-left:1px solid #e8ebee; padding:15px 17px; display:flex; flex-direction:column; gap:14px; }
+  canvas { display:block; width:100%; height:auto; aspect-ratio:460/340; border-radius:10px; background:#0f1722; }
+  .toggleRow { display:flex; gap:0; border:1px solid #d3d8dd; border-radius:9px; overflow:hidden; }
+  .toggleRow button { flex:1; border:0; background:#fff; color:#525a63; font:600 12.5px 'Source Sans 3',sans-serif; padding:9px 8px; cursor:pointer; }
+  .toggleRow button.on { background:#473a8f; color:#fff; }
+  .section-label { font-size:10.5px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; color:#9aa2ab; margin-bottom:2px; }
+  .slider-row { display:flex; flex-direction:column; gap:5px; }
+  .slider-row .lbl { display:flex; justify-content:space-between; font-size:12.5px; font-weight:600; }
+  .slider-row .lbl .val { font-family:'JetBrains Mono',monospace; color:#473a8f; }
+  input[type=range] { width:100%; accent-color:#6d5bd0; }
+  .results { display:flex; flex-direction:column; gap:8px; }
+  .resrow { display:flex; align-items:center; justify-content:space-between; background:#f7f6fd; border-radius:8px; padding:8px 11px; }
+  .resrow .k { font-family:'Source Serif 4',serif; font-style:italic; font-size:13.5px; }
+  .resrow .v { font-family:'JetBrains Mono',monospace; font-weight:700; font-size:13px; color:#3a2f78; }
+  .note { font-size:11.5px; line-height:1.5; color:#6b747c; background:#f7f6fd; border-radius:8px; padding:9px 11px; }
+  .infobtn, .menu-btn { cursor:pointer; }
+  .footer-note { text-align:center; padding:14px; font-size:11.5px; color:#8b949d; }
+  .modal-backdrop { position:fixed; inset:0; background:rgba(15,23,34,0.86); backdrop-filter:blur(3px); display:none; align-items:center; justify-content:center; padding:30px; z-index:50; }
+  .modal-backdrop.show { display:flex; }
+  .modal { max-width:760px; width:100%; max-height:90vh; overflow:auto; background:rgba(17,26,38,0.95); border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:22px 26px; color:#eef2f6; }
+  .modal h2 { font-family:'Source Serif 4',serif; font-weight:600; font-size:20px; margin:0 0 16px; display:flex; justify-content:space-between; align-items:baseline; }
+  .modal .close { cursor:pointer; width:26px; height:26px; border-radius:7px; border:1px solid rgba(255,255,255,0.2); background:rgba(255,255,255,0.06); color:#dce6f2; display:flex; align-items:center; justify-content:center; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:0 24px; }
+  .yellow { color:#ffd66b; font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:9px; }
+  .step { background:rgba(255,255,255,0.05); border-radius:10px; padding:10px 13px; margin-bottom:10px; }
+  .step .h { font-size:11.5px; font-weight:700; color:#fff; margin-bottom:4px; }
+  .formula { font-family:'Source Serif 4',serif; font-style:italic; color:#fff; display:block; margin:2px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="header">
+      <div class="title">
+        <span class="dot"></span>
+        <span class="name">Parallel-Plate Capacitor <span class="sub">— storing charge on two plates</span></span>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="headbtn" id="infoBtn">ⓘ Info</button>
+        <button class="headbtn" id="exampleBtn">✎ Worked example</button>
+      </div>
+    </div>
+    <div class="body">
+      <div class="canvasCol">
+        <canvas id="cv" width="460" height="340"></canvas>
+        <div class="toggleRow">
+          <button id="modeBattery" class="on">🔋 Battery connected (V fixed)</button>
+          <button id="modeIsolated">🔌 Disconnected (Q fixed)</button>
+        </div>
+        <div class="note" id="modeNote">The battery holds V constant. Sliding in the dielectric lets more charge flow onto the plates.</div>
+      </div>
+      <div class="ctlCol">
+        <div class="section-label">Given</div>
+        <div class="slider-row">
+          <div class="lbl"><span>Plate area A</span><span class="val" id="aVal">100 cm²</span></div>
+          <input type="range" id="aSlider" min="20" max="300" step="5" value="100">
+        </div>
+        <div class="slider-row">
+          <div class="lbl"><span>Separation d</span><span class="val" id="dVal">2.0 mm</span></div>
+          <input type="range" id="dSlider" min="5" max="100" step="1" value="20">
+        </div>
+        <div class="slider-row" id="vRow">
+          <div class="lbl"><span>Battery voltage V</span><span class="val" id="vVal">9.0 V</span></div>
+          <input type="range" id="vSlider" min="10" max="200" step="1" value="90">
+        </div>
+        <div class="slider-row">
+          <div class="lbl"><span>Dielectric κ</span><span class="val" id="kVal">1.0 (vacuum)</span></div>
+          <input type="range" id="kSlider" min="10" max="80" step="1" value="10">
+        </div>
+        <div class="section-label" style="margin-top:6px;">Results</div>
+        <div class="results" id="results"></div>
+      </div>
+    </div>
+    <div class="footer-note">DRAFT — not yet in the sim catalog. Physics: C=κε₀A/d, Q=CV, U=½CV².</div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="infoModal">
+  <div class="modal">
+    <h2>Parallel-Plate Capacitor <span class="close" id="infoClose">×</span></h2>
+    <div class="grid2">
+      <div style="padding-right:22px;">
+        <div class="yellow">What this shows</div>
+        <p style="font-size:12.5px;line-height:1.55;">Two charged plates store energy in the field between them. Capacitance C depends only on geometry (area, separation) and what fills the gap — not on charge or voltage.</p>
+      </div>
+      <div style="padding:0 22px;border-left:1px solid rgba(255,255,255,0.12);">
+        <div class="yellow">How to use</div>
+        <p style="font-size:12.5px;line-height:1.55;">Compare the two modes: with the battery connected, V stays fixed and Q changes; disconnected, Q is trapped and V changes instead. Slide in the dielectric either way and watch which quantity moves.</p>
+      </div>
+      <div style="grid-column:1/-1;border-top:1px solid rgba(255,255,255,0.12);margin-top:15px;padding-top:15px;">
+        <div class="yellow">Relevant formulas</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px 28px;">
+          <div><span class="formula" id="f1"></span><div style="font-size:11.5px;color:#b7c2cd;">capacitance — geometry and dielectric only</div></div>
+          <div><span class="formula" id="f2"></span><div style="font-size:11.5px;color:#b7c2cd;">charge stored at voltage V</div></div>
+          <div><span class="formula" id="f3"></span><div style="font-size:11.5px;color:#b7c2cd;">energy stored in the field</div></div>
+          <div><span class="formula" id="f4"></span><div style="font-size:11.5px;color:#b7c2cd;">uniform field between the plates</div></div>
+        </div>
+      </div>
+      <div style="grid-column:1/-1;border-top:1px solid rgba(255,255,255,0.12);margin-top:15px;padding-top:15px;">
+        <div class="yellow">Learn more</div>
+        <div style="font-size:11px;color:#9fb0bf;margin:0 0 5px;">OpenStax <em>University Physics</em> — calculus</div>
+        <ul style="margin:0;padding-left:15px;color:#d7e0e8;font-size:12px;line-height:1.55;">
+          <li><a href="https://openstax.org/books/university-physics-volume-2/pages/8-1-capacitors-and-capacitance" target="_blank" rel="noopener" style="color:#8fc7ff;">Vol 2 · 8.1 Capacitors and Capacitance</a></li>
+          <li><a href="https://openstax.org/books/university-physics-volume-2/pages/8-2-capacitors-in-series-and-in-parallel" target="_blank" rel="noopener" style="color:#8fc7ff;">Vol 2 · 8.2 Capacitors in Series and Parallel</a></li>
+          <li><a href="https://openstax.org/books/university-physics-volume-2/pages/8-3-energy-stored-in-a-capacitor" target="_blank" rel="noopener" style="color:#8fc7ff;">Vol 2 · 8.3 Energy Stored in a Capacitor</a></li>
+          <li><a href="https://openstax.org/books/university-physics-volume-2/pages/8-5-capacitor-with-a-dielectric" target="_blank" rel="noopener" style="color:#8fc7ff;">Vol 2 · 8.5 Capacitor with a Dielectric</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="exampleModal">
+  <div class="modal">
+    <h2>Worked example — inserting a dielectric <span class="close" id="exampleClose">×</span></h2>
+    <p style="font-size:11.5px;line-height:1.5;color:#d9c7d6;margin-bottom:12px;">A parallel-plate capacitor with A = 100 cm² and d = 2.0 mm is connected to a 9.0 V battery. Find C and Q, then slide in a κ = 5 dielectric (battery still connected) and find the new Q.</p>
+    <div class="step"><div class="h">1 · Capacitance in vacuum</div><span class="formula" id="ex1"></span></div>
+    <div class="step"><div class="h">2 · Charge at 9.0 V</div><span class="formula" id="ex2"></span></div>
+    <div class="step"><div class="h">3 · Insert the dielectric (κ = 5), battery still connected — V stays 9.0 V</div><span class="formula" id="ex3"></span></div>
+    <div class="step"><div class="h">4 · New charge</div><span class="formula" id="ex4"></span><div style="font-size:11px;color:#e7d6e4;margin-top:4px;">5× the capacitance pulls 5× the charge onto the plates at the same voltage — the battery does work moving that extra charge.</div></div>
+    <div class="step" style="background:rgba(109,91,208,0.15);border:1px solid rgba(109,91,208,0.3);"><div class="h">If it had been disconnected first…</div><div style="font-size:11.5px;color:#e7d6e4;">Q would stay at 3.99 nC (nowhere for charge to go) and V would instead drop to 1/5 of 9.0 V = 1.8 V. Same dielectric, opposite thing changes — that's the pairing to remember.</div></div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const EPS0 = 8.85e-12;
+let mode = 'battery'; // 'battery' | 'isolated'
+let isolatedQ = null; // stored charge when disconnected
+
+function state() {
+  const A = +$('aSlider').value / 1e4;      // cm² -> m²
+  const d = +$('dSlider').value / 1000;     // mm -> m
+  const kappa = +$('kSlider').value / 10;   // slider units of 0.1
+  const Vbatt = +$('vSlider').value / 10;   // slider units of 0.1 V
+  return {A, d, kappa, Vbatt};
+}
+
+function render() {
+  const {A, d, kappa, Vbatt} = state();
+  const C = kappa * EPS0 * A / d;
+  let V, Q;
+  if (mode === 'battery') {
+    V = Vbatt;
+    Q = C * V;
+  } else {
+    if (isolatedQ === null) isolatedQ = C * Vbatt; // capture charge at the moment of disconnecting, using vacuum C at current V
+    Q = isolatedQ;
+    V = Q / C;
+  }
+  const E = V / d;
+  const U = 0.5 * C * V * V;
+
+  $('aVal').textContent = (A*1e4).toFixed(0) + ' cm²';
+  $('dVal').textContent = (d*1000).toFixed(1) + ' mm';
+  $('kVal').textContent = kappa.toFixed(1) + (kappa===1 ? ' (vacuum)' : '');
+  $('vVal').textContent = Vbatt.toFixed(1) + ' V';
+  $('vRow').style.opacity = mode === 'battery' ? '1' : '0.4';
+  $('vSlider').disabled = mode !== 'battery';
+
+  const fmt = (x, unit) => {
+    if (Math.abs(x) >= 1e-3 && Math.abs(x) < 1e4) return x.toPrecision(3) + ' ' + unit;
+    return x.toExponential(2) + ' ' + unit;
+  };
+  $('results').innerHTML = `
+    <div class="resrow"><span class="k">C</span><span class="v">${fmt(C*1e12,'pF')}</span></div>
+    <div class="resrow"><span class="k">Q</span><span class="v">${fmt(Q*1e9,'nC')}</span></div>
+    <div class="resrow"><span class="k">V</span><span class="v">${fmt(V,'V')}</span></div>
+    <div class="resrow"><span class="k">E</span><span class="v">${fmt(E,'V/m')}</span></div>
+    <div class="resrow"><span class="k">U</span><span class="v">${fmt(U*1e9,'nJ')}</span></div>
+  `;
+  $('modeNote').textContent = mode === 'battery'
+    ? 'The battery holds V constant. Sliding in the dielectric lets more charge flow onto the plates (Q = CV grows with C).'
+    : 'The charge is trapped with nowhere to go. Sliding in the dielectric drops the voltage instead (V = Q/C shrinks as C grows).';
+
+  draw(A, d, kappa, Q, C);
+}
+
+function draw(A, d, kappa, Q, C) {
+  const ctx = $('cv').getContext('2d');
+  const W = 460, H = 340;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle = '#0f1722'; ctx.fillRect(0,0,W,H);
+
+  const plateW = 220, plateH = 18;
+  const gapPx = 40 + (d*1000)*4; // visual separation scales with d
+  const cx = W/2, cy = H/2 - 20;
+  const topY = cy - gapPx/2, botY = cy + gapPx/2;
+
+  // field lines (only drawn in the gap)
+  ctx.strokeStyle = 'rgba(150,180,255,0.55)'; ctx.lineWidth = 1.5;
+  const nLines = 9;
+  for (let i=0;i<nLines;i++){
+    const x = cx - plateW/2 + 20 + i*(plateW-40)/(nLines-1);
+    ctx.beginPath(); ctx.moveTo(x, topY+6); ctx.lineTo(x, botY-6); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x-4, botY-12); ctx.lineTo(x, botY-6); ctx.lineTo(x+4, botY-12);
+    ctx.stroke();
+  }
+
+  // dielectric slab (fills the gap once kappa>1, animated width by kappa fraction)
+  const kFrac = Math.min(1, (kappa-1)/7); // full at kappa=8 slider max, but visually saturate a bit earlier
+  if (kFrac > 0.02) {
+    const slabW = plateW * Math.min(1, kFrac*1.15);
+    ctx.fillStyle = 'rgba(200,170,255,0.18)';
+    ctx.strokeStyle = 'rgba(200,170,255,0.5)'; ctx.lineWidth = 1.5;
+    const sx = cx - slabW/2;
+    ctx.fillRect(sx, topY+3, slabW, gapPx-6);
+    ctx.strokeRect(sx, topY+3, slabW, gapPx-6);
+    ctx.fillStyle = 'rgba(230,215,255,0.85)'; ctx.font = '11px "Source Sans 3",sans-serif'; ctx.textAlign='center';
+    ctx.fillText('dielectric κ='+kappa.toFixed(1), cx, topY+gapPx/2+4);
+  }
+
+  // plates
+  const qDensity = Math.min(1, Math.abs(Q)*1e9/6); // visual saturation
+  const nCharges = Math.max(4, Math.round(6 + qDensity*14));
+  function plate(y, sign) {
+    const grd = ctx.createLinearGradient(0,y,0,y+plateH*Math.sign(sign||1));
+    grd.addColorStop(0,'#8fa6b8'); grd.addColorStop(1,'#5c7386');
+    ctx.fillStyle = grd;
+    ctx.fillRect(cx-plateW/2, y-plateH/2, plateW, plateH);
+    ctx.strokeStyle='rgba(255,255,255,0.25)'; ctx.strokeRect(cx-plateW/2, y-plateH/2, plateW, plateH);
+    ctx.font = '13px "JetBrains Mono",monospace'; ctx.textAlign='center';
+    ctx.fillStyle = sign>0 ? '#ff8a80' : '#82c8ff';
+    for (let i=0;i<nCharges;i++){
+      const x = cx - plateW/2 + 14 + i*(plateW-28)/(nCharges-1);
+      ctx.fillText(sign>0?'+':'−', x, y + (sign>0?-plateH/2-6:plateH/2+16));
+    }
+  }
+  plate(topY, +1);
+  plate(botY, -1);
+
+  // battery / disconnect indicator
+  ctx.font = '12px "Source Sans 3",sans-serif'; ctx.fillStyle='#9fb0bf'; ctx.textAlign='left';
+  if (mode === 'battery') {
+    ctx.strokeStyle='#e0aa5c'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(cx-plateW/2-30, topY); ctx.lineTo(cx-plateW/2-30, botY); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx-plateW/2-30, topY); ctx.lineTo(cx-plateW/2, topY); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx-plateW/2-30, botY); ctx.lineTo(cx-plateW/2, botY); ctx.stroke();
+    // battery symbol
+    const midY = (topY+botY)/2;
+    ctx.beginPath(); ctx.moveTo(cx-plateW/2-30-10, midY-14); ctx.lineTo(cx-plateW/2-30+10, midY-14); ctx.stroke();
+    ctx.lineWidth=4;
+    ctx.beginPath(); ctx.moveTo(cx-plateW/2-30-6, midY+14); ctx.lineTo(cx-plateW/2-30+6, midY+14); ctx.stroke();
+    ctx.fillStyle='#e0aa5c'; ctx.fillText('battery', cx-plateW/2-95, midY+4);
+  } else {
+    ctx.strokeStyle='#7c8792'; ctx.lineWidth=2; ctx.setLineDash([4,4]);
+    ctx.beginPath(); ctx.moveTo(cx-plateW/2-30, topY); ctx.lineTo(cx-plateW/2-30, topY+gapPx*0.35); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx-plateW/2-30, botY); ctx.lineTo(cx-plateW/2-30, botY-gapPx*0.35); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='#7c8792'; ctx.fillText('disconnected', cx-plateW/2-110, (topY+botY)/2+4);
+  }
+}
+
+function katexAll() {
+  const specs = [
+    ['f1', 'C = \\kappa\\varepsilon_0 A / d'],
+    ['f2', 'Q = CV'],
+    ['f3', 'U = \\tfrac{1}{2}CV^2 = \\tfrac{1}{2}QV = \\tfrac{1}{2}Q^2/C'],
+    ['f4', 'E = V/d'],
+    ['ex1', 'C_0 = \\varepsilon_0 A/d = (8.85\\times10^{-12})(0.01)/(0.002) \\approx 44.3\\ \\text{pF}'],
+    ['ex2', 'Q_0 = C_0 V = (44.3\\ \\text{pF})(9.0\\ \\text{V}) \\approx 399\\ \\text{pC}'],
+    ['ex3', 'C = \\kappa C_0 = 5(44.3\\ \\text{pF}) \\approx 221\\ \\text{pF}'],
+    ['ex4', 'Q = CV = (221\\ \\text{pF})(9.0\\ \\text{V}) \\approx 1.99\\ \\text{nC}'],
+  ];
+  const hasKatex = typeof window.katex !== 'undefined';
+  for (const [id, tex] of specs) {
+    if (hasKatex) {
+      try { katex.render(tex, $(id), {throwOnError:false}); continue; } catch(e) {}
+    }
+    let plain = tex
+      .replace(/\\text\{([^}]*)\}/g, '$1')
+      .replace(/\\tfrac\{([^}]*)\}\{([^}]*)\}/g, '($1)/($2)')
+      .replace(/\\kappa/g, 'κ').replace(/\\varepsilon_0/g, 'ε₀')
+      .replace(/\\times/g, '×').replace(/\^2/g, '²')
+      .replace(/[{}\\]/g, '');
+    $(id).textContent = plain;
+  }
+}
+
+['aSlider','dSlider','vSlider','kSlider'].forEach(id => $(id).addEventListener('input', render));
+$('modeBattery').addEventListener('click', () => {
+  mode = 'battery'; isolatedQ = null;
+  $('modeBattery').classList.add('on'); $('modeIsolated').classList.remove('on');
+  render();
+});
+$('modeIsolated').addEventListener('click', () => {
+  mode = 'isolated';
+  $('modeIsolated').classList.add('on'); $('modeBattery').classList.remove('on');
+  render();
+});
+$('infoBtn').addEventListener('click', () => $('infoModal').classList.add('show'));
+$('infoClose').addEventListener('click', () => $('infoModal').classList.remove('show'));
+$('infoModal').addEventListener('click', e => { if (e.target.id==='infoModal') $('infoModal').classList.remove('show'); });
+$('exampleBtn').addEventListener('click', () => $('exampleModal').classList.add('show'));
+$('exampleClose').addEventListener('click', () => $('exampleModal').classList.remove('show'));
+$('exampleModal').addEventListener('click', e => { if (e.target.id==='exampleModal') $('exampleModal').classList.remove('show'); });
+
+window.addEventListener('load', () => { katexAll(); render(); });
+</script>
+</body>
+</html>

@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Beats</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<style>
+  * { box-sizing: border-box; }
+  body { margin:0; background:#eef1f4; font-family:'Source Sans 3',system-ui,sans-serif; color:#20262b; }
+  .wrap { max-width:920px; margin:0 auto; padding:20px; }
+  .card { background:#fff; border:1px solid #e1e6ea; border-radius:12px; overflow:hidden; }
+  .header { background:#15212e; color:#fff; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:13px 18px; flex-wrap:wrap; }
+  .header .title { display:flex; align-items:center; gap:10px; }
+  .header .dot { width:11px; height:11px; border-radius:3px; background:#2b8a9e; flex:none; }
+  .header .name { font-family:'Source Serif 4',serif; font-weight:600; font-size:16px; }
+  .header .sub { font-weight:400; color:#9fb0bf; font-size:12px; }
+  .headbtn { font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:9px; cursor:pointer; border:1px solid rgba(255,255,255,0.22); background:rgba(255,255,255,0.06); color:#dfe8f0; }
+  .body { display:flex; gap:0; align-items:stretch; flex-wrap:wrap; }
+  .canvasCol { padding:14px; display:flex; flex-direction:column; gap:10px; flex:1 1 500px; min-width:0; }
+  .ctlCol { width:290px; flex:none; border-left:1px solid #e8ebee; padding:15px 17px; display:flex; flex-direction:column; gap:14px; }
+  canvas { display:block; width:100%; height:auto; aspect-ratio:500/360; border-radius:10px; background:#0f1722; }
+  .btnrow { display:flex; gap:7px; align-items:center; flex-wrap:wrap; }
+  .playbtn { display:flex; align-items:center; gap:7px; font-size:12.5px; font-weight:600; padding:8px 16px; border-radius:9px; cursor:pointer; border:1px solid #1c5f6d; background:#1c5f6d; color:#fff; }
+  .resetbtn { font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:9px; cursor:pointer; border:1px solid #d3d8dd; background:#fff; color:#525a63; }
+  .section-label { font-size:10.5px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; color:#9aa2ab; margin-bottom:2px; }
+  .slider-row { display:flex; flex-direction:column; gap:5px; }
+  .slider-row .lbl { display:flex; justify-content:space-between; font-size:12.5px; font-weight:600; }
+  .slider-row .lbl .val { font-family:'JetBrains Mono',monospace; }
+  #f1Slider ~ .lbl, .lbl.f1 .val { color:#c9702e; }
+  input[type=range] { width:100%; }
+  #f1Slider { accent-color:#e0844a; }
+  #f2Slider { accent-color:#3a6ea5; }
+  .results { display:flex; flex-direction:column; gap:8px; }
+  .resrow { display:flex; align-items:center; justify-content:space-between; background:#eaf5f6; border-radius:8px; padding:8px 11px; }
+  .resrow .k { font-family:'Source Serif 4',serif; font-style:italic; font-size:13px; }
+  .resrow .v { font-family:'JetBrains Mono',monospace; font-weight:700; font-size:13px; color:#1c5f6d; }
+  .note { font-size:11.5px; line-height:1.5; color:#6b747c; background:#eaf5f6; border-radius:8px; padding:9px 11px; }
+  .footer-note { text-align:center; padding:14px; font-size:11.5px; color:#8b949d; }
+  .modal-backdrop { position:fixed; inset:0; background:rgba(15,23,34,0.86); backdrop-filter:blur(3px); display:none; align-items:center; justify-content:center; padding:30px; z-index:50; }
+  .modal-backdrop.show { display:flex; }
+  .modal { max-width:760px; width:100%; max-height:90vh; overflow:auto; background:rgba(17,26,38,0.95); border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:22px 26px; color:#eef2f6; }
+  .modal h2 { font-family:'Source Serif 4',serif; font-weight:600; font-size:20px; margin:0 0 16px; display:flex; justify-content:space-between; align-items:baseline; }
+  .modal .close { cursor:pointer; width:26px; height:26px; border-radius:7px; border:1px solid rgba(255,255,255,0.2); background:rgba(255,255,255,0.06); color:#dce6f2; display:flex; align-items:center; justify-content:center; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:0 24px; }
+  .yellow { color:#ffd66b; font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:9px; }
+  .step { background:rgba(255,255,255,0.05); border-radius:10px; padding:10px 13px; margin-bottom:10px; }
+  .step .h { font-size:11.5px; font-weight:700; color:#fff; margin-bottom:4px; }
+  .formula { font-family:'Source Serif 4',serif; font-style:italic; color:#fff; display:block; margin:2px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="header">
+      <div class="title">
+        <span class="dot"></span>
+        <span class="name">Beats <span class="sub">— two close frequencies pulsing in time</span></span>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="headbtn" id="infoBtn">ⓘ Info</button>
+        <button class="headbtn" id="exampleBtn">✎ Worked example</button>
+      </div>
+    </div>
+    <div class="body">
+      <div class="canvasCol">
+        <canvas id="cv" width="500" height="360"></canvas>
+        <div class="btnrow">
+          <button class="playbtn" id="playBtn">🔊 Play both tones</button>
+          <button class="resetbtn" id="resetBtn">↺ Reset</button>
+        </div>
+        <div class="note">Orange and blue are the two pure tones; white is their sum — the actual pressure wave your ear receives. Its envelope (dashed) swells and fades at the beat frequency.</div>
+      </div>
+      <div class="ctlCol">
+        <div class="section-label">Given</div>
+        <div class="slider-row">
+          <div class="lbl f1"><span>Tone 1  f₁</span><span class="val">440 Hz</span></div>
+          <input type="range" id="f1Slider" min="400" max="480" step="1" value="440">
+        </div>
+        <div class="slider-row">
+          <div class="lbl"><span>Tone 2  f₂</span><span class="val" id="f2Val" style="color:#3a6ea5;">444 Hz</span></div>
+          <input type="range" id="f2Slider" min="400" max="480" step="1" value="444">
+        </div>
+        <div class="section-label" style="margin-top:6px;">Results — you compute</div>
+        <div class="results" id="results"></div>
+        <div class="note" id="note"></div>
+      </div>
+    </div>
+    <div class="footer-note">DRAFT — not yet in the sim catalog. Physics: f_beat = |f₁ − f₂|.</div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="infoModal">
+  <div class="modal">
+    <h2>Beats <span class="close" id="infoClose">×</span></h2>
+    <div class="grid2">
+      <div style="padding-right:22px;">
+        <div class="yellow">What this shows</div>
+        <p style="font-size:12.5px;line-height:1.55;">Two tones close in frequency drift in and out of phase. Where they agree the sum is loud; a moment later they cancel and it's quiet — a slow pulsing called beats, at a rate equal to the difference in frequency.</p>
+      </div>
+      <div style="padding:0 22px;border-left:1px solid rgba(255,255,255,0.12);">
+        <div class="yellow">How to use</div>
+        <p style="font-size:12.5px;line-height:1.55;">Set the two frequencies close together and hit play. Watch the envelope on the sum wave, and listen for the "wa-wa-wa" pulsing — count how many pulses per second and compare to f_beat below.</p>
+      </div>
+      <div style="grid-column:1/-1;border-top:1px solid rgba(255,255,255,0.12);margin-top:15px;padding-top:15px;">
+        <div class="yellow">Relevant formulas</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px 28px;">
+          <div><span class="formula" id="f1f"></span><div style="font-size:11.5px;color:#b7c2cd;">two tones of equal amplitude, added</div></div>
+          <div><span class="formula" id="f2f"></span><div style="font-size:11.5px;color:#b7c2cd;">product form — a fast tone inside a slow envelope</div></div>
+          <div><span class="formula" id="f3f"></span><div style="font-size:11.5px;color:#b7c2cd;">beat frequency — how often you hear loud</div></div>
+        </div>
+      </div>
+      <div style="grid-column:1/-1;border-top:1px solid rgba(255,255,255,0.12);margin-top:15px;padding-top:15px;">
+        <div class="yellow">Learn more</div>
+        <div style="font-size:11px;color:#9fb0bf;margin:0 0 5px;">OpenStax <em>University Physics</em> — calculus</div>
+        <ul style="margin:0;padding-left:15px;color:#d7e0e8;font-size:12px;line-height:1.55;">
+          <li><a href="https://openstax.org/books/university-physics-volume-1/pages/17-6-beats" target="_blank" rel="noopener" style="color:#8fc7ff;">Vol 1 · 17.6 Beats</a></li>
+        </ul>
+        <div style="font-size:11px;color:#9fb0bf;margin:9px 0 5px;">OpenStax <em>College Physics</em> — algebra</div>
+        <ul style="margin:0;padding-left:15px;color:#d7e0e8;font-size:12px;line-height:1.55;">
+          <li><a href="https://openstax.org/books/college-physics-2e/pages/17-3-sound-interference-and-resonance-standing-waves-in-air-columns" target="_blank" rel="noopener" style="color:#8fc7ff;">Ch 17 Sound Interference (beats)</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="exampleModal">
+  <div class="modal">
+    <h2>Worked example — tuning a guitar string <span class="close" id="exampleClose">×</span></h2>
+    <p style="font-size:11.5px;line-height:1.5;color:#d9c7d6;margin-bottom:12px;">A guitar string is supposed to ring at 220 Hz. Played against a 220 Hz tuning fork, you hear 3 beats per second. Find the two possible string frequencies, then say which way to turn the tuning peg.</p>
+    <div class="step"><div class="h">1 · The beat frequency only gives the difference</div><span class="formula" id="ex1"></span></div>
+    <div class="step"><div class="h">2 · Two possibilities</div><span class="formula" id="ex2"></span></div>
+    <div class="step"><div class="h">3 · Break the tie — tighten the string a little and listen</div><div style="font-size:11.5px;color:#e7d6e4;">Tightening always raises pitch. If the beat rate rises, the string was the higher one (223 Hz) and you're moving further apart — loosen instead. If the beat rate falls, the string was 217 Hz and tightening is closing the gap — keep going until the beats disappear.</div></div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+let audioCtx = null, osc1 = null, osc2 = null, gain1 = null, gain2 = null;
+let playing = false;
+let startTime = null;
+
+function state() {
+  return { f1: +$('f1Slider').value, f2: +$('f2Slider').value };
+}
+
+function render() {
+  const {f1, f2} = state();
+  document.querySelector('.lbl.f1 .val').textContent = f1 + ' Hz';
+  $('f2Val').textContent = f2 + ' Hz';
+  const fbeat = Math.abs(f1 - f2);
+  const favg = (f1+f2)/2;
+  $('results').innerHTML = `
+    <div class="resrow"><span class="k">f_beat = |f₁ − f₂|</span><span class="v">${fbeat.toFixed(0)} Hz</span></div>
+    <div class="resrow"><span class="k">carrier ≈ (f₁+f₂)/2</span><span class="v">${favg.toFixed(0)} Hz</span></div>
+    <div class="resrow"><span class="k">beat period</span><span class="v">${fbeat>0 ? (1/fbeat).toFixed(2)+' s' : '∞'}</span></div>
+  `;
+  $('note').textContent = fbeat === 0
+    ? 'Same frequency — no beating, the two tones just add to a single steady tone.'
+    : `You should hear about ${fbeat} pulse${fbeat===1?'':'s'} per second.`;
+  if (osc1) osc1.frequency.setTargetAtTime(f1, audioCtx.currentTime, 0.02);
+  if (osc2) osc2.frequency.setTargetAtTime(f2, audioCtx.currentTime, 0.02);
+  draw();
+}
+
+function draw() {
+  const ctx = $('cv').getContext('2d');
+  const W = 500, H = 360;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle = '#0f1722'; ctx.fillRect(0,0,W,H);
+
+  const {f1, f2} = state();
+  const t0 = playing && startTime !== null ? (performance.now() - startTime)/1000 : 0;
+  const windowMs = 0.08; // seconds of waveform shown
+  const rows = [
+    {y: 55, color: '#e0844a', fn: t => Math.sin(2*Math.PI*f1*t), label: 'f₁ = '+f1+' Hz'},
+    {y: 145, color: '#5b9bd5', fn: t => Math.sin(2*Math.PI*f2*t), label: 'f₂ = '+f2+' Hz'},
+  ];
+  const plotW = 460, plotX0 = 20, ampRow = 32;
+  rows.forEach(row => {
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)'; ctx.beginPath(); ctx.moveTo(plotX0, row.y); ctx.lineTo(plotX0+plotW, row.y); ctx.stroke();
+    ctx.strokeStyle = row.color; ctx.lineWidth = 1.8; ctx.beginPath();
+    for (let i=0;i<=plotW;i++){
+      const t = t0 + (i/plotW)*windowMs;
+      const y = row.y - row.fn(t)*ampRow;
+      if (i===0) ctx.moveTo(plotX0+i, y); else ctx.lineTo(plotX0+i, y);
+    }
+    ctx.stroke();
+    ctx.fillStyle = row.color; ctx.font = '11px "JetBrains Mono",monospace'; ctx.textAlign = 'left';
+    ctx.fillText(row.label, plotX0, row.y - ampRow - 8);
+  });
+
+  // sum row
+  const sumY = 260, sumAmp = 70;
+  ctx.strokeStyle = 'rgba(255,255,255,0.08)'; ctx.beginPath(); ctx.moveTo(plotX0, sumY); ctx.lineTo(plotX0+plotW, sumY); ctx.stroke();
+  // envelope (dashed)
+  const fbeat = Math.abs(f1-f2);
+  ctx.strokeStyle = 'rgba(255,214,107,0.55)'; ctx.setLineDash([4,4]); ctx.lineWidth = 1.3;
+  [1,-1].forEach(sign => {
+    ctx.beginPath();
+    for (let i=0;i<=plotW;i++){
+      const t = t0 + (i/plotW)*windowMs;
+      const env = sign * Math.abs(2*Math.cos(2*Math.PI*(fbeat/2)*t)) * (sumAmp/2);
+      const y = sumY - env;
+      if (i===0) ctx.moveTo(plotX0+i,y); else ctx.lineTo(plotX0+i,y);
+    }
+    ctx.stroke();
+  });
+  ctx.setLineDash([]);
+  // sum wave
+  ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.8; ctx.beginPath();
+  for (let i=0;i<=plotW;i++){
+    const t = t0 + (i/plotW)*windowMs;
+    const y = sumY - (rows[0].fn(t)+rows[1].fn(t))*(sumAmp/2);
+    if (i===0) ctx.moveTo(plotX0+i,y); else ctx.lineTo(plotX0+i,y);
+  }
+  ctx.stroke();
+  ctx.fillStyle = '#fff'; ctx.font = '11px "JetBrains Mono",monospace'; ctx.textAlign='left';
+  ctx.fillText('sum = f₁ + f₂  (what you actually hear)', plotX0, sumY - sumAmp - 8);
+
+  // long-time beat pattern strip (real-time seconds, showing multiple beat cycles)
+  const stripY0 = 330, stripH = 24;
+  ctx.strokeStyle='rgba(255,255,255,0.15)'; ctx.strokeRect(plotX0, stripY0-stripH/2-2, plotW, stripH+4);
+  const stripWindow = 3.0; // seconds
+  ctx.beginPath();
+  for (let i=0;i<=plotW;i++){
+    const t = t0 - windowMs + (i/plotW)*stripWindow;
+    const env = Math.abs(Math.cos(2*Math.PI*(fbeat/2)*t));
+    const y = stripY0 + stripH/2 - env*stripH;
+    if (i===0) ctx.moveTo(plotX0+i,y); else ctx.lineTo(plotX0+i,y);
+  }
+  ctx.strokeStyle = '#ffd66b'; ctx.lineWidth=1.5; ctx.stroke();
+  ctx.fillStyle = '#8b949d'; ctx.font='10px "Source Sans 3",sans-serif';
+  ctx.fillText('loudness envelope over '+stripWindow.toFixed(0)+' s (real time)', plotX0, stripY0+stripH/2+16);
+}
+
+let rafId = null;
+function loop() {
+  if (!playing) return;
+  draw();
+  rafId = requestAnimationFrame(loop);
+}
+
+$('playBtn').addEventListener('click', () => {
+  if (!playing) {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const {f1, f2} = state();
+    osc1 = audioCtx.createOscillator(); gain1 = audioCtx.createGain();
+    osc2 = audioCtx.createOscillator(); gain2 = audioCtx.createGain();
+    osc1.type = 'sine'; osc2.type = 'sine';
+    osc1.frequency.value = f1; osc2.frequency.value = f2;
+    gain1.gain.value = 0.06; gain2.gain.value = 0.06;
+    osc1.connect(gain1); gain1.connect(audioCtx.destination);
+    osc2.connect(gain2); gain2.connect(audioCtx.destination);
+    osc1.start(); osc2.start();
+    playing = true; startTime = performance.now();
+    $('playBtn').textContent = '🔇 Stop';
+    loop();
+  } else {
+    playing = false;
+    if (rafId) cancelAnimationFrame(rafId);
+    [osc1,osc2].forEach(o => { try{o.stop(); o.disconnect();}catch(e){} });
+    osc1 = osc2 = null;
+    $('playBtn').textContent = '🔊 Play both tones';
+    draw();
+  }
+});
+$('resetBtn').addEventListener('click', () => {
+  $('f1Slider').value = 440; $('f2Slider').value = 444;
+  render();
+});
+['f1Slider','f2Slider'].forEach(id => $(id).addEventListener('input', render));
+
+function katexAll() {
+  const specs = [
+    ['f1f', 'y = \\sin(2\\pi f_1 t) + \\sin(2\\pi f_2 t)'],
+    ['f2f', 'y = 2\\cos\\!\\left(2\\pi\\tfrac{f_1-f_2}{2}t\\right)\\sin\\!\\left(2\\pi\\tfrac{f_1+f_2}{2}t\\right)'],
+    ['f3f', 'f_{beat} = |f_1 - f_2|'],
+    ['ex1', 'f_{beat} = |f_{string} - 220| = 3\\ \\text{Hz}'],
+    ['ex2', 'f_{string} = 217\\ \\text{Hz} \\quad\\text{or}\\quad 223\\ \\text{Hz}'],
+  ];
+  const hasKatex = typeof window.katex !== 'undefined';
+  for (const [id, tex] of specs) {
+    if (hasKatex) { try { katex.render(tex, $(id), {throwOnError:false}); continue; } catch(e) {} }
+    $(id).textContent = tex.replace(/\\text\{([^}]*)\}/g,'$1').replace(/\\tfrac\{([^}]*)\}\{([^}]*)\}/g,'($1)/($2)').replace(/\\left|\\right/g,'').replace(/\\cos|\\sin/g, m=>m.slice(1)).replace(/\\pi/g,'π').replace(/\\quad/g,'  ').replace(/[{}\\]/g,'');
+  }
+}
+
+$('infoBtn').addEventListener('click', () => $('infoModal').classList.add('show'));
+$('infoClose').addEventListener('click', () => $('infoModal').classList.remove('show'));
+$('infoModal').addEventListener('click', e => { if (e.target.id==='infoModal') $('infoModal').classList.remove('show'); });
+$('exampleBtn').addEventListener('click', () => $('exampleModal').classList.add('show'));
+$('exampleClose').addEventListener('click', () => $('exampleModal').classList.remove('show'));
+$('exampleModal').addEventListener('click', e => { if (e.target.id==='exampleModal') $('exampleModal').classList.remove('show'); });
+
+window.addEventListener('load', () => { katexAll(); render(); });
+</script>
+</body>
+</html>
