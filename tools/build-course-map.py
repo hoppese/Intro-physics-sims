@@ -83,12 +83,24 @@ def main():
         if vlit:
             new_chunk = re.sub(r"video:\{[^{}]*\}", "video:" + vlit, new_chunk, count=1)
 
-        # sim display name (only if the day features a sim inline)
+        # sim: display name + slug (only if the day features a sim inline).
+        # The slug is the topic's primary sim dir — the same one the class-prep
+        # for that day embeds — so "Open simulation" lands on the real sim,
+        # not the catalog.
         if "sim:sim(" in new_chunk:
             primary = topic["sims"][0]
             title = TOPICS["sim_titles"].get(primary, primary)
             title_js = title.replace("\\", "\\\\").replace("'", "\\'")
-            new_chunk = re.sub(r"sim:sim\('[^']*'", f"sim:sim('{title_js}'", new_chunk, count=1)
+
+            def _sub(mo, _t=title_js, _s=primary):
+                note = mo.group(1) or "''"
+                return f"sim:sim('{_t}',{note},'{_s}')"
+
+            new_chunk = re.sub(
+                r"sim:sim\('(?:[^'\\]|\\.)*'"          # name
+                r"(?:,('(?:[^'\\]|\\.)*'))?"            # optional note  -> group 1
+                r"(?:,'(?:[^'\\]|\\.)*')?\)",           # optional stale slug
+                _sub, new_chunk, count=1)
 
         if new_chunk != chunk:
             parts[idx] = new_chunk
