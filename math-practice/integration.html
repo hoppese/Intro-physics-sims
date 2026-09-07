@@ -292,21 +292,22 @@ function checkAnswer() {
 }
 
 function buildSteps() {
-  const p = problem;
+  const p = problem, v = p.v;
   let lines = [];
   if (p.kind === 'polycoef') {
-    lines.push(`∫${p.a}x² dx = ${p.a}/3 x³ = ${fmtNum(p.capA)}x³`);
-    lines.push(`∫${p.b}x dx = ${p.b}/2 x² = ${fmtNum(p.capB)}x²`);
-    lines.push(`∫${p.c} dx = ${p.c}x`);
-    lines.push(`F(x) = ${fmtNum(p.capA)}x³ + ${fmtNum(p.capB)}x² + ${fmtNum(p.capC)}x  (+ C)`);
+    lines.push(`∫ ${ico(p.a, v + '²')} d${v} = ${fmtNum(p.capA)}${v}³`);
+    lines.push(`∫ ${ico(p.b, v)} d${v} = ${fmtNum(p.capB)}${v}²`);
+    lines.push(`∫ ${p.c} d${v} = ${p.c}${v}`);
+    lines.push(`F(${v}) = ${fmtNum(p.capA)}${v}³ + ${fmtNum(p.capB)}${v}² + ${fmtNum(p.capC)}${v}  (+ C)`);
   } else if (p.kind === 'definitePoly') {
-    lines.push(`F(x) = ${p.a}/3 x³ + ${p.b}/2 x² + ${p.c}x`);
+    lines.push(`F(${v}) = ${fmtNum(p.a/3)}${v}³ + ${fmtNum(p.b/2)}${v}² + ${p.c}${v}`);
     lines.push(`F(${p.x2}) − F(${p.x1}) = ${fmtNum(p.ans)}`);
   } else if (p.kind === 'definiteChain') {
-    lines.push(`F(x) = ${p.a}(${p.b}x${fmtSigned(p.c)})^${p.n+1} / (${p.b}·${p.n+1})  [reverse chain rule]`);
+    lines.push(`F(${v}) = ${p.a}(${ico(p.b, v)}${fmtSigned(p.c)})^${p.n+1} / (${p.b}·${p.n+1})   [reverse chain rule]`);
     lines.push(`F(${p.x2}) − F(${p.x1}) = ${fmtNum(p.ans)}`);
   } else {
-    const ruleTxt = p.type==='sin' ? `F(x) = −A/k·cos(kx)` : (p.type==='cos' ? `F(x) = A/k·sin(kx)` : `F(x) = A/k·e^(kx)`);
+    const kv = p.k === 1 ? v : p.k + v;
+    const ruleTxt = p.type==='sin' ? `F(${v}) = −(A/k)·cos(${kv})` : (p.type==='cos' ? `F(${v}) = (A/k)·sin(${kv})` : `F(${v}) = (A/k)·e^(${kv})`);
     lines.push(ruleTxt);
     lines.push(`F(${radLabel(p.x2)}) − F(${radLabel(p.x1)}) = ${fmtNum(p.ans)}`);
   }

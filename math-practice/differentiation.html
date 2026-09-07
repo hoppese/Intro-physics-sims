@@ -257,8 +257,8 @@ function genProblem(lvl) {
       fields:[ { id:'v', label:`${fn}'(${radLabel(x0)})`, want:ans, tol:Math.max(0.05, Math.abs(ans)*0.02) } ],
       steps:[
         type === 'sin'
-          ? `${fn}'(${v}) = ${A}\\cdot${k}\\cos(${k}${v}) = ${A*k}\\cos(${k}${v})`
-          : `${fn}'(${v}) = -${A}\\cdot${k}\\sin(${k}${v}) = ${-A*k}\\sin(${k}${v})`,
+          ? `${fn}'(${v}) = ${co(A*k, '')}\\cos(${kv})`
+          : `${fn}'(${v}) = ${co(-A*k, '')}\\sin(${kv})`,
         `${fn}'(${radLabel(x0)}) = ${fmt(ans)}`,
       ],
       f: x => type === 'sin' ? A*Math.sin(k*x) : A*Math.cos(k*x),
@@ -279,8 +279,8 @@ function genProblem(lvl) {
         ask:`Find ${fn}'(${v}) at ${v} = ${x0}.`,
         fields:[ { id:'v', label:`${fn}'(${x0})`, want:ans, tol:Math.max(0.05, Math.abs(ans)*0.02) } ],
         steps:[
-          `${fn}'(${v}) = ${A}\\cdot${k}\\,e^{${k}${v}} = ${A*k}e^{${k}${v}}`,
-          `${fn}'(${x0}) = ${A*k}e^{${k*x0}} = ${fmt(ans)}`,
+          `${fn}'(${v}) = (${A})(${k})\\,e^{${kv}} = ${co(A*k,'')}e^{${kv}}`,
+          `${fn}'(${x0}) = ${fmt(A*k)}\\,e^{${fmt(k*x0)}} = ${fmt(ans)}`,
         ],
         f: x => A*Math.exp(k*x),
       };

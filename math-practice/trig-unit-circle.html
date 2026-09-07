@@ -164,24 +164,26 @@ function quadrantOf(deg) {
   if (d < 90) return 'I'; if (d < 180) return 'II'; if (d < 270) return 'III'; return 'IV';
 }
 
+const ANGSYM = ['\u03b8','\u03c6','\u03b1','\u03b2'];
 function genProblem(lvl) {
+  const sym = ANGSYM[Math.floor(Math.random()*ANGSYM.length)];
   if (lvl === 1) {
     const deg = pick(ALL_SPECIAL);
-    return { type:'given-angle', deg, unit:'deg', ask:['sin','cos'] };
+    return { sym, type:'given-angle', deg, unit:'deg', ask:['sin','cos'] };
   }
   if (lvl === 2) {
     const deg = pick(NO_TAN_UNDEF);
-    return { type:'given-angle', deg, unit:'deg', ask:['sin','cos','tan'] };
+    return { sym, type:'given-angle', deg, unit:'deg', ask:['sin','cos','tan'] };
   }
   if (lvl === 3) {
     const deg = pick(NO_TAN_UNDEF);
-    return { type:'given-angle', deg, unit:'rad', ask:['sin','cos','tan'] };
+    return { sym, type:'given-angle', deg, unit:'rad', ask:['sin','cos','tan'] };
   }
   // level 4: given a trig value + quadrant, find the angle
   const deg = pick(ALL_SPECIAL.filter(a => quadrantOf(a) !== 'axis'));
   const fn = pick(['sin','cos']);
   const val = +Math[fn](deg*Math.PI/180).toFixed(4);
-  return { type:'given-value', deg, fn, val, quadrant: quadrantOf(deg) };
+  return { sym, type:'given-value', deg, fn, val, quadrant: quadrantOf(deg) };
 }
 
 function levelTrack() {
@@ -200,15 +202,15 @@ function trueVal(fn, deg) {
 
 function buildAnswerFields() {
   if (problem.type === 'given-value') {
-    $('answerSectionLabel').textContent = 'Your answer — θ in degrees [0, 360)';
+    $('answerSectionLabel').textContent = `Your answer — ${problem.sym} in degrees [0, 360)`;
     $('answerFields').className = 'ans-grid single';
-    $('answerFields').innerHTML = `<div class="ans-field"><label>θ (degrees)</label><input type="number" step="any" id="ansTheta"></div>`;
+    $('answerFields').innerHTML = `<div class="ans-field"><label>${problem.sym} (degrees)</label><input type="number" step="any" id="ansTheta"></div>`;
     return;
   }
   const n = problem.ask.length;
   $('answerSectionLabel').textContent = 'Your answer';
   $('answerFields').className = 'ans-grid' + (n===3?' triple':(n===1?' single':''));
-  $('answerFields').innerHTML = problem.ask.map(fn => `<div class="ans-field"><label>${fn}θ</label><input type="number" step="any" id="ans_${fn}"></div>`).join('');
+  $('answerFields').innerHTML = problem.ask.map(fn => `<div class="ans-field"><label>${fn} ${problem.sym}</label><input type="number" step="any" id="ans_${fn}"></div>`).join('');
 }
 
 function newProblem() {
@@ -222,10 +224,10 @@ function newProblem() {
   $('checkBtn').disabled = false;
 
   if (problem.type === 'given-angle') {
-    const angleStr = problem.unit === 'rad' ? `θ = ${radFracString(problem.deg)} rad` : `θ = ${problem.deg}°`;
-    $('problemBox').innerHTML = `<div style="font-weight:600;">${angleStr}</div><div style="margin-top:6px;">Find: ${problem.ask.map(f=>f+'θ').join(', ')}</div>`;
+    const angleStr = problem.unit === 'rad' ? `${problem.sym} = ${radFracString(problem.deg)} rad` : `${problem.sym} = ${problem.deg}°`;
+    $('problemBox').innerHTML = `<div style="font-weight:600;">${angleStr}</div><div style="margin-top:6px;">Find: ${problem.ask.map(f=>f+' '+problem.sym).join(', ')}</div>`;
   } else {
-    $('problemBox').innerHTML = `<div style="font-weight:600;">${problem.fn}θ = ${problem.val}</div><div style="margin-top:6px;">θ is in Quadrant ${problem.quadrant}</div><div style="margin-top:6px;">Find θ (degrees, 0–360)</div>`;
+    $('problemBox').innerHTML = `<div style="font-weight:600;">${problem.fn} ${problem.sym} = ${problem.val}</div><div style="margin-top:6px;">${problem.sym} is in Quadrant ${problem.quadrant}</div><div style="margin-top:6px;">Find ${problem.sym} (degrees, 0–360)</div>`;
   }
   buildAnswerFields();
   levelTrack();
@@ -260,8 +262,8 @@ function checkAnswer() {
     streak = 0; wrongStreak++;
     fb.classList.add('wrong'); fb.classList.remove('correct');
     let ansText;
-    if (problem.type === 'given-value') ansText = `θ = ${problem.deg}°`;
-    else ansText = problem.ask.map(fn => `${fn}θ = ${trueVal(fn,problem.deg).toFixed(3)}`).join(', ');
+    if (problem.type === 'given-value') ansText = `${problem.sym} = ${problem.deg}°`;
+    else ansText = problem.ask.map(fn => `${fn} ${problem.sym} = ${trueVal(fn,problem.deg).toFixed(3)}`).join(', ');
     fb.textContent = `✗ Not quite. Correct: ${ansText}.`;
     if (wrongStreak >= 2 && level > 1) { level--; wrongStreak = 0; }
   }
@@ -273,17 +275,17 @@ function checkAnswer() {
 function buildSteps() {
   let html = '';
   if (problem.type === 'given-angle') {
-    if (problem.unit === 'rad') html += `<div class="formula">θ = ${radFracString(problem.deg)} rad = ${problem.deg}°</div>`;
+    if (problem.unit === 'rad') html += `<div class="formula">${problem.sym} = ${radFracString(problem.deg)} rad = ${problem.deg}°</div>`;
     for (const fn of problem.ask) {
       if (fn === 'tan') {
-        html += `<div class="formula">tanθ = sinθ/cosθ = ${trueVal('sin',problem.deg).toFixed(3)} / ${trueVal('cos',problem.deg).toFixed(3)} = ${trueVal('tan',problem.deg).toFixed(3)}</div>`;
+        html += `<div class="formula">tan ${problem.sym} = sin/cos = ${trueVal('sin',problem.deg).toFixed(3)} / ${trueVal('cos',problem.deg).toFixed(3)} = ${trueVal('tan',problem.deg).toFixed(3)}</div>`;
       } else {
         html += `<div class="formula">${fn}(${problem.deg}°) = ${trueVal(fn,problem.deg).toFixed(3)}</div>`;
       }
     }
   } else {
     html += `<div class="formula">${problem.fn}⁻¹(${problem.val}) gives a reference angle</div>`;
-    html += `<div class="formula">Placed in Quadrant ${problem.quadrant} (where ${problem.fn} is ${problem.val>=0?'positive':'negative'}), θ = ${problem.deg}°</div>`;
+    html += `<div class="formula">Placed in Quadrant ${problem.quadrant} (where ${problem.fn} is ${problem.val>=0?'positive':'negative'}), ${problem.sym} = ${problem.deg}°</div>`;
   }
   $('steps').innerHTML = html;
 }
@@ -343,16 +345,16 @@ function draw() {
   ctx.font = '12px "Source Sans 3",sans-serif';
   // θ — just above the +x axis, at the start of the sweep
   ctx.fillStyle = '#cfc3ef'; ctx.textAlign = 'center';
-  ctx.fillText('θ', cx + 0.30 * R, cy - 12);
+  ctx.fillText(problem.sym, cx + 0.30 * R, cy - 12);
   // cosθ — on the horizontal projection line (height py), midway to the y-axis
   if (Math.abs(px - cx) > 22) {
     ctx.fillStyle = '#ff9f5d'; ctx.textAlign = 'center';
-    ctx.fillText('cosθ', (px + cx) / 2, py + (py < cy ? -8 : 18));
+    ctx.fillText('cos '+problem.sym, (px + cx) / 2, py + (py < cy ? -8 : 18));
   }
   // sinθ — beside the vertical projection line (at x px), midway to the x-axis
   if (Math.abs(py - cy) > 22) {
     ctx.fillStyle = '#5da9ff'; ctx.textAlign = px > cx ? 'left' : 'right';
-    ctx.fillText('sinθ', px + (px > cx ? 8 : -8), (py + cy) / 2 + 4);
+    ctx.fillText('sin '+problem.sym, px + (px > cx ? 8 : -8), (py + cy) / 2 + 4);
   }
 }
 
@@ -383,7 +385,7 @@ if (window.MP) {
     setLevel: n => { level = n; newProblem(); },
     currentLevel: () => level,
     nextProblem: newProblem,
-    answerText: () => { if(!problem) return '\u2014'; return problem.type==='given-value' ? ('\u03b8='+problem.deg+'\u00b0') : problem.ask.map(fn=>fn+'\u03b8='+trueVal(fn,problem.deg).toFixed(3)).join('  '); },
+    answerText: () => { if(!problem) return '\u2014'; return problem.type==='given-value' ? (problem.sym+'='+problem.deg+'\u00b0') : problem.ask.map(fn=>fn+problem.sym+'='+trueVal(fn,problem.deg).toFixed(3)).join('  '); },
   });
 }
 window.addEventListener('load', () => { katexAll(); newProblem(); });

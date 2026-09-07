@@ -145,6 +145,7 @@ function randInt(lo, hi) { return Math.floor(Math.random()*(hi-lo+1))+lo; }
 function fmtNum(n) { return Number.isInteger(+n.toFixed(4)) ? String(Math.round(n)) : n.toFixed(2); }
 
 const TRIPLES = [[3,4,5],[5,12,13],[6,8,10],[8,15,17],[7,24,25],[9,12,15]];
+const LEGSETS = [['a','b','c'],['p','q','r'],['d','e','f'],['x','y','z'],['m','n','s'],['j','k','l']];
 
 function genProblem(lvl) {
   if (lvl === 1) {
@@ -152,7 +153,8 @@ function genProblem(lvl) {
     const k = randInt(1,3);
     const a=a0*k, b=b0*k, c=c0*k;
     const findHyp = Math.random() < 0.5;
-    return { kind:'pyth', a, b, c, findHyp, ans: findHyp ? c : b };
+    const L = LEGSETS[randInt(0,LEGSETS.length-1)];
+    return { kind:'pyth', a, b, c, findHyp, L, ans: findHyp ? c : b };
   }
   if (lvl === 2) {
     const shape = ['rectangle','triangle','circle'][randInt(0,2)];
@@ -200,8 +202,9 @@ function levelTrack() {
 function equationText() {
   const p = problem;
   if (p.kind === 'pyth') {
-    if (p.findHyp) return `Right triangle, legs a = ${p.a}, b = ${p.b}.\nFind the hypotenuse c.`;
-    return `Right triangle, leg a = ${p.a}, hypotenuse c = ${p.c}.\nFind the other leg b.`;
+    const [la,lb,lc] = p.L;
+    if (p.findHyp) return `Right triangle, legs ${la} = ${p.a}, ${lb} = ${p.b}.\nFind the hypotenuse ${lc}.`;
+    return `Right triangle, leg ${la} = ${p.a}, hypotenuse ${lc} = ${p.c}.\nFind the other leg ${lb}.`;
   }
   if (p.kind === 'shape2d') {
     if (p.shape === 'rectangle') return `Rectangle, width = ${p.w}, height = ${p.h}.\nFind the ${p.askArea?'area':'perimeter'}.`;
@@ -267,8 +270,9 @@ function buildSteps() {
   const p = problem;
   let lines = [];
   if (p.kind === 'pyth') {
-    if (p.findHyp) { lines.push(`c = √(a² + b²) = √(${p.a}² + ${p.b}²) = ${fmtNum(p.ans)}`); }
-    else { lines.push(`b = √(c² − a²) = √(${p.c}² − ${p.a}²) = ${fmtNum(p.ans)}`); }
+    const [la,lb,lc] = p.L;
+    if (p.findHyp) { lines.push(`${lc} = √(${la}² + ${lb}²) = √(${p.a}² + ${p.b}²) = ${fmtNum(p.ans)}`); }
+    else { lines.push(`${lb} = √(${lc}² − ${la}²) = √(${p.c}² − ${p.a}²) = ${fmtNum(p.ans)}`); }
   } else if (p.kind === 'shape2d') {
     if (p.shape === 'rectangle') lines.push(p.askArea ? `Area = w·h = ${p.w}·${p.h} = ${fmtNum(p.ans)}` : `Perimeter = 2(w+h) = 2(${p.w}+${p.h}) = ${fmtNum(p.ans)}`);
     else if (p.shape === 'triangle') lines.push(`Area = ½·base·height = ½·${p.base}·${p.height} = ${fmtNum(p.ans)}`);
@@ -317,13 +321,14 @@ function draw() {
     ctx.strokeStyle = '#5da9ff'; ctx.lineWidth = 2.4;
     ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(ox+ax,oy); ctx.lineTo(ox+ax,oy-by); ctx.closePath(); ctx.stroke();
     ctx.strokeStyle='#fff'; ctx.lineWidth=1.4; ctx.strokeRect(ox+ax-10,oy-10,10,10);
-    ctx.fillStyle = '#5da9ff'; ctx.fillText(`a=${p.a}`, ox+ax/2, oy+20);
+    const [la,lb,lc] = p.L;
+    ctx.fillStyle = '#5da9ff'; ctx.fillText(`${la}=${p.a}`, ox+ax/2, oy+20);
     // b — given when finding the hypotenuse, unknown otherwise
     ctx.fillStyle = p.findHyp ? '#5da9ff' : '#ff9f5d';
-    ctx.fillText(p.findHyp ? `b=${p.b}` : (checked ? `b=${fmtNum(p.ans)}` : 'b = ?'), ox+ax+26, oy-by/2);
+    ctx.fillText(p.findHyp ? `${lb}=${p.b}` : (checked ? `${lb}=${fmtNum(p.ans)}` : `${lb} = ?`), ox+ax+26, oy-by/2);
     // c — unknown when finding the hypotenuse, given otherwise
     ctx.fillStyle = p.findHyp ? '#ff9f5d' : '#5dffa0';
-    ctx.fillText(p.findHyp ? (checked ? `c=${fmtNum(p.ans)}` : 'c = ?') : `c=${p.c}`, ox+ax/2-20, oy-by/2-10);
+    ctx.fillText(p.findHyp ? (checked ? `${lc}=${fmtNum(p.ans)}` : `${lc} = ?`) : `${lc}=${p.c}`, ox+ax/2-20, oy-by/2-10);
   } else if (p.kind === 'shape2d') {
     ctx.lineWidth = 2.4;
     if (p.shape === 'rectangle') {
