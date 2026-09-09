@@ -55,8 +55,8 @@
     "charge-conductors-insulators": {
       "title": "Charges, Insulators & Conductors",
       "knight": "22.1–22.3",
-      "videos": [{ "id": "TFlVWf8JX4A", "status": "unv" }],
-      "sims": ["electroscope", "e-fields-conductors-and-insulators"]
+      "videos": [{ "id": "TFlVWf8JX4A", "status": "ok" }],
+      "sims": ["e-fields-conductors-and-insulators", "electroscope"]
     },
     "coulomb-field": {
       "title": "Coulomb's Law & the Electric Field",
