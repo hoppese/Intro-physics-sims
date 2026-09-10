@@ -1,0 +1,818 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fourier Series — Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="mp-tools.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<style>
+  * { box-sizing: border-box; }
+  body { margin:0; background:#eef0f4; font-family:'Source Sans 3',system-ui,sans-serif; color:#20262b; }
+  .wrap { max-width:1000px; margin:0 auto; padding:20px; }
+  .card { background:#fff; border:1px solid #e1e3ea; border-radius:12px; overflow:hidden; }
+  .header { background:#241b3d; color:#fff; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:13px 18px; flex-wrap:wrap; }
+  .header .title { display:flex; align-items:center; gap:10px; }
+  .header .dot { width:11px; height:11px; border-radius:3px; background:#6a55c9; flex:none; }
+  .header .name { font-family:'Source Serif 4',serif; font-weight:600; font-size:16px; }
+  .header .sub { font-weight:400; color:#a99fce; font-size:12px; }
+  .header .right { display:flex; gap:8px; align-items:center; }
+  .headbtn { font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:9px; cursor:pointer; border:1px solid rgba(255,255,255,0.22); background:rgba(255,255,255,0.06); color:#e6e1f5; }
+  .modeseg { display:flex; border:1px solid rgba(255,255,255,0.22); border-radius:9px; overflow:hidden; }
+  .modeseg button { font-size:12px; font-weight:700; letter-spacing:0.03em; padding:7px 13px; cursor:pointer; border:none; background:transparent; color:#c9bff0; }
+  .modeseg button.on { background:#6a55c9; color:#fff; }
+  .track-pill { font-size:10.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.18); border-radius:20px; padding:4px 10px; color:#cfc3ef; }
+  .body { display:flex; gap:0; align-items:stretch; flex-wrap:wrap; }
+  .canvasCol { padding:14px; display:flex; flex-direction:column; gap:10px; flex:1 1 520px; min-width:0; }
+  .ctlCol { width:340px; flex:none; border-left:1px solid #e8e9ee; padding:15px 17px; display:flex; flex-direction:column; gap:12px; }
+  canvas { display:block; width:100%; height:auto; aspect-ratio:1.35/1; border-radius:10px; background:#181225; }
+  .section-label { font-size:10.5px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; color:#9aa2ab; margin-bottom:4px; }
+  .problem-box { background:#f4f1fb; border-radius:9px; padding:12px 13px; font-size:14px; line-height:1.7; }
+  .problem-box .ask { margin-top:9px; font-weight:600; }
+  .ans-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .ans-grid.triple { grid-template-columns:1fr 1fr 1fr; }
+  .ans-grid.single { grid-template-columns:1fr; }
+  .ans-field label { font-size:11px; font-weight:600; color:#525a63; display:block; margin-bottom:3px; }
+  .ans-field input { width:100%; font:600 14px 'JetBrains Mono',monospace; padding:7px 9px; border-radius:7px; border:1px solid #d3d3dc; color:#241b3d; }
+  .ans-field input:focus { outline:2px solid #6a55c9; border-color:#6a55c9; }
+  .choice-row { display:flex; flex-wrap:wrap; gap:6px; }
+  .choice-row button { font-size:12px; font-weight:600; padding:7px 12px; border-radius:8px; cursor:pointer; border:1px solid #d3d3dc; background:#fff; color:#3a414a; }
+  .choice-row button.sel { border-color:#6a55c9; background:#efeafb; color:#4b3a99; }
+  .choice-row button:disabled { opacity:0.5; cursor:default; }
+  .ans-hint { font-size:11px; color:#9aa2ab; }
+  .btnrow { display:flex; gap:7px; flex-wrap:wrap; }
+  .checkbtn { font-size:12.5px; font-weight:600; padding:9px 18px; border-radius:9px; cursor:pointer; border:1px solid #4b3a99; background:#4b3a99; color:#fff; }
+  .checkbtn:disabled { opacity:0.45; cursor:default; }
+  .nextbtn { font-size:12.5px; font-weight:600; padding:9px 16px; border-radius:9px; cursor:pointer; border:1px solid #d3d8dd; background:#fff; color:#525a63; }
+  .feedback { border-radius:9px; padding:10px 12px; font-size:13px; font-weight:600; display:none; }
+  .feedback.show { display:block; }
+  .feedback.correct { background:#e5f6ec; color:#1f7a45; }
+  .feedback.wrong { background:#fbebea; color:#a53a30; }
+  .feedback.neutral { background:#f0eef6; color:#5b5470; }
+  .stepsbtn { font-size:12px; font-weight:600; color:#4b3a99; cursor:pointer; background:none; border:none; padding:0; text-align:left; text-decoration:underline; align-self:flex-start; }
+  .steps { display:none; background:#f4f1fb; border-radius:9px; padding:11px 13px; font-size:13px; line-height:1.85; margin-top:2px; }
+  .steps.show { display:block; }
+  .steps .ln { display:block; margin:3px 0; }
+  .stat-row { display:flex; gap:10px; }
+  .stat { flex:1; background:#f4f1fb; border-radius:9px; padding:8px 10px; text-align:center; }
+  .stat .n { font-family:'JetBrains Mono',monospace; font-weight:700; font-size:17px; color:#4b3a99; }
+  .stat .l { font-size:10px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; color:#8b8fa0; }
+  .level-track { display:flex; gap:4px; }
+  .level-track .seg { flex:1; height:5px; border-radius:3px; background:#e3e1ee; }
+  .level-track .seg.on { background:#6a55c9; }
+  .wave-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; }
+  .wave-grid button { font-size:11.5px; font-weight:600; padding:8px 4px; border-radius:8px; cursor:pointer; border:1px solid #d3d3dc; background:#fff; color:#3a414a; }
+  .wave-grid button.on { border-color:#6a55c9; background:#efeafb; color:#4b3a99; }
+  .field-row { display:flex; align-items:center; gap:8px; }
+  .field-row label { font-size:11px; font-weight:600; color:#525a63; white-space:nowrap; }
+  .field-row input[type=text], .field-row input[type=number] { flex:1; min-width:0; font:600 13px 'JetBrains Mono',monospace; padding:6px 8px; border-radius:7px; border:1px solid #d3d3dc; color:#241b3d; }
+  .field-row input:focus { outline:2px solid #6a55c9; border-color:#6a55c9; }
+  .slider-row { display:flex; align-items:center; gap:9px; }
+  .slider-row span { font-size:11px; font-family:'JetBrains Mono',monospace; color:#525a63; white-space:nowrap; }
+  .slider-row input[type=range] { flex:1; }
+  .coef-table { font-family:'JetBrains Mono',monospace; font-size:11.5px; background:#f4f1fb; border-radius:9px; padding:10px 12px; line-height:1.6; color:#3a414a; overflow-x:auto; }
+  .coef-table .hd { color:#8b8fa0; font-weight:700; }
+  .metric-row { display:flex; gap:10px; }
+  .metric { flex:1; background:#f4f1fb; border-radius:9px; padding:7px 9px; text-align:center; }
+  .metric .n { font-family:'JetBrains Mono',monospace; font-weight:700; font-size:14px; color:#4b3a99; }
+  .metric .l { font-size:9.5px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:#8b8fa0; }
+  .err { font-size:11px; color:#a53a30; min-height:14px; }
+  .footer-note { text-align:center; padding:14px; font-size:11.5px; color:#8b949d; }
+  .modal-backdrop { position:fixed; inset:0; background:rgba(15,10,26,0.86); backdrop-filter:blur(3px); display:none; align-items:center; justify-content:center; padding:30px; z-index:50; }
+  .modal-backdrop.show { display:flex; }
+  .modal { max-width:720px; width:100%; max-height:90vh; overflow:auto; background:rgba(24,18,37,0.96); border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:22px 26px; color:#eee8f6; }
+  .modal h2 { font-family:'Source Serif 4',serif; font-weight:600; font-size:20px; margin:0 0 16px; display:flex; justify-content:space-between; align-items:baseline; }
+  .modal .close { cursor:pointer; width:26px; height:26px; border-radius:7px; border:1px solid rgba(255,255,255,0.2); background:rgba(255,255,255,0.06); color:#dce6f2; display:flex; align-items:center; justify-content:center; }
+  .modal p { font-size:12.5px; line-height:1.55; }
+  .modal .yellow { color:#e5c86b; font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin:14px 0 7px; }
+  .modal .lvl { font-size:12.5px; line-height:1.65; }
+  .modal .lvl b { color:#fff; }
+  [hidden] { display:none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="dc-root">
+  <div class="card">
+    <div class="header">
+      <div class="title">
+        <span class="dot"></span>
+        <span class="name">Fourier Series <span class="sub">— math practice</span></span>
+      </div>
+      <div class="right">
+        <div class="modeseg" id="modeSeg">
+          <button data-mode="explore" class="on">Explore</button>
+          <button data-mode="practice">Practice</button>
+        </div>
+        <span class="track-pill" id="levelPill" hidden>Level 1</span>
+        <button class="headbtn" id="infoBtn">ⓘ Info</button>
+      </div>
+    </div>
+    <div class="body">
+      <div class="canvasCol">
+        <canvas id="cv" width="620" height="460" data-mp-canvas></canvas>
+        <div class="stat-row" id="statRow" hidden>
+          <div class="stat"><div class="n" id="streakN">0</div><div class="l">Streak</div></div>
+          <div class="stat"><div class="n" id="correctN">0</div><div class="l">Correct</div></div>
+          <div class="stat"><div class="n" id="totalN">0</div><div class="l">Attempted</div></div>
+        </div>
+        <div class="level-track" id="levelTrack" hidden></div>
+        <div class="metric-row" id="metricRow">
+          <div class="metric"><div class="n" id="mW0">1.00</div><div class="l">&omega;&#8320;</div></div>
+          <div class="metric"><div class="n" id="mRms">—</div><div class="l">RMS error</div></div>
+          <div class="metric"><div class="n" id="mMax">—</div><div class="l">max |residual|</div></div>
+        </div>
+      </div>
+
+      <!-- EXPLORE CONTROLS -->
+      <div class="ctlCol" id="exploreCol">
+        <div class="section-label">Waveform</div>
+        <div class="wave-grid" id="waveGrid"></div>
+        <div class="field-row">
+          <label for="customF">f(x) =</label>
+          <input type="text" id="customF" placeholder="x^2, abs(sin(x)), …" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="field-row">
+          <label for="customT">period</label>
+          <input type="text" id="customT" value="2*pi" autocomplete="off" spellcheck="false">
+          <button class="nextbtn" id="plotBtn" style="padding:6px 12px;">Plot</button>
+        </div>
+        <div class="err" id="customErr"></div>
+        <div class="slider-row">
+          <span>N = <b id="nVal">6</b></span>
+          <input type="range" id="nSlider" min="1" max="40" value="6">
+        </div>
+        <div class="section-label" style="margin-top:2px;">Fourier coefficients</div>
+        <div class="coef-table" id="coefTable"></div>
+      </div>
+
+      <!-- PRACTICE CONTROLS -->
+      <div class="ctlCol" id="practiceCol" hidden>
+        <div class="section-label" id="taskLabel">Task</div>
+        <div class="problem-box" id="problemBox"></div>
+        <div class="section-label" style="margin-top:2px;">Your answer</div>
+        <div id="answerArea"></div>
+        <div class="btnrow">
+          <button class="checkbtn" id="checkBtn">Check</button>
+          <button class="nextbtn" id="nextBtn">New problem ↻</button>
+        </div>
+        <div class="feedback" id="feedback"></div>
+        <button class="stepsbtn" id="stepsBtn">Show worked solution</button>
+        <div class="steps" id="steps"></div>
+      </div>
+    </div>
+    <div class="footer-note" id="footNote">Explore: pick a waveform (or type your own), slide N, watch the partial sum and residual. Switch to Practice to be quizzed.</div>
+  </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="infoModal">
+  <div class="modal">
+    <h2>Fourier Series <span class="close" id="infoClose">×</span></h2>
+    <div class="yellow">Convention used here</div>
+    <p><span id="cf1"></span></p>
+    <p><span id="cf2"></span> &nbsp;·&nbsp; <span id="cf3"></span> &nbsp;·&nbsp; <span id="cf4"></span></p>
+    <p>So <b>a&#8320;/2</b> is the average value of f over one period.</p>
+    <div class="yellow">Explore</div>
+    <p>Choose a preset waveform or type any f(x) and a period. Coefficients are found by numerical integration, so anything you type works. The dashed grey curve is the target; the solid curve is the N-term partial sum; the strip underneath is the residual f − S<sub>N</sub> (watch the spikes at jumps — that's Gibbs).</p>
+    <div class="yellow">Practice levels</div>
+    <div class="lvl">
+      <b>1</b> — period T, fundamental ω₀ = 2π/T, and whether even harmonics appear.<br>
+      <b>2</b> — symmetry: which coefficients vanish (even → b<sub>n</sub>=0, odd → a<sub>n</sub>=0, half-wave → even harmonics gone).<br>
+      <b>3</b> — the constant term a₀ (= twice the average).<br>
+      <b>4</b> — a<sub>n</sub> or b<sub>n</sub> for a specific n of a standard waveform.<br>
+      <b>5</b> — evaluate an N-term partial sum, or the Gibbs overshoot.
+    </div>
+    <div class="yellow">Elsewhere</div>
+    <p>Taylor &amp; binomial series have their own sim.</p>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const TAU = Math.PI * 2;
+const rnd = (lo,hi) => Math.floor(Math.random()*(hi-lo+1))+lo;
+const pick = a => a[Math.floor(Math.random()*a.length)];
+function fmt(n, d) { d = d==null ? 2 : d; const r = Math.round(n*Math.pow(10,d))/Math.pow(10,d); return Number.isInteger(r) ? String(r) : r.toFixed(d); }
+function tex(el, s) {
+  if (window.katex) { try { katex.render(s, el, { throwOnError:false, displayMode:false }); return; } catch(e) {} }
+  el.textContent = s.replace(/\\[a-zA-Z]+/g, m => ({'\\omega':'ω','\\pi':'π','\\int':'∫','\\sum':'Σ','\\infty':'∞','\\cos':'cos','\\sin':'sin','\\,':' ','\\frac':'','\\dfrac':'','\\cdot':'·','\\approx':'≈'}[m]||'')).replace(/[{}\\]/g,'');
+}
+
+/* =================================================================
+   Waveform library.  Each canonical waveform has amplitude A and
+   period T; ω0 = 2π/T.  Convention:
+       f(x) = a0/2 + Σ_{n≥1} [ a_n cos(n ω0 x) + b_n sin(n ω0 x) ]
+       a_n = (2/T) ∫_T f cos(n ω0 x) dx ,  b_n likewise
+   ================================================================= */
+const WAVES = {
+  square: {
+    label: 'Square', parity: 'odd', hasEven: false, defT: TAU,
+    f: (x, A, T) => (((x % T) + T) % T) < T/2 ? A : -A,
+    a0: () => 0, an: () => 0,
+    bn: (n, A) => (n % 2 ? 4*A/(n*Math.PI) : 0),
+    tt: (A) => `\\text{square wave, amplitude } ${A}`,
+    coefTeX: 'b_n = \\dfrac{4A}{n\\pi}\\ (n\\text{ odd}),\\quad a_n = 0',
+    how: 'odd function, so all a_n = 0. b_n = (2/T)∫ f sin(nω₀x) dx over one period; the two half-periods add to 4A/(nπ) for odd n and cancel for even n.'
+  },
+  sawtooth: {
+    label: 'Sawtooth', parity: 'odd', hasEven: true, defT: TAU,
+    f: (x, A, T) => { let u = (((x + T/2) % T) + T) % T - T/2; return 2*A*u/T; },
+    a0: () => 0, an: () => 0,
+    bn: (n, A) => Math.pow(-1, n+1) * 2*A/(n*Math.PI),
+    tt: (A) => `\\text{sawtooth, } f(x)=x \\text{ scaled to } \\pm${A}`,
+    coefTeX: 'b_n = (-1)^{n+1}\\,\\dfrac{2A}{n\\pi},\\quad a_n = 0',
+    how: 'odd, so a_n = 0. b_n = (2/T)∫ f sin(nω₀x) dx; integrate by parts to get (−1)^{n+1}·2A/(nπ).'
+  },
+  triangle: {
+    label: 'Triangle', parity: 'even', hasEven: false, defT: TAU,
+    f: (x, A, T) => { let u = (((x + T/2) % T) + T) % T - T/2; return A*(1 - 4*Math.abs(u)/T); },
+    a0: () => 0,
+    an: (n, A) => (n % 2 ? 8*A/(Math.PI*Math.PI*n*n) : 0),
+    bn: () => 0,
+    tt: (A) => `\\text{triangle wave, } \\pm${A}`,
+    coefTeX: 'a_n = \\dfrac{8A}{\\pi^2 n^2}\\ (n\\text{ odd}),\\quad b_n = 0',
+    how: 'even, so b_n = 0. a_n = (2/T)∫ f cos(nω₀x) dx; two integrations by parts give 8A/(π²n²) for odd n, 0 for even n.'
+  },
+  fullwave: {
+    label: '|sin x|', parity: 'even', hasEven: true, defT: Math.PI,
+    f: (x, A) => A*Math.abs(Math.sin(x)),
+    a0: (A) => 4*A/Math.PI,
+    an: (n, A) => -4*A/(Math.PI*(4*n*n - 1)),
+    bn: () => 0,
+    tt: (A) => `\\text{full-wave rectified }, ${A}\\,|\\sin x|,\\ T=\\pi`,
+    coefTeX: 'a_0 = \\dfrac{4A}{\\pi},\\quad a_n = \\dfrac{-4A}{\\pi(4n^2-1)}',
+    how: 'period π so ω₀ = 2. Even, so b_n = 0. a_0 = (2/π)∫₀^π A sin x dx = 4A/π. a_n uses a product-to-sum identity.'
+  },
+  pulse: {
+    label: 'Pulse ½', parity: 'even', hasEven: false, defT: TAU, duty: 0.5,
+    f: (x, A, T) => { let u = (((x + T/2) % T) + T) % T - T/2; return Math.abs(u) < T*0.25 ? A : 0; },
+    a0: (A) => A,
+    an: (n, A) => (2*A/(n*Math.PI)) * Math.sin(n*Math.PI/2),
+    bn: () => 0,
+    tt: (A) => `\\text{50% pulse train between } 0 \\text{ and } ${A}`,
+    coefTeX: 'a_0 = A,\\quad a_n = \\dfrac{2A}{n\\pi}\\sin\\!\\big(\\tfrac{n\\pi}{2}\\big)',
+    how: 'even, b_n = 0. On is half the period, so the average is A/2 and a_0 = A. a_n = (2/T)∫ over the "on" interval = (2A/nπ)·sin(nπ/2): zero for even n.'
+  },
+};
+const PRACTICE_WAVES = ['square', 'sawtooth', 'triangle', 'pulse'];
+
+/* -------- numerical Fourier (works for any f, period T) -------- */
+function fourierNumeric(f, T, N) {
+  const M = 3000, dx = T/M, w0 = TAU/T;
+  let a0 = 0; const a = new Array(N+1).fill(0), b = new Array(N+1).fill(0);
+  for (let i = 0; i < M; i++) {
+    const x = -T/2 + (i + 0.5)*dx, y = f(x);
+    a0 += y;
+    for (let n = 1; n <= N; n++) { a[n] += y*Math.cos(n*w0*x); b[n] += y*Math.sin(n*w0*x); }
+  }
+  a0 *= 2*dx/T;
+  for (let n = 1; n <= N; n++) { a[n] *= 2*dx/T; b[n] *= 2*dx/T; }
+  return { a0, a, b, w0 };
+}
+function partialSum(C, x) {
+  let s = C.a0/2;
+  for (let n = 1; n < C.a.length; n++) s += C.a[n]*Math.cos(n*C.w0*x) + C.b[n]*Math.sin(n*C.w0*x);
+  return s;
+}
+
+/* -------- expression compiler for typed f(x) -------- */
+function compileFn(src) {
+  let s = String(src||'').toLowerCase().replace(/\s+/g,'');
+  if (!s) return null;
+  const words = ['sin','cos','tan','asin','acos','atan','sinh','cosh','tanh','exp','log','ln','sqrt','abs','sign','floor','ceil','round','min','max','pow','pi'];
+  let probe = s;
+  words.forEach(w => { probe = probe.split(w).join(''); });
+  if (!/^[0-9.x+\-*/^(),]*$/.test(probe)) return null;
+  let js = s.replace(/\^/g, '**').replace(/\bln\b/g, 'log').replace(/\bpi\b/g, 'PI');
+  js = js.replace(/\b(sin|cos|tan|asin|acos|atan|sinh|cosh|tanh|exp|log|sqrt|abs|sign|floor|ceil|round|min|max|pow|PI)\b/g, 'Math.$1');
+  try {
+    const f = new Function('x', 'return (' + js + ');');
+    const t = f(0.37);
+    if (typeof t !== 'number') return null;
+    return f;
+  } catch (e) { return null; }
+}
+function parsePeriod(src) {
+  const f = compileFn(src);
+  if (!f) return null;
+  const v = f(0);
+  return (isFinite(v) && v > 0.05 && v < 200) ? v : null;
+}
+
+/* ===================== state ===================== */
+let mode = 'explore';
+// explore
+let exWave = 'square', exCustom = null, exT = TAU, exN = 6;
+// practice
+let level = 1, streak = 0, wrongStreak = 0, correctCount = 0, totalCount = 0;
+let problem = null, checked = false, revealed = false;
+const MAXLVL = 5;
+
+/* ===================== explore ===================== */
+function buildWaveGrid() {
+  const g = $('waveGrid'); g.innerHTML = '';
+  Object.keys(WAVES).forEach(k => {
+    const b = document.createElement('button');
+    b.textContent = WAVES[k].label;
+    b.className = (k === exWave && !exCustom) ? 'on' : '';
+    b.addEventListener('click', () => {
+      exWave = k; exCustom = null; exT = WAVES[k].defT;
+      $('customF').value = ''; $('customErr').textContent = '';
+      buildWaveGrid(); draw();
+    });
+    g.appendChild(b);
+  });
+}
+function currentTargetFn() {
+  if (exCustom) return { f: exCustom, T: exT };
+  const W = WAVES[exWave];
+  return { f: (x) => W.f(x, 1, exT), T: exT };
+}
+function exploreCoef() {
+  const { f, T } = currentTargetFn();
+  return fourierNumeric(f, T, Math.max(exN, 8));
+}
+function renderCoefTable(C) {
+  const rows = ['<span class="hd">n   a_n        b_n</span>'];
+  rows.push(`0   ${padc(C.a0/2)}  (a₀/2 = avg)`);
+  for (let n = 1; n <= Math.min(8, exN); n++) rows.push(`${String(n).padEnd(3)} ${padc(C.a[n])}  ${padc(C.b[n])}`);
+  $('coefTable').innerHTML = rows.join('<br>');
+}
+function padc(v) { const s = (Math.abs(v) < 5e-4 ? '0' : v.toFixed(4)); return (v >= 0 ? ' ' : '') + s.padEnd(9); }
+
+/* ===================== practice ===================== */
+function waveDesc(k, A) { return { key:k, A, W:WAVES[k] }; }
+
+function genProblem(lvl) {
+  if (lvl === 1) {                       // period & fundamental
+    const T = pick([0.5, 1, 2, 4, Math.PI, TAU, 3, 6]);
+    const k = pick(PRACTICE_WAVES);
+    const W = WAVES[k];
+    return {
+      type:'periodic', k, T,
+      task:'Period & fundamental',
+      prompt:`A ${W.label.toLowerCase()} wave repeats with period T = ${prettyT(T)}.`,
+      fields:[
+        { id:'w0', label:'\\omega_0 \\text{ (rad/s)}', want: TAU/T, tol: Math.max(0.02, TAU/T*0.01) },
+        { id:'even', kind:'choice', label:'Does the series contain even harmonics (n = 2, 4, …)?',
+          options:[{label:'Yes',value:1},{label:'No',value:0}], want: W.hasEven ? 1 : 0 },
+      ],
+      steps:[
+        `\\omega_0 = \\dfrac{2\\pi}{T} = \\dfrac{2\\pi}{${prettyT(T)}} = ${fmt(TAU/T,3)}\\ \\text{rad/s}`,
+        W.hasEven ? `\\text{This wave has no half-wave symmetry, so even harmonics are present.}`
+                  : `\\text{This wave has half-wave symmetry } (f(x+T/2) = -f(x)),\\ \\text{so only odd } n \\text{ survive.}`,
+      ],
+    };
+  }
+
+  if (lvl === 2) {                       // symmetry
+    const k = pick(PRACTICE_WAVES);
+    const W = WAVES[k];
+    const shifted = Math.random() < 0.35;  // shift a nominally-even/odd wave off the axis -> breaks parity
+    const par = shifted ? 'none' : W.parity;
+    return {
+      type:'symmetry', k, shifted, par,
+      task:'Symmetry',
+      prompt:`Consider ${shifted ? 'a shifted ' : 'the '}${W.label.toLowerCase()} wave`
+        + (shifted ? ' (not centred on the origin — its graph has no symmetry about x = 0).' : `, centred so that ${W.parity === 'even' ? 'f(−x) = f(x)' : W.parity === 'odd' ? 'f(−x) = −f(x)' : 'it has no particular symmetry'}.`),
+      fields:[
+        { id:'a', kind:'choice', label:'Are all the a_n (n ≥ 1) zero?',
+          options:[{label:'Yes',value:1},{label:'No',value:0}], want: par === 'odd' ? 1 : 0 },
+        { id:'b', kind:'choice', label:'Are all the b_n zero?',
+          options:[{label:'Yes',value:1},{label:'No',value:0}], want: par === 'even' ? 1 : 0 },
+      ],
+      steps:[
+        par === 'odd' ? `\\text{Odd function: } f(-x) = -f(x).\\ \\cos \\text{ is even, so every } a_n = 0.\\ \\text{Only } b_n \\text{ terms remain.}`
+        : par === 'even' ? `\\text{Even function: } f(-x) = f(x).\\ \\sin \\text{ is odd, so every } b_n = 0.\\ \\text{Only } a_n \\text{ terms (and } a_0) \\text{ remain.}`
+        : `\\text{No symmetry about } x=0:\\ \\text{both } a_n \\text{ and } b_n \\text{ are generally nonzero.}`,
+      ],
+    };
+  }
+
+  if (lvl === 3) {                       // a0
+    const k = pick(['triangle', 'pulse', 'fullwave', 'square', 'sawtooth']);
+    const W = WAVES[k];
+    const A = pick([1, 2, 3]);
+    const a0 = W.a0(A);
+    return {
+      type:'a0', k, A,
+      task:'The constant term a₀',
+      prompt:`Find a₀ for a ${W.label.toLowerCase()} wave of amplitude A = ${A}.  (Recall a₀/2 is the average of f.)`,
+      fields:[ { id:'a0', label:'a_0', want: a0, tol: Math.max(0.02, Math.abs(a0)*0.02 || 0.02) } ],
+      steps:[
+        `a_0 = \\dfrac{2}{T}\\int_T f(x)\\,dx = 2\\,\\langle f\\rangle`,
+        `${W.how}`,
+        `a_0 = ${fmt(a0,4)}`,
+      ],
+    };
+  }
+
+  if (lvl === 4) {                       // a_n or b_n for a specific n
+    const k = pick(['square', 'sawtooth', 'triangle', 'pulse']);
+    const W = WAVES[k];
+    const A = pick([1, 2]);
+    const askZero = Math.random() < 0.25;
+    let n, coefName, want;
+    if (W.parity === 'odd') {
+      coefName = askZero ? 'a' : 'b';
+      n = coefName === 'b' ? pick([1,2,3,4,5]) : pick([1,2,3]);
+      want = coefName === 'b' ? W.bn(n, A) : 0;
+    } else {
+      coefName = askZero ? 'b' : 'a';
+      n = coefName === 'a' ? pick([1,2,3,4,5]) : pick([1,2,3]);
+      want = coefName === 'a' ? W.an(n, A) : 0;
+    }
+    const sym = coefName === 'a' ? 'a' : 'b';
+    return {
+      type:'coef', k, A, n, coefName, want,
+      task:`Coefficient ${sym}${sub(n)}`,
+      prompt:`For a ${W.label.toLowerCase()} wave of amplitude A = ${A} and period 2π, find ${sym}${sub(n)}.`,
+      fields:[ { id:'c', label:`${sym}_{${n}}`, want, tol: Math.max(0.01, Math.abs(want)*0.02 || 0.01) } ],
+      steps:[
+        `${W.how}`,
+        `\\text{Formula: } ${W.coefTeX}`,
+        `${sym}_{${n}} = ${want === 0 ? '0 \\ \\text{(this coefficient vanishes by symmetry)}' : fmt(want,4)}`,
+      ],
+    };
+  }
+
+  // lvl 5: partial sum value, or Gibbs
+  if (Math.random() < 0.6) {
+    const k = pick(['square', 'sawtooth', 'triangle']);
+    const W = WAVES[k];
+    const A = 1, N = pick([3, 5, 7]);
+    const x0 = pick([Math.PI/2, Math.PI/4, Math.PI/3, 2*Math.PI/3, 1]);
+    // build analytic coefficients
+    const C = { a0: W.a0(A), a: [0], b: [0], w0: 1 };
+    for (let n = 1; n <= N; n++) { C.a[n] = W.an(n, A); C.b[n] = W.bn(n, A); }
+    const val = partialSum(C, x0);
+    return {
+      type:'partial', k, N, x0,
+      task:`${N}-term partial sum`,
+      prompt:`For the ${W.label.toLowerCase()} wave (A = 1, T = 2π), evaluate the ${N}-term Fourier partial sum S_${N}(x) at x = ${prettyX(x0)}.`,
+      fields:[ { id:'s', label:`S_{${N}}(${prettyX(x0)})`, want: val, tol: 0.03 } ],
+      steps:[
+        `S_{${N}}(x) = \\dfrac{a_0}{2} + \\sum_{n=1}^{${N}} \\big[a_n\\cos(nx) + b_n\\sin(nx)\\big]`,
+        `\\text{Plug in the known } ${W.parity === 'odd' ? 'b_n' : 'a_n'} \\text{ and } x = ${prettyX(x0)}.`,
+        `S_{${N}}(${prettyX(x0)}) \\approx ${fmt(val,3)}`,
+      ],
+    };
+  }
+  return {
+    type:'gibbs',
+    task:'Gibbs overshoot',
+    prompt:`A Fourier partial sum of a discontinuous function overshoots near each jump. As N → ∞, by what fraction of the jump height does the overshoot settle (to 2 sig figs)?`,
+    fields:[ { id:'g', label:'overshoot / jump', want: 0.0895, tol: 0.012 } ],
+    steps:[
+      `\\text{The overshoot does not vanish; it approaches } \\dfrac{1}{\\pi}\\int_0^\\pi \\dfrac{\\sin t}{t}\\,dt - \\dfrac{1}{2} \\approx 0.0895.`,
+      `\\text{So the peak reaches about } 1.09 \\times \\text{ the jump, forever.}`,
+    ],
+  };
+}
+function sub(n){ return n; }
+function prettyT(T) {
+  if (Math.abs(T - TAU) < 1e-6) return '2\\pi';
+  if (Math.abs(T - Math.PI) < 1e-6) return '\\pi';
+  return String(T);
+}
+function prettyX(x) {
+  const map = [[Math.PI/4,'\\pi/4'],[Math.PI/3,'\\pi/3'],[Math.PI/2,'\\pi/2'],[2*Math.PI/3,'2\\pi/3'],[3*Math.PI/4,'3\\pi/4'],[Math.PI,'\\pi']];
+  for (const [v,s] of map) if (Math.abs(x-v) < 1e-6) return s;
+  return fmt(x,2);
+}
+
+/* ===================== practice UI ===================== */
+function levelTrack() {
+  let h = '';
+  for (let i=1;i<=MAXLVL;i++) h += `<div class="seg ${i<=level?'on':''}"></div>`;
+  $('levelTrack').innerHTML = h;
+  $('levelPill').textContent = 'Level ' + level;
+}
+function mathHtml(s) {
+  return s
+    .replace(/\\omega_0/g,'ω₀').replace(/\\omega/g,'ω').replace(/\\pi/g,'π')
+    .replace(/\\langle f\\rangle/g,'⟨f⟩')
+    .replace(/\\ge/g,'≥').replace(/\\le/g,'≤').replace(/\\to/g,'→').replace(/\\approx/g,'≈')
+    .replace(/\\times/g,'×').replace(/\\cdot/g,'·').replace(/\\infty/g,'∞')
+    .replace(/\\text\{([^}]*)\}/g,'$1')
+    .replace(/\b([abS])_(\d)\b/g,'$1<sub>$2</sub>')
+    .replace(/([abS])_\{([^}]+)\}/g,'$1<sub>$2</sub>')
+    .replace(/\\,/g,' ').replace(/[{}\\]/g,'');
+}
+function renderProblem() {
+  $('taskLabel').textContent = problem.task;
+  $('problemBox').innerHTML = mathHtml(problem.prompt);
+  const area = $('answerArea'); area.innerHTML = '';
+  const grid = document.createElement('div');
+  grid.className = 'ans-grid' + (problem.fields.length === 1 ? ' single' : problem.fields.length === 3 ? ' triple' : '');
+  problem.fields.forEach(f => {
+    const wrap = document.createElement('div'); wrap.className = 'ans-field';
+    const lab = document.createElement('label'); lab.innerHTML = mathHtml(f.label); wrap.appendChild(lab);
+    if (f.kind === 'choice') {
+      const row = document.createElement('div'); row.className = 'choice-row'; row.id = 'ans_' + f.id;
+      f.options.forEach(o => {
+        const b = document.createElement('button'); b.textContent = o.label; b.dataset.value = o.value;
+        b.addEventListener('click', () => {
+          if (checked || revealed) return;
+          [...row.children].forEach(c => c.classList.remove('sel'));
+          b.classList.add('sel'); row.dataset.value = o.value;
+        });
+        row.appendChild(b);
+      });
+      wrap.appendChild(row);
+      if (problem.fields.length > 1) grid.className = 'ans-grid single';
+    } else {
+      const inp = document.createElement('input');
+      inp.type = 'number'; inp.step = 'any'; inp.id = 'ans_' + f.id;
+      inp.addEventListener('keydown', e => { if (e.key === 'Enter') checkAnswer(); });
+      wrap.appendChild(inp);
+    }
+    grid.appendChild(wrap);
+  });
+  area.appendChild(grid);
+  const hint = document.createElement('div'); hint.className = 'ans-hint';
+  hint.textContent = problem.fields.some(f => f.kind === 'choice' && problem.fields.length === 1) ? 'Pick one.' : 'Round to 2–3 decimals.';
+  area.appendChild(hint);
+}
+function readField(f) {
+  if (f.kind === 'choice') {
+    const row = $('ans_' + f.id);
+    return row && row.dataset.value != null && row.dataset.value !== '' ? Number(row.dataset.value) : null;
+  }
+  const raw = ($('ans_' + f.id) || {}).value;
+  if (raw === '' || raw == null) return null;
+  const v = Number(raw);
+  return Number.isNaN(v) ? null : v;
+}
+function checkAnswer() {
+  if (checked || revealed) return;
+  const results = problem.fields.map(f => {
+    const got = readField(f);
+    if (got === null) return null;
+    if (f.kind === 'choice') return got === f.want;
+    const tol = f.tol != null ? f.tol : Math.max(0.01, Math.abs(f.want)*0.02);
+    return Math.abs(got - f.want) <= tol;
+  });
+  if (results.some(r => r === null)) return;
+  const correct = results.every(r => r === true);
+  checked = true; totalCount++;
+  $('checkBtn').disabled = true;
+  problem.fields.forEach(f => {
+    if (f.kind === 'choice') { const r = $('ans_' + f.id); if (r) [...r.children].forEach(c => c.disabled = true); }
+    else { const el = $('ans_' + f.id); if (el) el.disabled = true; }
+  });
+  const fb = $('feedback');
+  if (correct) {
+    correctCount++; streak++; wrongStreak = 0;
+    fb.className = 'feedback show correct';
+    fb.textContent = '✓ Correct.' + (streak % 3 === 0 && level < MAXLVL ? ' Leveling up.' : '');
+    if (streak % 3 === 0 && level < MAXLVL) level++;
+  } else {
+    streak = 0; wrongStreak++;
+    fb.className = 'feedback show wrong';
+    fb.textContent = '✗ Not quite — try the worked solution.';
+    if (wrongStreak >= 2 && level > 1) { level--; wrongStreak = 0; }
+  }
+  $('streakN').textContent = streak; $('correctN').textContent = correctCount; $('totalN').textContent = totalCount;
+  levelTrack(); draw();
+  if (window.MP) MP.previewTick();
+}
+function buildSteps() {
+  const host = $('steps'); host.innerHTML = '';
+  problem.steps.forEach(s => { const sp = document.createElement('span'); sp.className = 'ln'; tex(sp, s); host.appendChild(sp); });
+}
+$('stepsBtn').addEventListener('click', () => {
+  const s = $('steps'); const opening = !s.classList.contains('show');
+  if (opening && !checked) {
+    revealed = true; checked = true; $('checkBtn').disabled = true;
+    problem.fields.forEach(f => {
+      if (f.kind === 'choice') { const r = $('ans_' + f.id); if (r) [...r.children].forEach(c => c.disabled = true); }
+      else { const el = $('ans_' + f.id); if (el) el.disabled = true; }
+    });
+    const fb = $('feedback'); fb.className = 'feedback show neutral';
+    fb.textContent = 'Worked solution shown — not scored.';
+    draw();
+  }
+  if (opening) buildSteps();
+  s.classList.toggle('show');
+  $('stepsBtn').textContent = s.classList.contains('show') ? 'Hide worked solution' : 'Show worked solution';
+});
+function newProblem() {
+  problem = genProblem(level);
+  checked = false; revealed = false;
+  $('feedback').className = 'feedback'; $('feedback').textContent = '';
+  $('steps').className = 'steps'; $('steps').innerHTML = '';
+  $('stepsBtn').textContent = 'Show worked solution';
+  $('checkBtn').disabled = false;
+  renderProblem(); levelTrack(); draw();
+  if (window.MP) MP.previewTick();
+}
+$('checkBtn').addEventListener('click', checkAnswer);
+$('nextBtn').addEventListener('click', newProblem);
+
+/* ===================== drawing ===================== */
+function draw() {
+  const cv = $('cv'), ctx = cv.getContext('2d');
+  const dpr = cv._mpDpr || 1;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  const W = cv.width/dpr, H = cv.height/dpr;
+  ctx.clearRect(0,0,W,H); ctx.fillStyle = '#181225'; ctx.fillRect(0,0,W,H);
+  if (mode === 'explore') drawExplore(ctx, W, H);
+  else drawPractice(ctx, W, H);
+}
+
+function axes(ctx, r, xr, yr) {
+  const [x0,x1] = xr, [y0,y1] = yr;
+  const X = x => r.x + (x - x0)/(x1 - x0)*r.w;
+  const Y = y => r.y + r.h - (y - y0)/(y1 - y0)*r.h;
+  ctx.strokeStyle = 'rgba(255,255,255,0.07)'; ctx.lineWidth = 1;
+  for (let gx = Math.ceil(x0); gx <= x1; gx++) { ctx.beginPath(); ctx.moveTo(X(gx), r.y); ctx.lineTo(X(gx), r.y+r.h); ctx.stroke(); }
+  ctx.strokeStyle = 'rgba(255,255,255,0.2)'; ctx.lineWidth = 1.2;
+  if (y0 < 0 && y1 > 0) { ctx.beginPath(); ctx.moveTo(r.x, Y(0)); ctx.lineTo(r.x+r.w, Y(0)); ctx.stroke(); }
+  if (x0 < 0 && x1 > 0) { ctx.beginPath(); ctx.moveTo(X(0), r.y); ctx.lineTo(X(0), r.y+r.h); ctx.stroke(); }
+  return { X, Y };
+}
+function plot(ctx, r, xr, yr, fn, color, dash, lw) {
+  const m = axes.__m; // unused
+  const [x0,x1] = xr;
+  const P = axesP(r, xr, yr);
+  ctx.strokeStyle = color; ctx.lineWidth = lw || 2; ctx.setLineDash(dash || []);
+  ctx.beginPath();
+  let started = false;
+  const steps = Math.max(240, Math.round(r.w));
+  for (let i = 0; i <= steps; i++) {
+    const x = x0 + (x1-x0)*i/steps;
+    let y = fn(x);
+    if (!isFinite(y)) { started = false; continue; }
+    y = Math.max(yr[0]-1, Math.min(yr[1]+1, y));
+    const px = P.X(x), py = P.Y(y);
+    if (!started) { ctx.moveTo(px, py); started = true; } else ctx.lineTo(px, py);
+  }
+  ctx.stroke(); ctx.setLineDash([]);
+}
+function axesP(r, xr, yr) {
+  const [x0,x1] = xr, [y0,y1] = yr;
+  return { X: x => r.x + (x-x0)/(x1-x0)*r.w, Y: y => r.y + r.h - (y-y0)/(y1-y0)*r.h };
+}
+
+function drawExplore(ctx, W, H) {
+  const { f, T } = currentTargetFn();
+  const C = fourierNumeric(f, T, exN);
+  const SN = x => partialSum(C, x);
+  // sample for y-range + errors
+  const xr = [-T, T];
+  let ymin = 1e9, ymax = -1e9, maxres = 0, sse = 0, m = 0;
+  for (let i = 0; i <= 600; i++) {
+    const x = xr[0] + (xr[1]-xr[0])*i/600;
+    const t = f(x); if (isFinite(t)) { ymin = Math.min(ymin, t); ymax = Math.max(ymax, t); }
+    const res = t - SN(x); if (isFinite(res)) { maxres = Math.max(maxres, Math.abs(res)); sse += res*res; m++; }
+  }
+  if (!isFinite(ymin)) { ymin = -1; ymax = 1; }
+  const pad = (ymax - ymin) * 0.15 + 0.05;
+  const yr = [ymin - pad, ymax + pad];
+  const mainR = { x: 40, y: 12, w: W - 52, h: H*0.62 };
+  const P = axes(ctx, mainR, xr, yr);
+  // period shading
+  ctx.fillStyle = 'rgba(255,255,255,0.03)';
+  ctx.fillRect(P.X(-T/2), mainR.y, P.X(T/2)-P.X(-T/2), mainR.h);
+  plot(ctx, mainR, xr, yr, f, 'rgba(255,255,255,0.4)', [5,4], 1.6);
+  plot(ctx, mainR, xr, yr, SN, '#7c9dff', null, 2.4);
+  ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.font = '11px "JetBrains Mono",monospace';
+  ctx.fillText('f(x)', mainR.x + 4, mainR.y + 13);
+  ctx.fillStyle = '#7c9dff'; ctx.fillText('S_N(x),  N = ' + exN, mainR.x + 44, mainR.y + 13);
+  // residual strip
+  const resR = { x: 40, y: H*0.68, w: W - 52, h: H*0.28 };
+  const rMax = Math.max(maxres, 1e-3) * 1.2;
+  const rr = [-rMax, rMax];
+  axes(ctx, resR, xr, rr);
+  plot(ctx, resR, xr, rr, x => f(x) - SN(x), '#ff7c9d', null, 1.8);
+  ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.font = '10px "JetBrains Mono",monospace';
+  ctx.fillText('residual  f − S_N', resR.x + 4, resR.y + 12);
+  // metrics
+  $('mW0').textContent = fmt(TAU/T, 3);
+  $('mRms').textContent = fmt(Math.sqrt(sse/m), 4);
+  $('mMax').textContent = fmt(maxres, 4);
+  renderCoefTable(C);
+}
+
+function drawPractice(ctx, W, H) {
+  const r = { x: 40, y: 14, w: W - 52, h: H - 30 };
+  if (!problem) { axes(ctx, r, [-Math.PI, Math.PI], [-1.4, 1.4]); return; }
+  const p = problem;
+  if (p.type === 'gibbs') { drawGibbs(ctx, r); return; }
+  const k = p.k || 'square';
+  const W2 = WAVES[k], A = p.A || 1, T = p.T || W2.defT;
+  const f = x => W2.f(x, A, T);
+  const xr = [-1.15*T, 1.15*T];
+  let ymin = 1e9, ymax = -1e9;
+  for (let i = 0; i <= 400; i++) { const t = f(xr[0] + (xr[1]-xr[0])*i/400); if (isFinite(t)) { ymin = Math.min(ymin,t); ymax = Math.max(ymax,t); } }
+  const pad = (ymax - ymin)*0.2 + 0.05;
+  const yr = [ymin - pad, ymax + pad];
+  const P = axes(ctx, r, xr, yr);
+  // shade one period
+  ctx.fillStyle = 'rgba(255,255,255,0.04)';
+  ctx.fillRect(P.X(-T/2), r.y, P.X(T/2) - P.X(-T/2), r.h);
+  ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.setLineDash([3,3]);
+  ctx.beginPath(); ctx.moveTo(P.X(-T/2), r.y); ctx.lineTo(P.X(-T/2), r.y+r.h); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(P.X(T/2), r.y); ctx.lineTo(P.X(T/2), r.y+r.h); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = 'rgba(255,255,255,0.45)'; ctx.font = '11px "JetBrains Mono",monospace';
+  ctx.fillText('one period', P.X(-T/2) + 6, r.y + 14);
+  plot(ctx, r, xr, yr, f, '#7c9dff', null, 2.2);
+
+  if (p.type === 'partial' && (checked || revealed)) {
+    const C = { a0: WAVES[k].a0(A), a:[0], b:[0], w0: 1 };
+    for (let n = 1; n <= p.N; n++) { C.a[n] = WAVES[k].an(n, A); C.b[n] = WAVES[k].bn(n, A); }
+    plot(ctx, r, xr, yr, x => partialSum(C, x), '#5dffa0', null, 2);
+    const px = P.X(p.x0), py = P.Y(partialSum(C, p.x0));
+    ctx.fillStyle = '#5dffa0'; ctx.beginPath(); ctx.arc(px, py, 4, 0, TAU); ctx.fill();
+    ctx.font = '11px "JetBrains Mono",monospace';
+    ctx.fillText('S_' + p.N + ' ≈ ' + fmt(partialSum(C, p.x0), 3), px + 8, py - 8);
+  }
+  if (p.type === 'coef' && (checked || revealed) && p.want !== 0) {
+    const cn = x => (p.coefName === 'a' ? p.want*Math.cos(p.n*x) : p.want*Math.sin(p.n*x));
+    plot(ctx, r, xr, yr, cn, 'rgba(93,255,160,0.85)', [4,3], 1.6);
+    ctx.fillStyle = '#5dffa0'; ctx.font = '11px "JetBrains Mono",monospace';
+    ctx.fillText('the n=' + p.n + ' term', r.x + 4, r.y + r.h - 8);
+  }
+}
+function drawGibbs(ctx, r) {
+  const A = 1, T = TAU, N = 19;
+  const f = x => WAVES.square.f(x, A, T);
+  const C = { a0: 0, a: [0], b: [0], w0: 1 };
+  for (let n = 1; n <= N; n++) { C.b[n] = WAVES.square.bn(n, A); C.a[n] = 0; }
+  const xr = [-Math.PI, Math.PI], yr = [-1.4, 1.4];
+  const P = axes(ctx, r, xr, yr);
+  plot(ctx, r, xr, yr, f, 'rgba(255,255,255,0.35)', [5,4], 1.5);
+  plot(ctx, r, xr, yr, x => partialSum(C, x), '#7c9dff', null, 2);
+  ctx.strokeStyle = 'rgba(255,124,157,0.7)'; ctx.setLineDash([3,3]); ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(r.x, P.Y(1.0895)); ctx.lineTo(r.x+r.w, P.Y(1.0895)); ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle = '#ff7c9d'; ctx.font = '11px "JetBrains Mono",monospace';
+  ctx.fillText('≈ 1.09  (9% overshoot, persists as N→∞)', r.x + 8, P.Y(1.0895) - 6);
+}
+
+/* ===================== mode toggle ===================== */
+function setMode(m) {
+  mode = m;
+  $('modeSeg').querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.mode === m));
+  const practice = m === 'practice';
+  $('exploreCol').hidden = practice;
+  $('practiceCol').hidden = !practice;
+  $('statRow').hidden = !practice;
+  $('levelTrack').hidden = !practice;
+  $('levelPill').hidden = !practice;
+  $('metricRow').hidden = practice;
+  $('footNote').textContent = practice
+    ? 'Adaptive: 3 right in a row levels you up, 2 wrong drops you down. Revealing the solution skips scoring.'
+    : 'Explore: pick a waveform (or type your own), slide N, watch the partial sum and residual. Switch to Practice to be quizzed.';
+  if (practice && !problem) newProblem();
+  draw();
+}
+$('modeSeg').addEventListener('click', e => { const b = e.target.closest('button'); if (b) setMode(b.dataset.mode); });
+
+/* explore wiring */
+$('nSlider').addEventListener('input', e => { exN = +e.target.value; $('nVal').textContent = exN; draw(); });
+$('plotBtn').addEventListener('click', () => {
+  const src = $('customF').value.trim();
+  if (!src) { exCustom = null; $('customErr').textContent = ''; buildWaveGrid(); draw(); return; }
+  const f = compileFn(src);
+  const T = parsePeriod($('customT').value) || TAU;
+  if (!f) { $('customErr').textContent = 'Could not read that expression.'; return; }
+  exCustom = f; exT = T; $('customErr').textContent = '';
+  buildWaveGrid(); draw();
+});
+$('customF').addEventListener('keydown', e => { if (e.key === 'Enter') $('plotBtn').click(); });
+
+/* info */
+function infoFormulas() {
+  tex($('cf1'), 'f(x) = \\dfrac{a_0}{2} + \\sum_{n=1}^{\\infty}\\big[a_n\\cos(n\\omega_0 x) + b_n\\sin(n\\omega_0 x)\\big]');
+  tex($('cf2'), '\\omega_0 = \\dfrac{2\\pi}{T}');
+  tex($('cf3'), 'a_n = \\dfrac{2}{T}\\int_T f(x)\\cos(n\\omega_0 x)\\,dx');
+  tex($('cf4'), 'b_n = \\dfrac{2}{T}\\int_T f(x)\\sin(n\\omega_0 x)\\,dx');
+}
+$('infoBtn').addEventListener('click', () => $('infoModal').classList.add('show'));
+$('infoClose').addEventListener('click', () => $('infoModal').classList.remove('show'));
+$('infoModal').addEventListener('click', e => { if (e.target.id === 'infoModal') $('infoModal').classList.remove('show'); });
+
+MP.onResize(draw);
+MP.register({
+  levels: MAXLVL,
+  setLevel: n => { if (mode !== 'practice') setMode('practice'); level = n; newProblem(); },
+  currentLevel: () => level,
+  nextProblem: () => { if (mode !== 'practice') setMode('practice'); newProblem(); },
+  answerText: () => problem ? problem.fields.map(f => f.id + '=' + (f.kind === 'choice' ? f.want : fmt(f.want,3))).join('  ') : '—',
+});
+if (MP.preview) { const k = $('mp-answer-key'); if (k) $('practiceCol').appendChild(k); }
+window.addEventListener('load', () => {
+  infoFormulas();
+  buildWaveGrid();
+  if (MP.preview) setMode('practice'); else draw();
+});
+</script>
+</body>
+</html>
