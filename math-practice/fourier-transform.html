@@ -1,0 +1,721 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fourier Transform — Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="mp-tools.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<style>
+  * { box-sizing: border-box; }
+  body { margin:0; background:#eef0f4; font-family:'Source Sans 3',system-ui,sans-serif; color:#20262b; }
+  .wrap { max-width:1000px; margin:0 auto; padding:20px; }
+  .card { background:#fff; border:1px solid #e1e3ea; border-radius:12px; overflow:hidden; }
+  .header { background:#241b3d; color:#fff; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:13px 18px; flex-wrap:wrap; }
+  .header .title { display:flex; align-items:center; gap:10px; }
+  .header .dot { width:11px; height:11px; border-radius:3px; background:#6a55c9; flex:none; }
+  .header .name { font-family:'Source Serif 4',serif; font-weight:600; font-size:16px; }
+  .header .sub { font-weight:400; color:#a99fce; font-size:12px; }
+  .header .right { display:flex; gap:8px; align-items:center; }
+  .headbtn { font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:9px; cursor:pointer; border:1px solid rgba(255,255,255,0.22); background:rgba(255,255,255,0.06); color:#e6e1f5; }
+  .modeseg { display:flex; border:1px solid rgba(255,255,255,0.22); border-radius:9px; overflow:hidden; }
+  .modeseg button { font-size:12px; font-weight:700; letter-spacing:0.03em; padding:7px 13px; cursor:pointer; border:none; background:transparent; color:#c9bff0; }
+  .modeseg button.on { background:#6a55c9; color:#fff; }
+  .track-pill { font-size:10.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.18); border-radius:20px; padding:4px 10px; color:#cfc3ef; }
+  .body { display:flex; gap:0; align-items:stretch; flex-wrap:wrap; }
+  .canvasCol { padding:14px; display:flex; flex-direction:column; gap:10px; flex:1 1 520px; min-width:0; }
+  .ctlCol { width:340px; flex:none; border-left:1px solid #e8e9ee; padding:15px 17px; display:flex; flex-direction:column; gap:12px; }
+  canvas { display:block; width:100%; height:auto; aspect-ratio:1.35/1; border-radius:10px; background:#181225; }
+  .section-label { font-size:10.5px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; color:#9aa2ab; margin-bottom:4px; }
+  .problem-box { background:#f4f1fb; border-radius:9px; padding:12px 13px; font-size:14px; line-height:1.7; }
+  .ans-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .ans-grid.single { grid-template-columns:1fr; }
+  .ans-field label { font-size:11px; font-weight:600; color:#525a63; display:block; margin-bottom:3px; }
+  .ans-field input { width:100%; font:600 14px 'JetBrains Mono',monospace; padding:7px 9px; border-radius:7px; border:1px solid #d3d3dc; color:#241b3d; }
+  .ans-field input:focus { outline:2px solid #6a55c9; border-color:#6a55c9; }
+  .choice-row { display:flex; flex-wrap:wrap; gap:6px; }
+  .choice-row button { font-size:12px; font-weight:600; padding:7px 12px; border-radius:8px; cursor:pointer; border:1px solid #d3d3dc; background:#fff; color:#3a414a; }
+  .choice-row button.sel { border-color:#6a55c9; background:#efeafb; color:#4b3a99; }
+  .choice-row button:disabled { opacity:0.5; cursor:default; }
+  .ans-hint { font-size:11px; color:#9aa2ab; }
+  .btnrow { display:flex; gap:7px; flex-wrap:wrap; }
+  .checkbtn { font-size:12.5px; font-weight:600; padding:9px 18px; border-radius:9px; cursor:pointer; border:1px solid #4b3a99; background:#4b3a99; color:#fff; }
+  .checkbtn:disabled { opacity:0.45; cursor:default; }
+  .nextbtn { font-size:12.5px; font-weight:600; padding:9px 16px; border-radius:9px; cursor:pointer; border:1px solid #d3d8dd; background:#fff; color:#525a63; }
+  .feedback { border-radius:9px; padding:10px 12px; font-size:13px; font-weight:600; display:none; }
+  .feedback.show { display:block; }
+  .feedback.correct { background:#e5f6ec; color:#1f7a45; }
+  .feedback.wrong { background:#fbebea; color:#a53a30; }
+  .feedback.neutral { background:#f0eef6; color:#5b5470; }
+  .stepsbtn { font-size:12px; font-weight:600; color:#4b3a99; cursor:pointer; background:none; border:none; padding:0; text-align:left; text-decoration:underline; align-self:flex-start; }
+  .steps { display:none; background:#f4f1fb; border-radius:9px; padding:11px 13px; font-size:13px; line-height:1.85; margin-top:2px; }
+  .steps.show { display:block; }
+  .steps .ln { display:block; margin:3px 0; }
+  .stat-row { display:flex; gap:10px; }
+  .stat { flex:1; background:#f4f1fb; border-radius:9px; padding:8px 10px; text-align:center; }
+  .stat .n { font-family:'JetBrains Mono',monospace; font-weight:700; font-size:17px; color:#4b3a99; }
+  .stat .l { font-size:10px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; color:#8b8fa0; }
+  .level-track { display:flex; gap:4px; }
+  .level-track .seg { flex:1; height:5px; border-radius:3px; background:#e3e1ee; }
+  .level-track .seg.on { background:#6a55c9; }
+  .wave-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; }
+  .wave-grid button { font-size:11px; font-weight:600; padding:8px 4px; border-radius:8px; cursor:pointer; border:1px solid #d3d3dc; background:#fff; color:#3a414a; }
+  .wave-grid button.on { border-color:#6a55c9; background:#efeafb; color:#4b3a99; }
+  .field-row { display:flex; align-items:center; gap:8px; }
+  .field-row label { font-size:11px; font-weight:600; color:#525a63; white-space:nowrap; }
+  .field-row input[type=text] { flex:1; min-width:0; font:600 13px 'JetBrains Mono',monospace; padding:6px 8px; border-radius:7px; border:1px solid #d3d3dc; color:#241b3d; }
+  .field-row input:focus { outline:2px solid #6a55c9; border-color:#6a55c9; }
+  .slider-row { display:flex; align-items:center; gap:9px; }
+  .slider-row span { font-size:11px; font-family:'JetBrains Mono',monospace; color:#525a63; white-space:nowrap; }
+  .slider-row input[type=range] { flex:1; }
+  .pair-box { font-family:'Source Serif 4',serif; background:#f4f1fb; border-radius:9px; padding:12px 13px; font-size:13.5px; overflow-x:auto; }
+  .metric-row { display:flex; gap:10px; }
+  .metric { flex:1; background:#f4f1fb; border-radius:9px; padding:7px 9px; text-align:center; }
+  .metric .n { font-family:'JetBrains Mono',monospace; font-weight:700; font-size:14px; color:#4b3a99; }
+  .metric .l { font-size:9px; font-weight:700; letter-spacing:0.03em; text-transform:uppercase; color:#8b8fa0; }
+  .err { font-size:11px; color:#a53a30; min-height:14px; }
+  .footer-note { text-align:center; padding:14px; font-size:11.5px; color:#8b949d; }
+  .modal-backdrop { position:fixed; inset:0; background:rgba(15,10,26,0.86); backdrop-filter:blur(3px); display:none; align-items:center; justify-content:center; padding:30px; z-index:50; }
+  .modal-backdrop.show { display:flex; }
+  .modal { max-width:720px; width:100%; max-height:90vh; overflow:auto; background:rgba(24,18,37,0.96); border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:22px 26px; color:#eee8f6; }
+  .modal h2 { font-family:'Source Serif 4',serif; font-weight:600; font-size:20px; margin:0 0 16px; display:flex; justify-content:space-between; align-items:baseline; }
+  .modal .close { cursor:pointer; width:26px; height:26px; border-radius:7px; border:1px solid rgba(255,255,255,0.2); background:rgba(255,255,255,0.06); color:#dce6f2; display:flex; align-items:center; justify-content:center; }
+  .modal p { font-size:12.5px; line-height:1.55; }
+  .modal .yellow { color:#e5c86b; font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin:14px 0 7px; }
+  .modal .lvl { font-size:12.5px; line-height:1.65; }
+  .modal .lvl b { color:#fff; }
+  table.pairs { border-collapse:collapse; font-size:12px; margin-top:6px; }
+  table.pairs td { padding:3px 12px 3px 0; }
+  [hidden] { display:none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="dc-root">
+  <div class="card">
+    <div class="header">
+      <div class="title">
+        <span class="dot"></span>
+        <span class="name">Fourier Transform <span class="sub">— math practice</span></span>
+      </div>
+      <div class="right">
+        <div class="modeseg" id="modeSeg">
+          <button data-mode="explore" class="on">Explore</button>
+          <button data-mode="practice">Practice</button>
+        </div>
+        <span class="track-pill" id="levelPill" hidden>Level 1</span>
+        <button class="headbtn" id="infoBtn">ⓘ Info</button>
+      </div>
+    </div>
+    <div class="body">
+      <div class="canvasCol">
+        <canvas id="cv" width="620" height="460" data-mp-canvas></canvas>
+        <div class="stat-row" id="statRow" hidden>
+          <div class="stat"><div class="n" id="streakN">0</div><div class="l">Streak</div></div>
+          <div class="stat"><div class="n" id="correctN">0</div><div class="l">Correct</div></div>
+          <div class="stat"><div class="n" id="totalN">0</div><div class="l">Attempted</div></div>
+        </div>
+        <div class="level-track" id="levelTrack" hidden></div>
+        <div class="metric-row" id="metricRow">
+          <div class="metric"><div class="n" id="mWt">—</div><div class="l">t half-width</div></div>
+          <div class="metric"><div class="n" id="mWw">—</div><div class="l">&omega; half-width</div></div>
+          <div class="metric"><div class="n" id="mProd">—</div><div class="l">product</div></div>
+        </div>
+      </div>
+
+      <div class="ctlCol" id="exploreCol">
+        <div class="section-label">Signal f(t)</div>
+        <div class="wave-grid" id="waveGrid"></div>
+        <div class="field-row">
+          <label for="customF">f(t) =</label>
+          <input type="text" id="customF" placeholder="exp(-t^2), 1/(1+t^2), …" autocomplete="off" spellcheck="false">
+          <button class="nextbtn" id="plotBtn" style="padding:6px 12px;">Plot</button>
+        </div>
+        <div class="err" id="customErr"></div>
+        <div class="slider-row">
+          <span id="pName">width</span>
+          <input type="range" id="pSlider" min="1" max="100" value="40">
+          <span id="pVal">2.0</span>
+        </div>
+        <div class="section-label" style="margin-top:2px;">Transform pair</div>
+        <div class="pair-box" id="pairBox"></div>
+      </div>
+
+      <div class="ctlCol" id="practiceCol" hidden>
+        <div class="section-label" id="taskLabel">Task</div>
+        <div class="problem-box" id="problemBox"></div>
+        <div class="section-label" style="margin-top:2px;">Your answer</div>
+        <div id="answerArea"></div>
+        <div class="btnrow">
+          <button class="checkbtn" id="checkBtn">Check</button>
+          <button class="nextbtn" id="nextBtn">New problem ↻</button>
+        </div>
+        <div class="feedback" id="feedback"></div>
+        <button class="stepsbtn" id="stepsBtn">Show worked solution</button>
+        <div class="steps" id="steps"></div>
+      </div>
+    </div>
+    <div class="footer-note" id="footNote">Explore: pick a signal, slide its width, and watch its spectrum |F(ω)| stretch the other way. Switch to Practice to be quizzed.</div>
+  </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="infoModal">
+  <div class="modal">
+    <h2>Fourier Transform <span class="close" id="infoClose">×</span></h2>
+    <div class="yellow">Convention used here</div>
+    <p><span id="cf1"></span></p>
+    <p><span id="cf2"></span></p>
+    <div class="yellow">Standard pairs</div>
+    <table class="pairs" id="pairsTable"></table>
+    <div class="yellow">Reciprocity</div>
+    <p>Squeeze a signal in time and its spectrum spreads in frequency: f(at) ↔ (1/|a|)F(ω/a). The Gaussian is the tightest possible — its rms widths satisfy Δt·Δω = ½ (the uncertainty bound).</p>
+    <div class="yellow">Explore</div>
+    <p>The top panel is f(t); the bottom is |F(ω)| (with the dashed line the analytic transform when there is one). Type any f(t) — the transform is done numerically.</p>
+    <div class="yellow">Practice levels</div>
+    <div class="lvl">
+      <b>1</b> — match a signal to its spectrum.<br>
+      <b>2</b> — spectral width / first null from the pulse width.<br>
+      <b>3</b> — the transform F(ω) at a specific ω.<br>
+      <b>4</b> — the shift / scaling / modulation properties.<br>
+      <b>5</b> — the time–bandwidth (uncertainty) product.
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const PI = Math.PI, TAU = 2*Math.PI;
+const rnd = (lo,hi) => Math.floor(Math.random()*(hi-lo+1))+lo;
+const pick = a => a[Math.floor(Math.random()*a.length)];
+function fmt(n, d) { d = d==null ? 2 : d; if (!isFinite(n)) return '∞'; const r = Math.round(n*Math.pow(10,d))/Math.pow(10,d); return Number.isInteger(r) ? String(r) : r.toFixed(d); }
+function sinc(x) { return Math.abs(x) < 1e-8 ? 1 : Math.sin(x)/x; }
+function tex(el, s) {
+  if (window.katex) { try { katex.render(s, el, { throwOnError:false, displayMode:false }); return; } catch(e) {} }
+  el.textContent = s.replace(/\\[a-zA-Z]+/g, m => ({'\\omega':'ω','\\pi':'π','\\int':'∫','\\infty':'∞','\\tau':'τ','\\sigma':'σ','\\cos':'cos','\\sin':'sin','\\,':' ','\\frac':'','\\dfrac':'','\\cdot':'·','\\approx':'≈','\\pm':'±','\\sqrt':'√','\\operatorname':'','\\leftrightarrow':'↔'}[m]||'')).replace(/[{}\\]/g,'');
+}
+
+/* ================= signal library =================
+   Convention:  F(ω) = ∫ f(t) e^{-iωt} dt  ,  f(t) = (1/2π) ∫ F(ω) e^{iωt} dω
+   p = the width parameter (a, σ, or τ depending on the signal).
+   ================================================= */
+const SIGNALS = {
+  rect: {
+    label: 'Rect pulse', pName: 'width a',
+    f: (t, p) => Math.abs(t) < p/2 ? 1 : 0,
+    F: (w, p) => p*sinc(w*p/2),            // real
+    firstNull: p => TAU/p,
+    pairTeX: '\\operatorname{rect}(t/a)\\ \\leftrightarrow\\ a\\,\\operatorname{sinc}(\\omega a/2)',
+  },
+  tri: {
+    label: 'Triangle', pName: 'half-width a',
+    f: (t, p) => Math.abs(t) < p ? (1 - Math.abs(t)/p) : 0,
+    F: (w, p) => p*sinc(w*p/2)**2,
+    firstNull: p => TAU/p,
+    pairTeX: '\\Lambda(t/a)\\ \\leftrightarrow\\ a\\,\\operatorname{sinc}^2(\\omega a/2)',
+  },
+  gauss: {
+    label: 'Gaussian', pName: 'σ',
+    f: (t, p) => Math.exp(-t*t/(2*p*p)),
+    F: (w, p) => p*Math.sqrt(TAU)*Math.exp(-p*p*w*w/2),
+    pairTeX: 'e^{-t^2/2\\sigma^2}\\ \\leftrightarrow\\ \\sigma\\sqrt{2\\pi}\\,e^{-\\sigma^2\\omega^2/2}',
+  },
+  twoexp: {
+    label: 'Two-sided e⁻|t|', pName: 'τ',
+    f: (t, p) => Math.exp(-Math.abs(t)/p),
+    F: (w, p) => 2*p/(1 + w*w*p*p),         // Lorentzian, real
+    pairTeX: 'e^{-|t|/\\tau}\\ \\leftrightarrow\\ \\dfrac{2\\tau}{1+\\omega^2\\tau^2}',
+  },
+  oneexp: {
+    label: 'One-sided e⁻ᵗ', pName: 'τ',
+    f: (t, p) => t > 0 ? Math.exp(-t/p) : 0,
+    F: (w, p) => p/Math.sqrt(1 + w*w*p*p),  // |F| only (F is complex)
+    complex: true,
+    pairTeX: 'e^{-t/\\tau}u(t)\\ \\leftrightarrow\\ \\dfrac{\\tau}{1+i\\omega\\tau}',
+  },
+  burst: {
+    label: 'Cosine burst', pName: 'envelope a',
+    w0: 6,
+    f: (t, p) => Math.abs(t) < p ? Math.cos(6*t) : 0,
+    F: (w, p) => Math.abs(p*(sinc((w-6)*p) + sinc((w+6)*p))),
+    pairTeX: '\\cos(\\omega_0 t)\\,\\operatorname{rect}(t/2a)\\ \\leftrightarrow\\ a[\\operatorname{sinc}((\\omega-\\omega_0)a)+\\operatorname{sinc}((\\omega+\\omega_0)a)]',
+  },
+};
+const PRACTICE_SIGS = ['rect', 'tri', 'gauss', 'twoexp'];
+
+// map slider 1..100 to a width in [0.4 .. 6]
+function sliderToP(v) { return +(0.4 + (v-1)/99 * 5.6).toFixed(2); }
+
+/* numeric FT of an arbitrary f(t): F(ω) = ∫ f cos - i ∫ f sin, trapezoid on [-L,L] */
+function ftAt(f, w, L) {
+  const M = 2400, dt = 2*L/M;
+  let re = 0, im = 0;
+  for (let i = 0; i <= M; i++) {
+    const t = -L + i*dt, y = f(t), wgt = (i === 0 || i === M) ? 0.5 : 1;
+    re += wgt*y*Math.cos(w*t);
+    im -= wgt*y*Math.sin(w*t);
+  }
+  return { re: re*dt, im: im*dt, mag: Math.hypot(re, im)*dt };
+}
+// half-width at half-max of a nonneg symmetric-ish function sampled on a grid
+function hwhm(vals, xs) {
+  let peak = 0, pk = 0;
+  for (let i = 0; i < vals.length; i++) if (vals[i] > peak) { peak = vals[i]; pk = i; }
+  if (peak <= 0) return NaN;
+  for (let i = pk; i < vals.length; i++) if (vals[i] <= peak/2) return Math.abs(xs[i] - xs[pk]);
+  return Math.abs(xs[vals.length-1] - xs[pk]);
+}
+
+/* expression compiler for typed f(t) */
+function compileFn(src) {
+  let s = String(src||'').toLowerCase().replace(/\s+/g,'').replace(/\bt\b/g,'x');
+  if (!s) return null;
+  const words = ['sin','cos','tan','asin','acos','atan','sinh','cosh','tanh','exp','log','ln','sqrt','abs','sign','floor','ceil','round','min','max','pow','pi'];
+  let probe = s;
+  words.forEach(w => { probe = probe.split(w).join(''); });
+  if (!/^[0-9.x+\-*/^(),]*$/.test(probe)) return null;
+  let js = s.replace(/\^/g,'**').replace(/\bln\b/g,'log').replace(/\bpi\b/g,'PI');
+  js = js.replace(/\b(sin|cos|tan|asin|acos|atan|sinh|cosh|tanh|exp|log|sqrt|abs|sign|floor|ceil|round|min|max|pow|PI)\b/g,'Math.$1');
+  try { const g = new Function('x', 'return (' + js + ');'); if (typeof g(0.3) !== 'number') return null; return t => g(t); }
+  catch (e) { return null; }
+}
+
+/* ================= state ================= */
+let mode = 'explore';
+let exSig = 'rect', exCustom = null, exP = 2.0;
+let level = 1, streak = 0, wrongStreak = 0, correctCount = 0, totalCount = 0;
+let problem = null, checked = false, revealed = false;
+const MAXLVL = 5;
+
+/* ================= explore ================= */
+function buildWaveGrid() {
+  const g = $('waveGrid'); g.innerHTML = '';
+  Object.keys(SIGNALS).forEach(k => {
+    const b = document.createElement('button');
+    b.textContent = SIGNALS[k].label;
+    b.className = (k === exSig && !exCustom) ? 'on' : '';
+    b.addEventListener('click', () => {
+      exSig = k; exCustom = null; $('customF').value = ''; $('customErr').textContent = '';
+      $('pName').textContent = SIGNALS[k].pName;
+      buildWaveGrid(); draw();
+    });
+    g.appendChild(b);
+  });
+  $('pName').textContent = exCustom ? 'scale' : SIGNALS[exSig].pName;
+}
+function currentSignal() {
+  if (exCustom) return { f: exCustom, F: null };
+  const S = SIGNALS[exSig];
+  return { f: t => S.f(t, exP), F: S.complex || !S.F ? null : (w => S.F(w, exP)), S };
+}
+
+/* ================= practice ================= */
+function genProblem(lvl) {
+  if (lvl === 1) {                       // match signal -> spectrum
+    const k = pick(PRACTICE_SIGS);
+    const names = { rect:'a sinc function, sin(x)/x', tri:'a sinc-squared function', gauss:'another Gaussian', twoexp:'a Lorentzian, 1/(1+x²)' };
+    const opts = ['a sinc function, sin(x)/x','a sinc-squared function','another Gaussian','a Lorentzian, 1/(1+x²)'];
+    return {
+      type:'match', k,
+      task:'Match the spectrum',
+      prompt:`The magnitude spectrum |F(ω)| of a ${SIGNALS[k].label.toLowerCase()} looks like which of these?`,
+      fields:[{ id:'m', kind:'choice', label:'|F(ω)| is …',
+        options: opts.map((o,i) => ({label:o, value:i})), want: opts.indexOf(names[k]) }],
+      steps:[`\\text{${SIGNALS[k].label} } \\leftrightarrow ${SIGNALS[k].pairTeX.split('\\leftrightarrow')[1]}`],
+    };
+  }
+  if (lvl === 2) {                       // spectral first null
+    const a = pick([1, 2, 3, 4, 5, 6]);
+    const k = pick(['rect', 'tri']);
+    return {
+      type:'null', k, a,
+      task:'First spectral null',
+      prompt:`A ${SIGNALS[k].label.toLowerCase()} of width parameter ${k==='rect'?'a':'a'} = ${a} (so f is nonzero on ${k==='rect'?`|t| < ${a}/2`:`|t| < ${a}`}). At what ω > 0 does |F(ω)| first hit zero?`,
+      fields:[{ id:'w', label:'\\omega_{\\text{null}}', want: TAU/a, tol: Math.max(0.03, TAU/a*0.01) }],
+      steps:[
+        `F(\\omega) \\propto \\operatorname{sinc}(\\omega a/2)${k==='tri'?'^2':''},\\ \\text{which is zero when } \\omega a/2 = \\pi.`,
+        `\\omega_{\\text{null}} = \\dfrac{2\\pi}{a} = \\dfrac{2\\pi}{${a}} = ${fmt(TAU/a,3)}`,
+      ],
+    };
+  }
+  if (lvl === 3) {                       // F at a point
+    const kind = pick(['rectF0', 'twoexpF0', 'gaussF0']);
+    if (kind === 'rectF0') {
+      const a = pick([2, 3, 4]), A = pick([1, 2]);
+      return { type:'point',
+        task:'Transform at ω = 0',
+        prompt:`For a rectangular pulse of height ${A} and width a = ${a}, find F(0).`,
+        fields:[{ id:'v', label:'F(0)', want: A*a, tol: 0.02 }],
+        steps:[`F(0) = \\int f(t)\\,dt = \\text{area} = ${A}\\times${a} = ${A*a}`],
+      };
+    }
+    if (kind === 'twoexpF0') {
+      const tau = pick([1, 2, 3]);
+      return { type:'point',
+        task:'Transform at ω = 0',
+        prompt:`For f(t) = e^{−|t|/τ} with τ = ${tau}, find F(0).`,
+        fields:[{ id:'v', label:'F(0)', want: 2*tau, tol: 0.02 }],
+        steps:[`F(0) = \\int_{-\\infty}^{\\infty} e^{-|t|/\\tau}\\,dt = 2\\tau = ${2*tau}`],
+      };
+    }
+    const s = pick([1, 2]);
+    return { type:'point',
+      task:'Transform at ω = 0',
+      prompt:`For a Gaussian f(t) = e^{−t²/(2σ²)} with σ = ${s}, find F(0).`,
+      fields:[{ id:'v', label:'F(0)', want: s*Math.sqrt(TAU), tol: 0.03 }],
+      steps:[`F(0) = \\int e^{-t^2/2\\sigma^2}\\,dt = \\sigma\\sqrt{2\\pi} = ${fmt(s*Math.sqrt(TAU),4)}`],
+    };
+  }
+  if (lvl === 4) {                       // properties
+    const q = pick([
+      { p:'the transform of the time-shifted signal f(t − t_0)', o:['F(\\omega)\\,e^{-i\\omega t_0}','F(\\omega - \\omega_0)','F(\\omega)/t_0','F(\\omega/t_0)'], a:0,
+        s:'A time shift multiplies the transform by a pure phase: f(t-t_0) \\leftrightarrow e^{-i\\omega t_0}F(\\omega).' },
+      { p:'the transform of the scaled signal f(a t) (a > 0)', o:['\\tfrac{1}{a}F(\\omega/a)','aF(a\\omega)','F(\\omega)/a^2','F(\\omega - a)'], a:0,
+        s:'Compressing in time by a stretches in frequency by a and scales the height: f(at) \\leftrightarrow \\tfrac{1}{a}F(\\omega/a).' },
+      { p:'the transform of f(t)\\cos(\\omega_0 t)', o:['\\tfrac12[F(\\omega-\\omega_0)+F(\\omega+\\omega_0)]','F(\\omega)\\cos(\\omega_0)','F(\\omega-\\omega_0)','i\\omega_0 F(\\omega)'], a:0,
+        s:'Multiplying by a cosine shifts copies of the spectrum to \\pm\\omega_0 (modulation).' },
+      { p:'the transform of the derivative f\\,\'(t)', o:['i\\omega\\,F(\\omega)','F(\\omega)/(i\\omega)','\\omega^2 F(\\omega)','-F(\\omega)'], a:0,
+        s:'Differentiation in time is multiplication by i\\omega in frequency.' },
+    ]);
+    return { type:'prop',
+      task:'Fourier transform property',
+      prompt:`If f(t) has Fourier transform F(ω), what is ${q.p.replace(/\\_/g,'_').replace(/\\t/g,'t')}?`,
+      fields:[{ id:'p', kind:'choice', label:'answer', options: q.o.map((o,i)=>({label:o, value:i, tex:true})), want: q.a }],
+      steps:[q.s],
+    };
+  }
+  // lvl 5: uncertainty product
+  return { type:'uncert',
+    task:'Time–bandwidth product',
+    prompt:`Using rms widths Δt and Δω (the standard deviations of |f(t)|² and |F(ω)|²), what is the smallest possible value of the product Δt·Δω, and which signal achieves it?`,
+    fields:[
+      { id:'v', label:'minimum \\Delta t\\,\\Delta\\omega', want: 0.5, tol: 0.06 },
+      { id:'w', kind:'choice', label:'achieved by', options:[{label:'Gaussian',value:0},{label:'Rect pulse',value:1},{label:'Lorentzian',value:2}], want: 0 },
+    ],
+    steps:[
+      `\\Delta t\\,\\Delta\\omega \\ge \\tfrac12,\\ \\text{with equality only for a Gaussian.}`,
+      `\\text{This is the classical form of the uncertainty principle.}`,
+    ],
+  };
+}
+
+/* ================= practice UI ================= */
+function levelTrack() {
+  let h = '';
+  for (let i=1;i<=MAXLVL;i++) h += `<div class="seg ${i<=level?'on':''}"></div>`;
+  $('levelTrack').innerHTML = h;
+  $('levelPill').textContent = 'Level ' + level;
+}
+function mathHtml(s) {
+  return s
+    .replace(/\\omega_0/g,'ω₀').replace(/\\omega/g,'ω').replace(/\\pi/g,'π').replace(/\\tau/g,'τ').replace(/\\sigma/g,'σ')
+    .replace(/\\Delta/g,'Δ').replace(/\\ge/g,'≥').replace(/\\le/g,'≤').replace(/\\to/g,'→').replace(/\\approx/g,'≈')
+    .replace(/\\times/g,'×').replace(/\\cdot/g,'·').replace(/\\infty/g,'∞').replace(/\\pm/g,'±')
+    .replace(/\\propto/g,'∝').replace(/\\leftrightarrow/g,'↔')
+    .replace(/\\operatorname\{([^}]+)\}/g,'$1').replace(/\\text\{([^}]*)\}/g,'$1').replace(/\\tfrac\{([^}]*)\}\{([^}]*)\}/g,'$1/$2')
+    .replace(/([A-Za-z])_\{([^}]+)\}/g,'$1<sub>$2</sub>').replace(/\b([A-Za-z])_(\d|0)\b/g,'$1<sub>$2</sub>')
+    .replace(/\\,/g,' ').replace(/[{}\\]/g,'');
+}
+function renderProblem() {
+  $('taskLabel').textContent = problem.task;
+  $('problemBox').innerHTML = mathHtml(problem.prompt);
+  const area = $('answerArea'); area.innerHTML = '';
+  const grid = document.createElement('div');
+  grid.className = 'ans-grid' + (problem.fields.length === 1 || problem.fields.some(f=>f.kind==='choice') ? ' single' : '');
+  problem.fields.forEach(f => {
+    const wrap = document.createElement('div'); wrap.className = 'ans-field';
+    const lab = document.createElement('label'); lab.innerHTML = mathHtml(f.label); wrap.appendChild(lab);
+    if (f.kind === 'choice') {
+      const row = document.createElement('div'); row.className = 'choice-row'; row.id = 'ans_' + f.id;
+      f.options.forEach(o => {
+        const b = document.createElement('button'); b.dataset.value = o.value;
+        if (o.tex) tex(b, o.label); else b.textContent = mathHtml(o.label);
+        b.addEventListener('click', () => {
+          if (checked || revealed) return;
+          [...row.children].forEach(c => c.classList.remove('sel'));
+          b.classList.add('sel'); row.dataset.value = o.value;
+        });
+        row.appendChild(b);
+      });
+      wrap.appendChild(row);
+    } else {
+      const inp = document.createElement('input'); inp.type = 'number'; inp.step = 'any'; inp.id = 'ans_' + f.id;
+      inp.addEventListener('keydown', e => { if (e.key === 'Enter') checkAnswer(); });
+      wrap.appendChild(inp);
+    }
+    grid.appendChild(wrap);
+  });
+  area.appendChild(grid);
+  const hint = document.createElement('div'); hint.className = 'ans-hint';
+  hint.textContent = problem.fields.every(f => f.kind === 'choice') ? 'Pick one.' : 'Round to 2–3 decimals.';
+  area.appendChild(hint);
+}
+function readField(f) {
+  if (f.kind === 'choice') { const r = $('ans_' + f.id); return r && r.dataset.value !== undefined && r.dataset.value !== '' ? Number(r.dataset.value) : null; }
+  const raw = ($('ans_' + f.id) || {}).value;
+  if (raw === '' || raw == null) return null;
+  const v = Number(raw); return Number.isNaN(v) ? null : v;
+}
+function checkAnswer() {
+  if (checked || revealed) return;
+  const results = problem.fields.map(f => {
+    const got = readField(f);
+    if (got === null) return null;
+    if (f.kind === 'choice') return got === f.want;
+    const tol = f.tol != null ? f.tol : Math.max(0.01, Math.abs(f.want)*0.02);
+    return Math.abs(got - f.want) <= tol;
+  });
+  if (results.some(r => r === null)) return;
+  const correct = results.every(r => r === true);
+  checked = true; totalCount++;
+  $('checkBtn').disabled = true;
+  problem.fields.forEach(f => {
+    if (f.kind === 'choice') { const r = $('ans_' + f.id); if (r) [...r.children].forEach(c => c.disabled = true); }
+    else { const el = $('ans_' + f.id); if (el) el.disabled = true; }
+  });
+  const fb = $('feedback');
+  if (correct) {
+    correctCount++; streak++; wrongStreak = 0;
+    fb.className = 'feedback show correct';
+    fb.textContent = '✓ Correct.' + (streak % 3 === 0 && level < MAXLVL ? ' Leveling up.' : '');
+    if (streak % 3 === 0 && level < MAXLVL) level++;
+  } else {
+    streak = 0; wrongStreak++;
+    fb.className = 'feedback show wrong';
+    fb.textContent = '✗ Not quite — try the worked solution.';
+    if (wrongStreak >= 2 && level > 1) { level--; wrongStreak = 0; }
+  }
+  $('streakN').textContent = streak; $('correctN').textContent = correctCount; $('totalN').textContent = totalCount;
+  levelTrack(); draw();
+  if (window.MP) MP.previewTick();
+}
+function buildSteps() {
+  const host = $('steps'); host.innerHTML = '';
+  problem.steps.forEach(s => { const sp = document.createElement('span'); sp.className = 'ln'; tex(sp, s); host.appendChild(sp); });
+}
+$('stepsBtn').addEventListener('click', () => {
+  const s = $('steps'); const opening = !s.classList.contains('show');
+  if (opening && !checked) {
+    revealed = true; checked = true; $('checkBtn').disabled = true;
+    problem.fields.forEach(f => {
+      if (f.kind === 'choice') { const r = $('ans_' + f.id); if (r) [...r.children].forEach(c => c.disabled = true); }
+      else { const el = $('ans_' + f.id); if (el) el.disabled = true; }
+    });
+    const fb = $('feedback'); fb.className = 'feedback show neutral';
+    fb.textContent = 'Worked solution shown — not scored.';
+  }
+  if (opening) buildSteps();
+  s.classList.toggle('show');
+  $('stepsBtn').textContent = s.classList.contains('show') ? 'Hide worked solution' : 'Show worked solution';
+});
+function newProblem() {
+  problem = genProblem(level);
+  checked = false; revealed = false;
+  $('feedback').className = 'feedback'; $('feedback').textContent = '';
+  $('steps').className = 'steps'; $('steps').innerHTML = '';
+  $('stepsBtn').textContent = 'Show worked solution';
+  $('checkBtn').disabled = false;
+  renderProblem(); levelTrack(); draw();
+  if (window.MP) MP.previewTick();
+}
+$('checkBtn').addEventListener('click', checkAnswer);
+$('nextBtn').addEventListener('click', newProblem);
+
+/* ================= drawing ================= */
+function draw() {
+  const cv = $('cv'), ctx = cv.getContext('2d');
+  const dpr = cv._mpDpr || 1;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  const W = cv.width/dpr, H = cv.height/dpr;
+  ctx.clearRect(0,0,W,H); ctx.fillStyle = '#181225'; ctx.fillRect(0,0,W,H);
+  if (mode === 'explore') drawExplore(ctx, W, H);
+  else drawPractice(ctx, W, H);
+}
+function axesP(r, xr, yr) {
+  const [x0,x1] = xr, [y0,y1] = yr;
+  return { X: x => r.x + (x-x0)/(x1-x0)*r.w, Y: y => r.y + r.h - (y-y0)/(y1-y0)*r.h };
+}
+function drawAxes(ctx, r, xr, yr, label) {
+  const P = axesP(r, xr, yr);
+  ctx.strokeStyle = 'rgba(255,255,255,0.06)'; ctx.lineWidth = 1;
+  for (let gx = Math.ceil(xr[0]); gx <= xr[1]; gx++) { ctx.beginPath(); ctx.moveTo(P.X(gx), r.y); ctx.lineTo(P.X(gx), r.y+r.h); ctx.stroke(); }
+  ctx.strokeStyle = 'rgba(255,255,255,0.2)'; ctx.lineWidth = 1.2;
+  if (yr[0] < 0 && yr[1] > 0) { ctx.beginPath(); ctx.moveTo(r.x, P.Y(0)); ctx.lineTo(r.x+r.w, P.Y(0)); ctx.stroke(); }
+  else { ctx.beginPath(); ctx.moveTo(r.x, r.y+r.h); ctx.lineTo(r.x+r.w, r.y+r.h); ctx.stroke(); }
+  if (xr[0] < 0 && xr[1] > 0) { ctx.beginPath(); ctx.moveTo(P.X(0), r.y); ctx.lineTo(P.X(0), r.y+r.h); ctx.stroke(); }
+  if (label) { ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.font = '11px "JetBrains Mono",monospace'; ctx.fillText(label, r.x + 4, r.y + 13); }
+  return P;
+}
+function plotCurve(ctx, r, xr, yr, fn, color, dash, lw, fill) {
+  const P = axesP(r, xr, yr);
+  ctx.strokeStyle = color; ctx.lineWidth = lw || 2; ctx.setLineDash(dash || []);
+  const steps = Math.max(300, Math.round(r.w));
+  ctx.beginPath(); let started = false;
+  for (let i = 0; i <= steps; i++) {
+    const x = xr[0] + (xr[1]-xr[0])*i/steps;
+    let y = fn(x); if (!isFinite(y)) { started = false; continue; }
+    y = Math.max(yr[0]-2, Math.min(yr[1]+2, y));
+    const px = P.X(x), py = P.Y(y);
+    if (!started) { ctx.moveTo(px, py); started = true; } else ctx.lineTo(px, py);
+  }
+  ctx.stroke(); ctx.setLineDash([]);
+  if (fill) {
+    ctx.lineTo(P.X(xr[1]), P.Y(yr[0])); ctx.lineTo(P.X(xr[0]), P.Y(yr[0])); ctx.closePath();
+    ctx.fillStyle = fill; ctx.fill();
+  }
+}
+
+function drawExplore(ctx, W, H) {
+  const { f, F, S } = currentSignal();
+  // time panel
+  const tL = exCustom ? 8 : Math.max(4, exP*3.2);
+  const tR = { x: 40, y: 12, w: W - 52, h: H*0.44 };
+  let tmin = 1e9, tmax = -1e9;
+  const NT = 400, tvals = [], txs = [];
+  for (let i = 0; i <= NT; i++) { const t = -tL + 2*tL*i/NT; const y = f(t); txs.push(t); tvals.push(Math.abs(y)); if (isFinite(y)) { tmin = Math.min(tmin,y); tmax = Math.max(tmax,y); } }
+  if (!isFinite(tmin)) { tmin = -1; tmax = 1; }
+  const tpad = (tmax - tmin)*0.15 + 0.05;
+  drawAxes(ctx, tR, [-tL, tL], [Math.min(0,tmin)-tpad, tmax+tpad], 'f(t)');
+  plotCurve(ctx, tR, [-tL, tL], [Math.min(0,tmin)-tpad, tmax+tpad], f, '#7c9dff', null, 2.4, 'rgba(124,157,255,0.12)');
+
+  // frequency panel — numeric |F(ω)|
+  const wL = exCustom ? 20 : Math.max(8, 24/exP);
+  const NW = 260, wxs = [], wmag = [];
+  let Fmax = 0;
+  for (let i = 0; i <= NW; i++) {
+    const w = -wL + 2*wL*i/NW;
+    const v = ftAt(f, w, tL*1.6).mag;
+    wxs.push(w); wmag.push(v); if (v > Fmax) Fmax = v;
+  }
+  const fR = { x: 40, y: H*0.52, w: W - 52, h: H*0.44 };
+  drawAxes(ctx, fR, [-wL, wL], [0, Fmax*1.12 || 1], '|F(ω)|');
+  let idx = 0;
+  plotCurve(ctx, fR, [-wL, wL], [0, Fmax*1.12 || 1], w => { // sample from precomputed
+    const t = (w + wL)/(2*wL)*NW; const j = Math.max(0, Math.min(NW-1, Math.floor(t)));
+    return wmag[j] + (wmag[j+1]-wmag[j])*(t-j);
+  }, '#ff9d5d', null, 2.2, 'rgba(255,157,93,0.12)');
+  if (F) plotCurve(ctx, fR, [-wL, wL], [0, Fmax*1.12 || 1], w => Math.abs(F(w)), 'rgba(255,255,255,0.45)', [5,4], 1.5);
+
+  // metrics
+  const wt = hwhm(tvals, txs), ww = hwhm(wmag, wxs);
+  $('mWt').textContent = fmt(wt, 2);
+  $('mWw').textContent = fmt(ww, 2);
+  $('mProd').textContent = fmt(wt*ww, 2);
+  // pair box
+  if (exCustom) $('pairBox').textContent = 'Typed signal — transform computed numerically. Slide the "scale" control (it multiplies t).';
+  else tex($('pairBox'), S.pairTeX);
+}
+
+function drawPractice(ctx, W, H) {
+  const r = { x: 40, y: 16, w: W - 52, h: H - 34 };
+  const p = problem;
+  if (!p) { drawAxes(ctx, r, [-6,6], [-1,1]); return; }
+  if (p.type === 'match' || p.type === 'null' || p.type === 'point') {
+    const k = p.k || (p.type === 'point' ? 'rect' : 'rect');
+    const S = SIGNALS[k] || SIGNALS.rect;
+    const pp = p.a || 2.5;
+    const half = { x:40, y:16, w:W-52, h:(H-44)/2 };
+    const half2 = { x:40, y:16 + (H-44)/2 + 12, w:W-52, h:(H-44)/2 };
+    const tL = Math.max(4, pp*3);
+    let tmax = 0; for (let i=-100;i<=100;i++){ const v=S.f(i*tL/100, pp); if (v>tmax) tmax=v; }
+    drawAxes(ctx, half, [-tL,tL], [Math.min(0,-0.1), tmax*1.15||1], 'f(t)');
+    plotCurve(ctx, half, [-tL,tL], [Math.min(0,-0.1), tmax*1.15||1], t => S.f(t, pp), '#7c9dff', null, 2.2, 'rgba(124,157,255,0.12)');
+    if (checked || revealed || p.type !== 'match') {
+      const wL = Math.max(6, 18/pp);
+      let Fm = 0; for (let i=-120;i<=120;i++){ const v=Math.abs(S.F(i*wL/120, pp)); if (v>Fm) Fm=v; }
+      drawAxes(ctx, half2, [-wL,wL], [0, Fm*1.15||1], '|F(ω)|');
+      plotCurve(ctx, half2, [-wL,wL], [0, Fm*1.15||1], w => Math.abs(S.F(w, pp)), '#ff9d5d', null, 2.2, 'rgba(255,157,93,0.12)');
+      if (p.type === 'null') {
+        const P = axesP(half2, [-wL,wL], [0, Fm*1.15||1]);
+        ctx.strokeStyle = 'rgba(93,255,160,0.7)'; ctx.setLineDash([3,3]);
+        ctx.beginPath(); ctx.moveTo(P.X(TAU/p.a), half2.y); ctx.lineTo(P.X(TAU/p.a), half2.y+half2.h); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = '#5dffa0'; ctx.font = '11px "JetBrains Mono",monospace';
+        ctx.fillText('ω = 2π/a ≈ ' + fmt(TAU/p.a,2), P.X(TAU/p.a) + 6, half2.y + 14);
+      }
+    } else {
+      drawAxes(ctx, half2, [-6,6], [0,1], '|F(ω)|  — pick from the options');
+    }
+    return;
+  }
+  // property / uncertainty: show the Gaussian pair as a reference
+  const half = { x:40, y:16, w:W-52, h:(H-44)/2 };
+  const half2 = { x:40, y:16 + (H-44)/2 + 12, w:W-52, h:(H-44)/2 };
+  const s = 1.4;
+  drawAxes(ctx, half, [-6,6], [-0.1,1.15], 'f(t) = e^{-t²/2σ²}');
+  plotCurve(ctx, half, [-6,6], [-0.1,1.15], t => Math.exp(-t*t/(2*s*s)), '#7c9dff', null, 2.2, 'rgba(124,157,255,0.12)');
+  const Fm = s*Math.sqrt(TAU);
+  drawAxes(ctx, half2, [-6,6], [0, Fm*1.15], '|F(ω)|');
+  plotCurve(ctx, half2, [-6,6], [0, Fm*1.15], w => Fm*Math.exp(-s*s*w*w/2), '#ff9d5d', null, 2.2, 'rgba(255,157,93,0.12)');
+}
+
+/* ================= mode toggle ================= */
+function setMode(m) {
+  mode = m;
+  $('modeSeg').querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.mode === m));
+  const practice = m === 'practice';
+  $('exploreCol').hidden = practice; $('practiceCol').hidden = !practice;
+  $('statRow').hidden = !practice; $('levelTrack').hidden = !practice; $('levelPill').hidden = !practice;
+  $('metricRow').hidden = practice;
+  $('footNote').textContent = practice
+    ? 'Adaptive: 3 right in a row levels you up, 2 wrong drops you down. Revealing the solution skips scoring.'
+    : 'Explore: pick a signal, slide its width, and watch its spectrum |F(ω)| stretch the other way.';
+  if (practice && !problem) newProblem();
+  draw();
+}
+$('modeSeg').addEventListener('click', e => { const b = e.target.closest('button'); if (b) setMode(b.dataset.mode); });
+
+/* explore wiring */
+$('pSlider').addEventListener('input', e => {
+  exP = sliderToP(+e.target.value);
+  $('pVal').textContent = fmt(exP, exCustom ? 2 : 1);
+  draw();
+});
+$('plotBtn').addEventListener('click', () => {
+  const src = $('customF').value.trim();
+  if (!src) { exCustom = null; $('customErr').textContent = ''; buildWaveGrid(); draw(); return; }
+  const g = compileFn(src);
+  if (!g) { $('customErr').textContent = 'Could not read that expression.'; return; }
+  exCustom = t => g(t / exP);
+  $('customErr').textContent = ''; buildWaveGrid(); draw();
+});
+$('customF').addEventListener('keydown', e => { if (e.key === 'Enter') $('plotBtn').click(); });
+
+/* info */
+function infoStuff() {
+  tex($('cf1'), 'F(\\omega) = \\int_{-\\infty}^{\\infty} f(t)\\,e^{-i\\omega t}\\,dt');
+  tex($('cf2'), 'f(t) = \\dfrac{1}{2\\pi}\\int_{-\\infty}^{\\infty} F(\\omega)\\,e^{i\\omega t}\\,d\\omega');
+  const rows = [
+    ['\\operatorname{rect}(t/a)', 'a\\,\\operatorname{sinc}(\\omega a/2)'],
+    ['e^{-t^2/2\\sigma^2}', '\\sigma\\sqrt{2\\pi}\\;e^{-\\sigma^2\\omega^2/2}'],
+    ['e^{-|t|/\\tau}', '2\\tau/(1+\\omega^2\\tau^2)'],
+    ['\\delta(t)', '1'],
+    ['1', '2\\pi\\,\\delta(\\omega)'],
+  ];
+  $('pairsTable').innerHTML = rows.map(([a,b]) => '<tr><td class="t1"></td><td>↔</td><td class="t2"></td></tr>').join('');
+  [...$('pairsTable').querySelectorAll('tr')].forEach((tr,i) => { tex(tr.querySelector('.t1'), rows[i][0]); tex(tr.querySelector('.t2'), rows[i][1]); });
+}
+$('infoBtn').addEventListener('click', () => $('infoModal').classList.add('show'));
+$('infoClose').addEventListener('click', () => $('infoModal').classList.remove('show'));
+$('infoModal').addEventListener('click', e => { if (e.target.id === 'infoModal') $('infoModal').classList.remove('show'); });
+
+MP.onResize(draw);
+MP.register({
+  levels: MAXLVL,
+  setLevel: n => { if (mode !== 'practice') setMode('practice'); level = n; newProblem(); },
+  currentLevel: () => level,
+  nextProblem: () => { if (mode !== 'practice') setMode('practice'); newProblem(); },
+  answerText: () => problem ? problem.fields.map(f => f.id + '=' + (f.kind === 'choice' ? f.want : fmt(f.want,3))).join('  ') : '—',
+});
+if (MP.preview) { const k = $('mp-answer-key'); if (k) $('practiceCol').appendChild(k); }
+window.addEventListener('load', () => {
+  infoStuff(); buildWaveGrid();
+  $('pVal').textContent = fmt(exP, 1);
+  if (MP.preview) setMode('practice'); else draw();
+});
+</script>
+</body>
+</html>
