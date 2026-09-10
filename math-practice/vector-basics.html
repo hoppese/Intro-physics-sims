@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Adding &amp; Subtracting Vectors — Practice</title>
+<title>Vectors — Practice</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
@@ -74,7 +74,7 @@
     <div class="header">
       <div class="title">
         <span class="dot"></span>
-        <span class="name">Adding &amp; Subtracting Vectors <span class="sub">— math practice</span></span>
+        <span class="name">Vectors <span class="sub">— math practice</span></span>
       </div>
       <div style="display:flex;gap:8px;align-items:center;">
         <span class="track-pill" id="levelPill">Level 1</span>
@@ -114,25 +114,27 @@
 
 <div class="modal-backdrop" id="infoModal">
   <div class="modal">
-    <h2>Adding &amp; Subtracting Vectors <span class="close" id="infoClose">×</span></h2>
+    <h2>Vectors <span class="close" id="infoClose">×</span></h2>
     <div class="yellow">What this practices</div>
-    <p>Combining two vectors: add or subtract component by component in 2D and 3D, and handle the case where one vector is given in polar form (magnitude &amp; angle) so you have to resolve it first. Vectors are written both ways &mdash; angle brackets <span id="n1"></span> and <span id="n2"></span> notation. Vector names change between problems on purpose.</p>
+    <p>Everything you do to a <b>single</b> vector: resolving it into components, going back to a magnitude &amp; direction, building its unit vector, and resolving it onto a set of tilted axes (an inclined plane). Vectors are written both ways &mdash; angle brackets <span id="n1"></span> and <span id="n2"></span> notation &mdash; because physics uses both and you need to read either. Angle and vector names change between problems on purpose.</p>
     <div class="yellow">Levels</div>
     <div class="lvl">
-      <b>1</b> — add / subtract two vectors (2D components).<br>
-      <b>2</b> — add / subtract in 3D (components).<br>
-      <b>3</b> — add / subtract when one vector is polar; answer as magnitude &amp; direction.
+      <b>1</b> — magnitude &amp; angle → components.<br>
+      <b>2</b> — components → magnitude &amp; direction.<br>
+      <b>3</b> — unit vector of a given vector (2D and 3D).<br>
+      <b>4</b> — resolve a vector onto axes rotated by φ.<br>
+      <b>5</b> — split a vector into components parallel and perpendicular to an inclined plane.
     </div>
     <div class="yellow">Key relations</div>
-    <p><span id="f1"></span> &nbsp;·&nbsp; <span id="f2"></span></p>
+    <p><span id="f1"></span> &nbsp;·&nbsp; <span id="f2"></span> &nbsp;·&nbsp; <span id="f3"></span></p>
     <div class="yellow">Elsewhere</div>
-    <p>Single-vector work (components, magnitude &amp; direction, unit vectors, tilted axes) is in the <b>Vectors</b> sim. Dot &amp; cross products have their own.</p>
+    <p>Adding &amp; subtracting vectors, and dot &amp; cross products, each have their own sim.</p>
   </div>
 </div>
 
 <script>
 const $ = id => document.getElementById(id);
-const MAXLVL = 3;
+const MAXLVL = 5;
 const C = { A:'#5da9ff', B:'#ff9f5d', R:'#5dffa0', axis:'#c9b8f0', proj:'rgba(255,255,255,0.5)', vec:'#5da9ff' };
 
 let level = 1;
@@ -153,6 +155,7 @@ function tex(el, s) {
   if (window.katex) { try { katex.render(s, el, { throwOnError:false }); return; } catch(e) {} }
   el.textContent = plainMath(s);
 }
+// crude TeX -> unicode for when KaTeX fails to load
 function plainMath(s) {
   return s
     .replace(/\\langle\s*/g,'⟨').replace(/\s*\\rangle/g,'⟩')
@@ -160,10 +163,12 @@ function plainMath(s) {
     .replace(/\\hat\{([^}]+)\}/g,'$1̂')
     .replace(/\\imath/g,'ı').replace(/\\jmath/g,'ȷ')
     .replace(/\\left|\\right/g,'')
+    .replace(/\\dfrac\{([^}]*)\}\{([^}]*)\}/g,'($1)/($2)')
     .replace(/\\sqrt\{([^}]*)\}/g,'√($1)')
     .replace(/\\operatorname\{([^}]+)\}/g,'$1')
     .replace(/\\text\{([^}]*)\}/g,'$1')
     .replace(/\\theta/g,'θ').replace(/\\phi/g,'φ').replace(/\\alpha/g,'α').replace(/\\beta/g,'β')
+    .replace(/\\parallel/g,'∥').replace(/\\perp/g,'⟂')
     .replace(/\\cos/g,'cos').replace(/\\sin/g,'sin').replace(/\\pm/g,'±').replace(/\\cdot/g,'·')
     .replace(/\\vec\{([^}]+)\}/g,'$1⃗')
     .replace(/\^\\circ/g,'°').replace(/\\,/g,' ').replace(/\\ /g,' ')
@@ -171,6 +176,7 @@ function plainMath(s) {
 }
 
 // ---- notation ----
+// 'ang' = angle-bracket components; 'ijk' = i-hat / j-hat / k-hat
 function pickNotation() { return Math.random() < 0.5 ? 'ang' : 'ijk'; }
 const HATS = ['\\hat{\\imath}', '\\hat{\\jmath}', '\\hat{k}'];
 const AXES = ['x', 'y', 'z'];
@@ -184,6 +190,7 @@ function vecTeX(comps, notn) {
   }
   return '\\langle ' + comps.map(fmt).join(',\\ ') + ' \\rangle';
 }
+// answer-field label for component k of a vector called `sym` (bare letter, e.g. 'v' or 'R')
 function compLabel(k, notn, sym) {
   if (notn === 'ijk') return HATS[k] + '\\text{ coefficient}';
   return sym + '_{' + AXES[k] + '}';
@@ -192,15 +199,22 @@ function compLabel(k, notn, sym) {
 // ---- label pools ----
 const ANG = ['\\theta','\\phi','\\alpha','\\beta'];
 const ANGP = { '\\theta':'θ', '\\phi':'φ', '\\alpha':'α', '\\beta':'β' };
-const TWO_VEC = [
-  { a:'A', b:'B', noun:'vector' },
-  { a:'d_1', b:'d_2', noun:'displacement' },
-  { a:'F_1', b:'F_2', noun:'force' },
-  { a:'v', b:'w', noun:'velocity' },
-  { a:'p', b:'q', noun:'vector' },
+const ONE_VEC = [
+  { s:'\\vec{F}', p:'F', noun:'force', unit:'N' },
+  { s:'\\vec{d}', p:'d', noun:'displacement', unit:'m' },
+  { s:'\\vec{v}', p:'v', noun:'velocity', unit:'m/s' },
+  { s:'\\vec{A}', p:'A', noun:'vector', unit:'' },
+  { s:'\\vec{r}', p:'r', noun:'vector', unit:'' },
 ];
 const NICE = [15,20,25,30,37,40,45,50,53,60,65,70,75];
+// Pythagorean pairs / quadruples so magnitudes come out clean
+const TRIP2 = [[3,4],[6,8],[5,12],[8,15],[7,24],[20,21],[9,12],[12,16],[10,24]];
+const TRIP3 = [[1,2,2],[2,3,6],[1,4,8],[2,6,9],[6,6,7],[3,4,12],[4,4,7],[2,10,11],[8,9,12],[1,2,2]];
 
+const rndSign = () => (Math.random() < 0.5 ? -1 : 1);
+function shuffle(a) { for (let i=a.length-1;i>0;i--){ const j=rnd(0,i); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+// friendly polar vector: nice angle in any quadrant
 function polar(magLo, magHi) {
   const mag = rnd(magLo, magHi);
   const base = pick(NICE);
@@ -213,83 +227,132 @@ function polar(magLo, magHi) {
 function genProblem(lvl) {
   const asym = pick(ANG), ap = ANGP[asym];
 
-  if (lvl === 1 || lvl === 3) {          // 2D add / subtract  (lvl 3: one vector polar)
-    const set = pick(TWO_VEC);
+  if (lvl === 1) {                       // resolve into components
+    const v = pick(ONE_VEC);
+    const P = polar(4, 14);
     const notn = pickNotation();
-    const op = Math.random() < 0.5 ? '+' : '−';
-    const sgn = op === '+' ? 1 : -1;
-    const polarMode = lvl === 3;
-    let A, B, Aform='comp', Bform='comp';
-    if (polarMode) {
-      if (Math.random() < 0.5) { A = polar(4,12); Aform='polar'; B = { x:rndNZ(-8,8), y:rndNZ(-8,8) }; }
-      else { A = { x:rndNZ(-8,8), y:rndNZ(-8,8) }; B = polar(4,12); Bform='polar'; }
-    } else {
-      A = { x:rndNZ(-8,8), y:rndNZ(-8,8) };
-      B = { x:rndNZ(-8,8), y:rndNZ(-8,8) };
-    }
-    const Rx = A.x + sgn*B.x, Ry = A.y + sgn*B.y;
-    const an = set.a, bn = set.b;
-    const magR = Math.hypot(Rx,Ry), angR = norm360(Math.atan2(Ry,Rx)*R2D);
-    const p = {
-      type: polarMode ? 'addpolar' : 'add2d',
-      set, op, A, B, Aform, Bform, Rx, Ry, magR, angR, an, bn, asym, ap, notn,
-      task: polarMode ? 'Add / subtract (one polar)' : 'Add / subtract (2D)',
-      prompt:`${set.noun[0].toUpperCase()+set.noun.slice(1)}s: ${an} = ${vecStr(A,Aform,asym,notn)},  ${bn} = ${vecStr(B,Bform,asym,notn)}.`,
-      askTex:`${an} ${op} ${bn}`,
-      steps:[],
+    return {
+      type:'resolve', asym, ap, v, P, notn,
+      task:'Resolve into components',
+      prompt:`A ${v.noun} ${v.s} has magnitude ${P.mag}${v.unit?' '+v.unit:''} and points at ${asym} = ${P.angle}° measured counter-clockwise from the +x axis. `
+        + (notn === 'ijk' ? `Write ${v.s} in ${HATS[0]}, ${HATS[1]} form.` : `Give its x- and y-components.`),
+      fields:[
+        { id:'cx', label:compLabel(0, notn, v.p), want:P.x },
+        { id:'cy', label:compLabel(1, notn, v.p), want:P.y },
+      ],
+      steps:[
+        `${v.s}_x = |${v.s}|\\cos ${asym} = ${P.mag}\\cos ${P.angle}^\\circ = ${fmt(P.x)}`,
+        `${v.s}_y = |${v.s}|\\sin ${asym} = ${P.mag}\\sin ${P.angle}^\\circ = ${fmt(P.y)}`,
+        `${v.s} = ${vecTeX([P.x, P.y], notn)}`,
+      ],
     };
-    if (Aform==='polar') p.steps.push(`${an} = (${A.mag}\\cos ${A.angle}^\\circ,\\ ${A.mag}\\sin ${A.angle}^\\circ) = ${vecTeX([A.x,A.y], notn)}`);
-    if (Bform==='polar') p.steps.push(`${bn} = (${B.mag}\\cos ${B.angle}^\\circ,\\ ${B.mag}\\sin ${B.angle}^\\circ) = ${vecTeX([B.x,B.y], notn)}`);
-    p.steps.push(`R_x = ${fmt(A.x)} ${op} ${fmt(B.x)} = ${fmt(Rx)}`);
-    p.steps.push(`R_y = ${fmt(A.y)} ${op} ${fmt(B.y)} = ${fmt(Ry)}`);
-    if (polarMode) {
-      p.steps.push(`|R| = \\sqrt{R_x^2 + R_y^2} = ${fmt(magR)}`);
-      p.steps.push(`${asym} = \\operatorname{atan2}(R_y,\\ R_x) = ${fmt(angR)}^\\circ`);
-      p.fields = [
-        { id:'mag', label:'|R| \\text{ (magnitude)}', want:magR, tol:Math.max(0.2, magR*0.02) },
-        { id:'ang', label:`${ap} \\text{ from +x axis (deg)}`, want:angR, circular:true },
-      ];
-    } else {
-      p.steps.push(`R = ${vecTeX([Rx,Ry], notn)}`);
-      p.fields = [
-        { id:'rx', label:compLabel(0, notn, 'R'), want:Rx },
-        { id:'ry', label:compLabel(1, notn, 'R'), want:Ry },
-      ];
-    }
-    return p;
   }
 
-  // lvl 2: 3D add / subtract
-  const set = pick(TWO_VEC);
-  const notn = pickNotation();
-  const op = Math.random() < 0.5 ? '+' : '−';
-  const sgn = op === '+' ? 1 : -1;
-  const A = { x:rndNZ(-7,7), y:rndNZ(-7,7), z:rndNZ(-7,7) };
-  const B = { x:rndNZ(-7,7), y:rndNZ(-7,7), z:rndNZ(-7,7) };
-  const R = { x:A.x+sgn*B.x, y:A.y+sgn*B.y, z:A.z+sgn*B.z };
-  const an = set.a, bn = set.b;
-  return {
-    type:'add3d', set, op, A, B, R, an, bn, asym, ap, notn,
-    task:'Add / subtract (3D)',
-    prompt:`${set.noun[0].toUpperCase()+set.noun.slice(1)}s: ${an} = ${vecTeX([A.x,A.y,A.z], notn)},  ${bn} = ${vecTeX([B.x,B.y,B.z], notn)}.`,
-    askTex:`${an} ${op} ${bn}`,
-    fields:[
-      { id:'rx', label:compLabel(0, notn, 'R'), want:R.x },
-      { id:'ry', label:compLabel(1, notn, 'R'), want:R.y },
-      { id:'rz', label:compLabel(2, notn, 'R'), want:R.z },
-    ],
-    steps:[
-      `R_x = ${A.x} ${op} ${B.x} = ${R.x}`,
-      `R_y = ${A.y} ${op} ${B.y} = ${R.y}`,
-      `R_z = ${A.z} ${op} ${B.z} = ${R.z}`,
-      `R = ${vecTeX([R.x,R.y,R.z], notn)}`,
-    ],
-  };
-}
+  if (lvl === 2) {                       // components -> magnitude & direction
+    const v = pick(ONE_VEC);
+    const notn = pickNotation();
+    const x = rndNZ(-9,9), y = rndNZ(-9,9);
+    const mag = Math.hypot(x,y);
+    const ang = norm360(Math.atan2(y,x)*R2D);
+    return {
+      type:'magdir', asym, ap, v, x, y, mag, ang, notn,
+      task:'Magnitude & direction',
+      prompt:`A ${v.noun} ${v.s} = ${vecTeX([x,y], notn)}${v.unit?' '+v.unit:''}.`,
+      fields:[
+        { id:'mag', label:`|${v.p}| \\text{ (magnitude)}`, want:mag, tol:Math.max(0.15, mag*0.02) },
+        { id:'ang', label:`${ap} \\text{ from +x axis, } 0\\text{–}360^\\circ`, want:ang, circular:true },
+      ],
+      steps:[
+        `|${v.s}| = \\sqrt{${x}^2 + (${y})^2} = \\sqrt{${x*x + y*y}} = ${fmt(mag)}`,
+        `${asym} = \\operatorname{atan2}(${y},\\ ${x}) = ${fmt(ang)}^\\circ`,
+      ],
+    };
+  }
 
-function vecStr(v, form, asym, notn) {
-  if (form === 'polar') return `\\text{magnitude } ${v.mag}\\text{ at } ${asym} = ${v.angle}^\\circ`;
-  return vecTeX([v.x, v.y], notn);
+  if (lvl === 3) {                       // unit vector (2D or 3D)
+    const v = pick(ONE_VEC);
+    const notn = pickNotation();
+    const is3d = Math.random() < 0.45;
+    let comps;
+    if (is3d) { comps = shuffle(pick(TRIP3).slice()).map(n => n * rndSign()); }
+    else { const t = pick(TRIP2).slice(); if (Math.random() < 0.5) t.reverse(); comps = t.map(n => n * rndSign()); }
+    const mag = Math.hypot(...comps);
+    const u = comps.map(c => +(c/mag).toFixed(4));
+    const inner = notn === 'ijk' ? `\\left(${vecTeX(comps, notn)}\\right)` : vecTeX(comps, notn);
+    return {
+      type: is3d ? 'unit3d' : 'unit',
+      v, comps, mag, u, notn,
+      task:'Unit vector',
+      prompt:`A ${v.noun} ${v.s} = ${vecTeX(comps, notn)}${v.unit?' '+v.unit:''}. Find the unit vector \\hat{${v.p}} pointing the same way.`,
+      fields: comps.map((c,k) => ({
+        id:'u'+k,
+        label: notn === 'ijk' ? compLabel(k, notn, v.p) : `\\hat{${v.p}}_{${AXES[k]}}`,
+        want: u[k], tol: 0.02,
+      })),
+      steps:[
+        `|${v.s}| = \\sqrt{${comps.map(c => `(${c})^2`).join(' + ')}} = \\sqrt{${Math.round(mag*mag)}} = ${fmt(mag)}`,
+        `\\hat{${v.p}} = \\dfrac{${v.s}}{|${v.s}|} = \\dfrac{1}{${fmt(mag)}}\\,${inner} = ${vecTeX(u, notn)}`,
+      ],
+    };
+  }
+
+  if (lvl === 4) {                       // resolve onto rotated axes
+    const v = pick(ONE_VEC);
+    const notn = pickNotation();
+    const x = rndNZ(-9,9), y = rndNZ(-9,9);
+    const phi = pick([20,25,30,37,40,45,53,60]) * (Math.random()<0.5?1:-1);
+    const c = Math.cos(phi*D2R), s = Math.sin(phi*D2R);
+    const xp =  x*c + y*s;
+    const yp = -x*s + y*c;
+    const psym = pick(ANG.filter(a => a!==asym)), pp = ANGP[psym];
+    return {
+      type:'rotaxes', v, x, y, phi, xp, yp, psym, pp, asym, ap, notn,
+      task:'Resolve onto rotated axes',
+      prompt:`The x′y′ axes are rotated ${psym} = ${phi}° (counter-clockwise) from the standard axes. A ${v.noun} ${v.s} = ${vecTeX([x,y], notn)} in the standard frame.`,
+      fields:[
+        { id:'xp', label:`${v.p}_{x′}  \\text{ (along x′)}`, want:xp },
+        { id:'yp', label:`${v.p}_{y′}  \\text{ (along y′)}`, want:yp },
+      ],
+      steps:[
+        `${v.s}_{x'} = ${v.s}_x\\cos ${psym} + ${v.s}_y\\sin ${psym} = ${x}\\cos ${phi}^\\circ + (${y})\\sin ${phi}^\\circ = ${fmt(xp)}`,
+        `${v.s}_{y'} = -${v.s}_x\\sin ${psym} + ${v.s}_y\\cos ${psym} = -${x}\\sin ${phi}^\\circ + (${y})\\cos ${phi}^\\circ = ${fmt(yp)}`,
+      ],
+    };
+  }
+
+  // lvl 5: inclined plane
+  const alpha = pick([15,20,25,30,37,40,45,53,60]);
+  const W = rnd(5, 20);
+  const kind = pick(['weight','push']);
+  const asym7 = pick(['\\alpha','\\theta','\\phi']);
+  const parallel = W * Math.sin(alpha*D2R);
+  const perp = W * Math.cos(alpha*D2R);
+  let prompt, f1, f2, s1, s2;
+  if (kind === 'weight') {
+    prompt = `A block of weight ${W} N rests on a frictionless plane inclined at ${asym7} = ${alpha}° above the horizontal. Gravity pulls the block straight down.`;
+    f1 = 'component down the slope (parallel to the surface)';
+    f2 = 'component into the surface (perpendicular)';
+    s1 = `W_{\\parallel} = W\\sin ${asym7} = ${W}\\sin ${alpha}^\\circ = ${fmt(parallel)}`;
+    s2 = `W_{\\perp} = W\\cos ${asym7} = ${W}\\cos ${alpha}^\\circ = ${fmt(perp)}`;
+  } else {
+    prompt = `A rope pulls a crate with a force of ${W} N directed horizontally. The crate sits on a ramp inclined at ${asym7} = ${alpha}° above the horizontal.`;
+    f1 = 'component up the slope (parallel to the surface)';
+    f2 = 'component pressing into the surface (perpendicular)';
+    s1 = `F_{\\parallel} = F\\cos ${asym7} = ${W}\\cos ${alpha}^\\circ = ${fmt(perp)}`;
+    s2 = `F_{\\perp} = F\\sin ${asym7} = ${W}\\sin ${alpha}^\\circ = ${fmt(parallel)}`;
+  }
+  const wantPar = kind === 'weight' ? parallel : perp;
+  const wantPerp = kind === 'weight' ? perp : parallel;
+  return {
+    type:'incline', alpha, W, kind, asym7, wantPar, wantPerp,
+    task:'Inclined-plane components',
+    prompt,
+    fields:[
+      { id:'par', label:f1, want:wantPar, tol:Math.max(0.15, wantPar*0.02) },
+      { id:'perp', label:f2, want:wantPerp, tol:Math.max(0.15, wantPerp*0.02) },
+    ],
+    steps:[ s1, s2 ],
+  };
 }
 
 /* ================= UI ================= */
@@ -307,14 +370,6 @@ function renderProblem() {
   const pr = document.createElement('div');
   pr.innerHTML = mathToHtml(problem.prompt);
   box.appendChild(pr);
-
-  if (problem.askTex) {
-    const ask = document.createElement('div');
-    ask.className = 'ask';
-    ask.appendChild(document.createTextNode('Find R = '));
-    const sp = document.createElement('span'); tex(sp, problem.askTex); ask.appendChild(sp);
-    box.appendChild(ask);
-  }
 
   const area = $('answerArea');
   area.innerHTML = '';
@@ -338,21 +393,25 @@ function renderProblem() {
   area.appendChild(hint);
 }
 
+// turn a TeX-ish string into light HTML (subscripts, symbols, bracket / hat notation)
 function mathToHtml(s) {
   return s
     .replace(/\\langle\s*/g,'⟨').replace(/\s*\\rangle/g,'⟩')
+    .replace(/\\left\(/g,'(').replace(/\\right\)/g,')').replace(/\\left|\\right/g,'')
     .replace(/\\hat\{\\imath\}/g,'î').replace(/\\hat\{\\jmath\}/g,'ĵ').replace(/\\hat\{k\}/g,'k̂')
     .replace(/\\hat\{([^}]+)\}/g,'$1̂')
     .replace(/\\imath/g,'ı').replace(/\\jmath/g,'ȷ')
     .replace(/\\vec\{([^}]+)\}/g,'<i>$1</i>')
+    .replace(/\\dfrac\{([^}]*)\}\{([^}]*)\}/g,'($1)/($2)')
     .replace(/\\operatorname\{([^}]+)\}/g,'$1')
     .replace(/\\text\{([^}]*)\}/g,'$1')
     .replace(/\|([A-Za-z](?:_\d)?)\|/g, '|$1|')
     .replace(/\b([A-Za-z])_(\d|[xyz])\b/g, '$1<sub>$2</sub>')
     .replace(/([A-Za-z])_\{([^}]+)\}/g, '$1<sub>$2</sub>')
     .replace(/\\theta/g,'θ').replace(/\\phi/g,'φ').replace(/\\alpha/g,'α').replace(/\\beta/g,'β')
+    .replace(/\\parallel/g,'∥').replace(/\\perp/g,'⟂')
     .replace(/\\cos/g,'cos').replace(/\\sin/g,'sin').replace(/\\sqrt/g,'√').replace(/\\pm/g,'±')
-    .replace(/\\,/g,' ').replace(/\\ /g,' ')
+    .replace(/\\,/g,' ').replace(/\\ /g,' ')
     .replace(/\^\\circ/g,'°').replace(/\^([0-9])/g,'<sup>$1</sup>')
     .replace(/[{}]/g,'');
 }
@@ -451,7 +510,10 @@ function draw() {
   ctx.clearRect(0,0,W,H);
   ctx.fillStyle = '#181225'; ctx.fillRect(0,0,W,H);
   if (!problem) return;
-  if (problem.type === 'add3d') return draw3D(ctx,W,H);
+  const t = problem.type;
+  if (t === 'unit3d') return drawUnit3D(ctx,W,H);
+  if (t === 'incline') return drawIncline(ctx,W,H);
+  if (t === 'rotaxes') return drawRotAxes(ctx,W,H);
   drawPlane(ctx,W,H);
 }
 
@@ -485,56 +547,154 @@ function gridAxes(ctx,W,H,cx,cy,scale) {
 
 function drawPlane(ctx,W,H) {
   const cx = W/2, cy = H/2, p = problem;
-  const comps = [p.A.x,p.A.y,p.B.x,p.B.y,p.Rx,p.Ry];
+  const comps = [];
+  if (p.type === 'resolve') comps.push(p.P.x, p.P.y);
+  if (p.type === 'magdir') comps.push(p.x, p.y);
+  if (p.type === 'unit') comps.push(p.comps[0], p.comps[1], 1, -1);
   const maxC = Math.max(3, ...comps.map(Math.abs));
   const scale = Math.min(20, (Math.min(W,H)/2 - 28)/maxC);
   const toPx = (x,y) => [cx + x*scale, cy - y*scale];
   gridAxes(ctx,W,H,cx,cy,scale);
   const [ox,oy] = toPx(0,0);
-  const [ax,ay] = toPx(p.A.x,p.A.y);
-  const [bx,by] = toPx(p.B.x,p.B.y);
-  arrow(ctx,ox,oy,ax,ay,C.A,p.an.replace('_',''));
-  arrow(ctx,ox,oy,bx,by,C.B,p.bn.replace('_',''));
+
+  if (p.type === 'unit') {
+    ctx.strokeStyle = 'rgba(255,255,255,0.16)'; ctx.setLineDash([3,3]); ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.arc(ox,oy,scale,0,7); ctx.stroke(); ctx.setLineDash([]);
+    const [hx,hy] = toPx(p.comps[0], p.comps[1]);
+    arrow(ctx,ox,oy,hx,hy,C.vec,p.v.p);
+    if (checked) {
+      const [ux,uy] = toPx(p.u[0], p.u[1]);
+      arrow(ctx,ox,oy,ux,uy,C.R,p.v.p + '̂');
+      ctx.fillStyle = C.R; ctx.font = '12px "JetBrains Mono",monospace';
+      ctx.fillText(`${p.v.p}̂ = ⟨${fmt(p.u[0])}, ${fmt(p.u[1])}⟩`, 12, H-12);
+    }
+    return;
+  }
+
+  if (p.type === 'resolve' || p.type === 'magdir') {
+    const vx = p.type === 'resolve' ? p.P.x : p.x;
+    const vy = p.type === 'resolve' ? p.P.y : p.y;
+    const [hx,hy] = toPx(vx,vy);
+    ctx.setLineDash([4,4]); ctx.strokeStyle = C.proj; ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.moveTo(hx,hy); ctx.lineTo(hx,oy); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(hx,hy); ctx.lineTo(ox,hy); ctx.stroke();
+    ctx.setLineDash([]);
+    arrow(ctx,ox,oy,hx,hy,C.vec,p.v.p);
+    ctx.strokeStyle = C.axis; ctx.lineWidth = 1.6;
+    const a0 = 0, a1 = -Math.atan2(vy,vx);
+    ctx.beginPath(); ctx.arc(ox,oy,26,Math.min(a0,a1),Math.max(a0,a1)); ctx.stroke();
+    ctx.fillStyle = C.axis; ctx.font = '12px "Source Sans 3",sans-serif';
+    ctx.fillText(p.ap, ox + 34*Math.cos(a1/2), oy + 34*Math.sin(a1/2));
+    return;
+  }
+}
+
+function drawRotAxes(ctx,W,H) {
+  const cx = W/2, cy = H/2, p = problem;
+  const maxC = Math.max(3, Math.abs(p.x), Math.abs(p.y), Math.abs(p.xp), Math.abs(p.yp));
+  const scale = Math.min(20, (Math.min(W,H)/2 - 30)/maxC);
+  const toPx = (x,y) => [cx + x*scale, cy - y*scale];
+  gridAxes(ctx,W,H,cx,cy,scale);
+  const [ox,oy] = toPx(0,0);
+  const ph = p.phi*D2R;
+  const L = Math.min(W,H)/2 - 12;
+  ctx.strokeStyle = C.axis; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(ox - L*Math.cos(ph), oy + L*Math.sin(ph)); ctx.lineTo(ox + L*Math.cos(ph), oy - L*Math.sin(ph)); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ox + L*Math.sin(ph), oy + L*Math.cos(ph)); ctx.lineTo(ox - L*Math.sin(ph), oy - L*Math.cos(ph)); ctx.stroke();
+  ctx.fillStyle = C.axis; ctx.font = 'italic 13px "Source Serif 4",serif';
+  ctx.fillText("x′", ox + (L-14)*Math.cos(ph), oy - (L-14)*Math.sin(ph));
+  ctx.fillText("y′", ox - (L-14)*Math.sin(ph) + 4, oy - (L-14)*Math.cos(ph));
+  const [hx,hy] = toPx(p.x,p.y);
+  arrow(ctx,ox,oy,hx,hy,C.vec,p.v.p);
   if (checked) {
-    const [rx,ry] = toPx(p.Rx,p.Ry);
-    arrow(ctx,ox,oy,rx,ry,C.R,'R');
+    const ux = [Math.cos(ph), -Math.sin(ph)];
+    const px = [ox + p.xp*scale*ux[0], oy + p.xp*scale*ux[1]];
+    ctx.setLineDash([4,4]); ctx.strokeStyle = C.proj; ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.moveTo(hx,hy); ctx.lineTo(px[0],px[1]); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(px[0],px[1]); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = C.R; ctx.font = '12px "JetBrains Mono",monospace';
+    ctx.fillText(`${p.v.p}x′=${fmt(p.xp)}`, 12, H-26);
+    ctx.fillText(`${p.v.p}y′=${fmt(p.yp)}`, 12, H-10);
+  }
+}
+
+function drawIncline(ctx,W,H) {
+  const p = problem, a = p.alpha*D2R;
+  const baseY = H - 70, baseX0 = 46, baseLen = W - 110;
+  const apexX = baseX0 + baseLen, apexY = baseY - baseLen*Math.tan(a);
+  ctx.strokeStyle = '#8f7fd0'; ctx.fillStyle = 'rgba(143,127,208,0.12)'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(baseX0,baseY); ctx.lineTo(apexX,baseY); ctx.lineTo(apexX,apexY); ctx.closePath();
+  ctx.fill(); ctx.stroke();
+  ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 1;
+  for (let x = baseX0; x < apexX; x += 12) { ctx.beginPath(); ctx.moveTo(x,baseY); ctx.lineTo(x-8,baseY+9); ctx.stroke(); }
+  ctx.fillStyle = '#c9b8f0'; ctx.font = '13px "Source Sans 3",sans-serif';
+  ctx.fillText(`${mathToHtml(p.asym7).replace(/<[^>]+>/g,'')} = ${p.alpha}°`, baseX0 + 20, baseY - 8);
+  const mx = baseX0 + baseLen*0.5, my = baseY - baseLen*0.5*Math.tan(a);
+  const bs = 22;
+  ctx.save(); ctx.translate(mx,my); ctx.rotate(-a);
+  ctx.fillStyle = '#5da9ff'; ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5;
+  ctx.fillRect(-bs/2,-bs, bs, bs); ctx.strokeRect(-bs/2,-bs, bs, bs);
+  ctx.restore();
+  const dir = p.kind === 'weight' ? [0, 1] : [1, 0];
+  const vlen = 90;
+  const tipX = mx + dir[0]*vlen, tipY = my + dir[1]*vlen;
+  arrow(ctx, mx, my, tipX, tipY, '#ffd66b', p.kind === 'weight' ? 'W' : 'F', 2.6);
+  if (checked) {
+    const par = [Math.cos(a), -Math.sin(a)];
+    const per = [Math.sin(a),  Math.cos(a)];
+    const app = p.kind === 'weight' ? [0, 1] : [1, 0];
+    const cPar = app[0]*par[0] + app[1]*par[1];
+    ctx.setLineDash([4,4]); ctx.strokeStyle = C.proj; ctx.lineWidth = 1.3;
+    const pEnd = [mx + cPar*vlen*par[0], my + cPar*vlen*par[1]];
+    ctx.beginPath(); ctx.moveTo(tipX,tipY); ctx.lineTo(pEnd[0],pEnd[1]); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(mx,my); ctx.lineTo(pEnd[0],pEnd[1]); ctx.stroke();
+    ctx.setLineDash([]);
+    arrow(ctx, mx, my, pEnd[0], pEnd[1], '#5dffa0', '', 2);
+    ctx.fillStyle = '#5dffa0'; ctx.font = '12px "JetBrains Mono",monospace';
+    ctx.fillText(`∥ ${fmt(p.wantPar)}`, 12, H-26);
+    ctx.fillText(`⟂ ${fmt(p.wantPerp)}`, 12, H-10);
   }
 }
 
 let orbit = null;
-function draw3D(ctx,W,H) {
+function drawUnit3D(ctx,W,H) {
   const p = problem;
   if (!orbit) orbit = MP.makeOrbit($('cv'), draw);
   const cx = W/2, cy = H/2;
-  const maxC = Math.max(4, ...[p.A,p.B,p.R].flatMap(v=>[Math.abs(v.x),Math.abs(v.y),Math.abs(v.z)]));
-  const u = Math.min(26, (Math.min(W,H)/2 - 34) / (maxC*1.25));
+  const maxC = Math.max(2, ...p.comps.map(Math.abs));
+  const u = Math.min(30, (Math.min(W,H)/2 - 36) / (maxC*1.2));
   const P = (x,y,z) => { const q = orbit.project(x,y,z); return { x: cx + q.sx*u, y: cy + q.sy*u, d: q.depth }; };
   const L = maxC*1.15;
-  ctx.lineWidth = 1.3;
   [['x',[1,0,0]],['y',[0,1,0]],['z',[0,0,1]]].forEach(function (e) {
     var lab = e[0], d = e[1];
-    var a = P(-d[0]*L, -d[1]*L, -d[2]*L), b = P(d[0]*L, d[1]*L, d[2]*L);
-    ctx.strokeStyle = 'rgba(255,255,255,0.16)';
+    var a = P(-d[0]*L,-d[1]*L,-d[2]*L), b = P(d[0]*L,d[1]*L,d[2]*L);
+    ctx.strokeStyle = 'rgba(255,255,255,0.16)'; ctx.lineWidth = 1.3;
     ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
     ctx.fillStyle = 'rgba(255,255,255,0.55)'; ctx.font = 'italic 12px "Source Serif 4",serif';
     ctx.fillText(lab, b.x + 4, b.y + 4);
   });
   var o = P(0,0,0);
-  var vs = [ { v:p.A, c:C.A, l:p.an.replace('_','') }, { v:p.B, c:C.B, l:p.bn.replace('_','') } ];
-  if (checked) vs.push({ v:p.R, c:C.R, l:'R' });
-  vs.map(function (o2) { o2.tip = P(o2.v.x, o2.v.y, o2.v.z); return o2; })
-    .sort(function (m, n) { return m.tip.d - n.tip.d; })
-    .forEach(function (o2) { arrow(ctx, o.x, o.y, o2.tip.x, o2.tip.y, o2.c, o2.l); });
-  ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.font = '11px "Source Sans 3",sans-serif';
-  ctx.fillText('drag to rotate · add component by component', 12, H - 12);
+  var vt = P(p.comps[0], p.comps[1], p.comps[2]);
+  arrow(ctx, o.x, o.y, vt.x, vt.y, C.A, p.v.p);
+  if (checked) {
+    var ut = P(p.u[0], p.u[1], p.u[2]);
+    arrow(ctx, o.x, o.y, ut.x, ut.y, C.R, p.v.p + '̂');
+    ctx.fillStyle = C.R; ctx.font = '12px "JetBrains Mono",monospace';
+    ctx.fillText(`${p.v.p}̂ = ⟨${p.u.map(fmt).join(', ')}⟩`, 12, H-12);
+  } else {
+    ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.font = '11px "Source Sans 3",sans-serif';
+    ctx.fillText('drag to rotate', 12, H - 12);
+  }
 }
 
 /* ================= info ================= */
 function infoFormulas() {
-  tex($('n1'), '\\langle R_x, R_y \\rangle');
-  tex($('n2'), 'R_x\\,\\hat{\\imath} + R_y\\,\\hat{\\jmath}');
-  tex($('f1'), 'R_x = A_x \\pm B_x,\\quad R_y = A_y \\pm B_y');
-  tex($('f2'), '|R| = \\sqrt{R_x^2 + R_y^2}');
+  tex($('n1'), '\\langle A_x, A_y \\rangle');
+  tex($('n2'), 'A_x\\,\\hat{\\imath} + A_y\\,\\hat{\\jmath}');
+  tex($('f1'), 'A_x = |A|\\cos\\theta,\\ A_y = |A|\\sin\\theta');
+  tex($('f2'), '|A| = \\sqrt{A_x^2 + A_y^2}');
+  tex($('f3'), "\\hat{A} = \\vec{A}\\,/\\,|A|");
 }
 $('infoBtn').addEventListener('click', () => $('infoModal').classList.add('show'));
 $('infoClose').addEventListener('click', () => $('infoModal').classList.remove('show'));
