@@ -61,7 +61,7 @@
     "coulomb-field": {
       "title": "Coulomb's Law & the Electric Field",
       "knight": "22.4–22.5",
-      "videos": [{ "id": "4ubqby1Id4g", "status": "unv" }],
+      "videos": [{ "id": "vJn-GEh9cxM", "status": "unv" }],
       "sims": ["electrostatics-explorer", "moving-charge-field"]
     },
     "field-superposition": {

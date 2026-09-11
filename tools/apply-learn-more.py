@@ -94,6 +94,9 @@ def process(slug):
     p = ROOT / slug / "index.html"
     s = p.read_text()
     m = re.search(r'(<script type="__bundler/template">)(.*)(</script>)', s, re.S)
+    if not m:
+        print(f"  {slug}: not a dc-bundle (hand-authored HTML, own static Learn-more block) — SKIP")
+        return
     pre, raw, post = m.group(1), m.group(2), m.group(3)
     tpl = json.loads(raw)
 
