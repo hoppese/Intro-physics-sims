@@ -56,7 +56,7 @@
       "title": "Charges, Insulators & Conductors",
       "knight": "22.1–22.3",
       "videos": [{ "id": "TFlVWf8JX4A", "status": "ok" }],
-      "sims": ["e-fields-conductors-and-insulators", "electroscope"]
+      "sims": ["e-fields-conductors-and-insulators", "charged-objects-explorer"]
     },
     "coulomb-field": {
       "title": "Coulomb's Law & the Electric Field",
@@ -109,7 +109,7 @@
     "standing-waves": "Standing Waves — Strings & Pipes",
     "interference-explorer": "Interference Explorer",
     "two-source-interference": "Two-Source Interference",
-    "electroscope": "Electroscope & Charged Rod",
+    "charged-objects-explorer": "Charged Objects Explorer",
     "e-fields-conductors-and-insulators": "E-Fields in Conductors & Insulators",
     "electrostatics-explorer": "Electrostatic Force Explorer",
     "moving-charge-field": "B of a Moving Charge",
@@ -178,7 +178,7 @@
         ["Ch 27.3 Young's Double-Slit Experiment", "27-3-youngs-double-slit-experiment"]
       ]
     },
-    "electroscope": {
+    "charged-objects-explorer": {
       "up": [
         ["Vol 2 · 5.1 Electric Charge", "2/pages/5-1-electric-charge"],
         ["Vol 2 · 5.2 Conductors, Insulators, Charging by Induction", "2/pages/5-2-conductors-insulators-and-charging-by-induction"]

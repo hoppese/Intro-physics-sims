@@ -1,0 +1,787 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Charged Objects Explorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body { margin:0; background:#eef0f4; font-family:'Source Sans 3',system-ui,sans-serif; color:#20262b; }
+  .wrap { max-width:1040px; margin:0 auto; padding:20px; }
+  .card { background:#fff; border:1px solid #e1e3ea; border-radius:12px; overflow:hidden; }
+  .header { background:#141a24; color:#fff; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:13px 18px; flex-wrap:wrap; }
+  .header .title { display:flex; align-items:center; gap:10px; }
+  .header .dot { width:11px; height:11px; border-radius:3px; background:#6d5bd0; flex:none; }
+  .header .name { font-family:'Source Serif 4',serif; font-weight:600; font-size:16px; }
+  .header .sub { font-weight:400; color:#9a8fd6; font-size:12px; }
+  .header .right { display:flex; gap:8px; align-items:center; }
+  .headbtn { font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:9px; cursor:pointer; border:1px solid rgba(255,255,255,0.22); background:rgba(255,255,255,0.06); color:#e9e6f7; }
+  .modeseg { display:flex; border:1px solid rgba(255,255,255,0.22); border-radius:9px; overflow:hidden; }
+  .modeseg button { font-size:12px; font-weight:700; letter-spacing:0.03em; padding:7px 13px; cursor:pointer; border:none; background:transparent; color:#c6bff0; }
+  .modeseg button.on { background:#6d5bd0; color:#fff; }
+  .menuwrap { position:relative; }
+  .menu { position:absolute; top:34px; right:0; z-index:40; background:#1b2230; border:1px solid rgba(255,255,255,0.14); border-radius:11px; padding:6px; min-width:190px; box-shadow:0 14px 34px rgba(0,0,0,0.45); display:flex; flex-direction:column; gap:2px; }
+  .menu[hidden] { display:none; }
+  .menu a, .menu button { display:flex; align-items:center; gap:9px; width:100%; text-align:left; font-size:13px; font-weight:600; color:#e6e6ef; background:none; border:none; border-radius:7px; padding:9px 10px; cursor:pointer; text-decoration:none; }
+  .menu a:hover, .menu button:hover { background:rgba(255,255,255,0.08); }
+  .menu .ic { width:18px; text-align:center; flex:none; }
+  .backdrop { position:fixed; inset:0; z-index:39; }
+
+  .body { display:flex; gap:0; align-items:stretch; flex-wrap:wrap; }
+  .canvasCol { padding:14px; display:flex; flex-direction:column; gap:10px; flex:1 1 560px; min-width:0; }
+  .ctlCol { width:290px; flex:none; border-left:1px solid #e8e9ee; padding:15px 16px; display:flex; flex-direction:column; gap:14px; max-height:640px; overflow-y:auto; }
+  canvas { display:block; width:100%; height:auto; aspect-ratio:1.5/1; border-radius:10px; background:#0b0f16; touch-action:none; }
+
+  .section-label { font-size:10.5px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; color:#9aa2ab; margin-bottom:2px; }
+  .palette { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
+  .palette button { display:flex; flex-direction:column; align-items:center; gap:4px; font-size:11.5px; font-weight:600; padding:10px 6px; border-radius:9px; cursor:pointer; border:1px solid #d7dbe0; background:#fff; color:#3a414a; }
+  .palette button:hover { border-color:#6d5bd0; background:#f4f2fb; }
+  .palette .ic { font-size:18px; line-height:1; }
+  .ground-token { display:flex; align-items:center; gap:9px; padding:9px 11px; border-radius:9px; border:1.5px dashed #b9b2df; background:#f7f6fc; cursor:grab; font-size:12.5px; font-weight:600; color:#4b3a99; user-select:none; }
+  .ground-token.placed { border-style:solid; background:#efeafb; }
+
+  .toggle-row { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:8px 10px; border-radius:9px; background:#f4f5f7; }
+  .toggle-row label { font-size:12.5px; font-weight:600; color:#3a414a; }
+  .switch { width:34px; height:19px; border-radius:20px; border:none; cursor:pointer; position:relative; background:#c8ccd2; transition:background .15s; flex:none; }
+  .switch.on { background:#6d5bd0; }
+  .switch .knob { position:absolute; top:2px; left:2px; width:15px; height:15px; border-radius:50%; background:#fff; transition:left .15s; }
+  .switch.on .knob { left:17px; }
+
+  .inspector { border:1.5px solid #e1e3ea; border-radius:10px; padding:11px 12px; display:flex; flex-direction:column; gap:8px; }
+  .inspector .row1 { display:flex; align-items:center; gap:8px; }
+  .inspector .kind { font-weight:700; font-size:13px; }
+  .inspector .q { margin-left:auto; font-family:'JetBrains Mono',monospace; font-size:12.5px; font-weight:700; }
+  .matgrid { display:flex; flex-wrap:wrap; gap:5px; }
+  .matgrid button { font-size:10.5px; font-weight:600; padding:5px 9px; border-radius:7px; cursor:pointer; border:1px solid #d7dbe0; background:#fff; color:#3a414a; }
+  .matgrid button.on { border-color:#6d5bd0; background:#efeafb; color:#4b3a99; }
+  .miniBtn { font-size:11px; font-weight:600; padding:6px 10px; border-radius:7px; cursor:pointer; border:1px solid #d7dbe0; background:#fff; color:#3a414a; }
+  .miniBtn.danger { color:#a53a30; border-color:#e6c2be; }
+  .miniBtn.on { border-color:#6d5bd0; background:#efeafb; color:#4b3a99; }
+  .hint { font-size:11.5px; color:#8b949d; line-height:1.5; }
+
+  .quizBox { background:#f4f2fb; border-radius:9px; padding:12px 13px; font-size:13.5px; line-height:1.6; }
+  .quizOpts { display:flex; flex-direction:column; gap:6px; margin-top:8px; }
+  .quizOpts button { font-size:12.5px; font-weight:600; padding:8px 11px; border-radius:8px; cursor:pointer; border:1px solid #d7dbe0; background:#fff; color:#3a414a; text-align:left; }
+  .quizOpts button.sel { border-color:#6d5bd0; background:#efeafb; }
+  .quizOpts button:disabled { opacity:.6; cursor:default; }
+  .feedback { border-radius:9px; padding:9px 12px; font-size:13px; font-weight:600; }
+  .feedback.correct { background:#e5f6ec; color:#1f7a45; }
+  .feedback.wrong { background:#fbebea; color:#a53a30; }
+
+  .footer-note { text-align:center; padding:14px; font-size:11.5px; color:#8b949d; }
+  .modal-backdrop { position:fixed; inset:0; background:rgba(15,10,26,0.86); backdrop-filter:blur(3px); display:none; align-items:center; justify-content:center; padding:30px; z-index:50; }
+  .modal-backdrop.show { display:flex; }
+  .modal { max-width:680px; width:100%; max-height:90vh; overflow:auto; background:rgba(22,26,36,0.97); border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:22px 26px; color:#eee8f6; }
+  .modal h2 { font-family:'Source Serif 4',serif; font-weight:600; font-size:20px; margin:0 0 16px; display:flex; justify-content:space-between; align-items:baseline; }
+  .modal .close { cursor:pointer; width:26px; height:26px; border-radius:7px; border:1px solid rgba(255,255,255,0.2); background:rgba(255,255,255,0.06); color:#dce6f2; display:flex; align-items:center; justify-content:center; }
+  .modal p { font-size:12.5px; line-height:1.6; }
+  .modal .yellow { color:#e5c86b; font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin:14px 0 7px; }
+  .modal .lvl { font-size:12.5px; line-height:1.7; }
+  .modal .lvl b { color:#fff; }
+  .modal ul { padding-left:18px; margin:4px 0; }
+  [hidden] { display:none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="header">
+      <div class="title">
+        <span class="dot"></span>
+        <span class="name">Charged Objects Explorer <span class="sub">— electrostatics</span></span>
+      </div>
+      <div class="right">
+        <div class="modeseg" id="modeSeg">
+          <button data-mode="explore" class="on">Explore</button>
+          <button data-mode="quiz">Quiz</button>
+        </div>
+        <div class="menuwrap">
+          <button class="headbtn" id="menuBtn">☰</button>
+          <div class="backdrop" id="menuBackdrop" hidden></div>
+          <div class="menu" id="menu" hidden>
+            <a href="../" target="_blank" rel="noopener"><span class="ic">←</span>All sims</a>
+            <button id="infoBtn"><span class="ic">ⓘ</span>Info</button>
+            <button id="exampleBtn"><span class="ic">✎</span>Worked example</button>
+            <button id="bugBtn"><span class="ic">🐞</span>Submit bug</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="body">
+      <div class="canvasCol">
+        <canvas id="cv" width="700" height="467"></canvas>
+        <div class="hint" id="footHint">Click a palette item to add it near the middle, then drag it anywhere. Drag the ground token onto an object to connect it.</div>
+      </div>
+
+      <div class="ctlCol" id="exploreCol">
+        <div class="section-label">Add an object</div>
+        <div class="palette" id="palette"></div>
+
+        <div class="section-label" style="margin-top:2px;">Ground</div>
+        <div class="ground-token" id="groundToken">⏚ &nbsp;drag onto an object</div>
+
+        <div class="toggle-row">
+          <label for="distSwitch">Show charge distribution</label>
+          <button class="switch" id="distSwitch"><span class="knob"></span></button>
+        </div>
+
+        <div class="section-label" style="margin-top:2px;" id="inspLabel" hidden>Selected object</div>
+        <div id="inspector"></div>
+
+        <div class="hint">Rub a cloth onto a rod to charge it. Touch a charged object to a neutral one to share charge. Bring a charged object near (without touching) to polarize by induction.</div>
+      </div>
+
+      <div class="ctlCol" id="quizCol" hidden>
+        <div class="section-label" id="quizTaskLabel">Scenario</div>
+        <div class="quizBox" id="quizBox"></div>
+        <div class="quizOpts" id="quizOpts"></div>
+        <div class="feedback" id="quizFeedback" hidden></div>
+        <div style="display:flex;gap:7px;flex-wrap:wrap;">
+          <button class="miniBtn on" id="quizCheck" style="background:#4b3a99;color:#fff;border-color:#4b3a99;">Check</button>
+          <button class="miniBtn" id="quizShow">Show me</button>
+          <button class="miniBtn" id="quizNext">New scenario ↻</button>
+        </div>
+      </div>
+    </div>
+    <div class="footer-note" id="footNote">Explore: build a scene and predict-then-test. Switch to Quiz to be asked about preset scenarios.</div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="infoModal">
+  <div class="modal">
+    <h2>Charged Objects Explorer <span class="close" id="infoClose">×</span></h2>
+    <div class="yellow">What this practices</div>
+    <p>The standard intro-E&amp;M repertoire in one sandbox: charging by <b>friction</b> (rub a cloth on a rod — the triboelectric series decides who ends up + and who ends up −), by <b>contact</b> (touch a charged object to a neutral one and they share), and by <b>induction</b> (bring a charge near a grounded conductor, disconnect the ground while it's still near, then remove the charge — the conductor keeps a net charge <em>opposite</em> the inducer, without ever touching it).</p>
+    <div class="yellow">Objects</div>
+    <div class="lvl">
+      <b>Sphere</b> — a conductor. Charge roams freely on it: contact-shares, polarizes near other charges, and its net charge can be drained or set by grounding.<br>
+      <b>Rod</b> — an insulator with a material (glass, plastic/rubber, …). Doesn't share charge by touching; only rubbing changes it.<br>
+      <b>Cloth</b> — the rubbing partner, also has a material. Rubbing a rod and a cloth together charges both, oppositely.<br>
+      <b>Pith ball</b> — a light conductor on a thread. Swings toward anything it's attracted to — including neutral objects it can polarize.<br>
+      <b>Electroscope</b> — the detector. Its leaf deflects by <span id="fdeflect"></span>, regardless of sign; watch it to see how much (and, by which way it kicks, which sign of) charge is present.
+    </div>
+    <div class="yellow">Charge distribution</div>
+    <p>Toggle it on to see the actual (signed) surface charge — patches on a conductor, a faint tint on an insulator. It's the "answer key" for what you predicted from the deflection or the attraction alone.</p>
+    <div class="yellow">Learn more</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px 24px;">
+      <div>
+        <div style="font-size:11px;color:#9fb0bf;margin:0 0 5px;">OpenStax <em>University Physics Vol. 2</em></div>
+        <ul style="font-size:12px;line-height:1.6;color:#d7e0e8;">
+          <li><a href="https://openstax.org/books/university-physics-volume-2/pages/5-1-electrical-charge" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">5.1 Electrical Charge</a></li>
+          <li><a href="https://openstax.org/books/university-physics-volume-2/pages/5-8-applications-of-electrostatics" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">5.8 Applications of Electrostatics</a></li>
+        </ul>
+      </div>
+      <div>
+        <div style="font-size:11px;color:#9fb0bf;margin:0 0 5px;">Video</div>
+        <ul style="font-size:12px;line-height:1.6;color:#d7e0e8;">
+          <li><a href="https://www.youtube.com/watch?v=TFlVWf8JX4A" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">Pre-class video</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="exampleModal">
+  <div class="modal">
+    <h2>Worked example <span class="close" id="exampleClose">×</span></h2>
+    <div style="font-family:'Source Serif 4',serif;font-weight:600;font-size:16px;color:#fff;margin-bottom:6px;">Charging a sphere by induction</div>
+    <p style="color:#d7e0e8;">1&nbsp;·&nbsp;Add a sphere and ground it (drag the ground token onto it). With nothing nearby, it sits at zero net charge.</p>
+    <p style="color:#d7e0e8;margin-top:6px;">2&nbsp;·&nbsp;Charge a rod (rub a cloth on it) and drag it close to the sphere <em>without touching</em>. Watch the distribution toggle: the near side of the sphere shows charge opposite the rod, the far side shows charge draining away through the ground wire.</p>
+    <p style="color:#d7e0e8;margin-top:6px;">3&nbsp;·&nbsp;Drag the ground token off the sphere — it's now an isolated conductor, still near the rod, holding a net charge opposite the rod's sign.</p>
+    <p style="color:#d7e0e8;margin-top:6px;">4&nbsp;·&nbsp;Pull the rod far away. The sphere's charge — still opposite the rod's original sign — spreads out uniformly. No contact ever happened.</p>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="bugModal">
+  <div class="modal">
+    <h2>Submit a bug <span class="close" id="bugClose">×</span></h2>
+    <p style="color:#d7e0e8;">Describe what went wrong.</p>
+    <textarea id="bugText" rows="4" style="width:100%;border-radius:8px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.06);color:#fff;padding:9px;font-family:inherit;font-size:13px;margin-top:8px;"></textarea>
+    <input id="bugEmail" type="email" placeholder="email (optional)" style="width:100%;border-radius:8px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.06);color:#fff;padding:9px;font-family:inherit;font-size:13px;margin-top:8px;">
+    <input id="bugWebsite" type="text" style="position:absolute;left:-9999px;" tabindex="-1" autocomplete="off">
+    <div style="display:flex;gap:8px;margin-top:10px;">
+      <button id="bugSend" style="flex:1;padding:9px;border-radius:8px;border:none;background:#6d5bd0;color:#fff;font-weight:600;cursor:pointer;">Send</button>
+    </div>
+    <div id="bugResult" style="margin-top:8px;font-size:12.5px;color:#d7e0e8;"></div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const TAU = Math.PI*2;
+const rnd=(lo,hi)=>Math.floor(Math.random()*(hi-lo+1))+lo;
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const clamp=(v,lo,hi)=>Math.max(lo,Math.min(hi,v));
+
+/* ===================== materials & triboelectric series ===================== */
+// ranked most likely to go positive (top) to most likely to go negative (bottom)
+const MATERIALS = [
+  {id:'wool',   label:'Wool',          rank:5, col:'#caa06a'},
+  {id:'fur',    label:'Fur',           rank:4, col:'#a9825a'},
+  {id:'cotton', label:'Cotton',        rank:3, col:'#e9e6dd'},
+  {id:'glass',  label:'Glass',         rank:2, col:'#a9dcd8'},
+  {id:'silk',   label:'Silk',          rank:1, col:'#e3c3de'},
+  {id:'rubber', label:'Rubber/Plastic',rank:0, col:'#3a3d43'},
+];
+const matById = id => MATERIALS.find(m=>m.id===id) || MATERIALS[0];
+function triboRub(matAid, matBid) {
+  const A = matById(matAid), B = matById(matBid);
+  const d = A.rank - B.rank;
+  if (d === 0) return {a:0, b:0};
+  const amt = clamp(Math.abs(d)*1.1, 1, 6);
+  const sA = d > 0 ? 1 : -1;
+  return { a: sA*amt, b: -sA*amt };
+}
+
+/* ===================== object model ===================== */
+let uid = 1;
+const CONDUCTOR_KINDS = {sphere:1, pith:1, electroscope:1};
+function mkObject(kind, x, y) {
+  const o = { id:'o'+(uid++), kind, x, y, netQ:0, grounded:false };
+  if (kind === 'sphere') { o.r = 24; o.label = 'Sphere'; }
+  else if (kind === 'rod') { o.r = 12; o.w = 100; o.angle = -0.9; o.material = 'glass'; o.label = 'Rod'; }
+  else if (kind === 'cloth') { o.r = 14; o.w = 62; o.angle = 0.5; o.material = 'wool'; o.label = 'Cloth'; }
+  else if (kind === 'pith') { o.r = 11; o.ax = x; o.ay = y - 70; o.label = 'Pith ball'; }
+  else if (kind === 'electroscope') { o.r = 30; o.label = 'Electroscope'; o.leafAngle = 0; }
+  return o;
+}
+function isConductor(o) { return !!CONDUCTOR_KINDS[o.kind]; }
+function isInsulator(o) { return o.kind === 'rod' || o.kind === 'cloth'; }
+function objRadius(o) { return o.kind === 'rod' ? o.w/2 : o.kind === 'cloth' ? o.w/2 : o.r; }
+
+/* ===================== state ===================== */
+let mode = 'explore';
+let objects = [];
+let groundedId = null;      // which object currently has the ground token
+let selectedId = null;
+let showDist = false;
+let sparks = [];             // {x,y,t0}
+let dragging = null;         // {id, dx, dy} or {kind:'ground'}
+let touchMemo = new Set();   // pair keys currently touching, to detect new contact
+let redrawTimer = null;
+
+function seedScene() {
+  objects = [];
+  objects.push(mkObject('electroscope', 430, 300));
+  objects.push(mkObject('rod', 180, 160));
+}
+seedScene();
+
+/* ===================== physics ===================== */
+const K = 9500; // tuned coupling constant for on-screen units
+function pairKey(a,b){ return a.id < b.id ? a.id+'|'+b.id : b.id+'|'+a.id; }
+
+// signed scalar "influence" at (x,y) from all other charged objects: >0 means
+// the local neighborhood is net-positive (so a grounded conductor there wants
+// to pull in negative charge to stay at zero potential).
+function influenceAt(x, y, excludeId) {
+  let s = 0;
+  for (const o of objects) {
+    if (o.id === excludeId || !o.netQ) continue;
+    const dx = o.x - x, dy = o.y - y;
+    const d2 = Math.max(dx*dx + dy*dy, 26*26);
+    s += o.netQ / d2 * K;
+  }
+  return s;
+}
+// direction (unit vector) an external + test charge would be pushed at (x,y)
+function influenceVec(x, y, excludeId) {
+  let ex = 0, ey = 0;
+  for (const o of objects) {
+    if (o.id === excludeId || !o.netQ) continue;
+    const dx = x - o.x, dy = y - o.y;
+    const d2 = Math.max(dx*dx + dy*dy, 26*26), d = Math.sqrt(d2);
+    const f = o.netQ / d2;
+    ex += f*dx/d; ey += f*dy/d;
+  }
+  return { x: ex, y: ey, mag: Math.hypot(ex,ey) };
+}
+
+function resolvePhysics() {
+  // 1. grounding: grounded conductors sit at the charge that zeroes local influence
+  for (const o of objects) {
+    if (isConductor(o) && o.grounded) {
+      const infl = influenceAt(o.x, o.y, o.id);
+      o.netQ = clamp(-infl, -9, 9);
+    }
+  }
+  // 2. contact charging + spark detection
+  const nowTouching = new Set();
+  for (let i = 0; i < objects.length; i++) {
+    for (let j = i+1; j < objects.length; j++) {
+      const a = objects[i], b = objects[j];
+      const ra = objRadius(a), rb = objRadius(b);
+      const d = Math.hypot(a.x-b.x, a.y-b.y);
+      if (d > (ra+rb)*0.82) continue;
+      const key = pairKey(a,b);
+      nowTouching.add(key);
+      const isNew = !touchMemo.has(key);
+      const beforeA = a.netQ, beforeB = b.netQ;
+      if (isConductor(a) && isConductor(b)) {
+        if (!a.grounded && !b.grounded) {
+          const wa = ra/(ra+rb);
+          const total = a.netQ + b.netQ;
+          a.netQ = total*wa; b.netQ = total*(1-wa);
+        }
+      } else if (isConductor(a) && isInsulator(b) && isNew) {
+        const t = b.netQ*0.28; a.netQ += t; b.netQ -= t;
+      } else if (isConductor(b) && isInsulator(a) && isNew) {
+        const t = a.netQ*0.28; b.netQ += t; a.netQ -= t;
+      }
+      if (isNew && (Math.abs(a.netQ-beforeA) > 0.05 || Math.abs(b.netQ-beforeB) > 0.05)) {
+        sparks.push({ x:(a.x+b.x)/2, y:(a.y+b.y)/2, t0:performance.now() });
+        scheduleFade();
+      }
+    }
+  }
+  touchMemo = nowTouching;
+  // 3. pith ball equilibrium swing
+  for (const o of objects) {
+    if (o.kind !== 'pith') continue;
+    const infl = influenceVec(o.x, o.y, o.id);
+    // influenceVec is intentionally unscaled (tuned for the drawing hints below);
+    // bring it onto the same K-scaled footing as influenceAt() for a real, visible force.
+    const sMag = infl.mag * K;
+    const ux = infl.mag > 1e-6 ? infl.x/infl.mag : 0; // direction a + test charge is pushed
+    // own charge repelled/attracted by the field; if neutral, polarization always attracts
+    const fx = Math.abs(o.netQ) > 0.05
+      ? o.netQ * ux * Math.min(sMag*0.18, 30)
+      : -ux * Math.min(sMag*1.8, 30);
+    const g = 9;
+    const theta = clamp(Math.atan2(fx, g), -0.9, 0.9);
+    const L = 70;
+    o.x = o.ax + L*Math.sin(theta);
+    o.y = o.ay + L*Math.cos(theta);
+  }
+  // 4. electroscope leaf angle
+  for (const o of objects) {
+    if (o.kind !== 'electroscope') continue;
+    const mag = Math.min(1, Math.sqrt(Math.abs(o.netQ))/2.6);
+    o.leafAngle = mag * 0.62 * Math.sign(o.netQ || 1);
+  }
+}
+function scheduleFade(){ if (!redrawTimer) redrawTimer = setInterval(()=>{ sparks = sparks.filter(s=>performance.now()-s.t0<420); draw(); if (!sparks.length){ clearInterval(redrawTimer); redrawTimer=null; } }, 40); }
+
+/* ===================== drag & drop ===================== */
+const cv = $('cv');
+function cvPos(e) {
+  const r = cv.getBoundingClientRect();
+  const sx = cv.width/r.width, sy = cv.height/r.height;
+  const t = e.touches ? e.touches[0] : e;
+  return { x:(t.clientX-r.left)*sx, y:(t.clientY-r.top)*sy };
+}
+function hitTest(x,y) {
+  for (let i = objects.length-1; i >= 0; i--) {
+    const o = objects[i];
+    if (Math.hypot(x-o.x, y-o.y) < objRadius(o)+6) return o;
+  }
+  return null;
+}
+cv.addEventListener('pointerdown', e => {
+  const {x,y} = cvPos(e);
+  const o = hitTest(x,y);
+  if (o) { selectedId = o.id; dragging = { id:o.id, dx:o.x-x, dy:o.y-y }; renderInspector(); draw(); }
+  else { selectedId = null; renderInspector(); }
+  cv.setPointerCapture(e.pointerId);
+});
+cv.addEventListener('pointermove', e => {
+  if (!dragging) return;
+  const {x,y} = cvPos(e);
+  const o = objects.find(q=>q.id===dragging.id);
+  if (!o) return;
+  o.x = clamp(x+dragging.dx, 20, cv.width-20);
+  o.y = clamp(y+dragging.dy, 20, cv.height-20);
+  if (o.kind === 'pith') { o.ax = o.x; o.ay = o.y - 70; }
+  resolvePhysics(); draw();
+});
+window.addEventListener('pointerup', () => { dragging = null; });
+
+/* ground token drag: a simple DOM-level drag using pointer coords mapped onto the canvas */
+const gt = $('groundToken');
+let groundDrag = false;
+gt.addEventListener('pointerdown', e => { groundDrag = true; gt.setPointerCapture(e.pointerId); e.preventDefault(); });
+gt.addEventListener('pointermove', e => {
+  if (!groundDrag) return;
+  const r = cv.getBoundingClientRect();
+  if (e.clientX>=r.left && e.clientX<=r.right && e.clientY>=r.top && e.clientY<=r.bottom) {
+    const {x,y} = cvPos(e);
+    const o = hitTest(x,y);
+    hoverGroundTarget = o ? o.id : null;
+    draw();
+  } else { hoverGroundTarget = null; }
+});
+let hoverGroundTarget = null;
+window.addEventListener('pointerup', e => {
+  if (!groundDrag) return;
+  groundDrag = false;
+  const r = cv.getBoundingClientRect();
+  if (e.clientX>=r.left && e.clientX<=r.right && e.clientY>=r.top && e.clientY<=r.bottom) {
+    const {x,y} = cvPos(e);
+    const o = hitTest(x,y);
+    if (o && isConductor(o)) { objects.forEach(q=>q.grounded=false); o.grounded = true; groundedId = o.id; }
+  } else {
+    objects.forEach(q=>q.grounded=false); groundedId = null;
+  }
+  hoverGroundTarget = null;
+  gt.classList.toggle('placed', !!groundedId);
+  gt.textContent = groundedId ? ('⏚ connected to ' + (objects.find(o=>o.id===groundedId)||{label:'—'}).label) : '⏚ drag onto an object';
+  resolvePhysics(); draw();
+});
+
+/* rubbing: drop a cloth onto a rod (or vice versa) */
+function tryRub(a, b) {
+  const rod = a.kind === 'rod' ? a : (b.kind === 'rod' ? b : null);
+  const cloth = a.kind === 'cloth' ? a : (b.kind === 'cloth' ? b : null);
+  if (!rod || !cloth) return false;
+  const res = triboRub(rod.material, cloth.material);
+  rod.netQ = clamp(rod.netQ*0.3 + res.a, -6, 6);
+  cloth.netQ = clamp(cloth.netQ*0.3 + res.b, -6, 6);
+  sparks.push({ x:(rod.x+cloth.x)/2, y:(rod.y+cloth.y)/2, t0:performance.now() });
+  scheduleFade();
+  return true;
+}
+// check for rub opportunities on drag release
+window.addEventListener('pointerup', () => {
+  for (let i=0;i<objects.length;i++) for (let j=i+1;j<objects.length;j++) {
+    const a=objects[i], b=objects[j];
+    const d=Math.hypot(a.x-b.x,a.y-b.y);
+    if (d < (objRadius(a)+objRadius(b))*0.7) tryRub(a,b);
+  }
+  draw();
+});
+
+/* ===================== palette / add / remove ===================== */
+const PALETTE = [
+  {kind:'sphere', ic:'⚪', label:'Sphere'},
+  {kind:'rod', ic:'▮', label:'Rod'},
+  {kind:'cloth', ic:'▭', label:'Cloth'},
+  {kind:'pith', ic:'●', label:'Pith ball'},
+];
+function buildPalette() {
+  const p = $('palette'); p.innerHTML = '';
+  PALETTE.forEach(item => {
+    const b = document.createElement('button');
+    b.innerHTML = '<span class="ic">'+item.ic+'</span>'+item.label;
+    b.addEventListener('click', () => {
+      const x = 120 + Math.random()*460, y = 100 + Math.random()*260;
+      const o = mkObject(item.kind, x, y);
+      objects.push(o); selectedId = o.id;
+      resolvePhysics(); renderInspector(); draw();
+    });
+    p.appendChild(b);
+  });
+}
+function removeSelected() {
+  if (!selectedId) return;
+  if (selectedId === groundedId) groundedId = null;
+  objects = objects.filter(o => o.id !== selectedId);
+  selectedId = null;
+  resolvePhysics(); renderInspector(); draw();
+}
+
+/* ===================== inspector ===================== */
+function renderInspector() {
+  const host = $('inspector'); host.innerHTML = '';
+  $('inspLabel').hidden = !selectedId;
+  const o = objects.find(x=>x.id===selectedId);
+  if (!o) return;
+  const box = document.createElement('div'); box.className = 'inspector';
+  const row1 = document.createElement('div'); row1.className = 'row1';
+  row1.innerHTML = '<span class="kind">'+o.label+'</span><span class="q" style="color:'+qColor(o.netQ)+'">'+fmtQ(o.netQ)+'</span>';
+  box.appendChild(row1);
+  if (o.material) {
+    const mg = document.createElement('div'); mg.className = 'matgrid';
+    MATERIALS.forEach(m => {
+      const b = document.createElement('button'); b.textContent = m.label; b.className = m.id===o.material?'on':'';
+      b.addEventListener('click', () => { o.material = m.id; renderInspector(); });
+      mg.appendChild(b);
+    });
+    box.appendChild(mg);
+  }
+  const btnrow = document.createElement('div'); btnrow.style.cssText='display:flex;gap:6px;flex-wrap:wrap;';
+  if (isConductor(o)) {
+    const gb = document.createElement('button'); gb.className='miniBtn'+(o.grounded?' on':''); gb.textContent = o.grounded?'Grounded':'Not grounded';
+    gb.addEventListener('click', () => {
+      if (o.grounded) { o.grounded=false; groundedId=null; }
+      else { objects.forEach(q=>q.grounded=false); o.grounded=true; groundedId=o.id; }
+      $('groundToken').classList.toggle('placed', !!groundedId);
+      $('groundToken').textContent = groundedId ? ('⏚ connected to '+o.label) : '⏚ drag onto an object';
+      resolvePhysics(); renderInspector(); draw();
+    });
+    btnrow.appendChild(gb);
+    const zb = document.createElement('button'); zb.className='miniBtn'; zb.textContent='Discharge';
+    zb.addEventListener('click', () => { o.netQ = 0; resolvePhysics(); renderInspector(); draw(); });
+    btnrow.appendChild(zb);
+  }
+  const rb = document.createElement('button'); rb.className='miniBtn danger'; rb.textContent='Remove';
+  rb.addEventListener('click', removeSelected);
+  btnrow.appendChild(rb);
+  box.appendChild(btnrow);
+  host.appendChild(box);
+}
+function fmtQ(q){ if (Math.abs(q)<0.05) return 'neutral'; return (q>0?'+':'−')+Math.abs(q).toFixed(1); }
+function qColor(q){ if (Math.abs(q)<0.05) return '#8a939b'; return q>0 ? '#c0392b' : '#2a6bd6'; }
+
+/* ===================== drawing ===================== */
+function draw() {
+  const ctx = cv.getContext('2d');
+  const W = cv.width, H = cv.height;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle = '#0b0f16'; ctx.fillRect(0,0,W,H);
+
+  // ground wire preview while dragging the token
+  if (groundDrag) {
+    ctx.strokeStyle = 'rgba(255,255,255,0.25)'; ctx.setLineDash([4,3]); ctx.lineWidth=1.5;
+  }
+  // faint dielectric-polarization hint for insulators near a strong external charge
+  objects.forEach(o => {
+    if (!isInsulator(o)) return;
+    const infl = influenceVec(o.x, o.y, o.id);
+    if (infl.mag < 0.02) return;
+    const a = Math.min(0.35, infl.mag*0.4);
+    ctx.save(); ctx.translate(o.x,o.y);
+    const ang = Math.atan2(infl.y,infl.x);
+    const grad = ctx.createLinearGradient(-objRadius(o)*Math.cos(ang), -objRadius(o)*Math.sin(ang), objRadius(o)*Math.cos(ang), objRadius(o)*Math.sin(ang));
+    grad.addColorStop(0, 'rgba(90,150,230,'+a+')'); grad.addColorStop(1, 'rgba(230,90,90,'+a+')');
+    ctx.fillStyle = grad;
+    drawShapePath(ctx, o);
+    ctx.fill();
+    ctx.restore();
+  });
+
+  objects.forEach(o => drawObject(ctx, o, o.id===selectedId));
+
+  // ground wire to the grounded object
+  const go = objects.find(o=>o.id===groundedId);
+  if (go) {
+    ctx.strokeStyle = '#8fb3ff'; ctx.lineWidth = 2; ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(go.x, H-8); ctx.lineTo(go.x, go.y+objRadius(go)*0.2); ctx.stroke();
+    drawGroundSymbol(ctx, go.x, H-10);
+  }
+  if (groundDrag && hoverGroundTarget) {
+    const o = objects.find(q=>q.id===hoverGroundTarget);
+    if (o) { ctx.strokeStyle = '#8fb3ff'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(o.x,o.y,objRadius(o)+6,0,TAU); ctx.stroke(); }
+  }
+
+  // sparks
+  const now = performance.now();
+  sparks.forEach(s => {
+    const t = (now-s.t0)/420; if (t>1) return;
+    const a = 1-t;
+    ctx.save(); ctx.translate(s.x,s.y); ctx.globalAlpha = a;
+    ctx.strokeStyle = '#ffe27a'; ctx.lineWidth = 2;
+    for (let k=0;k<6;k++) { const ang=k/6*TAU + t*2; const rr=6+t*20;
+      ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(Math.cos(ang)*rr, Math.sin(ang)*rr); ctx.stroke(); }
+    ctx.restore();
+  });
+
+  ctx.fillStyle = 'rgba(255,255,255,0.35)'; ctx.font = '11px "JetBrains Mono",monospace';
+  ctx.fillText('drag objects · drag the ground token onto one', 10, H-10);
+}
+function drawShapePath(ctx, o) {
+  if (o.kind==='rod' || o.kind==='cloth') {
+    ctx.save(); ctx.translate(o.x,o.y); ctx.rotate(o.angle);
+    const w=o.w, h=o.r; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-w/2,-h/2,w,h,h/2) : ctx.rect(-w/2,-h/2,w,h);
+    ctx.restore();
+  } else {
+    ctx.beginPath(); ctx.arc(o.x,o.y,objRadius(o),0,TAU);
+  }
+}
+function drawGroundSymbol(ctx,x,y) {
+  ctx.strokeStyle='#8fb3ff'; ctx.lineWidth=2;
+  [10,6,3].forEach((w,i)=>{ ctx.beginPath(); ctx.moveTo(x-w,y+i*5); ctx.lineTo(x+w,y+i*5); ctx.stroke(); });
+}
+function drawDistribution(ctx, o) {
+  const N = 20, R = objRadius(o);
+  const infl = influenceVec(o.x, o.y, o.id);
+  const skewMag = Math.min(1, infl.mag*0.35);
+  const raw = [];
+  for (let i=0;i<N;i++){ const th = i/N*TAU;
+    const nx=Math.cos(th), ny=Math.sin(th);
+    const dirTerm = -(nx*infl.x+ny*infl.y)/(infl.mag||1); // near side (facing source) gets opposite sign
+    raw.push(dirTerm);
+  }
+  const mean = raw.reduce((a,b)=>a+b,0)/N;
+  for (let i=0;i<N;i++){ const th=i/N*TAU;
+    const patchQ = o.netQ/N + (raw[i]-mean)*skewMag*1.2;
+    const px = o.x+Math.cos(th)*R, py = o.y+Math.sin(th)*R;
+    ctx.beginPath(); ctx.arc(px,py,4.2,0,TAU);
+    ctx.fillStyle = patchQ>0.04 ? 'rgba(224,80,80,'+clamp(Math.abs(patchQ)*0.9,0.25,1)+')' : patchQ<-0.04 ? 'rgba(80,140,230,'+clamp(Math.abs(patchQ)*0.9,0.25,1)+')' : 'rgba(255,255,255,0.18)';
+    ctx.fill();
+  }
+}
+function drawObject(ctx, o, selected) {
+  const col = qColor2(o.netQ);
+  if (o.kind === 'sphere') {
+    const grad = ctx.createRadialGradient(o.x-6,o.y-6,3,o.x,o.y,o.r);
+    grad.addColorStop(0, lighten(col)); grad.addColorStop(1, col);
+    ctx.beginPath(); ctx.arc(o.x,o.y,o.r,0,TAU); ctx.fillStyle=grad; ctx.fill();
+    ctx.strokeStyle = selected ? '#fff' : 'rgba(255,255,255,0.4)'; ctx.lineWidth = selected?2.4:1.4; ctx.stroke();
+    label(ctx, fmtQ(o.netQ), o.x, o.y+o.r+14);
+  } else if (o.kind === 'pith') {
+    ctx.strokeStyle='rgba(255,255,255,0.5)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(o.ax,o.ay); ctx.lineTo(o.x,o.y); ctx.stroke();
+    ctx.beginPath(); ctx.arc(o.ax,o.ay,3,0,TAU); ctx.fillStyle='rgba(255,255,255,0.6)'; ctx.fill();
+    const grad = ctx.createRadialGradient(o.x-4,o.y-4,2,o.x,o.y,o.r);
+    grad.addColorStop(0, lighten(col)); grad.addColorStop(1, col);
+    ctx.beginPath(); ctx.arc(o.x,o.y,o.r,0,TAU); ctx.fillStyle=grad; ctx.fill();
+    ctx.strokeStyle = selected ? '#fff' : 'rgba(255,255,255,0.4)'; ctx.lineWidth = selected?2.4:1.4; ctx.stroke();
+    label(ctx, fmtQ(o.netQ), o.x, o.y+o.r+14);
+  } else if (o.kind === 'rod' || o.kind === 'cloth') {
+    const m = matById(o.material);
+    ctx.save(); ctx.translate(o.x,o.y); ctx.rotate(o.angle);
+    ctx.beginPath();
+    const w=o.w, h=o.r;
+    if (ctx.roundRect) ctx.roundRect(-w/2,-h/2,w,h,h/2); else ctx.rect(-w/2,-h/2,w,h);
+    ctx.fillStyle = m.col; ctx.fill();
+    ctx.strokeStyle = selected ? '#fff' : 'rgba(255,255,255,0.35)'; ctx.lineWidth = selected?2.2:1.2; ctx.stroke();
+    ctx.restore();
+    label(ctx, m.label+' · '+fmtQ(o.netQ), o.x, o.y+h/2+16);
+  } else if (o.kind === 'electroscope') {
+    ctx.strokeStyle = 'rgba(255,255,255,0.45)'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(o.x, o.y+o.r); ctx.lineTo(o.x, o.y+o.r+46); ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,0.12)'; ctx.fillRect(o.x-24, o.y+o.r+46, 48, 8);
+    const grad = ctx.createRadialGradient(o.x-6,o.y-6,3,o.x,o.y,o.r);
+    grad.addColorStop(0, lighten(col)); grad.addColorStop(1, col);
+    ctx.beginPath(); ctx.arc(o.x,o.y,o.r,0,TAU); ctx.fillStyle=grad; ctx.fill();
+    ctx.strokeStyle = selected ? '#fff' : 'rgba(255,255,255,0.4)'; ctx.lineWidth = selected?2.4:1.4; ctx.stroke();
+    // leaf
+    ctx.save(); ctx.translate(o.x, o.y+o.r+50); ctx.rotate(o.leafAngle);
+    ctx.fillStyle = col; ctx.fillRect(-3, 0, 6, 34);
+    ctx.restore();
+    label(ctx, fmtQ(o.netQ), o.x, o.y+o.r+96);
+  }
+  if (showDist && (isConductor(o))) drawDistribution(ctx, o);
+  if (showDist && isInsulator(o)) {
+    label(ctx, 'q ≈ '+fmtQ(o.netQ), o.x, o.y - objRadius(o) - 8);
+  }
+}
+function label(ctx, text, x, y) {
+  ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.font = '11px "JetBrains Mono",monospace'; ctx.textAlign='center';
+  ctx.fillText(text, x, y); ctx.textAlign='left';
+}
+function qColor2(q){ if (Math.abs(q)<0.05) return '#8a99a8'; return q>0 ? '#c0392b' : '#2a6bd6'; }
+function lighten(hex){ return hex; }
+
+/* ===================== toggles / mode ===================== */
+$('distSwitch').addEventListener('click', () => { showDist=!showDist; $('distSwitch').classList.toggle('on',showDist); draw(); });
+
+function setMode(m) {
+  mode = m;
+  $('modeSeg').querySelectorAll('button').forEach(b=>b.classList.toggle('on', b.dataset.mode===m));
+  $('exploreCol').hidden = m!=='explore';
+  $('quizCol').hidden = m!=='quiz';
+  $('footNote').textContent = m==='quiz'
+    ? 'Quiz: a preset scene is described. Predict the outcome, then press Show me to watch it play out.'
+    : 'Explore: build a scene and predict-then-test.';
+  if (m==='quiz' && !quizState.q) newQuizQuestion();
+  draw();
+}
+$('modeSeg').addEventListener('click', e => { const b=e.target.closest('button'); if (b) setMode(b.dataset.mode); });
+
+/* ===================== quiz ===================== */
+const QUIZ_BANK = [
+  { setup: () => { objects=[mkObject('sphere',420,260)]; objects[0].netQ=0; objects[0].grounded=false;
+      const rod=mkObject('rod',180,150); rod.material='rubber'; rod.netQ=-3; objects.push(rod); },
+    prompt: 'A neutral, ungrounded sphere sits far from a negatively-charged rubber rod. The rod is brought close but never touches it. What happens to the sphere’s net charge?',
+    options: ['Stays zero — nothing changes without contact','Becomes negative, like the rod','Becomes positive'],
+    answer: 0,
+    explain: 'With no ground connection, the sphere can only polarize (near side +, far side −) — the net charge stays exactly zero. Toggle the distribution to see the separation without any net charge.' },
+  { setup: () => { const sph=mkObject('sphere',420,260); sph.grounded=true;
+      const rod=mkObject('rod',180,150); rod.material='glass'; rod.netQ=+3; objects=[sph,rod]; },
+    prompt: 'A grounded sphere sits near a positively-charged glass rod (not touching). What sign of net charge does the sphere end up with?',
+    options: ['Positive, same as the rod','Negative, opposite the rod','Stays neutral'],
+    answer: 1,
+    explain: 'Grounding lets charge flow to keep the sphere’s potential at zero. Near a positive rod, that means electrons flow in — the sphere ends up negative, opposite the rod.' },
+  { setup: () => { const rod=mkObject('rod',200,220); rod.material='glass';
+      const cloth=mkObject('cloth',330,220); cloth.material='silk'; objects=[rod,cloth]; },
+    prompt: 'A glass rod is rubbed with silk. Which ends up positive?',
+    options: ['The glass rod','The silk cloth','Neither — glass and silk don’t exchange charge'],
+    answer: 0,
+    explain: 'Glass sits above silk in the triboelectric series, so glass gives up electrons to the silk: glass ends up positive, silk negative.' },
+  { setup: () => { const rod=mkObject('rod',200,220); rod.material='rubber';
+      const cloth=mkObject('cloth',330,220); cloth.material='wool'; objects=[rod,cloth]; },
+    prompt: 'A rubber rod is rubbed with wool. Which ends up negative?',
+    options: ['The rubber rod','The wool','Neither'],
+    answer: 0,
+    explain: 'Wool sits well above rubber in the triboelectric series, so wool gives electrons to the rubber: rubber ends up negative, wool positive.' },
+  { setup: () => { const es=mkObject('electroscope',420,260); es.netQ=0;
+      const rod=mkObject('rod',420,150); rod.material='rubber'; rod.netQ=-4; objects=[es,rod]; },
+    prompt: 'A charged rod touches a neutral electroscope’s knob directly (contact charging), then is pulled away. What happens to the leaf?',
+    options: ['It deflects and stays deflected','It deflects only while the rod is touching, then relaxes to zero','Nothing happens'],
+    answer: 0,
+    explain: 'Contact charging transfers some real charge onto the electroscope—once the rod is removed, that charge (and the deflection) remains.' },
+];
+let quizState = { q: null, sel: null, checked: false };
+function newQuizQuestion() {
+  const item = pick(QUIZ_BANK);
+  quizState = { q: item, sel: null, checked: false };
+  $('quizBox').textContent = item.prompt;
+  const opts = $('quizOpts'); opts.innerHTML = '';
+  item.options.forEach((label, i) => {
+    const b = document.createElement('button'); b.textContent = label;
+    b.addEventListener('click', () => { if (quizState.checked) return; quizState.sel = i;
+      [...opts.children].forEach(c=>c.classList.remove('sel')); b.classList.add('sel'); });
+    opts.appendChild(b);
+  });
+  $('quizFeedback').hidden = true;
+  $('quizCheck').disabled = false;
+}
+$('quizCheck').addEventListener('click', () => {
+  if (quizState.checked || quizState.sel==null) return;
+  quizState.checked = true;
+  const correct = quizState.sel === quizState.q.answer;
+  const fb = $('quizFeedback'); fb.hidden = false;
+  fb.className = 'feedback ' + (correct?'correct':'wrong');
+  fb.textContent = (correct?'✓ Correct. ':'✗ Not quite. ') + quizState.q.explain;
+  [...$('quizOpts').children].forEach((c,i)=>{ c.disabled=true; if (i===quizState.q.answer) c.classList.add('sel'); });
+});
+$('quizShow').addEventListener('click', () => {
+  quizState.q.setup();
+  showDist = true; $('distSwitch').classList.add('on');
+  setMode('explore');
+  resolvePhysics(); renderInspector(); draw();
+});
+$('quizNext').addEventListener('click', newQuizQuestion);
+
+/* ===================== menu / modals / bug report ===================== */
+function toggleMenu(open) { $('menu').hidden = !open; $('menuBackdrop').hidden = !open; }
+$('menuBtn').addEventListener('click', () => toggleMenu($('menu').hidden));
+$('menuBackdrop').addEventListener('click', () => toggleMenu(false));
+$('infoBtn').addEventListener('click', () => { toggleMenu(false); $('infoModal').classList.add('show'); });
+$('infoClose').addEventListener('click', () => $('infoModal').classList.remove('show'));
+$('infoModal').addEventListener('click', e => { if (e.target.id==='infoModal') $('infoModal').classList.remove('show'); });
+$('exampleBtn').addEventListener('click', () => { toggleMenu(false); $('exampleModal').classList.add('show'); });
+$('exampleClose').addEventListener('click', () => $('exampleModal').classList.remove('show'));
+$('exampleModal').addEventListener('click', e => { if (e.target.id==='exampleModal') $('exampleModal').classList.remove('show'); });
+$('bugBtn').addEventListener('click', () => { toggleMenu(false); $('bugModal').classList.add('show'); });
+$('bugClose').addEventListener('click', () => $('bugModal').classList.remove('show'));
+$('bugModal').addEventListener('click', e => { if (e.target.id==='bugModal') $('bugModal').classList.remove('show'); });
+$('bugSend').addEventListener('click', async () => {
+  const text = $('bugText').value.trim();
+  if (text.length < 3) { $('bugResult').textContent = 'Please describe the problem first.'; return; }
+  $('bugSend').disabled = true; $('bugResult').textContent = 'Sending…';
+  try {
+    const res = await fetch('https://sims-api.sethhopper.com/report', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ sim:'charged-objects-explorer', text, email:$('bugEmail').value.trim(), pageUrl:location.href, userAgent:navigator.userAgent, website:$('bugWebsite').value })
+    });
+    const j = await res.json().catch(()=>({}));
+    $('bugResult').textContent = j.ok ? 'Thanks — sent.' : 'Something went wrong. Try again later.';
+  } catch (e) { $('bugResult').textContent = 'Network error — try again later.'; }
+  $('bugSend').disabled = false;
+});
+
+/* ===================== boot ===================== */
+buildPalette();
+resolvePhysics();
+renderInspector();
+draw();
+window.addEventListener('resize', draw);
+</script>
+</body>
+</html>
