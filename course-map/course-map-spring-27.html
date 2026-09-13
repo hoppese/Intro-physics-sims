@@ -617,7 +617,23 @@ const TOT = {prep: pn, ko: kn, ohw: on,
   test: FLAT.filter(d => d.test).length};
 
 // ---- render ---------------------------------------------------------------
-let selIdx = 0, filter = null;
+function initialSelIdx(){
+  // Default to today's class day, or the next upcoming one if today isn't a
+  // class day (weekend, break, before/after the term). Year fixed at 2027.
+  const MONTHS = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+  const parseDate = s => {
+    const m = /^([A-Z][a-z]{2})\s+(\d{1,2})/.exec(s);
+    if (!m || MONTHS[m[1]] === undefined) return null;
+    return new Date(2027, MONTHS[m[1]], parseInt(m[2], 10));
+  };
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  for (let i = 0; i < FLAT.length; i++){
+    const dt = parseDate(FLAT[i].d);
+    if (dt && dt >= today) return i;
+  }
+  return FLAT.length - 1;
+}
+let selIdx = initialSelIdx(), filter = null;
 const $ = s => document.querySelector(s);
 
 function legendRender(){
@@ -812,7 +828,7 @@ function render(){
   weeksRender();
   panelRender();
   const sel = document.querySelector('.day.sel');
-  if (sel) sel.scrollIntoView({block:'nearest'});
+  if (sel) sel.scrollIntoView({block:'center'});
 }
 
 document.querySelectorAll('.fbtn').forEach(b => b.addEventListener('click', () => {
