@@ -1,0 +1,114 @@
+% worksheet-common.sty
+% Shared macros for print-ready physics practice worksheets.
+% Usage: \documentclass[11pt]{article} \usepackage{worksheet-common}
+%
+% Conventions:
+%   - One problem per \prob, auto-numbered, page-break-safe via \needspace.
+%   - Blank work space via \worksp{sm|md|lg|xl} (no ruled lines, no box) --
+%     pick the size by how much work the problem needs, not by habit.
+%   - Section headers via \partsec{LETTER}{Title}.
+%   - Vector separation notation \rv{1}{2} -> vec r sub 12; \Fv{1}{2} for forces.
+%   - Point-charge diagrams built from \chargenode{x}{y}{+|-}{color}{radius}.
+%   - Answer key goes on its own page(s), flipped 180 deg, inside the
+%     answerkey environment; use \akitem{Part label}{content} lines inside.
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{worksheet-common}[2026/09/14 v1.0 Practice worksheet helpers]
+
+\RequirePackage[letterpaper, margin=0.85in]{geometry}
+\RequirePackage{amsmath,amssymb}
+\RequirePackage{tikz}
+\RequirePackage{needspace}
+\RequirePackage{xcolor}
+\RequirePackage{graphicx}
+\RequirePackage{multicol}
+\RequirePackage{etoolbox}
+\RequirePackage{environ}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+
+% ---------------------------------------------------------------
+% Vector notation
+% ---------------------------------------------------------------
+% Convention: r_{ij} := r_j - r_i (points FROM i TO j). This is the vector
+% you get "reading the subscript left to right." It's NOT what Coulomb's
+% law wants for a force direction -- force on i due to j needs r_{ji} =
+% r_i - r_j = -r_{ij} (the vector ending AT i). Worksheets that ask for
+% r_{12} in one part and then "force on 1" in a later part must call this
+% out explicitly (see coulomb-force-practice.tex, Part D intro) so
+% students don't reuse r_{12} unflipped.
+\newcommand{\rv}[2]{\vec{r}_{#1#2}}   % separation vector r_{ij} = r_j - r_i
+\newcommand{\Fv}[2]{\vec{F}_{#1#2}}   % force vector F_{ij}, if ever needed
+
+% ---------------------------------------------------------------
+% Worksheet title
+% ---------------------------------------------------------------
+\newcommand{\worksheettitle}[1]{{\LARGE\bfseries #1}\par\vspace{8mm}}
+
+% ---------------------------------------------------------------
+% Section headers ("Part A --- Title")
+% ---------------------------------------------------------------
+\newcommand{\partsec}[2]{%
+  \needspace{4cm}\vspace{4mm}%
+  \par\noindent{\large\bfseries Part #1 --- #2}\par\vspace{2mm}%
+}
+
+% ---------------------------------------------------------------
+% Auto-numbered problems. \prob starts a new one; write the problem
+% text right after it, same as a normal \item.
+% ---------------------------------------------------------------
+\newcounter{prob}
+\newcommand{\prob}{\needspace{3cm}\stepcounter{prob}\par\noindent\textbf{\theprob.}\ \ }
+
+% Reference an earlier problem's number in prose, e.g. "Same as \probref{5}".
+\newcommand{\probref}[1]{Problem~#1}
+
+% ---------------------------------------------------------------
+% Blank work space -- no lines, no box, just room. Pick by how much
+% work the problem needs:
+%   sm = 6cm   md = 8cm   lg = 10cm   xl = 12cm
+% or pass an explicit length, e.g. \worksp{4in}.
+% ---------------------------------------------------------------
+\newcommand{\worksp}[1]{%
+  \ifstrequal{#1}{sm}{\vspace{6cm}}{%
+  \ifstrequal{#1}{md}{\vspace{8cm}}{%
+  \ifstrequal{#1}{lg}{\vspace{10cm}}{%
+  \ifstrequal{#1}{xl}{\vspace{12cm}}{\vspace{#1}}}}}%
+}
+
+% ---------------------------------------------------------------
+% TikZ point-charge node: circle, sign, filled by color!25 / stroked
+% color!60!black, centered exactly on (x,y) -- use \node at (...), not
+% a node chained after \circle, or the sign ends up off-center or
+% missing (TikZ's "current point" after a circle path is its 3
+% o'clock edge, not its center).
+%   \chargenode{x}{y}{+|-}{colorname}{radius}
+% ---------------------------------------------------------------
+\newcommand{\chargenode}[5]{%
+  \filldraw[#4!25,draw=#4!60!black] (#1,#2) circle (#5);%
+  \node at (#1,#2) {$#3$};%
+}
+% Shorthands for the two signs students see most.
+\newcommand{\poscharge}[3]{\chargenode{#1}{#2}{+}{red}{#3}}
+\newcommand{\negcharge}[3]{\chargenode{#1}{#2}{-}{blue}{#3}}
+
+% ---------------------------------------------------------------
+% Answer key: its own page, rotated 180 degrees so it has to be
+% flipped to read (keeps students honest while working the front).
+% Use \akpart{Title} for a part header and \akitem{N}{answer} per
+% problem, inside the environment, inside a multicols block if you
+% want two columns (recommended for >8 items).
+% ---------------------------------------------------------------
+\NewEnviron{answerkey}{%
+  \clearpage
+  \rotatebox{180}{\begin{minipage}{\textwidth}
+  \begin{center}{\small\bfseries ANSWER KEY --- FLIP THE PAGE OVER (OR STAND ON YOUR HEAD)}\end{center}
+  \vspace{3mm}\footnotesize
+  \BODY
+  \end{minipage}}%
+}
+\newcommand{\akpart}[1]{\textbf{#1}\\}
+\newcommand{\akitem}[2]{\textbf{#1.} #2\\}
+
+\endinput
