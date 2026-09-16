@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @page { size: letter; margin: 0.9in; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    color: #1a1a1a;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  h1 {
+    text-align: center;
+    font-size: 27px;
+    margin: 0 0 14px;
+  }
+  .subtitle {
+    color: #555;
+    font-size: 13px;
+    margin: 0 0 26px;
+  }
+  .subtitle i { font-style: italic; }
+  .problem { break-before: page; }
+  .problem:first-of-type { break-before: auto; }
+  .probhead {
+    color: #bf521a;
+    font-weight: bold;
+    font-size: 20px;
+    margin: 0 0 8px;
+  }
+  .statement { margin: 0 0 4px; }
+  .statement p { margin: 0 0 2px; }
+  .parts { margin: 2px 0 0; }
+  .solution {
+    margin-top: 14px;
+    padding-left: 4px;
+  }
+  .solution > div { margin-bottom: 14px; }
+  .lbl { font-weight: bold; }
+  .final { font-weight: bold; }
+  sup { font-size: 0.72em; }
+  sub { font-size: 0.72em; }
+  .vec { position: relative; display: inline-block; }
+  .vec::after {
+    content: "\2192";
+    position: absolute;
+    left: 50%;
+    top: -0.52em;
+    transform: translateX(-50%) scaleX(0.8);
+    font-size: 0.55em;
+    line-height: 1;
+  }
+</style>
+</head>
+<body>
+
+<h1>Written HW 2 &mdash; Full Solutions</h1>
+<p class="subtitle">Problem statements from Knight, <i>Physics for Scientists and Engineers</i> (5th ed., Global Edition), Chapter 22.
+K = 8.99&times;10<sup>9</sup> N&middot;m&sup2;/C&sup2; and g = 9.8 m/s&sup2; throughout.</p>
+
+<!-- ============================================================ -->
+<div class="problem">
+<div class="probhead">22.17 (3 pts)</div>
+<div class="statement">
+<p>Three charges lie on the x-axis (Figure EX22.17): q<sub>A</sub> = +1.0 nC at x = 0, q<sub>B</sub> = &minus;1.0 nC at x = 1.0 cm, and q<sub>C</sub> = +4.0 nC at x = 2.0 cm. What is the magnitude of the net force on charge A?</p>
+</div>
+<div class="solution">
+<div><span class="lbl">MODEL:</span> Treat A, B, and C as point charges. The net force on A is the vector sum of the force from B alone and the force from C alone.</div>
+<div><span class="lbl">VISUALIZE:</span> B is negative, so it attracts A &mdash; that force pulls A to the right, toward B (+x&#770;). C is positive, so it repels A &mdash; that force pushes A to the left, away from C (&minus;x&#770;). The two forces point in opposite directions.</div>
+<div><span class="lbl">SOLVE:</span> By Coulomb's law,
+<br>F<sub>B on A</sub> = K|q<sub>A</sub>q<sub>B</sub>|/r<sub>AB</sub>&sup2; = (8.99&times;10&#8313; N&middot;m&sup2;/C&sup2;)(1.0&times;10&#8315;&#8313; C)(1.0&times;10&#8315;&#8313; C)/(0.010 m)&sup2; = 8.99&times;10&#8315;&#8309; N, direction +x&#770;
+<br>F<sub>C on A</sub> = K|q<sub>A</sub>q<sub>C</sub>|/r<sub>AC</sub>&sup2; = (8.99&times;10&#8313;)(1.0&times;10&#8315;&#8313;)(4.0&times;10&#8315;&#8313;)/(0.020 m)&sup2; = 8.99&times;10&#8315;&#8309; N, direction &minus;x&#770;
+<br>These are equal in magnitude and opposite in direction, so
+<br>F<sub>net,A</sub> = (8.99&times;10&#8315;&#8309; N)x&#770; + (8.99&times;10&#8315;&#8309; N)(&minus;x&#770;) = <span class="final">0 N</span></div>
+<div><span class="lbl">REVIEW:</span> This cancellation isn't an accident &mdash; C sits twice as far from A as B does, but carries four times the charge, and Coulomb's law goes as (charge)/(distance)&sup2;. Doubling the distance cuts the force by 4&times;, and quadrupling the charge multiplies it by 4&times;, so the two effects exactly offset. A good example of how sensitive the inverse-square law is to distance.</div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<div class="problem">
+<div class="probhead">22.18 (3 pts)</div>
+<div class="statement">
+<p>Three charges lie on a vertical line (Figure EX22.18): q<sub>A</sub> = +1.0 nC at the top, q<sub>B</sub> = &minus;2.0 nC located 2.0 cm below A, and q<sub>C</sub> = +2.0 nC located 1.0 cm below B. What is the magnitude of the net force on charge B?</p>
+</div>
+<div class="solution">
+<div><span class="lbl">MODEL:</span> Treat A, B, and C as point charges.</div>
+<div><span class="lbl">SOLVE:</span> A is positive and B is negative, so A attracts B upward, toward A:
+<br>F<sub>A on B</sub> = K|q<sub>A</sub>q<sub>B</sub>|/r<sub>AB</sub>&sup2; = (8.99&times;10&#8313;)(1.0&times;10&#8315;&#8313;)(2.0&times;10&#8315;&#8313;)/(0.020 m)&sup2; = 4.5&times;10&#8315;&#8309; N, direction +&#309; (up)
+<br>C is positive and B is negative, so C attracts B downward, toward C:
+<br>F<sub>C on B</sub> = K|q<sub>C</sub>q<sub>B</sub>|/r<sub>CB</sub>&sup2; = (8.99&times;10&#8313;)(2.0&times;10&#8315;&#8313;)(2.0&times;10&#8315;&#8313;)/(0.010 m)&sup2; = 3.6&times;10&#8315;&#8308; N, direction &minus;&#309; (down)
+<br>Adding these as vectors,
+<br>F<sub>net,B</sub> = (4.5&times;10&#8315;&#8309; N)&#309; &minus; (3.6&times;10&#8315;&#8308; N)&#309; = &minus;3.1&times;10&#8315;&#8308; N &#309;, so the magnitude is <span class="final">3.1&times;10&#8315;&#8308; N</span> (downward)</div>
+<div><span class="lbl">REVIEW:</span> C is closer to B than A is (1.0 cm vs. 2.0 cm) and carries twice A's charge, so it makes sense that C's pull wins decisively &mdash; unlike Problem 22.17, nothing here is set up to cancel.</div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<div class="problem">
+<div class="probhead">22.19 (3 pts)</div>
+<div class="statement">
+<p>Three charges sit at the corners of an equilateral triangle with 1.0 cm sides (Figure EX22.19): q<sub>A</sub> = +2.0 nC at the top vertex, q<sub>B</sub> = &minus;2.0 nC at the bottom-left vertex, and q<sub>C</sub> = +1.0 nC at the bottom-right vertex. What is the force <span class="vec">F</span> on the 1.0 nC charge? Give your answer as a magnitude and direction.</p>
+</div>
+<div class="solution">
+<div><span class="lbl">MODEL:</span> Treat all three as point charges. Charge C feels two forces &mdash; a repulsion from A and an attraction to B &mdash; that must be added as vectors.</div>
+<div><span class="lbl">VISUALIZE:</span> Put B at the origin and C at (1.0 cm, 0), so A sits at (0.5 cm, 0.87 cm), completing the equilateral triangle. A and C are both positive, so A repels C straight along the line from A through C. B and C are opposite in sign, so B attracts C straight along the line from C to B.</div>
+<div><span class="lbl">SOLVE:</span> Both pairs are separated by the same 1.0 cm side, and both charge products have the same magnitude (2.0 nC &times; 1.0 nC), so the two individual forces come out equal:
+<br>F = Kq<sub>A</sub>q<sub>C</sub>/r&sup2; = (8.99&times;10&#8313;)(2.0&times;10&#8315;&#8313;)(1.0&times;10&#8315;&#8313;)/(0.010 m)&sup2; = 1.80&times;10&#8315;&#8308; N
+<br>The unit vector from A to C is (0.50, &minus;0.87), so the repulsion from A contributes
+<br>F<sub>A on C</sub> = (1.80&times;10&#8315;&#8308; N)(0.50, &minus;0.87) = (9.0&times;10&#8315;&#8309;, &minus;1.56&times;10&#8315;&#8308;) N
+<br>The unit vector from C to B is (&minus;1, 0), so the attraction to B contributes
+<br>F<sub>B on C</sub> = (1.80&times;10&#8315;&#8308; N)(&minus;1, 0) = (&minus;1.80&times;10&#8315;&#8308;, 0) N
+<br>Adding components,
+<br>F<sub>net,C</sub> = (&minus;9.0&times;10&#8315;&#8309;, &minus;1.56&times;10&#8315;&#8308;) N &nbsp;&rArr;&nbsp; magnitude = &radic;[(9.0&times;10&#8315;&#8309;)&sup2; + (1.56&times;10&#8315;&#8308;)&sup2;] = <span class="final">1.8&times;10&#8315;&#8308; N</span>
+<br>Both components are negative, so <span class="vec">F</span> points into the third quadrant, at tan&#8315;&sup1;(1.56/0.90) = <span class="final">60&deg; below the &minus;x-axis</span> &mdash; i.e., straight out through C, away from the midpoint of edge AB.</div>
+<div><span class="lbl">REVIEW:</span> Because the two individual forces are equal in magnitude and 120&deg; apart, the resultant must bisect that angle &mdash; which is exactly what the components give. That the two forces come out equal at all is itself a direct consequence of q<sub>A</sub>q<sub>C</sub> and |q<sub>B</sub>|q<sub>C</sub> being the same product (2.0 nC&sup2;) at the same 1.0 cm separation.</div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<div class="problem">
+<div class="probhead">22.33 (2 pts)</div>
+<div class="statement">
+<p>A +12 nC charge is located at the origin. What are the electric fields at the positions (x, y) = (5.0 cm, 0.0 cm), (&minus;5.0 cm, 5.0 cm), and (&minus;5.0 cm, &minus;5.0 cm)? Write each electric field vector in component form.</p>
+</div>
+<div class="solution">
+<div><span class="lbl">MODEL:</span> The field of a positive point charge points radially outward from it, with magnitude E = Kq/r&sup2;.</div>
+<div><span class="lbl">SOLVE:</span> At (5.0 cm, 0): r = 5.0 cm, straight along +x&#770;.
+<br>E = (8.99&times;10&#8313;)(12&times;10&#8315;&#8313;)/(0.050 m)&sup2; = 4.3&times;10&#8308; N/C &nbsp;&rArr;&nbsp; <span class="final"><span class="vec">E</span> = (4.3&times;10&#8308;, 0) N/C</span>
+<br>At (&minus;5.0 cm, 5.0 cm): r = &radic;50 cm = 7.07 cm, direction (&minus;1/&radic;2, 1/&radic;2).
+<br>E = (8.99&times;10&#8313;)(12&times;10&#8315;&#8313;)/(0.0707 m)&sup2; = 2.16&times;10&#8308; N/C &nbsp;&rArr;&nbsp; <span class="final"><span class="vec">E</span> = (&minus;1.5&times;10&#8308;, 1.5&times;10&#8308;) N/C</span>
+<br>At (&minus;5.0 cm, &minus;5.0 cm): same radius as the point above, direction (&minus;1/&radic;2, &minus;1/&radic;2), so
+<br><span class="final"><span class="vec">E</span> = (&minus;1.5&times;10&#8308;, &minus;1.5&times;10&#8308;) N/C</span></div>
+<div><span class="lbl">REVIEW:</span> The last two points are mirror images of each other across the x-axis, at the same distance from the charge, so their field magnitudes should match &mdash; they do (2.16&times;10&#8308; N/C both) &mdash; and only the sign of the y-component flips, exactly as the geometry demands.</div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<div class="problem">
+<div class="probhead">22.34 (4 pts) <span style="font-weight:normal;color:#666;font-size:14px;">BIO</span></div>
+<div class="statement">
+<p>A 0.10 g honeybee acquires a charge of +23 pC while flying.</p>
+<div class="parts">
+<p>a. The earth's electric field near the surface is typically 100 N/C, downward. What is the ratio of the electric force on the bee to the bee's weight?</p>
+<p>b. What electric field (strength and direction) would allow the bee to hang suspended in the air?</p>
+</div>
+</div>
+<div class="solution">
+<div><span class="lbl">MODEL:</span> Treat the bee as a point charge in a uniform field. Its weight is F<sub>g</sub> = mg; the electric force on it is F<sub>e</sub> = qE.</div>
+<div><span class="lbl">SOLVE: (a)</span> The ratio of the two forces is
+<br>F<sub>e</sub>/F<sub>g</sub> = qE/mg = (23&times;10&#8315;&sup1;&sup2; C)(100 N/C) / [(0.10&times;10&#8315;&sup3; kg)(9.8 m/s&sup2;)] = <span class="final">2.3&times;10&#8315;&#8310;</span></div>
+<div><span class="lbl">(b)</span> For the electric force to balance gravity, qE = mg, so
+<br>E = mg/q = (0.10&times;10&#8315;&sup3; kg)(9.8 m/s&sup2;) / (23&times;10&#8315;&sup1;&sup2; C) = <span class="final">4.3&times;10&#8309; N/C, directed upward</span> (so the force on the positive charge points up, opposing gravity).</div>
+<div><span class="lbl">REVIEW:</span> Part (a)'s ratio is minuscule &mdash; Earth's ordinary fair-weather field is millions of times too weak to matter to a flying bee. Part (b)'s answer, 4.3&times;10&#8309; N/C, is roughly 1000&times; the field strength that causes dielectric breakdown (sparking) in air, a reminder that electrically suspending a bee like this isn't something you could actually set up in a room, even though the algebra is clean.</div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<div class="problem">
+<div class="probhead">22.36 (3 pts)</div>
+<div class="statement">
+<p>A +5.0 nC charge sits at the origin (Figure EX22.36). Point 1 is at (x, y) = (1.0 cm, 2.0 cm), point 2 is at (1.0 cm, 0 cm), and point 3 is at (1.0 cm, &minus;2.0 cm). What are the electric fields at points 1, 2, and 3? Give your answer in component form.</p>
+</div>
+<div class="solution">
+<div><span class="lbl">MODEL:</span> The field of a positive point charge points radially outward from it, with magnitude E = Kq/r&sup2;.</div>
+<div><span class="lbl">SOLVE:</span> At point 2: r = 1.0 cm, straight along +x&#770;.
+<br>E = (8.99&times;10&#8313;)(5.0&times;10&#8315;&#8313;)/(0.010 m)&sup2; = 4.5&times;10&#8309; N/C &nbsp;&rArr;&nbsp; <span class="final"><span class="vec">E</span>&#8322; = (4.5&times;10&#8309;, 0) N/C</span>
+<br>Points 1 and 3 are both r = &radic;5 cm = 2.24 cm from the charge, with direction (1/&radic;5, &plusmn;2/&radic;5).
+<br>E = (8.99&times;10&#8313;)(5.0&times;10&#8315;&#8313;)/(0.0224 m)&sup2; = 8.99&times;10&#8308; N/C
+<br><span class="final"><span class="vec">E</span>&#8321; = (4.0&times;10&#8308;, 8.0&times;10&#8308;) N/C</span> &nbsp;&nbsp; <span class="final"><span class="vec">E</span>&#8323; = (4.0&times;10&#8308;, &minus;8.0&times;10&#8308;) N/C</span></div>
+<div><span class="lbl">REVIEW:</span> Point 2 is closer to the charge (1.0 cm) than points 1 and 3 (2.24 cm), so it should have the larger field &mdash; and by a factor of about (2.24)&sup2; &asymp; 5, exactly what the numbers show (4.5&times;10&#8309; vs. 8.99&times;10&#8308; N/C). Points 1 and 3 are mirror images across the x-axis, so their fields are mirror images too, differing only in the sign of the y-component.</div>
+</div>
+</div>
+
+</body>
+</html>
