@@ -66,7 +66,7 @@
 \setlength{\extrarowheight}{0pt}\renewcommand{\arraystretch}{1.05}
 \begin{tabular}{@{}r@{\ \ }l@{\hspace{1.8em}}r@{\ \ }l@{\hspace{1.8em}}r@{\ \ }l@{}}
 $q,Q$ & charge (C)                & $\Phi$      & electric flux (N$\cdot$m$^2$/C) & $U$ & potential energy (J) \\
-$\vec E$ & electric field (N/C = V/m) & $\lambda,\sigma,\rho$ & line / area / volume charge density & $V$ & potential (V $=$ J/C) \\
+$\vec E$ & electric field (N/C = V/m) & $\lambda,\eta,\rho$ & line / area / volume charge density & $V$ & potential (V $=$ J/C) \\
 $r,d$ & distance / separation (m) & $A$        & area                            & $k$ & $8.99\times10^{9}$ N$\cdot$m$^2$/C$^2$ \\
 $\varepsilon_0$ & \multicolumn{5}{@{}l@{}}{$8.85\times10^{-12}$ C$^2$/(N$\cdot$m$^2$),\quad $k = 1/(4\pi\varepsilon_0)$ \qquad\qquad $e = 1.60\times10^{-19}$ C} \\
 \end{tabular}
@@ -89,10 +89,10 @@ $\varepsilon_0$ & \multicolumn{5}{@{}l@{}}{$8.85\times10^{-12}$ C$^2$/(N$\cdot$m
 \eqtab{
   \band{fundamental}
   \R{Chop into pieces, add up (integrate)}{\vec E = \displaystyle\int d\vec E,\qquad dE = \dfrac{k\,dq}{r^{2}}}
-  \R{Charge densities}{\lambda = \dfrac{Q}{L},\qquad \sigma = \dfrac{Q}{A},\qquad \rho = \dfrac{Q}{V}}
+  \R{Charge densities}{\lambda = \dfrac{Q}{L},\qquad \eta = \dfrac{Q}{A},\qquad \rho = \dfrac{Q}{V}}
   \band{derived}
   \R{Infinite line of charge (distance $r$)}{E = \dfrac{\lambda}{2\pi\varepsilon_0\,r} = \dfrac{2k\lambda}{r}}
-  \R{Infinite plane / sheet of charge}{E = \dfrac{\sigma}{2\varepsilon_0} \quad(\text{uniform --- no }r)}
+  \R{Infinite plane / sheet of charge}{E = \dfrac{\eta}{2\varepsilon_0} \quad(\text{uniform --- no }r)}
 }
 
 %========================================================
@@ -113,7 +113,7 @@ $\varepsilon_0$ & \multicolumn{5}{@{}l@{}}{$8.85\times10^{-12}$ C$^2$/(N$\cdot$m
   \band{fundamental}
   \R{Field inside the conducting material}{\vec E = 0}
   \R{Excess charge}{\text{all on the outer surface}}
-  \R{Field at the outer surface}{\perp \text{ to the surface},\qquad E = \dfrac{\sigma}{\varepsilon_0}}
+  \R{Field at the outer surface}{\perp \text{ to the surface},\qquad E = \dfrac{\eta}{\varepsilon_0}}
   \band{derived}
   \R{Empty cavity inside a conductor}{\vec E = 0 \text{ in the cavity} \quad(\text{Faraday shielding})}
   \R{Charge $+q$ placed in the cavity}{-q \text{ on the inner wall},\ +q \text{ on the outer surface}}
