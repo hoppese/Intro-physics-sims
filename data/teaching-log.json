@@ -20,7 +20,7 @@
   "  wish      what you wish there had been time for",
   "  landed    what visibly worked - worth protecting next year",
   "  struggled what students got stuck on",
-  "  nextYear  a direct instruction to whoever rebuilds this schedule",
+  "  nextYear  a direct instruction to whoever rebuilds this schedule\n  notes     anything else worth remembering about the day",
   "",
   "Example of the shape (not a real class):",
   "  \"2026-01-01\": {",
@@ -28,6 +28,19 @@
   "    \"cut\": \"...\", \"wish\": \"...\", \"landed\": \"...\", \"struggled\": \"...\", \"nextYear\": \"...\"",
   "  }"
  ],
- "nominalPlan": { "kickoff": 5, "lecture": 15, "explore": 20, "synthesis": 10 },
- "entries": {}
+ "nominalPlan": {
+  "kickoff": 5,
+  "lecture": 15,
+  "explore": 20,
+  "synthesis": 10
+ },
+ "entries": {
+  "2026-09-21": {
+   "covered": "Opened with a brief lecture on flux, which carried straight into finishing the kickoff as a class. Then a long stretch lecturing on the torque on an electric dipole: defining the dipole moment and deriving tau = p x E. Closed by giving students a little time to start the written HW.",
+   "cut": "Time for students to start the written HW in class got squeezed by the dipole lecture.",
+   "wish": "More class time for them to get going on the written HW.",
+   "nextYear": "The dipole-torque derivation (dipole moment, tau = p x E) took a good deal of time on its own - budget for it explicitly rather than folding it in behind flux. And use a dipole sim here: electric-dipole-in-field already existed on this date and was not used.",
+   "notes": "Did not use the electric dipole sim. Minutes per segment were not recorded for this day."
+  }
+ }
 }
