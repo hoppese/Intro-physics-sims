@@ -1,0 +1,2384 @@
+{
+ "_comment": [
+  "MASTER SCHEDULE - single source of truth for PHYS 230/235, Fall 2026.",
+  "Times are course-local wall clock (America/Indiana/Indianapolis). Never epochs.",
+  "\"opens\" is the Restrict-access date, which is how this course gates activities;",
+  "the quiz-level open date is deliberately left unset throughout.",
+  "track: both | calc | alg. Derived from the Moodle group restriction where one exists.",
+  "Consumed by: the master-schedule viewer, the course-map generator, and the",
+  "pre-class audit. Seeded 2026-09-21 from course-map-fall-26.html + a live Moodle pull."
+ ],
+ "course": {
+  "name": "PHYS 230 / 235",
+  "term": "Fall 2026",
+  "moodleCourseId": 4157,
+  "timezone": "America/Indiana/Indianapolis",
+  "groups": {
+   "4974": "calc (PHYS 235)",
+   "4975": "alg (PHYS 230)"
+  }
+ },
+ "weeks": [
+  {
+   "n": 1,
+   "unit": "waves",
+   "range": "Aug 26 – 28",
+   "days": [
+    {
+     "dow": "Wed",
+     "date": "Aug 26",
+     "topic": "SHM — Introduction",
+     "reading": "15.1–2",
+     "video": {
+      "id": "kLWXLbciobw",
+      "st": "ok"
+     },
+     "sim": {
+      "name": "Oscillation Explorer",
+      "note": "Sliders for amplitude, period and phase with a live phasor → sine link.",
+      "slug": "oscillation-explorer"
+     },
+     "plan": {
+      "lec": "Define amplitude, period, angular frequency ω and phase from x(t)=A cos(ωt+φ).",
+      "exp": "SHM explorer — drag A, T, φ and watch the curve and a rotating phasor.",
+      "prac": "Read x(t) graphs and extract all four parameters."
+     },
+     "split": false,
+     "due": []
+    },
+    {
+     "dow": "Fri",
+     "date": "Aug 28",
+     "topic": "SHM — Energy & Dynamics",
+     "reading": "15.3–4",
+     "video": {
+      "id": "Hs_GeBx15Ws",
+      "st": "cav"
+     },
+     "sim": {
+      "name": "Energy in SHM — Mass on a Spring",
+      "note": "Animated mass on a spring with live KE/PE energy bars.",
+      "slug": "energy-in-shm"
+     },
+     "plan": {
+      "lec": "Energy interchange KE↔PE; restoring force F=−kx and a=−ω²x.",
+      "exp": "Energy-bar sim: watch KE/PE trade as the mass oscillates.",
+      "prac": "Spring–mass numericals; find ω from k and m."
+     },
+     "split": false,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 1",
+       "track": "both",
+       "cmid": 145929,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-08-28 09:50",
+       "closes": "2026-08-28 10:15",
+       "visible": true
+      },
+      {
+       "kind": "Prep",
+       "label": "Prep 1",
+       "track": "both",
+       "cmid": 145964,
+       "module": "quiz",
+       "points": 3.0,
+       "attempts": 2,
+       "opens": "2026-08-26 11:00",
+       "closes": "2026-08-28 10:00",
+       "visible": true
+      },
+      {
+       "kind": "OHW",
+       "label": "OHW 1",
+       "track": "both",
+       "cmid": 147438,
+       "module": "quiz",
+       "points": 6.0,
+       "attempts": 3,
+       "opens": "2026-08-26 10:00",
+       "closes": "2026-08-28 10:00",
+       "visible": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "n": 2,
+   "unit": "waves",
+   "range": "Aug 31 – Sep 4",
+   "days": [
+    {
+     "dow": "Mon",
+     "date": "Aug 31",
+     "topic": "Vertical oscillations + Simple pendulum",
+     "reading": "15.5–6",
+     "video": {
+      "id": "RspnXkl18ck",
+      "id2": "WPa5IgLgDyQ",
+      "st": "cav"
+     },
+     "sim": {
+      "name": "Simple Pendulum",
+      "note": "Adjustable length / gravity; period read-out and angle trace.",
+      "slug": "pendulum"
+     },
+     "plan": {
+      "lec": "Why a hanging spring is still SHM about a shifted equilibrium; small-angle pendulum.",
+      "exp": "Pendulum sim — vary length and g, measure the period.",
+      "prac": "Predict periods; test the small-angle limit."
+     },
+     "split": false,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 2",
+       "track": "both",
+       "cmid": 145928,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-08-31 09:50",
+       "closes": "2026-08-31 10:15",
+       "visible": true
+      },
+      {
+       "kind": "Prep",
+       "label": "Prep 2",
+       "track": "both",
+       "cmid": 145963,
+       "module": "quiz",
+       "points": 3.0,
+       "attempts": 2,
+       "opens": "2026-08-28 11:00",
+       "closes": "2026-08-31 10:00",
+       "visible": true
+      },
+      {
+       "kind": "OHW",
+       "label": "OHW 2",
+       "track": "both",
+       "cmid": null,
+       "module": null,
+       "points": 6,
+       "attempts": null,
+       "opens": null,
+       "closes": null,
+       "visible": null,
+       "note": "lives in Mastering, not Moodle"
+      }
+     ]
+    },
+    {
+     "dow": "Wed",
+     "date": "Sep 2",
+     "topic": "Traveling, standing & superposition",
+     "reading": "16.1–3",
+     "video": {
+      "id": "9WZM68aVnGk",
+      "st": "ok"
+     },
+     "sim": {
+      "name": "Wave Explorer",
+      "note": "Equation-driven traveling & standing waves.",
+      "slug": "wave-explorer"
+     },
+     "plan": {
+      "lec": "y(x,t)=A sin(kx−ωt); v=fλ; superposition → standing waves & nodes.",
+      "exp": "Wave explorer — build a wave from its equation, then add two for a standing wave.",
+      "prac": "Graph ↔ equation drills (use the wave quiz)."
+     },
+     "split": false,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 3",
+       "track": "both",
+       "cmid": 145927,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-09-02 09:50",
+       "closes": "2026-09-02 10:15",
+       "visible": true
+      },
+      {
+       "kind": "Prep",
+       "label": "Prep 3",
+       "track": "both",
+       "cmid": 145962,
+       "module": "quiz",
+       "points": 3.0,
+       "attempts": 2,
+       "opens": "2026-08-31 11:00",
+       "closes": "2026-09-02 10:00",
+       "visible": true
+      },
+      {
+       "kind": "HW",
+       "label": "HW 1",
+       "track": "both",
+       "cmid": 145981,
+       "module": "assign",
+       "points": 18.0,
+       "attempts": null,
+       "opens": "2026-08-26 10:00",
+       "closes": "2026-09-02 10:00",
+       "visible": true
+      }
+     ]
+    },
+    {
+     "dow": "Fri",
+     "date": "Sep 4",
+     "topic": "Waves on strings + music",
+     "reading": "17.1–2",
+     "video": {
+      "id": "XDsk6tZX55g",
+      "st": "ok"
+     },
+     "sim": {
+      "name": "Standing Waves — Strings & Pipes",
+      "note": "Standing waves on a string or in a pipe — set the ends, step the harmonics.",
+      "slug": "standing-waves"
+     },
+     "plan": {
+      "lec": "Wave speed v=√(T/μ); harmonic series on a fixed string.",
+      "exp": "Standing Waves sim — string and pipe modes, hear/see overtones.",
+      "prac": "Fundamental & overtone frequency calcs."
+     },
+     "split": false,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 4",
+       "track": "both",
+       "cmid": 145926,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-09-04 09:50",
+       "closes": "2026-09-04 10:15",
+       "visible": true
+      },
+      {
+       "kind": "Prep",
+       "label": "Prep 4",
+       "track": "both",
+       "cmid": 145961,
+       "module": "quiz",
+       "points": 3.0,
+       "attempts": 2,
+       "opens": "2026-09-02 11:00",
+       "closes": "2026-09-04 10:00",
+       "visible": true
+      },
+      {
+       "kind": "OHW",
+       "label": "OHW 3",
+       "track": "both",
+       "cmid": null,
+       "module": null,
+       "points": 6,
+       "attempts": null,
+       "opens": null,
+       "closes": null,
+       "visible": null,
+       "note": "lives in Mastering, not Moodle"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "n": 3,
+   "unit": "waves",
+   "range": "Sep 7 – 11",
+   "days": [
+    {
+     "dow": "Mon",
+     "date": "Sep 7",
+     "topic": "Interference",
+     "reading": "17.3–5",
+     "video": {
+      "id": "oTjTXS40pqs",
+      "id2": "DII-tbLRdGA",
+      "st": "ok"
+     },
+     "sim": {
+      "name": "Two-Source Interference",
+      "note": "Draggable sources with a live interference field — reused for diffraction in the optics unit.",
+      "slug": "two-source-interference"
+     },
+     "plan": {
+      "lec": "Path difference, constructive vs destructive, beats.",
+      "exp": "Two-source interference sim — drag sources, watch the pattern (you asked for this).",
+      "prac": "Predict maxima/minima from path difference."
+     },
+     "split": false,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 5",
+       "track": "both",
+       "cmid": 145925,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-09-07 09:50",
+       "closes": "2026-09-07 10:30",
+       "visible": true
+      },
+      {
+       "kind": "Prep",
+       "label": "Prep 5",
+       "track": "both",
+       "cmid": 145960,
+       "module": "quiz",
+       "points": 3.0,
+       "attempts": 2,
+       "opens": "2026-09-04 11:00",
+       "closes": "2026-09-07 10:00",
+       "visible": true
+      },
+      {
+       "kind": "OHW",
+       "label": "OHW 4",
+       "track": "both",
+       "cmid": null,
+       "module": null,
+       "points": 6,
+       "attempts": null,
+       "opens": null,
+       "closes": null,
+       "visible": null,
+       "note": "lives in Mastering, not Moodle"
+      }
+     ]
+    },
+    {
+     "dow": "Wed",
+     "date": "Sep 9",
+     "topic": "Test 1",
+     "test": 1,
+     "special": true,
+     "split": false,
+     "due": [
+      {
+       "kind": "Test",
+       "label": "Test 1",
+       "track": "both",
+       "cmid": 145965,
+       "module": "assign",
+       "points": 50.0,
+       "attempts": null,
+       "opens": "2026-08-23 11:00",
+       "closes": "2026-09-09 10:00",
+       "visible": true
+      }
+     ]
+    },
+    {
+     "dow": "Fri",
+     "date": "Sep 11",
+     "topic": "Charges, insulators, conductors",
+     "reading": "22.1–3",
+     "video": {
+      "id": "TFlVWf8JX4A",
+      "st": "ok"
+     },
+     "sim": {
+      "name": "E-Fields in Conductors & Insulators",
+      "note": "Put charge on a conductor or an insulator and see where the field and the excess charge end up.",
+      "slug": "e-fields-conductors-and-insulators"
+     },
+     "plan": {
+      "lec": "Charge models, charging by friction/contact/induction, polarization.",
+      "exp": "Electroscope / charged-rod sim — predict then test.",
+      "prac": "Sign-of-charge reasoning chains."
+     },
+     "split": false,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 6",
+       "track": "both",
+       "cmid": 145924,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-09-11 09:50",
+       "closes": "2026-09-11 10:30",
+       "visible": true
+      },
+      {
+       "kind": "Prep",
+       "label": "Prep 6",
+       "track": "both",
+       "cmid": 145959,
+       "module": "quiz",
+       "points": 3.0,
+       "attempts": 2,
+       "opens": "2026-09-09 11:00",
+       "closes": "2026-09-11 10:00",
+       "visible": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "n": 4,
+   "unit": "estat",
+   "range": "Sep 14 – 18",
+   "days": [
+    {
+     "dow": "Mon",
+     "date": "Sep 14",
+     "topic": "Coulomb’s law + E fields",
+     "reading": "22.4–5",
+     "video": {
+      "id": "vJn-GEh9cxM"
+     },
+     "sim": {
+      "name": "Electrostatic Force Explorer",
+      "note": "Drag + / − charges and watch field vectors and potential update live. The workhorse sim for electrostatics.",
+      "slug": "electrostatics-explorer"
+     },
+     "plan": {
+      "lec": "Coulomb’s law; the field idea E=F/q; field of a point charge.",
+      "exp": "Point-charge field explorer — drop charges, see the vector field.",
+      "prac": "Superpose the field of 2–3 charges."
+     },
+     "split": false,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 7",
+       "track": "both",
+       "cmid": 145923,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-09-14 09:50",
+       "closes": "2026-09-14 10:15",
+       "visible": true
+      },
+      {
+       "kind": "Prep",
+       "label": "Prep 7",
+       "track": "both",
+       "cmid": 145958,
+       "module": "quiz",
+       "points": 3.0,
+       "attempts": 2,
+       "opens": "2026-09-11 11:00",
+       "closes": "2026-09-14 10:00",
+       "visible": true
+      },
+      {
+       "kind": "OHW",
+       "label": "OHW 5",
+       "track": "both",
+       "cmid": null,
+       "module": null,
+       "points": 6,
+       "attempts": null,
+       "opens": null,
+       "closes": null,
+       "visible": null,
+       "note": "lives in Mastering, not Moodle"
+      }
+     ]
+    },
+    {
+     "dow": "Wed",
+     "date": "Sep 16",
+     "topic": "E-field superposition",
+     "reading": "23.1–3",
+     "video": {
+      "id": "_4VC3IHbuW8",
+      "id2": "ShhvgT4ppls"
+     },
+     "sim": {
+      "name": "Electric Field Explorer",
+      "note": "Drop point charges, put a field point anywhere, and add each charge’s E vector to get the total.",
+      "slug": "field-superposition-explorer"
+     },
+     "plan": {
+      "lec": "Vector superposition of fields; the leap to continuous distributions.",
+      "exp": "Electric Field Explorer — predict the resultant E by adding each charge’s vector.",
+      "prac": "Set up and evaluate the field of a line or ring of charge, using symmetry to simplify."
+     },
+     "split": false,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 8",
+       "track": "both",
+       "cmid": 145922,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-09-16 09:50",
+       "closes": "2026-09-16 10:30",
+       "visible": true
+      },
+      {
+       "kind": "Prep",
+       "label": "Prep 8",
+       "track": "both",
+       "cmid": 145957,
+       "module": "quiz",
+       "points": 3.0,
+       "attempts": 3,
+       "opens": "2026-09-14 11:00",
+       "closes": "2026-09-16 10:00",
+       "visible": true
+      },
+      {
+       "kind": "HW",
+       "label": "HW 2",
+       "track": "both",
+       "cmid": 145980,
+       "module": "assign",
+       "points": 18.0,
+       "attempts": null,
+       "opens": "2026-09-02 11:00",
+       "closes": "2026-09-16 23:59",
+       "visible": true
+      }
+     ]
+    },
+    {
+     "dow": "Fri",
+     "date": "Sep 18",
+     "topic": "More on charge distributions",
+     "reading": "23.4–6",
+     "video": {
+      "id": "bt46cqO1epw"
+     },
+     "sim": {
+      "name": "Building a Distribution from Point Charges",
+      "note": "Line / ring / disk with adjustable size and a measurable field point.",
+      "slug": "discrete-charge-builder-3d"
+     },
+     "plan": {
+      "lec": "Line / ring / disk fields and their far-field limits.",
+      "exp": "Distribution-field sim — vary size, watch the field approach a point charge.",
+      "prac": "Parallel problem sets by track."
+     },
+     "calc": "On-axis field of a ring and a disk by integration, then the far-field (point-charge) and infinite-sheet limits.",
+     "alg": "Use the ring / disk / sheet field results as given; decide which limit applies and compare magnitudes.",
+     "split": true,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 9",
+       "track": "calc",
+       "cmid": 145921,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-09-18 09:50",
+       "closes": "2026-09-18 10:15",
+       "visible": true
+      },
+      {
+       "kind": "Prep",
+       "label": "Prep 9",
+       "track": "calc",
+       "cmid": 145956,
+       "module": "quiz",
+       "points": 3.0,
+       "attempts": 3,
+       "opens": "2026-09-16 11:00",
+       "closes": "2026-09-18 10:00",
+       "visible": true
+      },
+      {
+       "kind": "OHW",
+       "label": "OHW 6",
+       "track": "both",
+       "cmid": null,
+       "module": null,
+       "points": 6,
+       "attempts": null,
+       "opens": null,
+       "closes": null,
+       "visible": null,
+       "note": "lives in Mastering, not Moodle"
+      },
+      {
+       "kind": "Quiz",
+       "label": "Quiz 1",
+       "track": "alg",
+       "cmid": 150025,
+       "module": "assign",
+       "points": 5.0,
+       "attempts": null,
+       "opens": "2026-09-16 11:00",
+       "closes": "2026-09-18 10:50",
+       "visible": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "n": 5,
+   "unit": "estat",
+   "range": "Sep 21 – 25",
+   "days": [
+    {
+     "dow": "Mon",
+     "date": "Sep 21",
+     "topic": "Electric dipoles + Gauss’s law",
+     "reading": "23.7, 24.1–3",
+     "video": {
+      "none": 1,
+      "note": "Khan Electric flux + Gauss law, or record"
+     },
+     "sim": {
+      "name": "Gauss’s Law — Flux Through a Closed Surface",
+      "note": "Adjustable Gaussian surface around charges with live flux read-out.",
+      "slug": "gauss-flux"
+     },
+     "plan": {
+      "lec": "Dipole moment and torque τ=p×E; flux concept; Φ=q_enc/ε₀; symmetry as the key to using it.",
+      "exp": "Gauss-flux sim — draw a surface around charges and count flux.",
+      "prac": "Split problem block (symmetric cases)."
+     },
+     "calc": "Evaluate ∮E·dA for sphere, line and plane symmetries.",
+     "alg": "Use the three symmetry results; reason about enclosed charge and flux.",
+     "split": true,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 10",
+       "track": "calc",
+       "cmid": 145920,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-09-21 09:50",
+       "closes": "2026-09-21 10:30",
+       "visible": true
+      },
+      {
+       "kind": "Prep",
+       "label": "Prep 10",
+       "track": "calc",
+       "cmid": 145955,
+       "module": "quiz",
+       "points": 3.0,
+       "attempts": 2,
+       "opens": "2026-09-18 11:00",
+       "closes": "2026-09-21 10:00",
+       "visible": true
+      },
+      {
+       "kind": "OHW",
+       "label": "OHW 7",
+       "track": "calc",
+       "cmid": 150295,
+       "module": "quiz",
+       "points": 6.0,
+       "attempts": 3,
+       "opens": "2026-09-18 11:00",
+       "closes": "2026-09-21 10:00",
+       "visible": true
+      },
+      {
+       "kind": "HW",
+       "label": "HW 3A",
+       "track": "alg",
+       "cmid": 149710,
+       "module": "assign",
+       "points": 8.0,
+       "attempts": null,
+       "opens": "2026-09-16 11:00",
+       "closes": "2026-09-21 10:00",
+       "visible": true
+      },
+      {
+       "kind": "Quiz",
+       "label": "Quiz 2",
+       "track": "alg",
+       "cmid": 150206,
+       "module": "assign",
+       "points": 5.0,
+       "attempts": null,
+       "opens": "2026-09-21 11:00",
+       "closes": "2026-09-21 11:00",
+       "visible": true
+      }
+     ]
+    },
+    {
+     "dow": "Wed",
+     "date": "Sep 23",
+     "topic": "More Gauss’s law",
+     "reading": "24.4–6",
+     "video": {
+      "id": "owMznEZPNt4",
+      "st": "ok"
+     },
+     "sim": {
+      "name": "Gauss’s Law — Flux Through a Closed Surface",
+      "note": "Shape library: sphere, cylinder, pillbox.",
+      "slug": "gauss-flux"
+     },
+     "plan": {
+      "lec": "Spheres, lines and planes/sheets via symmetry; conductors in equilibrium.",
+      "exp": "Flux sim with different symmetric shapes.",
+      "prac": "Parallel problem sets by track."
+     },
+     "calc": "Apply Gauss’s law to a charged sphere, an infinite line and an infinite slab; handle a conductor with an internal cavity.",
+     "alg": "Use the sphere / line / plane field results; reason about where charge sits on a conductor and the field just outside.",
+     "split": true,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 11",
+       "track": "calc",
+       "cmid": 145919,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-09-23 09:50",
+       "closes": "2026-09-23 10:15",
+       "visible": true
+      },
+      {
+       "kind": "Prep",
+       "label": "Prep 11",
+       "track": "calc",
+       "cmid": 145954,
+       "module": "quiz",
+       "points": 3.0,
+       "attempts": 2,
+       "opens": "2026-09-21 11:00",
+       "closes": "2026-09-23 10:00",
+       "visible": true
+      },
+      {
+       "kind": "HW",
+       "label": "HW 3",
+       "track": "calc",
+       "cmid": 145979,
+       "module": "assign",
+       "points": 18.0,
+       "attempts": null,
+       "opens": "2026-09-16 11:00",
+       "closes": "2026-09-23 23:59",
+       "visible": true
+      },
+      {
+       "kind": "HW",
+       "label": "HW 3B",
+       "track": "alg",
+       "cmid": 150302,
+       "module": "assign",
+       "points": 16.0,
+       "attempts": null,
+       "opens": "2026-09-21 10:00",
+       "closes": "2026-09-23 10:00",
+       "visible": true
+      },
+      {
+       "kind": "Quiz",
+       "label": "Quiz 3",
+       "track": "alg",
+       "cmid": 150208,
+       "module": "assign",
+       "points": 5.0,
+       "attempts": null,
+       "opens": "2026-09-23 11:00",
+       "closes": "2026-09-23 11:00",
+       "visible": true
+      }
+     ]
+    },
+    {
+     "dow": "Fri",
+     "date": "Sep 25",
+     "topic": "Electric potential energy",
+     "reading": "25.1–3",
+     "video": {
+      "id": "m_Rq_Pzt9fo",
+      "st": "unv"
+     },
+     "plan": {
+      "lec": "Work to assemble charges; U=kq₁q₂/r; energy conservation.",
+      "exp": "PE-vs-separation sim; release a charge and watch energy convert.",
+      "prac": "Energy-conservation problems with charges."
+     },
+     "calc": "Same lesson for both sections; the Calc set is Online HW 8.",
+     "alg": "Same lesson for both sections; Algebra does Written HW 3C instead of the online set.",
+     "split": true,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 12",
+       "track": "both",
+       "cmid": 145918,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-09-25 09:50",
+       "closes": "2026-09-25 10:15",
+       "visible": true
+      },
+      {
+       "kind": "Prep",
+       "label": "Prep 12",
+       "track": "both",
+       "cmid": 145953,
+       "module": "quiz",
+       "points": 3.0,
+       "attempts": 2,
+       "opens": "2026-09-23 11:00",
+       "closes": "2026-09-25 10:00",
+       "visible": true
+      },
+      {
+       "kind": "OHW",
+       "label": "OHW 8",
+       "track": "calc",
+       "cmid": null,
+       "module": null,
+       "points": 6,
+       "attempts": null,
+       "opens": null,
+       "closes": null,
+       "visible": null,
+       "note": "lives in Mastering, not Moodle"
+      },
+      {
+       "kind": "HW",
+       "label": "HW 3C",
+       "track": "alg",
+       "cmid": 150465,
+       "module": "assign",
+       "points": 6.0,
+       "attempts": null,
+       "opens": "2026-09-23 10:00",
+       "closes": "2026-09-25 10:00",
+       "visible": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "n": 6,
+   "unit": "estat",
+   "range": "Sep 28 – Oct 2",
+   "days": [
+    {
+     "dow": "Mon",
+     "date": "Sep 28",
+     "topic": "Electric potential",
+     "reading": "25.4–7",
+     "video": {
+      "id": "j3GrOKre__0",
+      "st": "unv"
+     },
+     "sim": {
+      "name": "Equipotential Explorer",
+      "note": "Field explorer in potential mode: equipotential contours ⊥ to field lines.",
+      "slug": "equipotential-explorer"
+     },
+     "plan": {
+      "lec": "V=U/q; potential of a point charge; equipotentials; relate E=−dV/dx.",
+      "exp": "Equipotential + field-line sim — V map, ⊥ field lines, read the gradient.",
+      "prac": "Add potentials (scalars!) from several charges; go V↔E."
+     },
+     "split": false,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 13",
+       "track": "both",
+       "cmid": 145917,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-09-28 09:50",
+       "closes": "2026-09-28 10:15",
+       "visible": true
+      },
+      {
+       "kind": "Prep",
+       "label": "Prep 13",
+       "track": "both",
+       "cmid": 145952,
+       "module": "quiz",
+       "points": 3.0,
+       "attempts": 1,
+       "opens": "2026-09-25 11:00",
+       "closes": "2026-09-28 10:00",
+       "visible": true
+      },
+      {
+       "kind": "OHW",
+       "label": "OHW 9",
+       "track": "both",
+       "cmid": null,
+       "module": null,
+       "points": 6,
+       "attempts": null,
+       "opens": null,
+       "closes": null,
+       "visible": null,
+       "note": "lives in Mastering, not Moodle"
+      }
+     ]
+    },
+    {
+     "dow": "Wed",
+     "date": "Sep 30",
+     "topic": "Catch up / Flex day",
+     "plan": {
+      "lec": "No new content.",
+      "exp": "Open problem stations; slack to absorb any electrostatics overrun before the test.",
+      "prac": "Whiteboard the hardest problems from the unit."
+     },
+     "buffer": true,
+     "split": false,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 14",
+       "track": "both",
+       "cmid": 145916,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-09-30 09:50",
+       "closes": "2026-09-30 10:15",
+       "visible": true
+      },
+      {
+       "kind": "HW",
+       "label": "HW 4",
+       "track": "both",
+       "cmid": 145978,
+       "module": "assign",
+       "points": 18.0,
+       "attempts": null,
+       "opens": "2026-09-23 11:00",
+       "closes": "2026-09-30 10:00",
+       "visible": true
+      }
+     ]
+    },
+    {
+     "dow": "Fri",
+     "date": "Oct 2",
+     "topic": "Test 2",
+     "test": 2,
+     "special": true,
+     "split": false,
+     "due": [
+      {
+       "kind": "Test",
+       "label": "Test 2",
+       "track": "both",
+       "cmid": 145966,
+       "module": "assign",
+       "points": 50.0,
+       "attempts": null,
+       "opens": "2026-09-09 11:00",
+       "closes": "2026-10-02 10:00",
+       "visible": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "n": 7,
+   "unit": "circ",
+   "range": "Oct 5 – 9",
+   "days": [
+    {
+     "dow": "Mon",
+     "date": "Oct 5",
+     "topic": "Ohm’s law + Kirchhoff’s laws",
+     "reading": "27.5, 28.1–2",
+     "video": {
+      "id": "mJjw__fgmTk",
+      "st": "unv"
+     },
+     "sim": {
+      "name": "Circuit builder",
+      "note": "Drag batteries, resistors and wires; live current/voltage meters. Reused across circuits."
+     },
+     "plan": {
+      "lec": "I=ΔV/R; junction and loop rules as charge/energy conservation.",
+      "exp": "Circuit builder — wire a two-loop circuit and probe it.",
+      "prac": "Solve a 2-loop network for all currents."
+     },
+     "split": false,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 15",
+       "track": "both",
+       "cmid": 145915,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-10-05 09:50",
+       "closes": "2026-10-05 10:15",
+       "visible": true
+      },
+      {
+       "kind": "Prep",
+       "label": "Prep 14",
+       "track": "both",
+       "cmid": 145951,
+       "module": "quiz",
+       "points": 3.0,
+       "attempts": 1,
+       "opens": "2026-10-02 11:00",
+       "closes": "2026-10-05 10:00",
+       "visible": true
+      }
+     ]
+    },
+    {
+     "dow": "Wed",
+     "date": "Oct 7",
+     "topic": "Series & parallel resistors",
+     "reading": "28.4, 28.6",
+     "video": {
+      "id": "dEuBykX5_B4",
+      "st": "unv"
+     },
+     "sim": {
+      "name": "Circuit builder",
+      "note": "Series/parallel reduction focus."
+     },
+     "plan": {
+      "lec": "Equivalent-resistance reasoning; voltage/current dividers.",
+      "exp": "Circuit builder — reconfigure and predict before measuring.",
+      "prac": "Reduce ladder networks to one resistor."
+     },
+     "split": false,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 16",
+       "track": "both",
+       "cmid": 145914,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-10-07 09:50",
+       "closes": "2026-10-07 10:15",
+       "visible": true
+      },
+      {
+       "kind": "Prep",
+       "label": "Prep 15",
+       "track": "both",
+       "cmid": 145950,
+       "module": "quiz",
+       "points": 3.0,
+       "attempts": 1,
+       "opens": "2026-10-05 11:00",
+       "closes": "2026-10-07 10:00",
+       "visible": true
+      },
+      {
+       "kind": "HW",
+       "label": "HW 5",
+       "track": "both",
+       "cmid": 145977,
+       "module": "assign",
+       "points": 18.0,
+       "attempts": null,
+       "opens": "2026-09-30 11:00",
+       "closes": "2026-10-07 10:00",
+       "visible": true
+      }
+     ]
+    },
+    {
+     "dow": "Fri",
+     "date": "Oct 9",
+     "topic": "No class — Early Semester Break",
+     "special": true,
+     "buffer": true,
+     "split": false,
+     "due": []
+    }
+   ]
+  },
+  {
+   "n": 8,
+   "unit": "circ",
+   "range": "Oct 12 – 16",
+   "days": [
+    {
+     "dow": "Mon",
+     "date": "Oct 12",
+     "topic": "More circuits + devices",
+     "reading": "28.5, 28.7",
+     "video": {
+      "id": "Zv8n1T9bzGY",
+      "st": "unv"
+     },
+     "sim": {
+      "name": "Circuit builder",
+      "note": "Internal resistance and meters."
+     },
+     "plan": {
+      "lec": "Real batteries (internal resistance); ammeter vs voltmeter placement.",
+      "exp": "Circuit builder with meters — measure correctly vs incorrectly.",
+      "prac": "Measurement-scenario problems."
+     },
+     "split": false,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 17",
+       "track": "both",
+       "cmid": 145913,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-10-12 09:50",
+       "closes": "2026-10-12 10:15",
+       "visible": true
+      },
+      {
+       "kind": "Prep",
+       "label": "Prep 16",
+       "track": "both",
+       "cmid": 145949,
+       "module": "quiz",
+       "points": 3.0,
+       "attempts": 1,
+       "opens": "2026-10-07 11:00",
+       "closes": "2026-10-12 10:00",
+       "visible": true
+      },
+      {
+       "kind": "OHW",
+       "label": "OHW 10",
+       "track": "both",
+       "cmid": null,
+       "module": null,
+       "points": 6,
+       "attempts": null,
+       "opens": null,
+       "closes": null,
+       "visible": null,
+       "note": "lives in Mastering, not Moodle"
+      }
+     ]
+    },
+    {
+     "dow": "Wed",
+     "date": "Oct 14",
+     "topic": "RC circuits",
+     "reading": "28.9",
+     "video": {
+      "id": "OIpHPsnLlNU",
+      "st": "unv"
+     },
+     "sim": {
+      "name": "RC charging sim",
+      "note": "Capacitor charge/voltage vs time with adjustable R, C and a τ marker."
+     },
+     "plan": {
+      "lec": "Charging / discharging; time constant τ=RC; exponential behavior.",
+      "exp": "RC sim — watch the exponential and mark one time constant.",
+      "prac": "Time-constant and half-life style problems."
+     },
+     "split": false,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 18",
+       "track": "both",
+       "cmid": 145912,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-10-14 09:50",
+       "closes": "2026-10-14 10:15",
+       "visible": true
+      },
+      {
+       "kind": "Prep",
+       "label": "Prep 17",
+       "track": "both",
+       "cmid": 145948,
+       "module": "quiz",
+       "points": 3.0,
+       "attempts": 1,
+       "opens": "2026-10-12 11:00",
+       "closes": "2026-10-14 10:00",
+       "visible": true
+      },
+      {
+       "kind": "HW",
+       "label": "HW 6",
+       "track": "both",
+       "cmid": 145976,
+       "module": "assign",
+       "points": 18.0,
+       "attempts": null,
+       "opens": "2026-10-07 11:00",
+       "closes": "2026-10-14 10:00",
+       "visible": true
+      }
+     ]
+    },
+    {
+     "dow": "Fri",
+     "date": "Oct 16",
+     "topic": "No class — Epic Expo",
+     "special": true,
+     "buffer": true,
+     "split": false,
+     "due": []
+    }
+   ]
+  },
+  {
+   "n": 9,
+   "unit": "circ",
+   "range": "Oct 19 – 23",
+   "days": [
+    {
+     "dow": "Mon",
+     "date": "Oct 19",
+     "topic": "Catch up / Flex day",
+     "plan": {
+      "lec": "No new content.",
+      "exp": "Open problem stations; slack before the circuits test.",
+      "prac": "Whiteboard the hardest circuits problems."
+     },
+     "buffer": true,
+     "split": false,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 19",
+       "track": "both",
+       "cmid": 145911,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-10-19 09:50",
+       "closes": "2026-10-19 10:15",
+       "visible": true
+      },
+      {
+       "kind": "OHW",
+       "label": "OHW 11",
+       "track": "both",
+       "cmid": null,
+       "module": null,
+       "points": 6,
+       "attempts": null,
+       "opens": null,
+       "closes": null,
+       "visible": null,
+       "note": "lives in Mastering, not Moodle"
+      }
+     ]
+    },
+    {
+     "dow": "Wed",
+     "date": "Oct 21",
+     "topic": "Test 3",
+     "test": 3,
+     "special": true,
+     "split": false,
+     "due": [
+      {
+       "kind": "Test",
+       "label": "Test 3",
+       "track": "both",
+       "cmid": 145967,
+       "module": "assign",
+       "points": 50.0,
+       "attempts": null,
+       "opens": "2026-10-02 11:00",
+       "closes": "2026-10-21 10:00",
+       "visible": true
+      }
+     ]
+    },
+    {
+     "dow": "Fri",
+     "date": "Oct 23",
+     "topic": "Magnetic fields + Biot–Savart",
+     "reading": "29.1–3",
+     "video": {
+      "id": "waTF7kjmmt8",
+      "st": "unv"
+     },
+     "sim": {
+      "name": "Magnetic field of currents",
+      "note": "B field around wires/loops; superpose multiple currents."
+     },
+     "plan": {
+      "lec": "B direction by right-hand rule; the Biot–Savart idea.",
+      "exp": "Field-of-a-wire sim — see B circle the current.",
+      "prac": "Split problem block."
+     },
+     "calc": "Derive B from a current element; integrate for a wire and a loop.",
+     "alg": "Apply B=μ₀I/2πr and the loop-center result; reason from field patterns.",
+     "split": true,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 20",
+       "track": "both",
+       "cmid": 145910,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-10-23 09:50",
+       "closes": "2026-10-23 10:15",
+       "visible": true
+      },
+      {
+       "kind": "Prep",
+       "label": "Prep 18",
+       "track": "both",
+       "cmid": 145947,
+       "module": "quiz",
+       "points": 3.0,
+       "attempts": 1,
+       "opens": "2026-10-21 11:00",
+       "closes": "2026-10-23 10:00",
+       "visible": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "n": 10,
+   "unit": "mag",
+   "range": "Oct 26 – 30",
+   "days": [
+    {
+     "dow": "Mon",
+     "date": "Oct 26",
+     "topic": "B from a line + a loop",
+     "reading": "29.4",
+     "video": {
+      "id": "WUpDMi50zPs",
+      "st": "unv"
+     },
+     "sim": {
+      "name": "Magnetic field of currents",
+      "note": "Two-wire superposition mode."
+     },
+     "plan": {
+      "lec": "B=μ₀I/2πr; field at the center of a loop; superposition of wires.",
+      "exp": "Superpose two wire fields; find the null point.",
+      "prac": "Magnitude + direction at a point."
+     },
+     "split": false,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 21",
+       "track": "both",
+       "cmid": 145909,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-10-26 09:50",
+       "closes": "2026-10-26 10:15",
+       "visible": true
+      },
+      {
+       "kind": "Prep",
+       "label": "Prep 19",
+       "track": "both",
+       "cmid": 145946,
+       "module": "quiz",
+       "points": 3.0,
+       "attempts": 1,
+       "opens": "2026-10-23 11:00",
+       "closes": "2026-10-26 10:00",
+       "visible": true
+      },
+      {
+       "kind": "OHW",
+       "label": "OHW 12",
+       "track": "both",
+       "cmid": null,
+       "module": null,
+       "points": 6,
+       "attempts": null,
+       "opens": null,
+       "closes": null,
+       "visible": null,
+       "note": "lives in Mastering, not Moodle"
+      }
+     ]
+    },
+    {
+     "dow": "Wed",
+     "date": "Oct 28",
+     "topic": "Ampère’s law",
+     "reading": "29.6",
+     "video": {
+      "none": 1,
+      "note": "Khan Ampère law, or record"
+     },
+     "sim": {
+      "name": "Ampère loop sim",
+      "note": "Pick an Amperian loop around currents; live circulation read-out."
+     },
+     "plan": {
+      "lec": "Circulation; ∮B·dl=μ₀I_enc; Amperian loops. (Pairs with Biot–Savart as the two ways to find B.)",
+      "exp": "Ampère-loop sim — choose a loop, count enclosed current.",
+      "prac": "Split problem block."
+     },
+     "calc": "Apply ∮B·dl for a wire and a solenoid; justify loop choice.",
+     "alg": "Use the solenoid (B=μ₀nI) and wire results; enclosed-current counting.",
+     "split": true,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 22",
+       "track": "both",
+       "cmid": 145908,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-10-28 09:50",
+       "closes": "2026-10-28 10:15",
+       "visible": true
+      },
+      {
+       "kind": "Prep",
+       "label": "Prep 20",
+       "track": "both",
+       "cmid": 145945,
+       "module": "quiz",
+       "points": 3.0,
+       "attempts": 1,
+       "opens": "2026-10-26 11:00",
+       "closes": "2026-10-28 10:00",
+       "visible": true
+      },
+      {
+       "kind": "HW",
+       "label": "HW 7",
+       "track": "both",
+       "cmid": 145975,
+       "module": "assign",
+       "points": 18.0,
+       "attempts": null,
+       "opens": "2026-10-14 11:00",
+       "closes": "2026-10-28 10:00",
+       "visible": true
+      }
+     ]
+    },
+    {
+     "dow": "Fri",
+     "date": "Oct 30",
+     "topic": "Magnetic dipoles + torque",
+     "reading": "29.5",
+     "video": {
+      "id": "p_I_8hl-Gok",
+      "st": "unv"
+     },
+     "sim": {
+      "name": "Dipole field + torque",
+      "note": "Electric vs magnetic dipole patterns, plus rotate-in-field torque & energy."
+     },
+     "plan": {
+      "lec": "Dipole moment; the p↔μ analogy; torque τ=p×E and τ=μ×B; energy U=−μ·B.",
+      "exp": "Dipole sim — compare E/B dipole fields, then rotate one in a field for torque.",
+      "prac": "Dipole field + torque/energy problems. (Merged from the old two dipole days.)"
+     },
+     "split": false,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 23",
+       "track": "both",
+       "cmid": 145907,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-10-30 09:50",
+       "closes": "2026-10-30 10:15",
+       "visible": true
+      },
+      {
+       "kind": "Prep",
+       "label": "Prep 21",
+       "track": "both",
+       "cmid": 145944,
+       "module": "quiz",
+       "points": 3.0,
+       "attempts": 1,
+       "opens": "2026-10-28 11:00",
+       "closes": "2026-10-30 10:00",
+       "visible": true
+      },
+      {
+       "kind": "OHW",
+       "label": "OHW 13",
+       "track": "both",
+       "cmid": null,
+       "module": null,
+       "points": 6,
+       "attempts": null,
+       "opens": null,
+       "closes": null,
+       "visible": null,
+       "note": "lives in Mastering, not Moodle"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "n": 11,
+   "unit": "mag",
+   "range": "Nov 2 – 6",
+   "days": [
+    {
+     "dow": "Mon",
+     "date": "Nov 2",
+     "topic": "Magnetic force on charges",
+     "reading": "29.7",
+     "video": {
+      "id": "9C8mRW43X0Q",
+      "st": "unv"
+     },
+     "sim": {
+      "name": "Lorentz-force particle",
+      "note": "Charge moving in adjustable E and B; traces helices/circles."
+     },
+     "plan": {
+      "lec": "F=qv×B; circular motion; radius r=mv/qB.",
+      "exp": "Lorentz-force sim — launch a charge into a field, trace the circle.",
+      "prac": "Cyclotron-radius and velocity-selector problems."
+     },
+     "split": false,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 24",
+       "track": "both",
+       "cmid": 145906,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-11-02 09:50",
+       "closes": "2026-11-02 10:15",
+       "visible": true
+      },
+      {
+       "kind": "Prep",
+       "label": "Prep 22",
+       "track": "both",
+       "cmid": 145943,
+       "module": "quiz",
+       "points": 3.0,
+       "attempts": 1,
+       "opens": "2026-10-30 11:00",
+       "closes": "2026-11-02 10:00",
+       "visible": true
+      },
+      {
+       "kind": "OHW",
+       "label": "OHW 14",
+       "track": "both",
+       "cmid": null,
+       "module": null,
+       "points": 6,
+       "attempts": null,
+       "opens": null,
+       "closes": null,
+       "visible": null,
+       "note": "lives in Mastering, not Moodle"
+      }
+     ]
+    },
+    {
+     "dow": "Wed",
+     "date": "Nov 4",
+     "topic": "Magnetic force + torque on wires",
+     "reading": "29.8–9",
+     "video": {
+      "id": "_saTdQ9AEnM",
+      "st": "unv"
+     },
+     "sim": {
+      "name": "Current-loop / motor",
+      "note": "Force and torque on a current-carrying loop in a field."
+     },
+     "plan": {
+      "lec": "F=IL×B; torque on a current loop → the motor.",
+      "exp": "Current-loop sim — see the loop torque and spin a simple motor.",
+      "prac": "Force-on-wire and motor-torque problems."
+     },
+     "split": false,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 25",
+       "track": "both",
+       "cmid": 145905,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-11-04 09:50",
+       "closes": "2026-11-04 10:15",
+       "visible": true
+      },
+      {
+       "kind": "Prep",
+       "label": "Prep 23",
+       "track": "both",
+       "cmid": 145942,
+       "module": "quiz",
+       "points": 3.0,
+       "attempts": 1,
+       "opens": "2026-11-02 11:00",
+       "closes": "2026-11-04 10:00",
+       "visible": true
+      },
+      {
+       "kind": "HW",
+       "label": "HW 8",
+       "track": "both",
+       "cmid": 145974,
+       "module": "assign",
+       "points": 18.0,
+       "attempts": null,
+       "opens": "2026-10-28 11:00",
+       "closes": "2026-11-04 10:00",
+       "visible": true
+      }
+     ]
+    },
+    {
+     "dow": "Fri",
+     "date": "Nov 6",
+     "topic": "Magnetism in action — applications",
+     "reading": "29 (synthesis)",
+     "sim": {
+      "name": "Lorentz-force + motor stations",
+      "note": "Velocity selector, cyclotron radius and a spinning current loop — magnetism applications in one place."
+     },
+     "plan": {
+      "lec": "Magnetism put to work: mass spectrometer, velocity selector, cyclotron, the electric motor.",
+      "exp": "Application stations — Lorentz-force sim (mass spec / cyclotron) and the current-loop motor sim.",
+      "prac": "Multi-step applied problems; a magnetism capstone."
+     },
+     "split": false,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 26",
+       "track": "both",
+       "cmid": 145904,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-11-06 09:50",
+       "closes": "2026-11-06 10:15",
+       "visible": true
+      },
+      {
+       "kind": "Prep",
+       "label": "Prep 24",
+       "track": "both",
+       "cmid": 145941,
+       "module": "quiz",
+       "points": 3.0,
+       "attempts": 1,
+       "opens": "2026-11-04 11:00",
+       "closes": "2026-11-06 10:00",
+       "visible": true
+      },
+      {
+       "kind": "OHW",
+       "label": "OHW 15",
+       "track": "both",
+       "cmid": null,
+       "module": null,
+       "points": 6,
+       "attempts": null,
+       "opens": null,
+       "closes": null,
+       "visible": null,
+       "note": "lives in Mastering, not Moodle"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "n": 12,
+   "unit": "mag",
+   "range": "Nov 9 – 13",
+   "days": [
+    {
+     "dow": "Mon",
+     "date": "Nov 9",
+     "topic": "Induced currents + Lenz’s law",
+     "reading": "30.1–4",
+     "video": {
+      "id": "vcStzn55MG0",
+      "st": "unv"
+     },
+     "sim": {
+      "name": "Faraday / induction sim",
+      "note": "Move a magnet or change a field through a loop; live flux, EMF and induced current."
+     },
+     "plan": {
+      "lec": "Magnetic flux; Lenz’s law for current direction.",
+      "exp": "Move-a-magnet sim — push a magnet through a loop, predict the current.",
+      "prac": "Predict-the-direction drills."
+     },
+     "split": false,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 27",
+       "track": "both",
+       "cmid": 145903,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-11-09 09:50",
+       "closes": "2026-11-09 10:15",
+       "visible": true
+      },
+      {
+       "kind": "Prep",
+       "label": "Prep 25",
+       "track": "both",
+       "cmid": 145940,
+       "module": "quiz",
+       "points": 3.0,
+       "attempts": 1,
+       "opens": "2026-11-06 11:00",
+       "closes": "2026-11-09 10:00",
+       "visible": true
+      },
+      {
+       "kind": "OHW",
+       "label": "OHW 16",
+       "track": "both",
+       "cmid": null,
+       "module": null,
+       "points": 6,
+       "attempts": null,
+       "opens": null,
+       "closes": null,
+       "visible": null,
+       "note": "lives in Mastering, not Moodle"
+      }
+     ]
+    },
+    {
+     "dow": "Wed",
+     "date": "Nov 11",
+     "topic": "Faraday’s law",
+     "reading": "30.5–6",
+     "video": {
+      "none": 1,
+      "note": "Crash Course #29 covers it, or record"
+     },
+     "sim": {
+      "name": "Faraday / induction sim",
+      "note": "Graph mode: flux and induced EMF vs time."
+     },
+     "plan": {
+      "lec": "EMF=−dΦ/dt; motional EMF.",
+      "exp": "Induction sim with synchronized flux and EMF graphs.",
+      "prac": "Quantitative EMF problems."
+     },
+     "split": false,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 28",
+       "track": "both",
+       "cmid": 145902,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-11-11 09:50",
+       "closes": "2026-11-11 10:15",
+       "visible": true
+      },
+      {
+       "kind": "Prep",
+       "label": "Prep 26",
+       "track": "both",
+       "cmid": 145939,
+       "module": "quiz",
+       "points": 3.0,
+       "attempts": 1,
+       "opens": "2026-11-09 11:00",
+       "closes": "2026-11-11 10:00",
+       "visible": true
+      },
+      {
+       "kind": "HW",
+       "label": "HW 9",
+       "track": "both",
+       "cmid": 145973,
+       "module": "assign",
+       "points": 18.0,
+       "attempts": null,
+       "opens": "2026-11-04 11:00",
+       "closes": "2026-11-11 10:00",
+       "visible": true
+      }
+     ]
+    },
+    {
+     "dow": "Fri",
+     "date": "Nov 13",
+     "topic": "Induced fields",
+     "reading": "30.6–7",
+     "video": {
+      "none": 1,
+      "note": "Crash Course #29 (motional EMF), or record"
+     },
+     "sim": {
+      "name": "Faraday / induction sim",
+      "note": "Eddy-current and induced-field variants."
+     },
+     "plan": {
+      "lec": "Induced electric fields; eddy currents; real-world applications.",
+      "exp": "Induction sim variants (eddy-current brake).",
+      "prac": "Synthesis problems across induction."
+     },
+     "split": false,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 29",
+       "track": "both",
+       "cmid": 145901,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-11-13 09:50",
+       "closes": "2026-11-13 10:15",
+       "visible": true
+      },
+      {
+       "kind": "Prep",
+       "label": "Prep 27",
+       "track": "both",
+       "cmid": 145938,
+       "module": "quiz",
+       "points": 3.0,
+       "attempts": 1,
+       "opens": "2026-11-11 11:00",
+       "closes": "2026-11-13 10:00",
+       "visible": true
+      },
+      {
+       "kind": "OHW",
+       "label": "OHW 17",
+       "track": "both",
+       "cmid": null,
+       "module": null,
+       "points": 6,
+       "attempts": null,
+       "opens": null,
+       "closes": null,
+       "visible": null,
+       "note": "lives in Mastering, not Moodle"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "n": 13,
+   "unit": "optics",
+   "range": "Nov 16 – 20",
+   "days": [
+    {
+     "dow": "Mon",
+     "date": "Nov 16",
+     "topic": "Test 4",
+     "test": 4,
+     "special": true,
+     "split": false,
+     "due": [
+      {
+       "kind": "Test",
+       "label": "Test 4",
+       "track": "both",
+       "cmid": 145968,
+       "module": "assign",
+       "points": 50.0,
+       "attempts": null,
+       "opens": "2026-10-21 11:00",
+       "closes": "2026-11-16 10:00",
+       "visible": true
+      }
+     ]
+    },
+    {
+     "dow": "Wed",
+     "date": "Nov 18",
+     "topic": "Snell’s law, TIR + dispersion",
+     "reading": "34.1–4",
+     "video": {
+      "id": "y55tzg_jW9I",
+      "st": "unv"
+     },
+     "sim": {
+      "name": "Ray-optics sim",
+      "note": "Refraction / TIR at an interface plus a dispersion mode; reused for lenses & mirrors."
+     },
+     "plan": {
+      "lec": "n₁ sinθ₁=n₂ sinθ₂; critical angle and TIR; why n varies with λ (prisms, rainbows).",
+      "exp": "Refraction sim — drag the ray across the critical angle, then send white light through a prism.",
+      "prac": "Ray-bending, TIR and dispersion problems."
+     },
+     "split": false,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 30",
+       "track": "both",
+       "cmid": 145900,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-11-18 09:50",
+       "closes": "2026-11-18 10:15",
+       "visible": true
+      },
+      {
+       "kind": "Prep",
+       "label": "Prep 28",
+       "track": "both",
+       "cmid": 145937,
+       "module": "quiz",
+       "points": 3.0,
+       "attempts": 1,
+       "opens": "2026-11-16 11:00",
+       "closes": "2026-11-18 10:00",
+       "visible": true
+      }
+     ]
+    },
+    {
+     "dow": "Fri",
+     "date": "Nov 20",
+     "topic": "Thin lenses",
+     "reading": "34.5",
+     "video": {
+      "id": "7GV1UZSTNJg",
+      "st": "unv"
+     },
+     "sim": {
+      "name": "Lens ray-tracer",
+      "note": "Converging/diverging lenses with principal rays and image formation."
+     },
+     "plan": {
+      "lec": "Thin-lens equation 1/f=1/s+1/s′; converging vs diverging; magnification.",
+      "exp": "Lens ray-tracer — move the object, watch the image form.",
+      "prac": "Locate, size and orient images."
+     },
+     "split": false,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 31",
+       "track": "both",
+       "cmid": 145899,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-11-20 09:50",
+       "closes": "2026-11-20 10:15",
+       "visible": true
+      },
+      {
+       "kind": "Prep",
+       "label": "Prep 29",
+       "track": "both",
+       "cmid": 145936,
+       "module": "quiz",
+       "points": 3.0,
+       "attempts": 1,
+       "opens": "2026-11-18 11:00",
+       "closes": "2026-11-20 10:00",
+       "visible": true
+      },
+      {
+       "kind": "HW",
+       "label": "HW 10",
+       "track": "both",
+       "cmid": 145972,
+       "module": "assign",
+       "points": 18.0,
+       "attempts": null,
+       "opens": "2026-11-11 11:00",
+       "closes": "2026-11-20 10:00",
+       "visible": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "n": 14,
+   "unit": "brk",
+   "range": "Nov 23 – 27",
+   "days": [
+    {
+     "dow": "",
+     "date": "Nov 23–27",
+     "topic": "Fall Break — Thanksgiving",
+     "special": true,
+     "split": false,
+     "due": []
+    }
+   ]
+  },
+  {
+   "n": 15,
+   "unit": "optics",
+   "range": "Nov 30 – Dec 4",
+   "days": [
+    {
+     "dow": "Mon",
+     "date": "Nov 30",
+     "topic": "Ray tracing + mirrors",
+     "reading": "35.1",
+     "video": {
+      "id": "dBOzdoIsOEI",
+      "st": "unv"
+     },
+     "sim": {
+      "name": "Mirror ray-tracer",
+      "note": "Concave/convex mirrors with principal-ray construction."
+     },
+     "plan": {
+      "lec": "Mirror equation; principal rays for concave/convex mirrors.",
+      "exp": "Mirror ray-tracer — trace images for both mirror types.",
+      "prac": "Image location, size and orientation."
+     },
+     "split": false,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 32",
+       "track": "both",
+       "cmid": 145898,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-11-30 09:50",
+       "closes": "2026-11-30 10:15",
+       "visible": true
+      },
+      {
+       "kind": "Prep",
+       "label": "Prep 30",
+       "track": "both",
+       "cmid": 145935,
+       "module": "quiz",
+       "points": 3.0,
+       "attempts": 1,
+       "opens": "2026-11-20 11:00",
+       "closes": "2026-11-30 10:00",
+       "visible": true
+      },
+      {
+       "kind": "OHW",
+       "label": "OHW 18",
+       "track": "both",
+       "cmid": null,
+       "module": null,
+       "points": 6,
+       "attempts": null,
+       "opens": null,
+       "closes": null,
+       "visible": null,
+       "note": "lives in Mastering, not Moodle"
+      }
+     ]
+    },
+    {
+     "dow": "Wed",
+     "date": "Dec 2",
+     "topic": "Interference + diffraction",
+     "reading": "33.1–2",
+     "video": {
+      "none": 1,
+      "note": "Crash Course #31 Diffraction & Interference, or record"
+     },
+     "sim": {
+      "name": "Diffraction / slit pattern",
+      "note": "Single/double slit intensity pattern — extends the interference sim."
+     },
+     "plan": {
+      "lec": "Double-slit interference; single-slit diffraction; the role of λ.",
+      "exp": "Diffraction sim — vary slit spacing and wavelength, read the pattern.",
+      "prac": "Fringe-spacing calculations."
+     },
+     "split": false,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 33",
+       "track": "both",
+       "cmid": 145897,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-12-02 09:50",
+       "closes": "2026-12-02 10:15",
+       "visible": true
+      },
+      {
+       "kind": "Prep",
+       "label": "Prep 31",
+       "track": "both",
+       "cmid": 145934,
+       "module": "quiz",
+       "points": 3.0,
+       "attempts": 1,
+       "opens": "2026-11-30 11:00",
+       "closes": "2026-12-02 10:00",
+       "visible": true
+      },
+      {
+       "kind": "HW",
+       "label": "HW 11",
+       "track": "both",
+       "cmid": 145971,
+       "module": "assign",
+       "points": 18.0,
+       "attempts": null,
+       "opens": "2026-11-20 11:00",
+       "closes": "2026-12-02 10:00",
+       "visible": true
+      }
+     ]
+    },
+    {
+     "dow": "Fri",
+     "date": "Dec 4",
+     "topic": "Diffraction gratings + resolution",
+     "reading": "33.3–5",
+     "video": {
+      "none": 1,
+      "note": "Crash Course #31, or record"
+     },
+     "sim": {
+      "name": "Diffraction / slit pattern",
+      "note": "Grating mode: many-slit interference."
+     },
+     "plan": {
+      "lec": "Gratings (many slits) sharpen the maxima; resolving power.",
+      "exp": "Grating sim — add slits, watch maxima sharpen.",
+      "prac": "Grating-equation and resolution problems."
+     },
+     "split": false,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 34",
+       "track": "both",
+       "cmid": 145896,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-12-04 09:50",
+       "closes": "2026-12-04 10:15",
+       "visible": true
+      },
+      {
+       "kind": "Prep",
+       "label": "Prep 32",
+       "track": "both",
+       "cmid": 145933,
+       "module": "quiz",
+       "points": 3.0,
+       "attempts": 1,
+       "opens": "2026-12-02 11:00",
+       "closes": "2026-12-04 10:00",
+       "visible": true
+      },
+      {
+       "kind": "OHW",
+       "label": "OHW 19",
+       "track": "both",
+       "cmid": null,
+       "module": null,
+       "points": 6,
+       "attempts": null,
+       "opens": null,
+       "closes": null,
+       "visible": null,
+       "note": "lives in Mastering, not Moodle"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "n": 16,
+   "unit": "optics",
+   "range": "Dec 7 – 11",
+   "days": [
+    {
+     "dow": "Mon",
+     "date": "Dec 7",
+     "topic": "EM waves + polarization",
+     "reading": "31.5, 31.7",
+     "video": {
+      "none": 1,
+      "note": "Crash Course #32 Light as a Wave, or record"
+     },
+     "sim": {
+      "name": "Polarization (Malus) sim",
+      "note": "Stacked rotatable polarizers with live transmitted intensity."
+     },
+     "plan": {
+      "lec": "EM wave structure & the wave equation; Malus’s law for polarizers.",
+      "exp": "Polarization sim — rotate polarizers, watch intensity follow cos².",
+      "prac": "Multi-polarizer intensity problems."
+     },
+     "calc": "Show a sinusoidal field satisfies ∂²y/∂x²=(1/v²)∂²y/∂t².",
+     "alg": "Connect c=fλ and the EM-wave picture qualitatively; focus on Malus’s law.",
+     "split": true,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 35",
+       "track": "both",
+       "cmid": 145931,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-12-07 09:50",
+       "closes": "2026-12-07 10:15",
+       "visible": true
+      },
+      {
+       "kind": "Prep",
+       "label": "Prep 33",
+       "track": "both",
+       "cmid": 145932,
+       "module": "quiz",
+       "points": 3.0,
+       "attempts": 1,
+       "opens": "2026-12-04 11:00",
+       "closes": "2026-12-07 10:00",
+       "visible": true
+      },
+      {
+       "kind": "OHW",
+       "label": "OHW 20",
+       "track": "both",
+       "cmid": null,
+       "module": null,
+       "points": 6,
+       "attempts": null,
+       "opens": null,
+       "closes": null,
+       "visible": null,
+       "note": "lives in Mastering, not Moodle"
+      }
+     ]
+    },
+    {
+     "dow": "Wed",
+     "date": "Dec 9",
+     "topic": "Test 5",
+     "test": 5,
+     "special": true,
+     "split": false,
+     "due": [
+      {
+       "kind": "Test",
+       "label": "Test 5",
+       "track": "both",
+       "cmid": 145969,
+       "module": "assign",
+       "points": 50.0,
+       "attempts": null,
+       "opens": "2026-11-16 11:00",
+       "closes": "2026-12-09 10:00",
+       "visible": true
+      }
+     ]
+    },
+    {
+     "dow": "Fri",
+     "date": "Dec 11",
+     "topic": "Catch up / Review",
+     "plan": {
+      "lec": "No new content (last day of class).",
+      "exp": "Final review stations across optics + cumulative.",
+      "prac": "Open Q&A; final-exam prep."
+     },
+     "buffer": true,
+     "split": false,
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 36",
+       "track": "both",
+       "cmid": 145930,
+       "module": "quiz",
+       "points": 2.0,
+       "attempts": 2,
+       "opens": "2026-12-11 09:50",
+       "closes": "2026-12-11 10:15",
+       "visible": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "n": 17,
+   "unit": "final",
+   "range": "Exam week",
+   "days": [
+    {
+     "dow": "Wed",
+     "date": "Dec 16",
+     "topic": "Final Exam",
+     "special": true,
+     "split": false,
+     "due": []
+    }
+   ]
+  }
+ ]
+}
