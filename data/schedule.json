@@ -16,6 +16,10 @@
   "groups": {
    "4974": "calc (PHYS 235)",
    "4975": "alg (PHYS 230)"
+  },
+  "textbook": {
+   "current": "Knight — all \"reading\" fields on days are Knight sections",
+   "nextYear": "OpenStax, NOT Knight. Every reading needs remapping when this schedule is rebuilt. data/topics.json already carries an OpenStax mapping per topic in sim_readings (University Physics + College Physics), which is the head start for that remap."
   }
  },
  "weeks": [

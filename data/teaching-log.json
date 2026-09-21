@@ -1,0 +1,33 @@
+{
+ "_comment": [
+  "TEACHING LOG - what actually happened in each class, as opposed to what was planned.",
+  "",
+  "Deliberately a SEPARATE file from schedule.json. schedule.json holds facts that are",
+  "synced from Moodle and can be regenerated; this holds hand-written judgement that must",
+  "never be clobbered by a regeneration. The master-schedule viewer merges the two by date.",
+  "",
+  "Purpose: when the schedule is rebuilt for next year, this is the evidence for what to",
+  "move, cut, or give more room. Write the entry the same day if possible - the 'what I",
+  "wish I'd had time for' is the part that evaporates fastest.",
+  "",
+  "Keys are ISO dates matching a class day in schedule.json.",
+  "Every field is optional; a two-line entry beats no entry.",
+  "",
+  "  covered   what actually got done, in a sentence or two",
+  "  timing    actual minutes per segment. The nominal 50-minute plan is",
+  "            kickoff 5, lecture 15, explore 20, synthesis 10",
+  "  cut       what got dropped for time",
+  "  wish      what you wish there had been time for",
+  "  landed    what visibly worked - worth protecting next year",
+  "  struggled what students got stuck on",
+  "  nextYear  a direct instruction to whoever rebuilds this schedule",
+  "",
+  "Example of the shape (not a real class):",
+  "  \"2026-01-01\": {",
+  "    \"covered\": \"...\", \"timing\": {\"kickoff\": 8, \"lecture\": 20, \"explore\": 14, \"synthesis\": 6},",
+  "    \"cut\": \"...\", \"wish\": \"...\", \"landed\": \"...\", \"struggled\": \"...\", \"nextYear\": \"...\"",
+  "  }"
+ ],
+ "nominalPlan": { "kickoff": 5, "lecture": 15, "explore": 20, "synthesis": 10 },
+ "entries": {}
+}
