@@ -4,7 +4,7 @@
   "Times are course-local wall clock (America/Indiana/Indianapolis). Never epochs.",
   "\"opens\" is the Restrict-access date, which is how this course gates activities;",
   "the quiz-level open date is deliberately left unset throughout.",
-  "track: both | calc | alg. Derived from the Moodle group restriction where one exists.",
+  "days may carry \"sims\": a list; a day can use more than one.\n  track: both | calc | alg. Derived from the Moodle group restriction where one exists.",
   "Consumed by: the master-schedule viewer, the course-map generator, and the",
   "pre-class audit. Seeded 2026-09-21 from course-map-fall-26.html + a live Moodle pull."
  ],
@@ -37,11 +37,6 @@
       "id": "kLWXLbciobw",
       "st": "ok"
      },
-     "sim": {
-      "name": "Oscillation Explorer",
-      "note": "Sliders for amplitude, period and phase with a live phasor → sine link.",
-      "slug": "oscillation-explorer"
-     },
      "plan": {
       "lec": "Define amplitude, period, angular frequency ω and phase from x(t)=A cos(ωt+φ).",
       "exp": "SHM explorer — drag A, T, φ and watch the curve and a rotating phasor.",
@@ -62,6 +57,13 @@
        "visible": true,
        "note": "first-day kickoff; the course map numbering skips day one"
       }
+     ],
+     "sims": [
+      {
+       "name": "Oscillation Explorer",
+       "note": "Sliders for amplitude, period and phase with a live phasor → sine link.",
+       "slug": "oscillation-explorer"
+      }
      ]
     },
     {
@@ -72,11 +74,6 @@
      "video": {
       "id": "Hs_GeBx15Ws",
       "st": "cav"
-     },
-     "sim": {
-      "name": "Energy in SHM — Mass on a Spring",
-      "note": "Animated mass on a spring with live KE/PE energy bars.",
-      "slug": "energy-in-shm"
      },
      "plan": {
       "lec": "Energy interchange KE↔PE; restoring force F=−kx and a=−ω²x.",
@@ -121,6 +118,13 @@
        "closes": "2026-08-28 10:00",
        "visible": true
       }
+     ],
+     "sims": [
+      {
+       "name": "Energy in SHM — Mass on a Spring",
+       "note": "Animated mass on a spring with live KE/PE energy bars.",
+       "slug": "energy-in-shm"
+      }
      ]
     }
    ]
@@ -139,11 +143,6 @@
       "id": "RspnXkl18ck",
       "id2": "WPa5IgLgDyQ",
       "st": "cav"
-     },
-     "sim": {
-      "name": "Simple Pendulum",
-      "note": "Adjustable length / gravity; period read-out and angle trace.",
-      "slug": "pendulum"
      },
      "plan": {
       "lec": "Why a hanging spring is still SHM about a shifted equilibrium; small-angle pendulum.",
@@ -189,6 +188,13 @@
        "visible": null,
        "note": "lives in Mastering, not Moodle"
       }
+     ],
+     "sims": [
+      {
+       "name": "Simple Pendulum",
+       "note": "Adjustable length / gravity; period read-out and angle trace.",
+       "slug": "pendulum"
+      }
      ]
     },
     {
@@ -199,11 +205,6 @@
      "video": {
       "id": "9WZM68aVnGk",
       "st": "ok"
-     },
-     "sim": {
-      "name": "Wave Explorer",
-      "note": "Equation-driven traveling & standing waves.",
-      "slug": "wave-explorer"
      },
      "plan": {
       "lec": "y(x,t)=A sin(kx−ωt); v=fλ; superposition → standing waves & nodes.",
@@ -248,6 +249,13 @@
        "closes": "2026-09-02 10:00",
        "visible": true
       }
+     ],
+     "sims": [
+      {
+       "name": "Wave Explorer",
+       "note": "Equation-driven traveling & standing waves.",
+       "slug": "wave-explorer"
+      }
      ]
     },
     {
@@ -258,11 +266,6 @@
      "video": {
       "id": "XDsk6tZX55g",
       "st": "ok"
-     },
-     "sim": {
-      "name": "Standing Waves — Strings & Pipes",
-      "note": "Standing waves on a string or in a pipe — set the ends, step the harmonics.",
-      "slug": "standing-waves"
      },
      "plan": {
       "lec": "Wave speed v=√(T/μ); harmonic series on a fixed string.",
@@ -308,6 +311,13 @@
        "visible": null,
        "note": "lives in Mastering, not Moodle"
       }
+     ],
+     "sims": [
+      {
+       "name": "Standing Waves — Strings & Pipes",
+       "note": "Standing waves on a string or in a pipe — set the ends, step the harmonics.",
+       "slug": "standing-waves"
+      }
      ]
     }
    ]
@@ -326,11 +336,6 @@
       "id": "oTjTXS40pqs",
       "id2": "DII-tbLRdGA",
       "st": "ok"
-     },
-     "sim": {
-      "name": "Two-Source Interference",
-      "note": "Draggable sources with a live interference field — reused for diffraction in the optics unit.",
-      "slug": "two-source-interference"
      },
      "plan": {
       "lec": "Path difference, constructive vs destructive, beats.",
@@ -376,6 +381,13 @@
        "visible": null,
        "note": "lives in Mastering, not Moodle"
       }
+     ],
+     "sims": [
+      {
+       "name": "Two-Source Interference",
+       "note": "Draggable sources with a live interference field — reused for diffraction in the optics unit.",
+       "slug": "two-source-interference"
+      }
      ]
     },
     {
@@ -409,11 +421,6 @@
       "id": "TFlVWf8JX4A",
       "st": "ok"
      },
-     "sim": {
-      "name": "E-Fields in Conductors & Insulators",
-      "note": "Put charge on a conductor or an insulator and see where the field and the excess charge end up.",
-      "slug": "e-fields-conductors-and-insulators"
-     },
      "plan": {
       "lec": "Charge models, charging by friction/contact/induction, polarization.",
       "exp": "Electroscope / charged-rod sim — predict then test.",
@@ -445,6 +452,13 @@
        "closes": "2026-09-11 10:00",
        "visible": true
       }
+     ],
+     "sims": [
+      {
+       "name": "E-Fields in Conductors & Insulators",
+       "note": "Put charge on a conductor or an insulator and see where the field and the excess charge end up.",
+       "slug": "e-fields-conductors-and-insulators"
+      }
      ]
     }
    ]
@@ -461,11 +475,6 @@
      "reading": "22.4–5",
      "video": {
       "id": "vJn-GEh9cxM"
-     },
-     "sim": {
-      "name": "Electrostatic Force Explorer",
-      "note": "Drag + / − charges and watch field vectors and potential update live. The workhorse sim for electrostatics.",
-      "slug": "electrostatics-explorer"
      },
      "plan": {
       "lec": "Coulomb’s law; the field idea E=F/q; field of a point charge.",
@@ -511,6 +520,13 @@
        "visible": null,
        "note": "lives in Mastering, not Moodle"
       }
+     ],
+     "sims": [
+      {
+       "name": "Electrostatic Force Explorer",
+       "note": "Drag + / − charges and watch field vectors and potential update live. The workhorse sim for electrostatics.",
+       "slug": "electrostatics-explorer"
+      }
      ]
     },
     {
@@ -521,11 +537,6 @@
      "video": {
       "id": "_4VC3IHbuW8",
       "id2": "ShhvgT4ppls"
-     },
-     "sim": {
-      "name": "Electric Field Explorer",
-      "note": "Drop point charges, put a field point anywhere, and add each charge’s E vector to get the total.",
-      "slug": "field-superposition-explorer"
      },
      "plan": {
       "lec": "Vector superposition of fields; the leap to continuous distributions.",
@@ -570,6 +581,13 @@
        "closes": "2026-09-16 23:59",
        "visible": true
       }
+     ],
+     "sims": [
+      {
+       "name": "Electric Field Explorer",
+       "note": "Drop point charges, put a field point anywhere, and add each charge’s E vector to get the total.",
+       "slug": "field-superposition-explorer"
+      }
      ]
     },
     {
@@ -579,11 +597,6 @@
      "reading": "23.4–6",
      "video": {
       "id": "bt46cqO1epw"
-     },
-     "sim": {
-      "name": "Building a Distribution from Point Charges",
-      "note": "Line / ring / disk with adjustable size and a measurable field point.",
-      "slug": "discrete-charge-builder-3d"
      },
      "plan": {
       "lec": "Line / ring / disk fields and their far-field limits.",
@@ -643,6 +656,13 @@
        "closes": "2026-09-18 10:50",
        "visible": true
       }
+     ],
+     "sims": [
+      {
+       "name": "Building a Distribution from Point Charges",
+       "note": "Line / ring / disk with adjustable size and a measurable field point.",
+       "slug": "discrete-charge-builder-3d"
+      }
      ]
     }
    ]
@@ -660,11 +680,6 @@
      "video": {
       "none": 1,
       "note": "Khan Electric flux + Gauss law, or record"
-     },
-     "sim": {
-      "name": "Gauss’s Law — Flux Through a Closed Surface",
-      "note": "Adjustable Gaussian surface around charges with live flux read-out.",
-      "slug": "gauss-flux"
      },
      "plan": {
       "lec": "Dipole moment and torque τ=p×E; flux concept; Φ=q_enc/ε₀; symmetry as the key to using it.",
@@ -735,6 +750,18 @@
        "closes": "2026-09-21 11:00",
        "visible": true
       }
+     ],
+     "sims": [
+      {
+       "name": "Gauss’s Law — Flux Through a Closed Surface",
+       "note": "Adjustable Gaussian surface around charges with live flux read-out.",
+       "slug": "gauss-flux"
+      },
+      {
+       "name": "Electric Dipole in a Field — Motion & Energy",
+       "note": "Torque τ=p×E and energy U=−p·E; release it off-axis and it swings like a rotational pendulum.",
+       "slug": "electric-dipole-in-field"
+      }
      ]
     },
     {
@@ -745,11 +772,6 @@
      "video": {
       "id": "owMznEZPNt4",
       "st": "ok"
-     },
-     "sim": {
-      "name": "Gauss’s Law — Flux Through a Closed Surface",
-      "note": "Shape library: sphere, cylinder, pillbox.",
-      "slug": "gauss-flux"
      },
      "plan": {
       "lec": "Spheres, lines and planes/sheets via symmetry; conductors in equilibrium.",
@@ -819,6 +841,13 @@
        "opens": "2026-09-23 11:00",
        "closes": "2026-09-23 11:00",
        "visible": true
+      }
+     ],
+     "sims": [
+      {
+       "name": "Gauss’s Law — Flux Through a Closed Surface",
+       "note": "Shape library: sphere, cylinder, pillbox.",
+       "slug": "gauss-flux"
       }
      ]
     },
@@ -907,11 +936,6 @@
       "id": "j3GrOKre__0",
       "st": "unv"
      },
-     "sim": {
-      "name": "Equipotential Explorer",
-      "note": "Field explorer in potential mode: equipotential contours ⊥ to field lines.",
-      "slug": "equipotential-explorer"
-     },
      "plan": {
       "lec": "V=U/q; potential of a point charge; equipotentials; relate E=−dV/dx.",
       "exp": "Equipotential + field-line sim — V map, ⊥ field lines, read the gradient.",
@@ -955,6 +979,13 @@
        "closes": null,
        "visible": null,
        "note": "lives in Mastering, not Moodle"
+      }
+     ],
+     "sims": [
+      {
+       "name": "Equipotential Explorer",
+       "note": "Field explorer in potential mode: equipotential contours ⊥ to field lines.",
+       "slug": "equipotential-explorer"
       }
      ]
     },
@@ -1034,10 +1065,6 @@
       "id": "mJjw__fgmTk",
       "st": "unv"
      },
-     "sim": {
-      "name": "Circuit builder",
-      "note": "Drag batteries, resistors and wires; live current/voltage meters. Reused across circuits."
-     },
      "plan": {
       "lec": "I=ΔV/R; junction and loop rules as charge/energy conservation.",
       "exp": "Circuit builder — wire a two-loop circuit and probe it.",
@@ -1069,6 +1096,12 @@
        "closes": "2026-10-05 10:00",
        "visible": true
       }
+     ],
+     "sims": [
+      {
+       "name": "Circuit builder",
+       "note": "Drag batteries, resistors and wires; live current/voltage meters. Reused across circuits."
+      }
      ]
     },
     {
@@ -1079,10 +1112,6 @@
      "video": {
       "id": "dEuBykX5_B4",
       "st": "unv"
-     },
-     "sim": {
-      "name": "Circuit builder",
-      "note": "Series/parallel reduction focus."
      },
      "plan": {
       "lec": "Equivalent-resistance reasoning; voltage/current dividers.",
@@ -1127,6 +1156,12 @@
        "closes": "2026-10-07 10:00",
        "visible": true
       }
+     ],
+     "sims": [
+      {
+       "name": "Circuit builder",
+       "note": "Series/parallel reduction focus."
+      }
      ]
     },
     {
@@ -1153,10 +1188,6 @@
      "video": {
       "id": "Zv8n1T9bzGY",
       "st": "unv"
-     },
-     "sim": {
-      "name": "Circuit builder",
-      "note": "Internal resistance and meters."
      },
      "plan": {
       "lec": "Real batteries (internal resistance); ammeter vs voltmeter placement.",
@@ -1202,6 +1233,12 @@
        "visible": null,
        "note": "lives in Mastering, not Moodle"
       }
+     ],
+     "sims": [
+      {
+       "name": "Circuit builder",
+       "note": "Internal resistance and meters."
+      }
      ]
     },
     {
@@ -1212,10 +1249,6 @@
      "video": {
       "id": "OIpHPsnLlNU",
       "st": "unv"
-     },
-     "sim": {
-      "name": "RC charging sim",
-      "note": "Capacitor charge/voltage vs time with adjustable R, C and a τ marker."
      },
      "plan": {
       "lec": "Charging / discharging; time constant τ=RC; exponential behavior.",
@@ -1259,6 +1292,12 @@
        "opens": "2026-10-07 11:00",
        "closes": "2026-10-14 10:00",
        "visible": true
+      }
+     ],
+     "sims": [
+      {
+       "name": "RC charging sim",
+       "note": "Capacitor charge/voltage vs time with adjustable R, C and a τ marker."
       }
      ]
     },
@@ -1348,10 +1387,6 @@
       "id": "waTF7kjmmt8",
       "st": "unv"
      },
-     "sim": {
-      "name": "Magnetic field of currents",
-      "note": "B field around wires/loops; superpose multiple currents."
-     },
      "plan": {
       "lec": "B direction by right-hand rule; the Biot–Savart idea.",
       "exp": "Field-of-a-wire sim — see B circle the current.",
@@ -1385,6 +1420,12 @@
        "closes": "2026-10-23 10:00",
        "visible": true
       }
+     ],
+     "sims": [
+      {
+       "name": "Magnetic field of currents",
+       "note": "B field around wires/loops; superpose multiple currents."
+      }
      ]
     }
    ]
@@ -1402,10 +1443,6 @@
      "video": {
       "id": "WUpDMi50zPs",
       "st": "unv"
-     },
-     "sim": {
-      "name": "Magnetic field of currents",
-      "note": "Two-wire superposition mode."
      },
      "plan": {
       "lec": "B=μ₀I/2πr; field at the center of a loop; superposition of wires.",
@@ -1451,6 +1488,12 @@
        "visible": null,
        "note": "lives in Mastering, not Moodle"
       }
+     ],
+     "sims": [
+      {
+       "name": "Magnetic field of currents",
+       "note": "Two-wire superposition mode."
+      }
      ]
     },
     {
@@ -1461,10 +1504,6 @@
      "video": {
       "none": 1,
       "note": "Khan Ampère law, or record"
-     },
-     "sim": {
-      "name": "Ampère loop sim",
-      "note": "Pick an Amperian loop around currents; live circulation read-out."
      },
      "plan": {
       "lec": "Circulation; ∮B·dl=μ₀I_enc; Amperian loops. (Pairs with Biot–Savart as the two ways to find B.)",
@@ -1511,6 +1550,12 @@
        "closes": "2026-10-28 10:00",
        "visible": true
       }
+     ],
+     "sims": [
+      {
+       "name": "Ampère loop sim",
+       "note": "Pick an Amperian loop around currents; live circulation read-out."
+      }
      ]
     },
     {
@@ -1521,10 +1566,6 @@
      "video": {
       "id": "p_I_8hl-Gok",
       "st": "unv"
-     },
-     "sim": {
-      "name": "Dipole field + torque",
-      "note": "Electric vs magnetic dipole patterns, plus rotate-in-field torque & energy."
      },
      "plan": {
       "lec": "Dipole moment; the p↔μ analogy; torque τ=p×E and τ=μ×B; energy U=−μ·B.",
@@ -1570,6 +1611,13 @@
        "visible": null,
        "note": "lives in Mastering, not Moodle"
       }
+     ],
+     "sims": [
+      {
+       "name": "Dipole in a Field — Torque & Energy",
+       "note": "Electric vs magnetic dipole patterns, then rotate one in a field for torque τ=μ×B and energy U=−μ·B.",
+       "slug": "dipole-field-and-torque"
+      }
      ]
     }
    ]
@@ -1587,10 +1635,6 @@
      "video": {
       "id": "9C8mRW43X0Q",
       "st": "unv"
-     },
-     "sim": {
-      "name": "Lorentz-force particle",
-      "note": "Charge moving in adjustable E and B; traces helices/circles."
      },
      "plan": {
       "lec": "F=qv×B; circular motion; radius r=mv/qB.",
@@ -1636,6 +1680,12 @@
        "visible": null,
        "note": "lives in Mastering, not Moodle"
       }
+     ],
+     "sims": [
+      {
+       "name": "Lorentz-force particle",
+       "note": "Charge moving in adjustable E and B; traces helices/circles."
+      }
      ]
     },
     {
@@ -1646,10 +1696,6 @@
      "video": {
       "id": "_saTdQ9AEnM",
       "st": "unv"
-     },
-     "sim": {
-      "name": "Current-loop / motor",
-      "note": "Force and torque on a current-carrying loop in a field."
      },
      "plan": {
       "lec": "F=IL×B; torque on a current loop → the motor.",
@@ -1694,6 +1740,12 @@
        "closes": "2026-11-04 10:00",
        "visible": true
       }
+     ],
+     "sims": [
+      {
+       "name": "Current-loop / motor",
+       "note": "Force and torque on a current-carrying loop in a field."
+      }
      ]
     },
     {
@@ -1701,10 +1753,6 @@
      "date": "Nov 6",
      "topic": "Magnetism in action — applications",
      "reading": "29 (synthesis)",
-     "sim": {
-      "name": "Lorentz-force + motor stations",
-      "note": "Velocity selector, cyclotron radius and a spinning current loop — magnetism applications in one place."
-     },
      "plan": {
       "lec": "Magnetism put to work: mass spectrometer, velocity selector, cyclotron, the electric motor.",
       "exp": "Application stations — Lorentz-force sim (mass spec / cyclotron) and the current-loop motor sim.",
@@ -1749,6 +1797,12 @@
        "visible": null,
        "note": "lives in Mastering, not Moodle"
       }
+     ],
+     "sims": [
+      {
+       "name": "Lorentz-force + motor stations",
+       "note": "Velocity selector, cyclotron radius and a spinning current loop — magnetism applications in one place."
+      }
      ]
     }
    ]
@@ -1766,10 +1820,6 @@
      "video": {
       "id": "vcStzn55MG0",
       "st": "unv"
-     },
-     "sim": {
-      "name": "Faraday / induction sim",
-      "note": "Move a magnet or change a field through a loop; live flux, EMF and induced current."
      },
      "plan": {
       "lec": "Magnetic flux; Lenz’s law for current direction.",
@@ -1815,6 +1865,12 @@
        "visible": null,
        "note": "lives in Mastering, not Moodle"
       }
+     ],
+     "sims": [
+      {
+       "name": "Faraday / induction sim",
+       "note": "Move a magnet or change a field through a loop; live flux, EMF and induced current."
+      }
      ]
     },
     {
@@ -1825,10 +1881,6 @@
      "video": {
       "none": 1,
       "note": "Crash Course #29 covers it, or record"
-     },
-     "sim": {
-      "name": "Faraday / induction sim",
-      "note": "Graph mode: flux and induced EMF vs time."
      },
      "plan": {
       "lec": "EMF=−dΦ/dt; motional EMF.",
@@ -1873,6 +1925,12 @@
        "closes": "2026-11-11 10:00",
        "visible": true
       }
+     ],
+     "sims": [
+      {
+       "name": "Faraday / induction sim",
+       "note": "Graph mode: flux and induced EMF vs time."
+      }
      ]
     },
     {
@@ -1883,10 +1941,6 @@
      "video": {
       "none": 1,
       "note": "Crash Course #29 (motional EMF), or record"
-     },
-     "sim": {
-      "name": "Faraday / induction sim",
-      "note": "Eddy-current and induced-field variants."
      },
      "plan": {
       "lec": "Induced electric fields; eddy currents; real-world applications.",
@@ -1932,6 +1986,12 @@
        "visible": null,
        "note": "lives in Mastering, not Moodle"
       }
+     ],
+     "sims": [
+      {
+       "name": "Faraday / induction sim",
+       "note": "Eddy-current and induced-field variants."
+      }
      ]
     }
    ]
@@ -1972,10 +2032,6 @@
       "id": "y55tzg_jW9I",
       "st": "unv"
      },
-     "sim": {
-      "name": "Ray-optics sim",
-      "note": "Refraction / TIR at an interface plus a dispersion mode; reused for lenses & mirrors."
-     },
      "plan": {
       "lec": "n₁ sinθ₁=n₂ sinθ₂; critical angle and TIR; why n varies with λ (prisms, rainbows).",
       "exp": "Refraction sim — drag the ray across the critical angle, then send white light through a prism.",
@@ -2007,6 +2063,12 @@
        "closes": "2026-11-18 10:00",
        "visible": true
       }
+     ],
+     "sims": [
+      {
+       "name": "Ray-optics sim",
+       "note": "Refraction / TIR at an interface plus a dispersion mode; reused for lenses & mirrors."
+      }
      ]
     },
     {
@@ -2017,10 +2079,6 @@
      "video": {
       "id": "7GV1UZSTNJg",
       "st": "unv"
-     },
-     "sim": {
-      "name": "Lens ray-tracer",
-      "note": "Converging/diverging lenses with principal rays and image formation."
      },
      "plan": {
       "lec": "Thin-lens equation 1/f=1/s+1/s′; converging vs diverging; magnification.",
@@ -2065,6 +2123,12 @@
        "closes": "2026-11-20 10:00",
        "visible": true
       }
+     ],
+     "sims": [
+      {
+       "name": "Lens ray-tracer",
+       "note": "Converging/diverging lenses with principal rays and image formation."
+      }
      ]
     }
    ]
@@ -2097,10 +2161,6 @@
      "video": {
       "id": "dBOzdoIsOEI",
       "st": "unv"
-     },
-     "sim": {
-      "name": "Mirror ray-tracer",
-      "note": "Concave/convex mirrors with principal-ray construction."
      },
      "plan": {
       "lec": "Mirror equation; principal rays for concave/convex mirrors.",
@@ -2146,6 +2206,12 @@
        "visible": null,
        "note": "lives in Mastering, not Moodle"
       }
+     ],
+     "sims": [
+      {
+       "name": "Mirror ray-tracer",
+       "note": "Concave/convex mirrors with principal-ray construction."
+      }
      ]
     },
     {
@@ -2156,10 +2222,6 @@
      "video": {
       "none": 1,
       "note": "Crash Course #31 Diffraction & Interference, or record"
-     },
-     "sim": {
-      "name": "Diffraction / slit pattern",
-      "note": "Single/double slit intensity pattern — extends the interference sim."
      },
      "plan": {
       "lec": "Double-slit interference; single-slit diffraction; the role of λ.",
@@ -2204,6 +2266,12 @@
        "closes": "2026-12-02 10:00",
        "visible": true
       }
+     ],
+     "sims": [
+      {
+       "name": "Diffraction / slit pattern",
+       "note": "Single/double slit intensity pattern — extends the interference sim."
+      }
      ]
     },
     {
@@ -2214,10 +2282,6 @@
      "video": {
       "none": 1,
       "note": "Crash Course #31, or record"
-     },
-     "sim": {
-      "name": "Diffraction / slit pattern",
-      "note": "Grating mode: many-slit interference."
      },
      "plan": {
       "lec": "Gratings (many slits) sharpen the maxima; resolving power.",
@@ -2263,6 +2327,12 @@
        "visible": null,
        "note": "lives in Mastering, not Moodle"
       }
+     ],
+     "sims": [
+      {
+       "name": "Diffraction / slit pattern",
+       "note": "Grating mode: many-slit interference."
+      }
      ]
     }
    ]
@@ -2280,10 +2350,6 @@
      "video": {
       "none": 1,
       "note": "Crash Course #32 Light as a Wave, or record"
-     },
-     "sim": {
-      "name": "Polarization (Malus) sim",
-      "note": "Stacked rotatable polarizers with live transmitted intensity."
      },
      "plan": {
       "lec": "EM wave structure & the wave equation; Malus’s law for polarizers.",
@@ -2330,6 +2396,12 @@
        "closes": null,
        "visible": null,
        "note": "lives in Mastering, not Moodle"
+      }
+     ],
+     "sims": [
+      {
+       "name": "Polarization (Malus) sim",
+       "note": "Stacked rotatable polarizers with live transmitted intensity."
       }
      ]
     },
