@@ -44,7 +44,21 @@
       "prac": "Read x(t) graphs and extract all four parameters."
      },
      "split": false,
-     "due": []
+     "due": [
+      {
+       "kind": "KO",
+       "label": "KO 0",
+       "track": "both",
+       "cmid": 145894,
+       "module": "quiz",
+       "points": 1.0,
+       "attempts": 2,
+       "opens": "2026-08-26 09:50",
+       "closes": "2026-08-26 10:50",
+       "visible": true,
+       "note": "first-day kickoff; the course map numbering skips day one"
+      }
+     ]
     },
     {
      "dow": "Fri",
@@ -2376,7 +2390,20 @@
      "topic": "Final Exam",
      "special": true,
      "split": false,
-     "due": []
+     "due": [
+      {
+       "kind": "Exam",
+       "label": "Final Exam",
+       "track": "both",
+       "cmid": 145970,
+       "module": "assign",
+       "points": 100.0,
+       "attempts": null,
+       "opens": "2026-12-09 11:00",
+       "closes": "2026-12-16 10:30",
+       "visible": true
+      }
+     ]
     }
    ]
   }
