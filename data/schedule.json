@@ -773,6 +773,13 @@
       "id": "owMznEZPNt4",
       "st": "ok"
      },
+     "handouts": [
+      {
+       "name": "Skeleton notes: the three symmetries",
+       "file": "assessments/lecture-notes/gauss-applications-notes.pdf",
+       "pages": 3
+      }
+     ],
      "plan": {
       "lec": "Spheres, lines and planes/sheets via symmetry; conductors in equilibrium.",
       "exp": "Flux sim with different symmetric shapes.",

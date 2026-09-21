@@ -186,6 +186,16 @@ def main():
                                                      key=lambda x: (x[0] is None, x[0])))
                 add(None, 'NOTE', f"{kind} {field} is not uniform — {parts}")
 
+    # Handouts are printed on paper the morning of class, so a broken path is
+    # only discovered when there is no time left to fix it.
+    for wk in sched['weeks']:
+        for d in wk['days']:
+            for h in d.get('handouts', []):
+                if not (ROOT / h['file']).exists():
+                    add(parse_day(d.get('date'), year), 'ERROR',
+                        f"{d.get('date')}: handout missing from the repo — "
+                        f"{h['file']} ({h.get('name', '?')})")
+
     # ---- report --------------------------------------------------------------
     soon = [f for f in findings if (f[0] - today).days <= args.days]
     later = [f for f in findings if (f[0] - today).days > args.days]

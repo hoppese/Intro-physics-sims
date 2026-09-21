@@ -283,9 +283,12 @@ function renderPanel(year){
             ${d.plan.exp  ? `<div><b>Explore</b>${esc(d.plan.exp)}</div>` : ''}
             ${d.plan.prac ? `<div><b>Practice</b>${esc(d.plan.prac)}</div>` : ''}</div>` : ''}
        ${logBlock(d, year)}
-       ${(d.video && d.video.id) || (d.sims || []).length ? `<div class="lab">Links</div>
+       ${(d.video && d.video.id) || (d.sims || []).length || (d.handouts || []).length ? `<div class="lab">Links</div>
             ${d.video && d.video.id ? `<div><a href="https://www.youtube.com/watch?v=${esc(d.video.id)}" target="_blank" rel="noopener">Pre-class video</a>
               ${d.video.st === 'unv' ? '<span class="mono" style="font-size:10px;color:#9aa2ab"> unvetted</span>' : ''}</div>` : ''}
+            ${(d.handouts || []).map(h =>
+              `<div><a href="../${esc(h.file)}" target="_blank" rel="noopener">${esc(h.name)}</a>
+                <span class="mono" style="font-size:10px;color:#9aa2ab"> print ${h.pages} pp</span></div>`).join('')}
             ${(d.sims || []).map(s => s.slug
               ? `<div><a href="../${esc(s.slug)}/index.html" target="_blank" rel="noopener">${esc(s.name)}</a></div>`
               : `<div class="empty">${esc(s.name)} (no sim linked)</div>`).join('')}` : ''}
