@@ -26,7 +26,11 @@
   "  \"2026-01-01\": {",
   "    \"covered\": \"...\", \"timing\": {\"kickoff\": 8, \"lecture\": 20, \"explore\": 14, \"synthesis\": 6},",
   "    \"cut\": \"...\", \"wish\": \"...\", \"landed\": \"...\", \"struggled\": \"...\", \"nextYear\": \"...\"",
-  "  }"
+  "  }",
+  "",
+  "'materials' lists things made for the course this semester - worksheets, handouts,",
+  "skeleton notes. 'usedOn' is an ISO date once known; leave it null rather than guessing.",
+  "Per-day entries can also carry a 'materials' list naming what was handed out that day."
  ],
  "nominalPlan": {
   "kickoff": 5,
@@ -42,5 +46,31 @@
    "nextYear": "The dipole-torque derivation (dipole moment, tau = p x E) took a good deal of time on its own - budget for it explicitly rather than folding it in behind flux. The electric-dipole-in-field sim is now linked from this day; use it.",
    "notes": "Did not use the electric dipole sim. It turned out one already existed and had since Sep 15 - electric-dipole-in-field, covering tau = p x E, U = -p.E and the rotational-pendulum swing - but it had never been added to the catalog, so it was effectively invisible. Fixed the same evening: added to the catalog, and wired to Sep 21 in the course map and schedule alongside the flux sim. Oct 30's dipole entry was a slug-less placeholder and now points at dipole-field-and-torque. Minutes per segment were not recorded for this day."
   }
- }
+ },
+ "materials": [
+  {
+   "file": "assessments/in-class-practice/coulomb-force-practice.pdf",
+   "source": "assessments/in-class-practice/latex-worksheets/coulomb-force-practice.tex",
+   "kind": "in-class practice worksheet",
+   "created": "2026-09-15",
+   "usedOn": null,
+   "note": "Committed 2026-09-15 with the worksheet system. Topic matches Mon Sep 14 (Coulomb's law + E fields), but the commit is the day after, so which class it was actually used in is unconfirmed."
+  },
+  {
+   "file": "assessments/in-class-practice/efield-superposition-practice.pdf",
+   "source": "assessments/in-class-practice/latex-worksheets/efield-superposition-practice.tex",
+   "kind": "in-class practice worksheet",
+   "created": "2026-09-15",
+   "usedOn": null,
+   "note": "Same commit. Topic matches Wed Sep 16 (E-field superposition); unconfirmed."
+  },
+  {
+   "file": "assessments/in-class-practice/HW1-practice.pdf",
+   "source": null,
+   "kind": "in-class practice worksheet",
+   "created": "2026-09-03",
+   "usedOn": null,
+   "note": "Predates the LaTeX pipeline - no .tex source in the repo. The 2026-09-03 date is when it was moved into this repo, not when it was written."
+  }
+ ]
 }
