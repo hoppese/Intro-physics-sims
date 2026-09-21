@@ -80,7 +80,7 @@
       "title": "Gauss's Law",
       "knight": "24.1–24.3",
       "videos": [],
-      "sims": ["gauss-flux"]
+      "sims": ["gauss-flux", "gauss-applications"]
     },
     "electric-pe": {
       "title": "Electric Potential Energy",
@@ -117,6 +117,7 @@
     "discrete-charge-builder-3d": "Building a Distribution from Point Charges",
     "field-line-density-3d": "Counting Field Lines — Density Is Field Strength",
     "gauss-flux": "Gauss’s Law — Flux Through a Closed Surface",
+    "gauss-applications": "Applying Gauss’s Law",
     "pe-vs-separation": "Potential Energy vs Separation",
     "equipotential-explorer": "Equipotential Explorer"
   },
@@ -246,6 +247,18 @@
       ]
     },
     "gauss-flux": {
+      "up": [
+        ["Vol 2 · 6.1 Electric Flux", "2/pages/6-1-electric-flux"],
+        ["Vol 2 · 6.2 Explaining Gauss's Law", "2/pages/6-2-explaining-gausss-law"],
+        ["Vol 2 · 6.3 Applying Gauss's Law", "2/pages/6-3-applying-gausss-law"]
+      ],
+      "cp": [
+        ["Ch 18.5 Electric Field Lines: Multiple Charges", "18-5-electric-field-lines-multiple-charges"],
+        ["Ch 18.7 Conductors & Fields in Equilibrium", "18-7-conductors-and-electric-fields-in-static-equilibrium"]
+      ],
+      "cp_note": "College Physics has no separate Gauss's-law section."
+    },
+    "gauss-applications": {
       "up": [
         ["Vol 2 · 6.1 Electric Flux", "2/pages/6-1-electric-flux"],
         ["Vol 2 · 6.2 Explaining Gauss's Law", "2/pages/6-2-explaining-gausss-law"],
