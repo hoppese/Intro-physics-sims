@@ -1,0 +1,153 @@
+% notes-common.sty
+% Shared macros for print-ready SKELETON lecture notes — the handout version of
+% a lecture, with the physics that matters left blank for students to fill in
+% from the board.
+%
+% Usage: \documentclass[11pt]{article} \usepackage{notes-common}
+%
+% Density convention ("scaffolded"): the prose, the setup and the framing are
+% GIVEN. What gets blanked is (a) key results, (b) the crucial algebra step,
+% (c) diagram labels. Students should be writing physics, not transcribing
+% sentences — if they are copying a whole paragraph off the board, the handout
+% is doing too little.
+%
+% Sibling of worksheet-common.sty (assessments/in-class-practice). Same
+% conventions where they overlap: \needspace before anything that must not
+% break, TikZ for diagrams, no paragraph indent, empty page style.
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{notes-common}[2026/09/21 v1.0 Skeleton lecture-note helpers]
+
+\RequirePackage[letterpaper, margin=0.8in]{geometry}
+\RequirePackage{amsmath,amssymb}
+\RequirePackage{tikz}
+\RequirePackage{needspace}
+\RequirePackage{xcolor}
+\RequirePackage{etoolbox}
+\RequirePackage{enumitem}
+
+\usetikzlibrary{decorations.pathreplacing}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.2mm}
+
+\definecolor{blankink}{RGB}{120,132,148}
+\definecolor{rulehue}{RGB}{190,200,212}
+\definecolor{accent}{RGB}{109,91,208}
+
+% ---------------------------------------------------------------
+% Title block. \noteshead{Topic}{Course + date line}
+% ---------------------------------------------------------------
+\newcommand{\noteshead}[2]{%
+  {\LARGE\bfseries #1}\par\vspace{1mm}%
+  {\small\color{blankink} #2}\par\vspace{2mm}%
+  {\color{accent}\hrule height 1.2pt}\par\vspace{3mm}%
+}
+
+% Name line, so a printed sheet can be collected.
+\newcommand{\nameline}{%
+  \hfill{\small Name:\ \rule[-2pt]{6.5cm}{0.4pt}}\par\vspace{3mm}%
+}
+
+% ---------------------------------------------------------------
+% "Today you should leave able to ..." — the point of the lecture,
+% stated up front. Always GIVEN, never blanked.
+% ---------------------------------------------------------------
+\newcommand{\goal}[1]{%
+  \needspace{2cm}%
+  \begin{tikzpicture}
+    \node[draw=accent!35, fill=accent!6, rounded corners=2pt, inner sep=6pt,
+          text width=\dimexpr\textwidth-14pt\relax, align=left]
+      {\small\textbf{Goal.}\ #1};
+  \end{tikzpicture}\par\vspace{3mm}%
+}
+
+% ---------------------------------------------------------------
+% Section header
+% ---------------------------------------------------------------
+\newcounter{nsec}
+\newcommand{\nsec}[1]{%
+  \needspace{3.5cm}\vspace{2mm}\stepcounter{nsec}%
+  \par\noindent{\large\bfseries\color{accent}\thensec.\ \ #1}\par\vspace{1mm}%
+}
+
+% ---------------------------------------------------------------
+% THE BLANKS
+%
+%   \bl        inline blank, default width, for a word or a symbol
+%   \bl[3cm]   inline blank, explicit width
+%   \blq{hint} inline blank with a faint hint underneath (use sparingly —
+%              a hint on every blank turns this into a fill-in-the-word
+%              exercise rather than note-taking)
+% ---------------------------------------------------------------
+\newcommand{\bl}[1][2.2cm]{\rule[-2pt]{#1}{0.5pt}}
+\newcommand{\blq}[2][2.2cm]{%
+  \underset{\text{\tiny\color{blankink}#2}}{\rule[-2pt]{#1}{0.5pt}}%
+}
+
+% Display-math blank: a centred rule where a derived equation belongs.
+\newcommand{\eqbl}[1][7cm]{\[\rule[-2pt]{#1}{0.5pt}\]}
+
+% ---------------------------------------------------------------
+% Boxed space for a derivation students work through on paper.
+% \derivbox{height}{caption} — caption sits faint in the top-left.
+% ---------------------------------------------------------------
+\newcommand{\derivbox}[2]{%
+  \needspace{\dimexpr #1 + 1cm\relax}%
+  \par\vspace{1mm}%
+  \begin{tikzpicture}
+    \draw[rulehue, rounded corners=2pt] (0,0) rectangle (\textwidth,#1);
+    \node[anchor=north west, inner sep=5pt, text=blankink]
+      at (0,#1) {\scriptsize #2};
+  \end{tikzpicture}\par\vspace{2mm}%
+}
+
+% ---------------------------------------------------------------
+% The result of a derivation — prominent, and empty. This is the line
+% students should leave with in their own handwriting.
+% \result{what it is} gives a tall framed box with a faint caption.
+% ---------------------------------------------------------------
+\newcommand{\result}[2][1.5cm]{%
+  \needspace{\dimexpr #1 + 0.7cm\relax}\par\vspace{1mm}%
+  \begin{tikzpicture}
+    \draw[accent!45, line width=0.9pt, rounded corners=3pt]
+      (0,0) rectangle (\textwidth,#1);
+    \node[anchor=north west, inner sep=5pt, text=accent!75]
+      at (0,#1) {\scriptsize\bfseries #2};
+  \end{tikzpicture}\par\vspace{2mm}%
+}
+
+% ---------------------------------------------------------------
+% Ruled lines for prose notes. \lines{n}
+% ---------------------------------------------------------------
+\newcommand{\lines}[1]{%
+  \par\vspace{1mm}%
+  \foreach \i in {1,...,#1}{\noindent\textcolor{rulehue}{\rule{\textwidth}{0.4pt}}\par\vspace{6.5mm}}%
+}
+
+% ---------------------------------------------------------------
+% Diagram label blank: a short rule with a leader, for putting on a
+% figure where the label belongs. \dlabel is the plain version;
+% in TikZ use \node {\dlabel}; at the spot.
+% ---------------------------------------------------------------
+\newcommand{\dlabel}[1][1.4cm]{\rule[-2pt]{#1}{0.5pt}}
+
+% A caption under a figure telling students what to label.
+\newcommand{\figtask}[1]{%
+  \par\vspace{-1mm}{\centering\scriptsize\color{blankink} #1\par}\vspace{2mm}%
+}
+
+% ---------------------------------------------------------------
+% Margin-free "check yourself" prompt at the end of a section.
+% ---------------------------------------------------------------
+\newcommand{\checkpoint}[1]{%
+  \needspace{2cm}\par\vspace{1mm}%
+  \begin{tikzpicture}
+    \node[draw=rulehue, fill=black!2, rounded corners=2pt, inner sep=6pt,
+          text width=\dimexpr\textwidth-14pt\relax, align=left]
+      {\small\textbf{Check.}\ #1};
+  \end{tikzpicture}\par\vspace{2mm}%
+}
+
+\endinput
