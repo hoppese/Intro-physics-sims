@@ -1,0 +1,72 @@
+% electrostatics-body.tex
+% Shared content for both track versions of the electrostatics equation
+% sheet. \input this from a file that has already set up the preamble
+% (packages, colors, \eqtab/\R/\band macros) and opened \begin{document}
+% with its own title block.
+%
+% Everything here is common to PHYS 230 (algebra) and PHYS 235 (calc):
+% neither track's version omits any of it. Track-specific material (the
+% continuous-distribution integrals, and the bonus E-U-V-F calculus
+% relations) lives only in electrostatics-calc.tex, after this \input.
+
+%========================================================
+\section{Coulomb's law \& the electric field \quad {\normalfont\small (Knight 22.4--22.5, 23.1--23.2)}}
+\eqtab{
+  \band{fundamental}
+  \R{Force between two point charges\newline\footnotesize(along the line joining them; repulsive for like signs; $F \propto 1/r^2$)}{F = \dfrac{1}{4\pi\varepsilon_0}\dfrac{|q_1 q_2|}{r_{12}^{2}}}
+  \R{Field --- force per unit test charge}{\vec E = \dfrac{\vec F_{\text{on }q}}{q}\,,\qquad \vec F = q\vec E}
+  \R{Field of a point charge\newline\footnotesize(away from $+$, toward $-$)}{E = \dfrac{1}{4\pi\varepsilon_0}\dfrac{|q|}{r^{2}}}
+  \R{Superposition (both are vector sums)}{\vec F_{\text{net}} = \textstyle\sum_i \vec F_i\,,\qquad \vec E_{\text{net}} = \textstyle\sum_i \vec E_i}
+  \band{derived}
+  \R{Coulomb's law, full vector form\newline\footnotesize($\vec r_{12}$ points from charge 1 to charge 2; force \emph{on} 2, \emph{due to} 1)}{\vec F_{1\text{ on }2} = \dfrac{1}{4\pi\varepsilon_0}\dfrac{q_1 q_2}{r_{12}^{2}}\,\hat r_{12}}
+}
+
+%========================================================
+\section{Continuous charge distributions \quad {\normalfont\small (Knight 23.3--23.6)}}
+\eqtab{
+  \band{fundamental}
+  \R{Chop into pieces, add up (integrate)}{\vec E = \displaystyle\int d\vec E,\qquad dE = \dfrac{1}{4\pi\varepsilon_0}\dfrac{dq}{r^{2}}}
+  \R{Charge densities}{\lambda = \dfrac{Q}{L},\qquad \eta = \dfrac{Q}{A},\qquad \rho = \dfrac{Q}{V}}
+  \band{derived}
+  \R{Infinite line of charge (distance $r$)}{E = \dfrac{\lambda}{2\pi\varepsilon_0\,r}}
+  \R{Infinite plane / sheet of charge}{E = \dfrac{\eta}{2\varepsilon_0} \quad(\text{uniform --- no }r)}
+  \R{Ring of charge $Q$, radius $R$, on axis at $z$}{E = \dfrac{1}{4\pi\varepsilon_0}\dfrac{Qz}{(z^2+R^2)^{3/2}}}
+  \R{Disk of charge $Q$, radius $R$, on axis at $z$\newline\footnotesize($\eta=Q/\pi R^2$; $R\to\infty$ recovers the infinite sheet; $z\gg R$ recovers a point charge)}{E = \dfrac{\eta}{2\varepsilon_0}\left(1-\dfrac{z}{\sqrt{z^2+R^2}}\right)}
+}
+
+%========================================================
+\section{Electric flux \& Gauss's law \quad {\normalfont\small (Knight 24.1--24.3)}}
+\eqtab{
+  \band{fundamental}
+  \R{Electric flux through a surface}{\Phi = \displaystyle\oint \vec E \cdot d\vec A}
+  \R{Gauss's law\newline\footnotesize(any closed surface; only the \emph{enclosed} charge matters)}{\Phi = \dfrac{Q_{\text{enc}}}{\varepsilon_0}}
+  \band{derived}
+  \R{Uniform field through a flat area}{\Phi = E A \cos\theta \quad(\theta \text{ from the normal})}
+  \R{Charge \emph{outside} a closed surface}{\Phi_{\text{net}} = 0}
+  \R{Sphere / spherical shell, total charge $Q$ ($r > R$)}{E = \dfrac{1}{4\pi\varepsilon_0}\dfrac{Q}{r^{2}} \quad(\text{same as a point charge})}
+}
+
+%========================================================
+\section{Conductors in equilibrium \quad {\normalfont\small (Knight 24.4--24.6)}}
+\eqtab{
+  \band{fundamental}
+  \R{Field inside the conducting material}{\vec E = 0}
+  \R{Excess charge}{\text{all on the outer surface}}
+  \R{Field at the outer surface}{\perp \text{ to the surface},\qquad E = \dfrac{\eta}{\varepsilon_0}}
+  \band{derived}
+  \R{Empty cavity inside a conductor}{\vec E = 0 \text{ in the cavity} \quad(\text{Faraday shielding})}
+  \R{Charge $+q$ placed in the cavity}{-q \text{ on the inner wall},\ +q \text{ on the outer surface}}
+}
+
+%========================================================
+\section{Electric potential energy \& potential \quad {\normalfont\small (Knight 25.1--25.7)}}
+\eqtab{
+  \band{fundamental}
+  \R{Two point charges\newline\footnotesize(keep the signs; $U \to 0$ as $r_{12} \to \infty$; one power of $r$)}{U = \dfrac{1}{4\pi\varepsilon_0}\dfrac{q_1 q_2}{r_{12}}}
+  \R{Energy conservation}{K_i + U_i = K_f + U_f\,,\qquad W_{\text{elec}} = -\Delta U}
+  \R{Potential --- energy per unit charge}{V = \dfrac{U}{q}\,,\qquad U = qV \qquad (1\ \text{V} = 1\ \text{J/C})}
+  \R{Point charge\newline\footnotesize(scalar; keep the sign; $V \to 0$ as $r \to \infty$)}{V = \dfrac{1}{4\pi\varepsilon_0}\dfrac{q}{r}\,,\qquad V_{\text{net}} = \textstyle\sum_i \dfrac{1}{4\pi\varepsilon_0}\dfrac{q_i}{r_i}}
+  \band{derived}
+  \R{Three or more charges: sum over every \emph{pair}\newline\footnotesize(the work to assemble the whole arrangement --- order doesn't matter)}{U_{\text{total}} = \dfrac{1}{4\pi\varepsilon_0}\!\!\sum_{\text{pairs }(i,j)}\!\dfrac{q_i q_j}{r_{ij}}}
+  \R{Equipotentials}{\perp \text{ field lines};\ \ \vec E \text{ points toward decreasing } V}
+}

@@ -1,0 +1,121 @@
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=0.8in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+
+\definecolor{accent}{HTML}{0F6CBF}
+\definecolor{band}{HTML}{6B5BD0}
+\definecolor{bonus}{HTML}{B2731B}
+
+\titleformat{\section}{\normalfont\large\bfseries\color{accent}}{\thesection.}{0.5em}{}
+\titlespacing*{\section}{0pt}{0.4em}{0.2em}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[C]{\footnotesize\color{gray} Intro Physics II \textbullet\ Electrostatics (calc) \textbullet\ page \thepage\ of \pageref{LastPage}}
+
+\setlength{\parindent}{0pt}
+\raggedbottom
+\setlength{\extrarowheight}{2pt}
+\renewcommand{\arraystretch}{1.05}
+\setlength{\aboverulesep}{1pt}\setlength{\belowrulesep}{1pt}
+
+% two-column equation table: left = description, right = formula
+\newcolumntype{L}{>{\raggedright\arraybackslash}p{0.40\linewidth}}
+\newcolumntype{F}{>{\raggedright\arraybackslash}p{0.555\linewidth}}
+\newcommand{\eqtab}[1]{%
+  \par\vspace{0.15em}
+  \noindent
+  \begin{tabular}{@{}L F@{}}
+  \toprule
+  #1
+  \bottomrule
+  \end{tabular}
+  \par\vspace{0.1em}}
+\newcommand{\R}[2]{#1 & $\displaystyle #2$ \\}
+% sub-band label spanning both columns
+\newcommand{\band}[1]{%
+  \addlinespace[1.5pt]%
+  \multicolumn{2}{@{}l@{}}{\rule{0pt}{1.0em}\footnotesize\bfseries\color{band}\textsc{#1}}\\[2pt]}
+% bonus-band label: a visually distinct amber marker, never the same color as
+% fundamental/derived --- this content is optional (extra-credit-only), not a
+% third tier of required material.
+\newcommand{\bonusband}[1]{%
+  \addlinespace[1.5pt]%
+  \multicolumn{2}{@{}l@{}}{\rule{0pt}{1.0em}\footnotesize\bfseries\color{bonus}\textsc{#1}}\\[2pt]}
+
+\begin{document}
+
+\begin{center}
+  {\LARGE\bfseries Equation Sheet: Electrostatics}\\[2pt]
+  {\large Intro Physics II \quad\textbullet\quad PHYS 235 (calc) \quad\textbullet\quad Knight ch.\ 22--25}
+\end{center}
+\vspace{0.25em}
+
+\hrule
+\vspace{0.4em}
+{\small \textbf{\textsc{\textcolor{band}{fundamental}}} = know cold (your starting points); \textbf{\textsc{\textcolor{band}{derived}}} = a line or two from the fundamentals; \textbf{\textsc{\textcolor{bonus}{bonus}}} = not required --- might appear as an extra-credit problem only.}
+\vspace{0.25em}
+\hrule
+\vspace{0.25em}
+{\small\bfseries\color{band}\textsc{Symbols and constants}}\\[2pt]
+\begingroup
+\footnotesize
+\setlength{\extrarowheight}{0pt}\renewcommand{\arraystretch}{1.05}
+\begin{tabular}{@{}r@{\ \ }l@{\hspace{1.8em}}r@{\ \ }l@{\hspace{1.8em}}r@{\ \ }l@{}}
+$q,Q$ & charge (C)                & $\Phi$      & electric flux (N$\cdot$m$^2$/C) & $U$ & potential energy (J) \\
+$\vec E$ & electric field (N/C = V/m) & $\lambda,\eta,\rho$ & line / area / volume charge density & $V$ & potential (V $=$ J/C) \\
+$r,d$ & distance / separation (m) & $A$        & area                            & $e$ & $1.60\times10^{-19}$ C \\
+$\varepsilon_0$ & \multicolumn{5}{@{}l@{}}{$8.85\times10^{-12}$ C$^2$/(N$\cdot$m$^2$),\qquad $\dfrac{1}{4\pi\varepsilon_0} = 8.99\times10^{9}$ N$\cdot$m$^2$/C$^2$} \\
+$\vec r_{12}$ & \multicolumn{5}{@{}l@{}}{separation vector, \emph{points from charge 1 to charge 2}: $\vec r_{12}=\vec r_2-\vec r_1$; \ $\hat r_{12}=\vec r_{12}/r_{12}$} \\
+\end{tabular}
+\endgroup
+\vspace{0.1em}
+\hrule
+
+\input{electrostatics-body}
+
+%========================================================
+\section{Doing the calculus: continuous distributions \& Gauss's law \quad {\normalfont\small (Knight 23.3--23.6, 24.1--24.3, 25.4)}}
+\eqtab{
+  \band{fundamental}
+  \R{Potential of a continuous distribution --- chop, add up\newline\footnotesize($V$ is a scalar: no components, no cancellation to track)}{V = \displaystyle\int dV,\qquad dV = \dfrac{1}{4\pi\varepsilon_0}\dfrac{dq}{r}}
+  \R{Evaluating a Gaussian-surface integral\newline\footnotesize(pick a surface where $E$ is constant and either $\parallel$ or $\perp$ to $d\vec A$ everywhere)}{\oint \vec E\cdot d\vec A = E\!\oint dA = EA \ \Rightarrow\ E=\dfrac{Q_{\text{enc}}}{\varepsilon_0 A}}
+  \band{derived}
+  \R{Ring of charge $Q$, radius $R$, on axis at $z$}{V = \dfrac{1}{4\pi\varepsilon_0}\dfrac{Q}{\sqrt{z^2+R^2}}}
+  \R{Disk of charge $Q$, radius $R$, on axis at $z$\newline\footnotesize($\eta=Q/\pi R^2$)}{V = \dfrac{\eta}{2\varepsilon_0}\Big(\sqrt{z^2+R^2}-z\Big)}
+}
+
+%========================================================
+\section{Bonus: how $\vec F$, $U$, $\vec E$, $V$ connect \quad {\normalfont\small might appear as an extra-credit problem only}}
+\eqtab{
+  \bonusband{Force $\leftrightarrow$ energy}
+  \R{Force is the (negative) slope of $U$}{F_x = -\dfrac{dU}{dx}\,,\qquad \vec F = -\nabla U}
+  \R{$U$ is (minus) the work integral of $\vec F$\newline\footnotesize(same statement as $W_{\text{elec}}=-\Delta U$ above, written as a line integral)}{U_f - U_i = -\displaystyle\int_i^f \vec F\cdot d\vec s}
+  \bonusband{Field $\leftrightarrow$ potential}
+  \R{Field is the (negative) slope of $V$}{E_x = -\dfrac{dV}{dx}\,,\qquad \vec E = -\nabla V}
+  \R{$V$ is (minus) the line integral of $\vec E$}{V_f - V_i = -\displaystyle\int_i^f \vec E\cdot d\vec s}
+}
+{\footnotesize\color{bonus} The two rows are the same relationship twice: $U$ and $V$ are what you integrate a force/field \emph{against}
+to get; $\vec F$ and $\vec E$ are what falls out when you differentiate $U$ or $V$. Swap $U\to V$ and $\vec F \to \vec E$
+(divide through by $q$) and the left column becomes the right column.}
+
+\vfill
+{\footnotesize\color{gray}\raggedright
+Companion simulations at \texttt{hoppese.github.io/Intro-physics-sims/}\,:
+\texttt{electroscope}, \texttt{e-fields-conductors-and-insulators},
+\texttt{electrostatics-explorer}, \texttt{field-superposition-explorer},
+\texttt{discrete-charge-builder-3d}, \texttt{gauss-flux},
+\texttt{gauss-applications}, \texttt{assembling-charges},
+\texttt{pe-vs-separation}, \texttt{equipotential-explorer}.\par}
+
+\end{document}
