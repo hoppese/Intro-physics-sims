@@ -132,6 +132,38 @@ now leaves R₂ at `(8,2)→(9,2)`, squeezed but correct, circuit still solving 
 
 **Still unfixed in `circuit-lab/`, which is the one in the catalog.**
 
+### 11. Parts could not be dragged off their own axis
+
+Asked for by Seth 2026-09-22: resistors should drag up/down/left/right, and the
+battery up/down.
+
+A neighbour keeps the endpoint it shares with the part being moved, so dragging
+a part *perpendicular* to its own axis would leave the neighbour diagonal. The
+baseline just committed that — dragging R₁ down one row produced
+`wire 0,2->4,3` and `resistor 8,3->12,2`, both diagonal. The first pass at
+fixing #10 went the other way and refused the move entirely, which is what
+Seth ran into.
+
+Neither is right, because the two ways a neighbour can fail are different
+problems:
+
+| neighbour would… | verdict | response |
+|---|---|---|
+| invert or collapse to zero | `squash` | refuse the step — drag stops against the obstruction |
+| go diagonal | `bend` | let the part move, leave the neighbour, reconnect with elbow wire at drop |
+
+Elbow wires are added once, in `onUp` — never mid-drag, or every `pointermove`
+would lay down another one. An L is routed via `{c: target.c, r: node.r}` when
+the two nodes share neither row nor column, and duplicate wires are skipped.
+
+Verified in both variants:
+
+- R₁ down one row → `resistor 4,3->8,3` plus `wire 4,2->4,3`, `wire 8,2->8,3`;
+  still DC solved, ΔV₁ 2.00 V, I 200 mA
+- battery down one row → `battery 0,3->0,7` plus `wire 0,2->0,3`, `wire 0,6->0,7`
+- R₁ right one col → left wire stretches, R₂ shrinks, no elbows needed
+- the #10 squeeze still refuses: R₂ stops at `8,2->9,2`, never inverted
+
 ## Suggested order
 
 1. Segment hit-testing (#1) — unblocks everything else
