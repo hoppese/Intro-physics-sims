@@ -85,8 +85,8 @@
     "electric-pe": {
       "title": "Electric Potential Energy",
       "knight": "25.1–25.3",
-      "videos": [{ "id": "m_Rq_Pzt9fo", "status": "unv" }],
-      "sims": ["pe-vs-separation"]
+      "videos": [{ "id": "wEQxtUwiV1E", "status": "ok" }],
+      "sims": ["pe-vs-separation", "assembling-charges"]
     },
     "electric-potential": {
       "title": "Electric Potential",
@@ -119,6 +119,7 @@
     "gauss-flux": "Gauss’s Law — Flux Through a Closed Surface",
     "gauss-applications": "Applying Gauss’s Law",
     "pe-vs-separation": "Potential Energy vs Separation",
+    "assembling-charges": "Assembling Charges",
     "equipotential-explorer": "Equipotential Explorer"
   },
 
@@ -271,6 +272,10 @@
       "cp_note": "College Physics has no separate Gauss's-law section."
     },
     "pe-vs-separation": {
+      "up": [["Vol 2 · 7.1 Electric Potential Energy", "2/pages/7-1-electric-potential-energy"]],
+      "cp": [["Ch 19.1 Electric Potential Energy: Potential Difference", "19-1-electric-potential-energy-potential-difference"]]
+    },
+    "assembling-charges": {
       "up": [["Vol 2 · 7.1 Electric Potential Energy", "2/pages/7-1-electric-potential-energy"]],
       "cp": [["Ch 19.1 Electric Potential Energy: Potential Difference", "19-1-electric-potential-energy-potential-difference"]]
     },

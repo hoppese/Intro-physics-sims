@@ -991,6 +991,13 @@
        "closes": "2026-09-25 10:00",
        "visible": true
       }
+     ],
+     "sims": [
+      {
+       "name": "Assembling Charges",
+       "note": "Bring charges in one at a time; the running ledger is U. Prep 12 is built on it.",
+       "slug": "assembling-charges"
+      }
      ]
     }
    ]
