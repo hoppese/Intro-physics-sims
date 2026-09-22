@@ -85,18 +85,20 @@
          color:#4a7a5c;font-weight:700}
   .log .tim{font-family:'JetBrains Mono',monospace;font-size:11px}
   .log .over{color:#a83a3a} .log .under{color:#2a6b43}
-  /* Long prose rows: closed shows a 2-line preview, open shows the whole thing. */
-  .log details{margin-bottom:6px}
-  .log details:last-child{margin-bottom:0}
-  .log summary{cursor:pointer;list-style:none;display:block}
-  .log summary::-webkit-details-marker{display:none}
-  .log summary b::after{content:' ▸';font-size:9px;color:#8aa694}
-  .log details[open] summary b::after{content:' ▾'}
-  .log summary:focus-visible{outline:2px solid #4a7a5c;outline-offset:2px;border-radius:3px}
-  .log .prev{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
-             overflow:hidden;color:#5d6b62}
-  .log details[open] .prev{display:none}
-  .log .full{margin-top:1px}
+  /* The whole log section collapses; shut by default so a day with a long entry
+     still fits the panel. Summary shows a one-line peek at what was covered. */
+  .logwrap{margin-top:2px}
+  .logwrap > summary{cursor:pointer;list-style:none;display:block;
+                     border-radius:6px;padding:1px 2px}
+  .logwrap > summary::-webkit-details-marker{display:none}
+  .logwrap > summary:hover .lab{color:#4a7a5c}
+  .logwrap > summary:focus-visible{outline:2px solid #4a7a5c;outline-offset:2px}
+  .logwrap > summary .lab::after{content:' ▸';font-size:9px}
+  .logwrap[open] > summary .lab::after{content:' ▾'}
+  .logwrap > summary .peek{display:block;font-size:11.5px;color:var(--faint);
+                           white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+                           margin-top:-3px}
+  .logwrap[open] > summary .peek{display:none}
   .logempty{border:1px dashed var(--line);border-radius:8px;padding:9px 11px;
             font-size:11.5px;color:var(--faint)}
   .note{background:#f5f7f9;border:1px solid var(--line);border-radius:8px;padding:9px 11px;
@@ -235,16 +237,7 @@ function logBlock(d, year){
       const delta = n == null ? '' : ` (${min > n ? '+' : ''}${min - n})`;
       return `<span class="tim${cls}">${esc(seg)} ${min}′${esc(delta)}</span>`;
     }).join(' · ') : '';
-  // Prose rows can run long. Past ~150 characters they push the rest of the day
-  // off the panel, so those collapse to a two-line preview you click to open.
-  const LONG = 150;
-  const row = (label, val) => {
-    if (!val) return '';
-    if (val.length <= LONG) return `<div class="row"><b>${label}</b>${esc(val)}</div>`;
-    return `<details class="row"><summary><b>${label}</b>
-        <span class="prev">${esc(val)}</span></summary>
-        <div class="full">${esc(val)}</div></details>`;
-  };
+  const row = (label, val) => val ? `<div class="row"><b>${label}</b>${esc(val)}</div>` : '';
   const total = e.timing ? Object.values(e.timing).reduce((a, b) => a + (+b || 0), 0) : null;
 
   // Anything from the log's materials list that was handed out on this day —
@@ -255,17 +248,24 @@ function logBlock(d, year){
         <span class="mono" style="font-size:10px;color:#9aa2ab">${esc(m.kind)}</span></div>`).join('')}
     </div>` : '';
 
-  return `<div class="lab">What actually happened</div><div class="log">
-      ${row('Covered', e.covered)}
-      ${timing ? `<div class="row"><b>Timing${total ? ` — ${total}′ of 50` : ''}</b>${timing}</div>` : ''}
-      ${matRow}
-      ${row('Cut for time', e.cut)}
-      ${row('Wish there had been time for', e.wish)}
-      ${row('Landed well', e.landed)}
-      ${row('Students struggled with', e.struggled)}
-      ${row('For next year', e.nextYear)}
-      ${row('Notes', e.notes)}
-    </div>`;
+  // The whole block collapses. A full entry is longer than everything else on
+  // the day put together, so it stays shut until asked for; the summary carries
+  // a one-line taste of what was covered so a shut block is not a blank label.
+  return `<details class="logwrap">
+      <summary><span class="lab">What actually happened</span>
+        <span class="peek">${esc(e.covered || '')}</span></summary>
+      <div class="log">
+        ${row('Covered', e.covered)}
+        ${timing ? `<div class="row"><b>Timing${total ? ` — ${total}′ of 50` : ''}</b>${timing}</div>` : ''}
+        ${matRow}
+        ${row('Cut for time', e.cut)}
+        ${row('Wish there had been time for', e.wish)}
+        ${row('Landed well', e.landed)}
+        ${row('Students struggled with', e.struggled)}
+        ${row('For next year', e.nextYear)}
+        ${row('Notes', e.notes)}
+      </div>
+    </details>`;
 }
 
 function renderPanel(year){
