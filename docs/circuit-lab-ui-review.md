@@ -102,6 +102,36 @@ reads `sol.symOf[id]`, and the solver models a closed switch as a resistive
 branch, so it inherits an R symbol. Confusing in a course where R means
 resistor. (Present in the baseline — not introduced by the variants.)
 
+### 10. Moving a wire can destroy the part next to it — **present in the shipped sim**
+
+Reported by Seth 2026-09-22: drag the right-hand wire of the series preset to
+the left and R₁/R₂ end up stacked on top of each other.
+
+Cause is in `onMove`, the `move` branch. A neighbouring part keeps the endpoint
+it shares with the part being dragged, so moving one stretches or squeezes the
+other — and nothing checks the result:
+
+```js
+for(const q of (this.drag.nbrsA||[])) q.o[q.w]={c:na.c,r:na.r};
+```
+
+Drag far enough and the neighbour's endpoint passes its own start. Reproduced
+in the **untouched baseline**: the series preset's R₂ goes from `(8,2)→(12,2)`
+to `(8,2)→(7,2)` — inverted, negative length, drawn back over R₁. The panel
+still reports "DC solved" and 200 mA over the mangled netlist.
+
+Not introduced by the variants; the variants only make wires easier to grab, so
+it is easier to reach.
+
+**Fix (in both variants):** before committing a move, check every affected
+neighbour would stay legal — non-zero length, still axis-aligned, and not
+flipped past its far end. If any would break, reject the step, so the drag
+stops against the obstruction instead of destroying it. Verified: the same drag
+now leaves R₂ at `(8,2)→(9,2)`, squeezed but correct, circuit still solving at
+200 mA.
+
+**Still unfixed in `circuit-lab/`, which is the one in the catalog.**
+
 ## Suggested order
 
 1. Segment hit-testing (#1) — unblocks everything else
