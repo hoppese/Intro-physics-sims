@@ -109,6 +109,15 @@
    "note": "Full solutions, 6 pages. HW 2 was due Sep 16 rather than Sep 9 because Test 1 took the Sep 9 slot. An HTML version of these solutions also lives alongside the PDF."
   },
   {
+   "file": "assessments/written-hw/written-hw-3-solutions.pdf",
+   "name": "Written HW 3 — full solutions",
+   "source": "assessments/written-hw/latex/written-hw-3-solutions.tex",
+   "kind": "written HW solutions",
+   "created": "2026-09-22",
+   "usedOn": null,
+   "note": "Calc-track Written HW 3 (Knight ch. 23, 18 pts: 23.3/23.4/23.8/23.10/23.12/23.19/23.25). First HW solution set built through the LaTeX pipeline rather than uploaded - new hw-solutions-common.sty, MODEL/VISUALIZE/SOLVE/REVIEW structure matching Knight's own worked-example format and the style of the HW1/HW2 solutions. One problem per page, 7 pages. All seven answers checked numerically in Python before writing the derivations. Algebra track's HW 3A/3B/3C are separate assignments with different problems; this covers only the calc-track HW 3."
+  },
+  {
    "file": "assessments/tests/test1.pdf",
    "name": "Test 1 (as given)",
    "source": null,

@@ -1,0 +1,290 @@
+\documentclass[11pt]{article}
+\usepackage{hw-solutions-common}
+
+\begin{document}
+
+\hwsolhead{Written HW 3}{Problem statements from Knight, \emph{Physics for Scientists and
+Engineers} (5th ed., Global Edition), Chapter 23. $K = 8.99\times10^{9}$
+N$\cdot$m$^2$/C$^2$, $\varepsilon_0 = 8.85\times10^{-12}$ C$^2$/(N$\cdot$m$^2$), and
+$g = 9.8$ m/s$^2$ throughout.}
+
+%============================================================
+\problem{23.3}{2}{Two point charges, $q_A = +3.0$ nC and $q_B = -3.0$ nC, sit one above
+the other with a 5.0 cm gap on each side of the point marked by the dot in Figure EX23.3:
+$q_A$ is 5.0 cm above the dot's height, $q_B$ is 5.0 cm below it, and the dot itself is
+5.0 cm to the side of the line joining the two charges. What are the strength and
+direction of the electric field at the dot? Specify the direction as an angle cw from
+horizontal.}
+
+\model{Treat both charges as point charges. The field at the dot is the vector sum of
+the field from $q_A$ alone and the field from $q_B$ alone.}
+
+\visualize{Put the midpoint between the charges at the origin, $q_A$ at $(0, 5.0\text{
+cm})$, $q_B$ at $(0, -5.0\text{ cm})$, and the dot at $(5.0\text{ cm}, 0)$. Both charges
+are the same distance from the dot, along lines at $45^\circ$ to the vertical. $q_A$ is
+positive, so its field points away from $q_A$, down and to the right. $q_B$ is negative,
+so its field points toward $q_B$, down and to the left. The horizontal components point
+opposite ways and will cancel; the vertical components both point down and will add.}
+
+\solve{Each charge is a distance $r = \sqrt{(5.0\text{ cm})^2+(5.0\text{ cm})^2} =
+7.07$ cm $= 0.0707$ m from the dot, so
+\[
+E_A = E_B = \frac{K|q|}{r^2} = \frac{(8.99\times10^{9})(3.0\times10^{-9})}{(0.0707\text{
+m})^2} = 5.39\times10^{3}\text{ N/C}.
+\]
+Each field makes a $45^\circ$ angle with the vertical, so each has horizontal component
+$E\cos45^\circ$ and vertical component $E\sin45^\circ$, both equal in magnitude since
+$\sin45^\circ=\cos45^\circ$. The horizontal components are equal and opposite (one
+points right, one points left), so they cancel exactly. The vertical components both
+point downward and add:
+\[
+E_{\text{net}} = 2E_A\sin45^\circ = 2(5.39\times10^{3}\text{ N/C})(0.707) =
+\boxed{7.6\times10^{3}\text{ N/C, straight down (}90^\circ\text{ cw from horizontal)}}.
+\]}
+
+\review{The horizontal cancellation isn't a coincidence: the dot is equidistant from
+both charges and the charges have equal and opposite magnitude, so whatever field $q_A$
+contributes sideways, $q_B$ contributes the exact opposite. Only the vertical
+components, which both point the same way (from $+$ toward $-$), survive. That the net
+field ends up parallel to the line joining the charges is a general feature of any
+symmetric point on a dipole's perpendicular bisector.}
+
+%============================================================
+\problem{23.4}{2}{$q_A = +3.0$ nC sits at the same height as, and 5.0 cm to the left
+of, the dot marked in Figure EX23.4. $q_B = -6.0$ nC sits 10 cm directly below $q_A$.
+What are the strength and direction of the electric field at the dot? Specify the
+direction as an angle cw from horizontal.}
+
+\model{Treat both charges as point charges and add their fields as vectors.}
+
+\visualize{Put $q_A$ at the origin, the dot at $(5.0\text{ cm}, 0)$, and $q_B$ at
+$(0,-10\text{ cm})$. $q_A$ is positive and directly to the left of the dot, so its field
+at the dot points straight in the $+x$ direction. $q_B$ is negative and down and to the
+left of the dot, so its field at the dot points down and to the left, toward $q_B$.}
+
+\solve{$q_A$ is a distance $r_A = 5.0$ cm $=0.050$ m from the dot:
+\[
+E_A = \frac{Kq_A}{r_A^2} = \frac{(8.99\times10^{9})(3.0\times10^{-9})}{(0.050)^2} =
+1.08\times10^{4}\text{ N/C, in } +\hat{x}.
+\]
+$q_B$ is a distance $r_B = \sqrt{(5.0\text{ cm})^2+(10\text{ cm})^2} = 11.18$ cm
+$=0.1118$ m from the dot, and the unit vector from the dot toward $q_B$ is
+$(-5.0,-10)/11.18 = (-0.447,-0.894)$:
+\[
+E_B = \frac{K|q_B|}{r_B^2} = \frac{(8.99\times10^{9})(6.0\times10^{-9})}{(0.1118)^2} =
+4.32\times10^{3}\text{ N/C},
+\qquad
+\vec{E}_B = (-1.93,-3.86)\times10^{3}\text{ N/C}.
+\]
+Adding components, $\vec{E}_A = (1.08\times10^4, 0)$ N/C, so
+\[
+\vec{E}_{\text{net}} = (8.86,-3.86)\times10^{3}\text{ N/C}
+\;\Rightarrow\;
+E_{\text{net}} = \sqrt{8.86^2+3.86^2}\times10^{3}\text{ N/C} = \boxed{9.7\times10^{3}\text{
+N/C}},
+\]
+directed $\tan^{-1}(3.86/8.86) = \boxed{23^\circ\text{ below horizontal (cw)}}$, i.e.,
+down and to the right.}
+
+\review{$q_A$ is closer to the dot than $q_B$ (5.0 cm vs.\ 11.2 cm) and $q_A$'s field
+points straight along $+\hat x$ with nothing to cancel it, so it's no surprise that
+$q_A$ dominates the result: the net field is close to $E_A$'s value and tilted only
+mildly toward $q_B$'s direction.}
+
+%============================================================
+\problem{23.8}{3}{A 10-cm-long thin glass rod uniformly charged to $+10$ nC and a
+10-cm-long thin plastic rod uniformly charged to $-10$ nC are placed side by side, 4.0
+cm apart. What are the electric field strengths $E_1$ to $E_3$ at distances 1.0 cm, 2.0
+cm, and 3.0 cm from the glass rod, along the line connecting the midpoints of the two
+rods?}
+
+\model{Each rod is a finite uniformly charged line. On the line through a rod's own
+midpoint, perpendicular to the rod, the field of a rod with charge $Q$ and length $L$ is
+\[
+E_{\text{rod}}(y) = \frac{KQ}{y\sqrt{y^2+(L/2)^2}},
+\]
+directed away from the rod if $Q>0$, toward it if $Q<0$. All three points lie on this
+line for \emph{both} rods at once (they're between the rods), so the total field is the
+vector sum of the two rods' contributions.}
+
+\visualize{Put the glass rod's center at $x=0$ and the plastic rod's center at
+$x=4.0$ cm. A point at distance $y_1$ from the glass rod (measured from $x=0$) is then a
+distance $y_2 = 4.0\text{ cm} - y_1$ from the plastic rod. Glass is positive, so its
+field pushes away from itself, toward the plastic rod ($+x$). Plastic is negative, so its
+field pulls toward itself, which from a point between the rods is also toward $+x$. Both
+fields point the same way at every point between the rods, so the strengths simply add.}
+
+\solve{With $L=0.10$ m so $L/2=0.050$ m, and $Q=1.0\times10^{-8}$ C for each rod (same
+magnitude, opposite sign):
+\[
+E_1:\ y_1=1.0\text{ cm},\ y_2=3.0\text{ cm}
+\;\Rightarrow\; E_{\text{glass}}=1.76\times10^{5},\ E_{\text{plastic}}=5.14\times10^{4}
+\;\Rightarrow\; E_1 = \boxed{2.3\times10^{5}\text{ N/C}}
+\]
+\[
+E_2:\ y_1=y_2=2.0\text{ cm}
+\;\Rightarrow\; E_{\text{glass}}=E_{\text{plastic}}=8.35\times10^{4}
+\;\Rightarrow\; E_2 = \boxed{1.7\times10^{5}\text{ N/C}}
+\]
+\[
+E_3:\ y_1=3.0\text{ cm},\ y_2=1.0\text{ cm}
+\;\Rightarrow\; E_{\text{glass}}=5.14\times10^{4},\ E_{\text{plastic}}=1.76\times10^{5}
+\;\Rightarrow\; E_3 = \boxed{2.3\times10^{5}\text{ N/C}}
+\]
+all three directed from the glass rod toward the plastic rod.}
+
+\review{$E_1$ and $E_3$ come out identical. That has to be true: the point 1.0 cm from
+glass (3.0 cm from plastic) is the mirror image of the point 3.0 cm from glass (1.0 cm
+from plastic), with the roles of ``near rod'' and ``far rod'' simply swapped between two
+rods that carry equal and opposite charge of equal magnitude. The field is \emph{smaller}
+exactly in the middle than near either rod: moving toward a rod, that rod's own
+contribution grows faster than the other rod's contribution shrinks.}
+
+%============================================================
+\problem{23.10}{2}{A small glass bead, charged to $+8.0$ nC, is in the plane that
+bisects a thin, uniformly charged, 10-cm-long glass rod and is 4.0 cm from the rod's
+center. The bead is repelled from the rod with a force of 720 $\mu$N. What is the total
+charge on the rod?}
+
+\model{The bead sits on the rod's perpendicular bisector, so its field there is
+$E=KQ_{\text{rod}}/\big(y\sqrt{y^2+(L/2)^2}\big)$. The force on the bead is $F=qE$.}
+
+\visualize{The bead is \emph{repelled}, so the rod's charge must have the same sign as
+the bead's: the rod is positively charged.}
+
+\solve{First find the field the bead sits in from the force it feels:
+\[
+E = \frac{F}{q} = \frac{7.20\times10^{-4}\text{ N}}{8.0\times10^{-9}\text{ C}} =
+9.0\times10^{4}\text{ N/C}.
+\]
+With $y=0.040$ m and $L/2=0.050$ m, $y\sqrt{y^2+(L/2)^2} = (0.040)\sqrt{0.0016+0.0025} =
+2.56\times10^{-3}$ m$^2$, so
+\[
+Q_{\text{rod}} = \frac{Ey\sqrt{y^2+(L/2)^2}}{K} =
+\frac{(9.0\times10^{4})(2.56\times10^{-3})}{8.99\times10^{9}} =
+\boxed{+26\text{ nC}}.
+\]}
+
+\review{26 nC on a 10-cm rod is a linear density of about 2.6 nC/cm, roughly comparable
+to the point charges used elsewhere in this chapter's problems, so the answer is a
+believable, everyday-lab-bench amount of charge rather than something wildly large or
+small.}
+
+%============================================================
+\problem{23.12}{2}{The electric field 2.0 cm from a very long charged wire is 1000 N/C,
+directed toward the wire. What is the charge (in nC) on a 5.0-cm-long segment of the
+wire?}
+
+\model{Far from its ends, a long charged wire produces the field of an infinite line of
+charge, $E = \lambda/(2\pi\varepsilon_0 r) = 2K\lambda/r$, independent of the wire's
+total length.}
+
+\visualize{The field points \emph{toward} the wire, which is what a negative line charge
+does (it attracts a positive test charge in toward itself). So the wire is negatively
+charged.}
+
+\solve{Solve for the linear charge density:
+\[
+\lambda = \frac{Er}{2K} = \frac{(1000\text{ N/C})(0.020\text{ m})}{2(8.99\times10^{9})} =
+1.11\times10^{-9}\text{ C/m}.
+\]
+The charge on a 5.0-cm $=0.050$ m segment is then
+\[
+Q = \lambda L = (1.11\times10^{-9}\text{ C/m})(0.050\text{ m}) = 5.6\times10^{-11}\text{
+C} = \boxed{-0.056\text{ nC}}
+\]
+(negative, since the wire itself is negatively charged).}
+
+\review{The field formula for a line of charge doesn't care how long the wire is, only
+how densely charged it is and how far away you're standing; the 5.0-cm length only
+enters at the very last step, to convert the density into an actual amount of charge on
+that particular stretch of wire.}
+
+%============================================================
+\problem{23.19}{3}{Two very large sheets of plastic face each other, separated by
+distance $d$, as shown in Figure EX23.19. One sheet (on the left) has been rubbed to a
+uniform surface charge density $\eta_1 = -\eta_0$; the other (on the right) has surface
+charge density $\eta_2 = +3\eta_0$. What are the electric field vectors at points 1
+(outside, to the left of both sheets), 2 (midway between the sheets), and 3 (outside, to
+the right of both sheets)?}
+
+\model{Each sheet, treated as an infinite plane of charge, produces a field of constant
+magnitude $\eta/(2\varepsilon_0)$ on each side, independent of distance from that sheet:
+pointing away from the sheet if $\eta>0$, toward it if $\eta<0$. The total field at any
+point is the vector sum of both sheets' contributions.}
+
+\visualize{Put the negative sheet at $x=0$ and the positive sheet at $x=d$, with $+x$
+pointing to the right. Sheet 1 ($-\eta_0$) points its field toward itself everywhere: in
+$+\hat x$ to its left (point 1) and in $-\hat x$ everywhere to its right (points 2 and
+3). Sheet 2 ($+3\eta_0$) points its field away from itself everywhere: in $-\hat x$
+everywhere to its left (points 1 and 2) and in $+\hat x$ to its right (point 3).}
+
+\solve{Each sheet contributes magnitude $\eta_0/(2\varepsilon_0)$ (sheet 1) or
+$3\eta_0/(2\varepsilon_0)$ (sheet 2). Adding the two contributions, with sign for
+direction ($+\hat x$ positive):
+\[
+\text{Point 1 (left of both):}\quad
+\frac{\eta_0}{2\varepsilon_0} - \frac{3\eta_0}{2\varepsilon_0} = -\frac{\eta_0}{\varepsilon_0}
+\;\Rightarrow\;
+\vec{E}_1 = \boxed{\dfrac{\eta_0}{\varepsilon_0}\text{, pointing left, away from the sheets}}
+\]
+\[
+\text{Point 2 (between):}\quad
+-\frac{\eta_0}{2\varepsilon_0} - \frac{3\eta_0}{2\varepsilon_0} = -\frac{2\eta_0}{\varepsilon_0}
+\;\Rightarrow\;
+\vec{E}_2 = \boxed{\dfrac{2\eta_0}{\varepsilon_0}\text{, pointing left, from sheet 2 toward sheet 1}}
+\]
+\[
+\text{Point 3 (right of both):}\quad
+-\frac{\eta_0}{2\varepsilon_0} + \frac{3\eta_0}{2\varepsilon_0} = +\frac{\eta_0}{\varepsilon_0}
+\;\Rightarrow\;
+\vec{E}_3 = \boxed{\dfrac{\eta_0}{\varepsilon_0}\text{, pointing right, away from the sheets}}
+\]
+Note $d$ never enters: an infinite sheet's field doesn't depend on distance from it.}
+
+\review{The two outside points have equal field strength, and the field between the
+sheets is exactly double that. This is the same pattern as a parallel-plate capacitor
+(a much stronger field trapped between the plates than leaks out around them) even
+though here the two charge densities aren't equal and opposite $(\eta_0$ vs.\
+$3\eta_0)$: the ratio between the ``inside'' and ``outside'' field strength is set purely by
+how the two contributions add or cancel, not by the sheets matching each other.}
+
+%============================================================
+\problem{23.25}{4}{Figure EX23.25 shows a 1.5 g ball hanging from a string inside a
+parallel-plate capacitor made from $12\text{ cm}\times12\text{ cm}$ electrodes, charged
+to $\pm75$ nC. The string hangs at $15^\circ$ from vertical, deflected toward the
+negative plate. What is the charge on the ball, in nC?}
+
+\model{Treat the capacitor's field as that of an ideal parallel-plate capacitor,
+uniform between the plates: $E = Q_{\text{plate}}/(\varepsilon_0 A)$. The ball hangs in
+equilibrium under three forces: gravity, string tension, and the electric force
+$qE$.}
+
+\visualize{The string is deflected toward the negative plate. The field inside the
+capacitor points from the positive plate toward the negative plate. A ball that gets
+pushed \emph{along} the field, toward the negative plate, must be positively charged.}
+
+\solve{The plate area is $A = (0.12\text{ m})^2 = 0.0144$ m$^2$, so the field strength is
+\[
+E = \frac{Q_{\text{plate}}}{\varepsilon_0 A} = \frac{75\times10^{-9}\text{ C}}
+{(8.85\times10^{-12})(0.0144\text{ m}^2)} = 5.89\times10^{5}\text{ N/C}.
+\]
+For the hanging ball, the string's angle from vertical is set by the ratio of the
+horizontal electric force to the vertical weight, $\tan\theta = F_{\text{elec}}/(mg)$, so
+\[
+F_{\text{elec}} = mg\tan\theta = (1.5\times10^{-3}\text{ kg})(9.8\text{ m/s}^2)\tan15^\circ
+= 3.94\times10^{-3}\text{ N}.
+\]
+Then
+\[
+q = \frac{F_{\text{elec}}}{E} = \frac{3.94\times10^{-3}\text{ N}}{5.89\times10^{5}\text{
+N/C}} = \boxed{+6.7\text{ nC}}.
+\]}
+
+\review{A $15^\circ$ deflection is fairly gentle, so it makes sense that the electric
+force $(3.9\text{ mN})$ comes out smaller than the ball's weight $(mg\approx14.7\text{
+mN})$ rather than dwarfing it: $\tan15^\circ\approx0.27$ is a modest ratio, not a
+dramatic one. If the deflection had instead been described toward the positive plate,
+the same method would give the same magnitude of charge, just negative.}
+
+\end{document}

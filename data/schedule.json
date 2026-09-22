@@ -837,6 +837,12 @@
        "kind": "Notes",
        "file": "assessments/lecture-notes/gauss-applications-notes.pdf",
        "pages": 3
+      },
+      {
+       "name": "Written HW 3 — full solutions",
+       "kind": "Solutions",
+       "file": "assessments/written-hw/written-hw-3-solutions.pdf",
+       "pages": 7
       }
      ],
      "plan": {
