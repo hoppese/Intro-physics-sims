@@ -39,6 +39,12 @@
   "synthesis": 10
  },
  "entries": {
+  "2026-09-09": {
+   "covered": "Test 1, in class. Four problems: standing waves in a pipe (15 pts, five multiple-choice parts), an oscillating spring (20 pts), a traveling wave (15 pts), and a 5-point extra-credit two-speaker interference problem. 50 points plus 5 extra credit.",
+   "struggled": "The oscillating spring gave people the most trouble by far. It was also the heaviest problem at 20 points, and the one that asked them to go from initial conditions (x0 and v0) all the way to an explicit x(t) = A cos(wt + phi), including the phase constant, and then sketch it.",
+   "nextYear": "Two things. The oscillating-spring problem is where the points were lost - give the x0/v0 to amplitude-and-phase-constant chain more class time before the test, since it is the one place students have to carry a multi-step result forward rather than plug into a single formula. And the timing was close to right but not comfortable: consider trimming a part, most likely one of the five standing-wave multiple-choice items.",
+   "notes": "Pacing: most students finished with time to spare, but some were still working when time was called. Per-segment minutes are not meaningful for a test day."
+  },
   "2026-09-21": {
    "covered": "Opened with a brief lecture on flux, which carried straight into finishing the kickoff as a class. Then a long stretch lecturing on the torque on an electric dipole: defining the dipole moment and deriving tau = p x E. Closed by giving students a little time to start the written HW.",
    "cut": "Time for students to start the written HW in class got squeezed by the dipole lecture.",
@@ -50,6 +56,7 @@
  "materials": [
   {
    "file": "assessments/in-class-practice/coulomb-force-practice.pdf",
+   "name": "Practice: Coulomb force",
    "source": "assessments/in-class-practice/latex-worksheets/coulomb-force-practice.tex",
    "kind": "in-class practice worksheet",
    "created": "2026-09-15",
@@ -58,6 +65,7 @@
   },
   {
    "file": "assessments/in-class-practice/efield-superposition-practice.pdf",
+   "name": "Practice: E-field superposition",
    "source": "assessments/in-class-practice/latex-worksheets/efield-superposition-practice.tex",
    "kind": "in-class practice worksheet",
    "created": "2026-09-15",
@@ -66,6 +74,7 @@
   },
   {
    "file": "assessments/in-class-practice/HW1-practice.pdf",
+   "name": "Practice: HW 1 problems",
    "source": null,
    "kind": "in-class practice worksheet",
    "created": "2026-09-03",
@@ -74,11 +83,30 @@
   },
   {
    "file": "assessments/lecture-notes/gauss-applications-notes.pdf",
+   "name": "Skeleton notes: the three symmetries",
    "source": "assessments/lecture-notes/latex/gauss-applications-notes.tex",
    "kind": "skeleton lecture notes (print-and-fill-in)",
    "created": "2026-09-21",
    "usedOn": "2026-09-23",
    "note": "First of a new series. Scaffolded density: prose and setup given; key results, the crucial algebra step and all diagram labels left blank. 3 pages, one symmetry each (line; sheet, plus the two-parallel-sheet superposition; sphere). Printed and handed out; the derivations happen on the whiteboard."
+  },
+  {
+   "file": "assessments/tests/test1.pdf",
+   "name": "Test 1 (as given)",
+   "source": null,
+   "kind": "test (as given)",
+   "created": "2026-09-09",
+   "usedOn": "2026-09-09",
+   "note": "Standing waves in a pipe (15), oscillating spring (20), traveling wave (15), extra-credit two-speaker interference (5). 50 pts + 5 EC. No .tex source in the repo - the PDF is the copy handed back in this conversation. Test rules allowed five pages of students' own newly made notes and a graphing calculator, nothing else, so the equation sheet below was a study resource, not a test aid."
+  },
+  {
+   "file": "assessments/equation-sheets/waves-oscillations.pdf",
+   "name": "Equation sheet: Oscillations & Waves",
+   "source": "assessments/equation-sheets/waves-oscillations.tex",
+   "kind": "unit equation sheet",
+   "created": "2026-09-02",
+   "usedOn": null,
+   "note": "Equation Sheet: Oscillations & Waves - Lectures 1-6, Knight ch. 15-17. Covers exactly the Test 1 material, so it is linked from the Test 1 day as the unit reference. Not handed out on test day itself; usedOn left null because the day it was actually distributed is unconfirmed."
   }
  ]
 }

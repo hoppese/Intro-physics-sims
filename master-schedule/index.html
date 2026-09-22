@@ -244,7 +244,7 @@ function logBlock(d, year){
   // skeleton lecture notes, practice worksheets — linked so it can be reprinted.
   const mats = ((LOG && LOG.materials) || []).filter(m => m.usedOn === key);
   const matRow = mats.length ? `<div class="row"><b>Handed out</b>
-      ${mats.map(m => `<div><a href="../${esc(m.file)}" target="_blank" rel="noopener">${esc(m.file.split('/').pop())}</a>
+      ${mats.map(m => `<div><a href="../${esc(m.file)}" target="_blank" rel="noopener">${esc(m.name || m.file.split('/').pop())}</a>
         <span class="mono" style="font-size:10px;color:#9aa2ab">${esc(m.kind)}</span></div>`).join('')}
     </div>` : '';
 

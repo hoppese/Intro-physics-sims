@@ -397,6 +397,18 @@
      "test": 1,
      "special": true,
      "split": false,
+     "handouts": [
+      {
+       "name": "Test 1 (as given)",
+       "file": "assessments/tests/test1.pdf",
+       "pages": 5
+      },
+      {
+       "name": "Equation sheet: Oscillations & Waves",
+       "file": "assessments/equation-sheets/waves-oscillations.pdf",
+       "pages": 2
+      }
+     ],
      "due": [
       {
        "kind": "Test",
