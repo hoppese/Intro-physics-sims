@@ -268,6 +268,21 @@ function logBlock(d, year){
     </details>`;
 }
 
+// One pre-class video link. The standing goal is that every video is Seth's own
+// and 10 minutes or under, so the line carries length and provenance, not just
+// a title — a borrowed or overlong video should be visible without clicking.
+function vidLine(v, suf){
+  if (!v || !v['id' + suf]) return '';
+  const id = v['id' + suf], mins = v['mins' + suf], own = v['own' + suf], dead = v['dead' + suf];
+  const tag = (txt, col) => `<span class="mono" style="font-size:10px;color:${col}"> ${txt}</span>`;
+  if (dead) return `<div><a href="https://www.youtube.com/watch?v=${esc(id)}" target="_blank" rel="noopener">Pre-class video${suf}</a>
+      ${tag('UNAVAILABLE — needs replacing', '#a83a3a')}</div>`;
+  return `<div><a href="https://www.youtube.com/watch?v=${esc(id)}" target="_blank" rel="noopener">Pre-class video${suf}</a>
+      ${mins != null ? tag(mins + ' min', mins > 10 ? '#a83a3a' : '#9aa2ab') : ''}
+      ${own === false ? tag('not yours', '#b07d2a') : (own ? tag('yours', '#2a6b43') : '')}
+      ${v.st === 'unv' && !suf ? tag('unvetted', '#9aa2ab') : ''}</div>`;
+}
+
 function renderPanel(year){
   const p = document.getElementById('panel');
   if (!SEL){ p.innerHTML = `<div class="pbody empty">Pick a day to see what is scheduled.</div>`; return; }
@@ -315,8 +330,8 @@ function renderPanel(year){
             ${d.plan.prac ? `<div><b>Practice</b>${esc(d.plan.prac)}</div>` : ''}</div>` : ''}
        ${logBlock(d, year)}
        ${(d.video && d.video.id) || (d.sims || []).length || (d.handouts || []).length ? `<div class="lab">Links</div>
-            ${d.video && d.video.id ? `<div><a href="https://www.youtube.com/watch?v=${esc(d.video.id)}" target="_blank" rel="noopener">Pre-class video</a>
-              ${d.video.st === 'unv' ? '<span class="mono" style="font-size:10px;color:#9aa2ab"> unvetted</span>' : ''}</div>` : ''}
+            ${vidLine(d.video, '')}
+            ${vidLine(d.video, '2')}
             ${(d.handouts || []).map(h =>
               `<div><a href="../${esc(h.file)}" target="_blank" rel="noopener">${esc(h.name)}</a>
                 <span class="mono" style="font-size:10px;color:#9aa2ab"> print ${h.pages} pp</span></div>`).join('')}

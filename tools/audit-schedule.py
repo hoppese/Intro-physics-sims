@@ -196,6 +196,42 @@ def main():
                         f"{d.get('date')}: handout missing from the repo — "
                         f"{h['file']} ({h.get('name', '?')})")
 
+    # ---- 4. pre-class videos -------------------------------------------------
+    # Standing goal: every teaching day has a video, it is Seth's own, and it
+    # runs 10 minutes or less. Flex/catch-up days are exempt from the first.
+    missing, borrowed, overlong = [], [], []
+    for wk in sched['weeks']:
+        for d in wk['days']:
+            topic = d.get('topic') or ''
+            if d.get('special') or 'No class' in topic:
+                continue
+            when = parse_day(d.get('date'), year)
+            v = d.get('video') or {}
+            for suf in ('', '2'):
+                if v.get('dead' + suf):
+                    add(when, 'ERROR',
+                        f"{d.get('date')}: pre-class video is unavailable on YouTube "
+                        f"— needs replacing ({topic})")
+            if not v.get('id'):
+                if 'Catch up' not in topic and 'Review' not in topic:
+                    missing.append(d.get('date'))
+                continue
+            if v.get('own') is False:
+                borrowed.append(d.get('date'))
+            if (v.get('mins') or 0) > 10:
+                overlong.append(f"{d.get('date')} ({v['mins']}m)")
+    if missing:
+        add(None, 'NOTE', f"{len(missing)} teaching day(s) have no pre-class video — "
+                          f"{', '.join(missing)}")
+    if borrowed:
+        add(None, 'NOTE', f"{len(borrowed)} pre-class video(s) are not Seth's own — "
+                          f"{', '.join(borrowed[:6])}"
+                          f"{'…' if len(borrowed) > 6 else ''}")
+    if overlong:
+        add(None, 'NOTE', f"{len(overlong)} pre-class video(s) run over 10 min — "
+                          f"{', '.join(overlong[:6])}"
+                          f"{'…' if len(overlong) > 6 else ''}")
+
     # ---- report --------------------------------------------------------------
     soon = [f for f in findings if (f[0] - today).days <= args.days]
     later = [f for f in findings if (f[0] - today).days > args.days]
