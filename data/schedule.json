@@ -928,9 +928,10 @@
      "topic": "Electric potential energy",
      "reading": "25.1–3",
      "video": {
-      "id": "m_Rq_Pzt9fo",
-      "st": "unv",
-      "dead": true
+      "id": "wEQxtUwiV1E",
+      "st": "ok",
+      "mins": 14.4,
+      "own": false
      },
      "plan": {
       "lec": "Work to assemble charges; U=kq₁q₂/r; energy conservation.",
