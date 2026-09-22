@@ -6,6 +6,11 @@
 data/schedule.json is the source of truth. This script never writes anything —
 it only reports drift, ordered by how soon it affects a class.
 
+SCOPE: the coming week by default (--days, 7). Days outside the window are
+skipped, NOT passed — every run prints the window it used, because a clean
+report must never be read as "the whole term is fine". --all audits the term
+and re-enables the three checks that only mean anything across it.
+
 The Moodle pull needs a logged-in session, so it is not done here. Collect it in
 the browser (see tools/README-audit.md) and pass the file in. Without --moodle
 the Moodle half is SKIPPED LOUDLY rather than silently passing.
@@ -108,11 +113,17 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--moodle', help='pipe-separated Moodle pull')
     ap.add_argument('--days', type=int, default=7,
-                    help='how far ahead counts as "soon" (default 7)')
+                    help='size of the window to audit, in days (default 7). '
+                         'Days beyond it are not checked at all unless --all')
     ap.add_argument('--partial', action='store_true',
                     help='the pull covers only some activities — skip the '
                          '"missing from Moodle" check, which would otherwise '
                          'flag every activity the pull left out')
+    ap.add_argument('--all', action='store_true',
+                    help='audit the whole term instead of the coming week. Also '
+                         'enables the term-wide checks (setting uniformity, video '
+                         'totals, activities in Moodle but not on the schedule), '
+                         'which are meaningless on a windowed run')
     args = ap.parse_args()
 
     sched = json.loads(SCHED.read_text(encoding='utf-8'))
@@ -120,10 +131,22 @@ def main():
     today = date.today()
     GROUPS = {int(k): v.split()[0] for k, v in sched['course']['groups'].items()}
 
+    # A routine run only cares about the days it can still do something about.
+    # Everything outside the window is skipped, not quietly passed — the header
+    # says so, because a clean report must never read as "the term is fine".
+    horizon = today + timedelta(days=args.days)
+
+    def in_window(when):
+        if args.all:
+            return True
+        return when is not None and today <= when <= horizon
+
     items = []
     for wk in sched['weeks']:
         for d in wk['days']:
             when = parse_day(d.get('date'), year)
+            if not in_window(when):
+                continue
             for e in d.get('due', []):
                 items.append((when, d.get('date'), e))
 
@@ -172,11 +195,14 @@ def main():
                     f"Moodle group says {got_track!r}")
             if not rec['visible']:
                 add(when, 'NOTE', f"{datestr} {e['label']}: hidden from students in Moodle")
-        extra = [r for c, r in moodle.items()
-                 if c not in seen and not r['name'].startswith('Course')]
-        for r in sorted(extra, key=lambda r: r['name']):
-            add(None, 'NOTE',
-                f"in Moodle but not on the schedule: {r['name']} (cmid {r['cmid']})")
+        # Only meaningful against a full pull: on a windowed run everything
+        # outside the window is legitimately absent from `seen`.
+        if args.all and not args.partial:
+            extra = [r for c, r in moodle.items()
+                     if c not in seen and not r['name'].startswith('Course')]
+            for r in sorted(extra, key=lambda r: r['name']):
+                add(None, 'NOTE',
+                    f"in Moodle but not on the schedule: {r['name']} (cmid {r['cmid']})")
 
     # ---- 2. course map -------------------------------------------------------
     try:
@@ -185,11 +211,12 @@ def main():
                    for w in cm for d in w['days']]
         sc_days = [(w['n'], d.get('date'), d.get('topic'), d.get('reading'))
                    for w in sched['weeks'] for d in w['days']]
+        # Day count is structural, so compare it however far we are looking.
         if len(cm_days) != len(sc_days):
             add(None, 'DRIFT',
                 f"course map has {len(cm_days)} days, schedule has {len(sc_days)}")
         for a, b in zip(cm_days, sc_days):
-            if a != b:
+            if a != b and in_window(parse_day(b[1], year)):
                 add(parse_day(b[1], year), 'DRIFT',
                     f"{b[1]}: course map says {a[2]!r} / K{a[3]}, "
                     f"schedule says {b[2]!r} / K{b[3]}")
@@ -197,29 +224,35 @@ def main():
         add(None, 'ERROR', f'course-map check failed: {ex}')
 
     # ---- 3. internal consistency --------------------------------------------
-    by_kind = {}
-    for when, _dt, e in items:
-        if e.get('cmid'):
-            by_kind.setdefault(e['kind'], []).append(e)
-    for kind, es in sorted(by_kind.items()):
-        for field in ('points', 'attempts'):
-            vals = {}
-            for e in es:
-                vals.setdefault(e.get(field), []).append(e['label'])
-            if len(vals) > 1:
-                parts = '; '.join(f"{v}: {len(l)} ({', '.join(l[:3])}"
-                                  f"{'…' if len(l) > 3 else ''})"
-                                  for v, l in sorted(vals.items(),
-                                                     key=lambda x: (x[0] is None, x[0])))
-                add(None, 'NOTE', f"{kind} {field} is not uniform — {parts}")
+    # Comparing a handful of items against each other says nothing useful, so
+    # this is a whole-term check only.
+    if args.all:
+        by_kind = {}
+        for when, _dt, e in items:
+            if e.get('cmid'):
+                by_kind.setdefault(e['kind'], []).append(e)
+        for kind, es in sorted(by_kind.items()):
+            for field in ('points', 'attempts'):
+                vals = {}
+                for e in es:
+                    vals.setdefault(e.get(field), []).append(e['label'])
+                if len(vals) > 1:
+                    parts = '; '.join(f"{v}: {len(l)} ({', '.join(l[:3])}"
+                                      f"{'…' if len(l) > 3 else ''})"
+                                      for v, l in sorted(vals.items(),
+                                                         key=lambda x: (x[0] is None, x[0])))
+                    add(None, 'NOTE', f"{kind} {field} is not uniform — {parts}")
 
     # Handouts are printed on paper the morning of class, so a broken path is
     # only discovered when there is no time left to fix it.
     for wk in sched['weeks']:
         for d in wk['days']:
+            when = parse_day(d.get('date'), year)
+            if not in_window(when):
+                continue
             for h in d.get('handouts', []):
                 if not (ROOT / h['file']).exists():
-                    add(parse_day(d.get('date'), year), 'ERROR',
+                    add(when, 'ERROR',
                         f"{d.get('date')}: handout missing from the repo — "
                         f"{h['file']} ({h.get('name', '?')})")
 
@@ -233,6 +266,8 @@ def main():
             if d.get('special') or 'No class' in topic:
                 continue
             when = parse_day(d.get('date'), year)
+            if not in_window(when):
+                continue
             v = d.get('video') or {}
             for suf in ('', '2'):
                 if v.get('dead' + suf):
@@ -241,23 +276,32 @@ def main():
                         f"— needs replacing ({topic})")
             if not v.get('id'):
                 if 'Catch up' not in topic and 'Review' not in topic:
-                    missing.append(d.get('date'))
+                    missing.append((when, d.get('date'), ''))
                 continue
             if v.get('own') is False:
-                borrowed.append(d.get('date'))
+                borrowed.append((when, d.get('date'), ''))
             if (v.get('mins') or 0) > 10:
-                overlong.append(f"{d.get('date')} ({v['mins']}m)")
-    if missing:
-        add(None, 'NOTE', f"{len(missing)} teaching day(s) have no pre-class video — "
-                          f"{', '.join(missing)}")
-    if borrowed:
-        add(None, 'NOTE', f"{len(borrowed)} pre-class video(s) are not Seth's own — "
-                          f"{', '.join(borrowed[:6])}"
-                          f"{'…' if len(borrowed) > 6 else ''}")
-    if overlong:
-        add(None, 'NOTE', f"{len(overlong)} pre-class video(s) run over 10 min — "
-                          f"{', '.join(overlong[:6])}"
-                          f"{'…' if len(overlong) > 6 else ''}")
+                overlong.append((when, d.get('date'), f" ({v['mins']}m)"))
+
+    # Over the term these are a backlog and belong in one line each. Over a
+    # single week they are about specific days, so they sort with those days.
+    def video_notes(rows, term_line, day_line):
+        if not rows:
+            return
+        if args.all:
+            shown = ', '.join(dt + extra for _, dt, extra in rows[:6])
+            add(None, 'NOTE', f"{len(rows)} {term_line} — {shown}"
+                              f"{'…' if len(rows) > 6 else ''}")
+        else:
+            for when, dt, extra in rows:
+                add(when, 'NOTE', f"{dt}: {day_line}{extra}")
+
+    video_notes(missing, "teaching day(s) have no pre-class video",
+                "no pre-class video")
+    video_notes(borrowed, "pre-class video(s) are not Seth's own",
+                "pre-class video is not yours")
+    video_notes(overlong, "pre-class video(s) run over 10 min",
+                "pre-class video runs over 10 min")
 
     # ---- 5. readiness deadlines ----------------------------------------------
     # Seth's rule (2026-09-22): everything for a class must be built before the
@@ -322,13 +366,19 @@ def main():
     order = {'ERROR': 0, 'DRIFT': 1, 'NOTE': 2}
 
     print(f"Master-schedule audit — {today.isoformat()}")
-    print(f"  {len(items)} scheduled items, "
+    if args.all:
+        print("  scope: WHOLE TERM (--all)")
+    else:
+        print(f"  scope: {today.isoformat()} → {horizon.isoformat()} "
+              f"({args.days} days). Days outside this window were NOT checked — "
+              f"run with --all for the full term.")
+    print(f"  {len(items)} scheduled items in scope, "
           f"{sum(1 for _, _, e in items if e.get('cmid'))} linked to Moodle")
     if moodle is not None:
         print(f"  Moodle pull: {len(moodle)} activities")
     print()
     if not findings:
-        print('No drift found.')
+        print('No drift found in scope.' if not args.all else 'No drift found.')
         return 0
     for title, group in (('NEEDS ACTION (next %d days)' % args.days, soon),
                          ('Later / informational', later)):

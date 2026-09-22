@@ -8,6 +8,20 @@ writes to Moodle.**
 python3 tools/audit-schedule.py --moodle <pull.psv> [--days 7]
 ```
 
+**Scope: the coming week, not the term.** By default only days from today to
+today + `--days` are checked at all. Anything outside that window is *skipped,
+not passed* — the header says so on every run, because a clean report must
+never be read as "the whole term is fine".
+
+Pass `--all` to audit the whole term. That also re-enables the three checks
+that are meaningless on a one-week window: setting uniformity within a kind,
+the term-wide video backlog totals, and "in Moodle but not on the schedule".
+Worth doing occasionally — start of term, after a bulk edit — not every run.
+
+Readiness deadlines are keyed to the deadline, not the class date, so work due
+*now* for a class beyond the window still shows up (HW 4 closes Sep 30 but has
+to be ready Sep 23, and it is reported on Sep 22).
+
 Exit 0 = nothing wrong, 1 = at least one ERROR or DRIFT. Findings are grouped
 into "needs action in the next N days" and "later", each in date order.
 
@@ -64,12 +78,26 @@ window.__pull=async(n)=>{
       attempts:a.mod==='quiz'?val('attempts'):null,
       close:a.mod==='quiz'?wall('timeclose'):wall('duedate'),
       quizOpen:a.mod==='quiz'?wall('timeopen'):wall('allowsubmissionsfromdate'),
-      visible:val('visible'), rt:dc?dc.t:null, groups:gc&&gc.length?gc:null};
+      visible:val('visible'), rt:dc?dc.t:null, groups:gc&&gc.length?gc:null,
+      content:await window.__content(a.cmid,a.mod)};   // see "content readiness" below
   }
   return {done:Object.keys(window.__detail).length,total:window.__acts.length};
 };
-await window.__pull(25)     // repeat until done === total (about 4 calls)
+await window.__pull(25)     // repeat until done === total
 ```
+
+**Scope the pull before running it.** A whole-term pull is ~96 activities and
+two fetches each; a week is about ten. Filter `window.__acts` to the cmids the
+window actually needs — take them from `data/schedule.json` for the days in
+range — before calling `__pull`:
+
+```js
+const want=new Set([145919,145954,145953,145918,145952,145917,150302,150465,145979,145978]);
+window.__acts=window.__acts.filter(a=>want.has(+a.cmid));
+```
+
+Verified 2026-09-22: an 11-row windowed pull produced findings identical to the
+full 96-row pull, in one readout call instead of nine.
 
 Then turn it into the pipe-separated rows the script expects:
 
@@ -109,16 +137,12 @@ An assignment counts as ready if it has either a description with real text or
 an attached file. Checking only the description misses the ones where the
 problems are in an attached PDF — HW 3B is set up that way.
 
-### Auditing just the next class
+### `--partial`
 
-For a quick "is Friday ready?" pass you do not need all 95 activities. Pull only
-the cmids you care about and add `--partial`, which suppresses the "in the
-schedule but not in Moodle" check — without it every activity you left out of
-the pull is reported as deleted.
-
-```
-python3 tools/audit-schedule.py --moodle next-class.psv --partial --days 9
-```
+Only needed with `--all`. On a windowed run the "in Moodle but not on the
+schedule" check is already off, because everything outside the window is
+legitimately missing from a scoped pull. Use `--partial` when you want `--all`
+against a pull that does not cover every activity.
 
 ### Things that do not work
 
