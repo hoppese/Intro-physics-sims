@@ -42,7 +42,7 @@
   "2026-09-09": {
    "covered": "Test 1, in class. Four problems: standing waves in a pipe (15 pts, five multiple-choice parts), an oscillating spring (20 pts), a traveling wave (15 pts), and a 5-point extra-credit two-speaker interference problem. 50 points plus 5 extra credit.",
    "struggled": "The oscillating spring gave people the most trouble by far. It was also the heaviest problem at 20 points, and the one that asked them to go from initial conditions (x0 and v0) all the way to an explicit x(t) = A cos(wt + phi), including the phase constant, and then sketch it.",
-   "nextYear": "Two things. The oscillating-spring problem is where the points were lost - give the x0/v0 to amplitude-and-phase-constant chain more class time before the test, since it is the one place students have to carry a multi-step result forward rather than plug into a single formula. And the timing was close to right but not comfortable: consider trimming a part, most likely one of the five standing-wave multiple-choice items.",
+   "nextYear": "Three things. (1) The oscillating-spring problem is where the points were lost - give the x0/v0 to amplitude-and-phase-constant chain more class time before the test, since it is the one place students have to carry a multi-step result forward rather than plug into a single formula. (2) Timing was close to right but not comfortable: consider trimming a part, most likely one of the five standing-wave multiple-choice items. (3) HOMEWORK STRUCTURE: this test date is the slot where Written HW 2 would naturally have been due, so it got pushed to Sep 16 and the pre-test week carried no written HW. In previous years there was an extra written HW before the test covering that material. This year the HW1-practice worksheet was built to fill the gap. Next year, fold the HW1-practice problems into Written HW 1 so the material is assessed before the test rather than patched in with a worksheet.",
    "notes": "Pacing: most students finished with time to spare, but some were still working when time was called. Per-segment minutes are not meaningful for a test day."
   },
   "2026-09-21": {
@@ -79,7 +79,7 @@
    "kind": "in-class practice worksheet",
    "created": "2026-09-03",
    "usedOn": null,
-   "note": "Predates the LaTeX pipeline - no .tex source in the repo. The 2026-09-03 date is when it was moved into this repo, not when it was written."
+   "note": "Predates the LaTeX pipeline - no .tex source in the repo. The 2026-09-03 date is when it was moved into this repo, not when it was written. PURPOSE, per Seth 2026-09-22: Test 1 landed on Sep 9, which is the slot where HW 2 would naturally have fallen. In previous years there was an extra written HW before the test covering that material; this year there wasn't, so this worksheet was built to cover it instead. NEXT YEAR: fold these problems into Written HW 1 - see the 2026-09-09 entry."
   },
   {
    "file": "assessments/lecture-notes/gauss-applications-notes.pdf",
@@ -89,6 +89,24 @@
    "created": "2026-09-21",
    "usedOn": "2026-09-23",
    "note": "First of a new series. Scaffolded density: prose and setup given; key results, the crucial algebra step and all diagram labels left blank. 3 pages, one symmetry each (line; sheet, plus the two-parallel-sheet superposition; sphere). Printed and handed out; the derivations happen on the whiteboard."
+  },
+  {
+   "file": "assessments/written-hw/written-hw-1-solutions.pdf",
+   "name": "Written HW 1 — full solutions",
+   "source": null,
+   "kind": "written HW solutions",
+   "created": "2026-09-02",
+   "usedOn": null,
+   "note": "Full solutions, 5 pages. Released after the Sep 2 due date; usedOn left null because the release date is unconfirmed. Next year this HW should also absorb the HW1-practice problems - see the 2026-09-09 entry."
+  },
+  {
+   "file": "assessments/written-hw/written-hw-2-solutions.pdf",
+   "name": "Written HW 2 — full solutions",
+   "source": null,
+   "kind": "written HW solutions",
+   "created": "2026-09-16",
+   "usedOn": null,
+   "note": "Full solutions, 6 pages. HW 2 was due Sep 16 rather than Sep 9 because Test 1 took the Sep 9 slot. An HTML version of these solutions also lives alongside the PDF."
   },
   {
    "file": "assessments/tests/test1.pdf",

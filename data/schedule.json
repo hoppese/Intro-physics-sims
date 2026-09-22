@@ -206,6 +206,13 @@
       "id": "9WZM68aVnGk",
       "st": "ok"
      },
+     "handouts": [
+      {
+       "name": "Written HW 1 — full solutions",
+       "file": "assessments/written-hw/written-hw-1-solutions.pdf",
+       "pages": 5
+      }
+     ],
      "plan": {
       "lec": "y(x,t)=A sin(kx−ωt); v=fλ; superposition → standing waves & nodes.",
       "exp": "Wave explorer — build a wave from its equation, then add two for a standing wave.",
@@ -550,6 +557,13 @@
       "id": "_4VC3IHbuW8",
       "id2": "ShhvgT4ppls"
      },
+     "handouts": [
+      {
+       "name": "Written HW 2 — full solutions",
+       "file": "assessments/written-hw/written-hw-2-solutions.pdf",
+       "pages": 6
+      }
+     ],
      "plan": {
       "lec": "Vector superposition of fields; the leap to continuous distributions.",
       "exp": "Electric Field Explorer — predict the resultant E by adding each charge’s vector.",
@@ -986,7 +1000,7 @@
        "cmid": 145952,
        "module": "quiz",
        "points": 3.0,
-       "attempts": 1,
+       "attempts": 2,
        "opens": "2026-09-25 11:00",
        "closes": "2026-09-28 10:00",
        "visible": true
@@ -1115,7 +1129,7 @@
        "cmid": 145951,
        "module": "quiz",
        "points": 3.0,
-       "attempts": 1,
+       "attempts": 2,
        "opens": "2026-10-02 11:00",
        "closes": "2026-10-05 10:00",
        "visible": true
@@ -1163,7 +1177,7 @@
        "cmid": 145950,
        "module": "quiz",
        "points": 3.0,
-       "attempts": 1,
+       "attempts": 2,
        "opens": "2026-10-05 11:00",
        "closes": "2026-10-07 10:00",
        "visible": true
@@ -1239,7 +1253,7 @@
        "cmid": 145949,
        "module": "quiz",
        "points": 3.0,
-       "attempts": 1,
+       "attempts": 2,
        "opens": "2026-10-07 11:00",
        "closes": "2026-10-12 10:00",
        "visible": true
@@ -1300,7 +1314,7 @@
        "cmid": 145948,
        "module": "quiz",
        "points": 3.0,
-       "attempts": 1,
+       "attempts": 2,
        "opens": "2026-10-12 11:00",
        "closes": "2026-10-14 10:00",
        "visible": true
@@ -1439,7 +1453,7 @@
        "cmid": 145947,
        "module": "quiz",
        "points": 3.0,
-       "attempts": 1,
+       "attempts": 2,
        "opens": "2026-10-21 11:00",
        "closes": "2026-10-23 10:00",
        "visible": true
@@ -1494,7 +1508,7 @@
        "cmid": 145946,
        "module": "quiz",
        "points": 3.0,
-       "attempts": 1,
+       "attempts": 2,
        "opens": "2026-10-23 11:00",
        "closes": "2026-10-26 10:00",
        "visible": true
@@ -1557,7 +1571,7 @@
        "cmid": 145945,
        "module": "quiz",
        "points": 3.0,
-       "attempts": 1,
+       "attempts": 2,
        "opens": "2026-10-26 11:00",
        "closes": "2026-10-28 10:00",
        "visible": true
@@ -1617,7 +1631,7 @@
        "cmid": 145944,
        "module": "quiz",
        "points": 3.0,
-       "attempts": 1,
+       "attempts": 2,
        "opens": "2026-10-28 11:00",
        "closes": "2026-10-30 10:00",
        "visible": true
@@ -1686,7 +1700,7 @@
        "cmid": 145943,
        "module": "quiz",
        "points": 3.0,
-       "attempts": 1,
+       "attempts": 2,
        "opens": "2026-10-30 11:00",
        "closes": "2026-11-02 10:00",
        "visible": true
@@ -1747,7 +1761,7 @@
        "cmid": 145942,
        "module": "quiz",
        "points": 3.0,
-       "attempts": 1,
+       "attempts": 2,
        "opens": "2026-11-02 11:00",
        "closes": "2026-11-04 10:00",
        "visible": true
@@ -1803,7 +1817,7 @@
        "cmid": 145941,
        "module": "quiz",
        "points": 3.0,
-       "attempts": 1,
+       "attempts": 2,
        "opens": "2026-11-04 11:00",
        "closes": "2026-11-06 10:00",
        "visible": true
@@ -1871,7 +1885,7 @@
        "cmid": 145940,
        "module": "quiz",
        "points": 3.0,
-       "attempts": 1,
+       "attempts": 2,
        "opens": "2026-11-06 11:00",
        "closes": "2026-11-09 10:00",
        "visible": true
@@ -1932,7 +1946,7 @@
        "cmid": 145939,
        "module": "quiz",
        "points": 3.0,
-       "attempts": 1,
+       "attempts": 2,
        "opens": "2026-11-09 11:00",
        "closes": "2026-11-11 10:00",
        "visible": true
@@ -1992,7 +2006,7 @@
        "cmid": 145938,
        "module": "quiz",
        "points": 3.0,
-       "attempts": 1,
+       "attempts": 2,
        "opens": "2026-11-11 11:00",
        "closes": "2026-11-13 10:00",
        "visible": true
@@ -2082,7 +2096,7 @@
        "cmid": 145937,
        "module": "quiz",
        "points": 3.0,
-       "attempts": 1,
+       "attempts": 2,
        "opens": "2026-11-16 11:00",
        "closes": "2026-11-18 10:00",
        "visible": true
@@ -2130,7 +2144,7 @@
        "cmid": 145936,
        "module": "quiz",
        "points": 3.0,
-       "attempts": 1,
+       "attempts": 2,
        "opens": "2026-11-18 11:00",
        "closes": "2026-11-20 10:00",
        "visible": true
@@ -2212,7 +2226,7 @@
        "cmid": 145935,
        "module": "quiz",
        "points": 3.0,
-       "attempts": 1,
+       "attempts": 2,
        "opens": "2026-11-20 11:00",
        "closes": "2026-11-30 10:00",
        "visible": true
@@ -2273,7 +2287,7 @@
        "cmid": 145934,
        "module": "quiz",
        "points": 3.0,
-       "attempts": 1,
+       "attempts": 2,
        "opens": "2026-11-30 11:00",
        "closes": "2026-12-02 10:00",
        "visible": true
@@ -2333,7 +2347,7 @@
        "cmid": 145933,
        "module": "quiz",
        "points": 3.0,
-       "attempts": 1,
+       "attempts": 2,
        "opens": "2026-12-02 11:00",
        "closes": "2026-12-04 10:00",
        "visible": true
@@ -2403,7 +2417,7 @@
        "cmid": 145932,
        "module": "quiz",
        "points": 3.0,
-       "attempts": 1,
+       "attempts": 2,
        "opens": "2026-12-04 11:00",
        "closes": "2026-12-07 10:00",
        "visible": true
