@@ -855,6 +855,11 @@
        "name": "Gauss’s Law — Flux Through a Closed Surface",
        "note": "Shape library: sphere, cylinder, pillbox.",
        "slug": "gauss-flux"
+      },
+      {
+       "name": "Applying Gauss’s Law",
+       "note": "The four classic symmetries with a live E(r) graph. The skeleton notes end by sending students here to check their three results.",
+       "slug": "gauss-applications"
       }
      ]
     },

@@ -85,6 +85,18 @@
          color:#4a7a5c;font-weight:700}
   .log .tim{font-family:'JetBrains Mono',monospace;font-size:11px}
   .log .over{color:#a83a3a} .log .under{color:#2a6b43}
+  /* Long prose rows: closed shows a 2-line preview, open shows the whole thing. */
+  .log details{margin-bottom:6px}
+  .log details:last-child{margin-bottom:0}
+  .log summary{cursor:pointer;list-style:none;display:block}
+  .log summary::-webkit-details-marker{display:none}
+  .log summary b::after{content:' ▸';font-size:9px;color:#8aa694}
+  .log details[open] summary b::after{content:' ▾'}
+  .log summary:focus-visible{outline:2px solid #4a7a5c;outline-offset:2px;border-radius:3px}
+  .log .prev{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+             overflow:hidden;color:#5d6b62}
+  .log details[open] .prev{display:none}
+  .log .full{margin-top:1px}
   .logempty{border:1px dashed var(--line);border-radius:8px;padding:9px 11px;
             font-size:11.5px;color:var(--faint)}
   .note{background:#f5f7f9;border:1px solid var(--line);border-radius:8px;padding:9px 11px;
@@ -223,11 +235,30 @@ function logBlock(d, year){
       const delta = n == null ? '' : ` (${min > n ? '+' : ''}${min - n})`;
       return `<span class="tim${cls}">${esc(seg)} ${min}′${esc(delta)}</span>`;
     }).join(' · ') : '';
-  const row = (label, val) => val ? `<div class="row"><b>${label}</b>${esc(val)}</div>` : '';
+  // Prose rows can run long. Past ~150 characters they push the rest of the day
+  // off the panel, so those collapse to a two-line preview you click to open.
+  const LONG = 150;
+  const row = (label, val) => {
+    if (!val) return '';
+    if (val.length <= LONG) return `<div class="row"><b>${label}</b>${esc(val)}</div>`;
+    return `<details class="row"><summary><b>${label}</b>
+        <span class="prev">${esc(val)}</span></summary>
+        <div class="full">${esc(val)}</div></details>`;
+  };
   const total = e.timing ? Object.values(e.timing).reduce((a, b) => a + (+b || 0), 0) : null;
+
+  // Anything from the log's materials list that was handed out on this day —
+  // skeleton lecture notes, practice worksheets — linked so it can be reprinted.
+  const mats = ((LOG && LOG.materials) || []).filter(m => m.usedOn === key);
+  const matRow = mats.length ? `<div class="row"><b>Handed out</b>
+      ${mats.map(m => `<div><a href="../${esc(m.file)}" target="_blank" rel="noopener">${esc(m.file.split('/').pop())}</a>
+        <span class="mono" style="font-size:10px;color:#9aa2ab">${esc(m.kind)}</span></div>`).join('')}
+    </div>` : '';
+
   return `<div class="lab">What actually happened</div><div class="log">
       ${row('Covered', e.covered)}
       ${timing ? `<div class="row"><b>Timing${total ? ` — ${total}′ of 50` : ''}</b>${timing}</div>` : ''}
+      ${matRow}
       ${row('Cut for time', e.cut)}
       ${row('Wish there had been time for', e.wish)}
       ${row('Landed well', e.landed)}
