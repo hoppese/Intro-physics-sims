@@ -219,6 +219,7 @@
      "handouts": [
       {
        "name": "Written HW 1 — full solutions",
+       "kind": "Solutions",
        "file": "assessments/written-hw/written-hw-1-solutions.pdf",
        "pages": 5
       }
@@ -423,11 +424,13 @@
      "handouts": [
       {
        "name": "Test 1 (as given)",
+       "kind": "Test",
        "file": "assessments/tests/test1.pdf",
        "pages": 5
       },
       {
        "name": "Equation sheet: Oscillations & Waves",
+       "kind": "Equations",
        "file": "assessments/equation-sheets/waves-oscillations.pdf",
        "pages": 2
       }
@@ -584,6 +587,7 @@
      "handouts": [
       {
        "name": "Written HW 2 — full solutions",
+       "kind": "Solutions",
        "file": "assessments/written-hw/written-hw-2-solutions.pdf",
        "pages": 6
       }
@@ -830,6 +834,7 @@
      "handouts": [
       {
        "name": "Skeleton notes: the three symmetries",
+       "kind": "Notes",
        "file": "assessments/lecture-notes/gauss-applications-notes.pdf",
        "pages": 3
       }

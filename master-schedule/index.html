@@ -85,20 +85,29 @@
          color:#4a7a5c;font-weight:700}
   .log .tim{font-family:'JetBrains Mono',monospace;font-size:11px}
   .log .over{color:#a83a3a} .log .under{color:#2a6b43}
-  /* The whole log section collapses; shut by default so a day with a long entry
-     still fits the panel. Summary shows a one-line peek at what was covered. */
+  /* Every panel section collapses, and the chevron on the label says so. */
+  .sec > summary{cursor:pointer;list-style:none;display:block;border-radius:6px}
+  .sec > summary::-webkit-details-marker{display:none}
+  .sec > summary:hover .lab{color:#4a7a5c}
+  .sec > summary:focus-visible{outline:2px solid #4a7a5c;outline-offset:2px}
+  .sec > summary .lab::after{content:' ▸';font-size:9px;letter-spacing:0}
+  .sec[open] > summary .lab::after{content:' ▾'}
+  .secbody{margin-top:-2px}
+  /* The log starts shut, so its summary shows a one-line peek at the entry. */
   .logwrap{margin-top:2px}
-  .logwrap > summary{cursor:pointer;list-style:none;display:block;
-                     border-radius:6px;padding:1px 2px}
-  .logwrap > summary::-webkit-details-marker{display:none}
-  .logwrap > summary:hover .lab{color:#4a7a5c}
-  .logwrap > summary:focus-visible{outline:2px solid #4a7a5c;outline-offset:2px}
-  .logwrap > summary .lab::after{content:' ▸';font-size:9px}
-  .logwrap[open] > summary .lab::after{content:' ▾'}
   .logwrap > summary .peek{display:block;font-size:11.5px;color:var(--faint);
                            white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
                            margin-top:-3px}
   .logwrap[open] > summary .peek{display:none}
+  /* Link type chips: Video / Sim / Handout told apart without reading titles. */
+  .kind{display:inline-block;min-width:52px;margin-right:6px;padding:1px 5px;
+        border-radius:4px;font-size:9.5px;font-weight:700;letter-spacing:.04em;
+        text-transform:uppercase;text-align:center;vertical-align:1px;
+        background:#eef1f4;color:#6b7683}
+  .k-video{background:#fdeaea;color:#a83a3a}
+  .k-sim{background:#e8f0fb;color:#2f5d9e}
+  .k-handout,.k-notes,.k-solutions,.k-equations{background:#eaf4ec;color:#2a6b43}
+  .k-test{background:#fdf0e3;color:#9a5b16}
   .logempty{border:1px dashed var(--line);border-radius:8px;padding:9px 11px;
             font-size:11.5px;color:var(--faint)}
   .note{background:#f5f7f9;border:1px solid var(--line);border-radius:8px;padding:9px 11px;
@@ -248,10 +257,10 @@ function logBlock(d, year){
         <span class="mono" style="font-size:10px;color:#9aa2ab">${esc(m.kind)}</span></div>`).join('')}
     </div>` : '';
 
-  // The whole block collapses. A full entry is longer than everything else on
-  // the day put together, so it stays shut until asked for; the summary carries
-  // a one-line taste of what was covered so a shut block is not a blank label.
-  return `<details class="logwrap">
+  // A full entry is longer than everything else on the day put together, so
+  // this one starts shut; the summary carries a one-line taste of what was
+  // covered so a closed block is not just a blank label.
+  return `<details class="sec logwrap">
       <summary><span class="lab">What actually happened</span>
         <span class="peek">${esc(e.covered || '')}</span></summary>
       <div class="log">
@@ -268,6 +277,21 @@ function logBlock(d, year){
     </details>`;
 }
 
+// Every panel section is collapsible and says so with a chevron, so the whole
+// day can be folded down to its headings. `open` is the default state.
+function sec(label, open, body){
+  if (!body) return '';
+  return `<details class="sec"${open ? ' open' : ''}>
+      <summary><span class="lab">${esc(label)}</span></summary>
+      <div class="secbody">${body}</div></details>`;
+}
+
+// Type chip on a link, so Video / Sim / Handout are told apart at a glance
+// rather than by reading the title.
+function kind(k){
+  return `<span class="kind k-${esc(k.toLowerCase().replace(/[^a-z]/g,''))}">${esc(k)}</span>`;
+}
+
 // One pre-class video link. The standing goal is that every video is Seth's own
 // and 10 minutes or under, so the line carries length and provenance, not just
 // a title — a borrowed or overlong video should be visible without clicking.
@@ -275,9 +299,10 @@ function vidLine(v, suf){
   if (!v || !v['id' + suf]) return '';
   const id = v['id' + suf], mins = v['mins' + suf], own = v['own' + suf], dead = v['dead' + suf];
   const tag = (txt, col) => `<span class="mono" style="font-size:10px;color:${col}"> ${txt}</span>`;
-  if (dead) return `<div><a href="https://www.youtube.com/watch?v=${esc(id)}" target="_blank" rel="noopener">Pre-class video${suf}</a>
+  const title = suf ? 'Second video' : 'Pre-class video';
+  if (dead) return `<div>${kind('Video')}<a href="https://www.youtube.com/watch?v=${esc(id)}" target="_blank" rel="noopener">${title}</a>
       ${tag('UNAVAILABLE — needs replacing', '#a83a3a')}</div>`;
-  return `<div><a href="https://www.youtube.com/watch?v=${esc(id)}" target="_blank" rel="noopener">Pre-class video${suf}</a>
+  return `<div>${kind('Video')}<a href="https://www.youtube.com/watch?v=${esc(id)}" target="_blank" rel="noopener">${title}</a>
       ${mins != null ? tag(mins + ' min', mins > 10 ? '#a83a3a' : '#9aa2ab') : ''}
       ${own === false ? tag('not yours', '#b07d2a') : (own ? tag('yours', '#2a6b43') : '')}
       ${v.st === 'unv' && !suf ? tag('unvetted', '#9aa2ab') : ''}</div>`;
@@ -314,30 +339,31 @@ function renderPanel(year){
        <div class="d">${esc(d.dow || '')} ${esc(d.date)}${d.reading ? ' · Knight ' + esc(d.reading) : ''}</div>
      </div>
      <div class="pbody">
-       <div class="lab">Due this day</div>
-       ${due.length ? `<table><thead><tr>
+       ${sec('Due this day', true, (due.length ? `<table><thead><tr>
             <th>Item</th><th style="text-align:right">Pts</th><th style="text-align:right">Att</th>
             <th>Opens</th><th>Closes</th><th></th></tr></thead><tbody>${rows}</tbody></table>`
-          : `<div class="empty">Nothing due.</div>`}
-       ${noMoodle.length ? `<div class="warn"><b>${noMoodle.length} item${noMoodle.length>1?'s':''} not in Moodle</b> —
-            ${esc(noMoodle.map(e => e.label).join(', '))}. ${esc(noMoodle[0].note || '')}</div>` : ''}
-       ${d.split ? `<div class="note"><b>Split day.</b>
+          : `<div class="empty">Nothing due.</div>`) +
+       (noMoodle.length ? `<div class="warn"><b>${noMoodle.length} item${noMoodle.length>1?'s':''} not in Moodle</b> —
+            ${esc(noMoodle.map(e => e.label).join(', '))}. ${esc(noMoodle[0].note || '')}</div>` : '') +
+       (d.split ? `<div class="note"><b>Split day.</b>
             ${d.calc ? `<div style="margin-top:4px"><b>Calc:</b> ${esc(d.calc)}</div>` : ''}
-            ${d.alg  ? `<div style="margin-top:2px"><b>Algebra:</b> ${esc(d.alg)}</div>` : ''}</div>` : ''}
-       ${d.plan ? `<div class="lab">50-minute plan</div><div class="plan">
+            ${d.alg  ? `<div style="margin-top:2px"><b>Algebra:</b> ${esc(d.alg)}</div>` : ''}</div>` : ''))}
+       ${d.plan ? sec('50-minute plan', true, `<div class="plan">
             ${d.plan.lec  ? `<div><b>Mini-lecture</b>${esc(d.plan.lec)}</div>` : ''}
             ${d.plan.exp  ? `<div><b>Explore</b>${esc(d.plan.exp)}</div>` : ''}
-            ${d.plan.prac ? `<div><b>Practice</b>${esc(d.plan.prac)}</div>` : ''}</div>` : ''}
+            ${d.plan.prac ? `<div><b>Practice</b>${esc(d.plan.prac)}</div>` : ''}</div>`) : ''}
        ${logBlock(d, year)}
-       ${(d.video && d.video.id) || (d.sims || []).length || (d.handouts || []).length ? `<div class="lab">Links</div>
-            ${vidLine(d.video, '')}
-            ${vidLine(d.video, '2')}
-            ${(d.handouts || []).map(h =>
-              `<div><a href="../${esc(h.file)}" target="_blank" rel="noopener">${esc(h.name)}</a>
-                <span class="mono" style="font-size:10px;color:#9aa2ab"> print ${h.pages} pp</span></div>`).join('')}
-            ${(d.sims || []).map(s => s.slug
-              ? `<div><a href="../${esc(s.slug)}/index.html" target="_blank" rel="noopener">${esc(s.name)}</a></div>`
-              : `<div class="empty">${esc(s.name)} (no sim linked)</div>`).join('')}` : ''}
+       ${(d.video && d.video.id) || (d.sims || []).length || (d.handouts || []).length
+         ? sec('Links', true,
+            vidLine(d.video, '') +
+            vidLine(d.video, '2') +
+            (d.handouts || []).map(h =>
+              `<div>${kind(h.kind || 'Handout')}<a href="../${esc(h.file)}" target="_blank" rel="noopener">${esc(h.name)}</a>
+                <span class="mono" style="font-size:10px;color:#9aa2ab"> ${h.pages} pp</span></div>`).join('') +
+            (d.sims || []).map(s => s.slug
+              ? `<div>${kind('Sim')}<a href="../${esc(s.slug)}/index.html" target="_blank" rel="noopener">${esc(s.name)}</a></div>`
+              : `<div class="empty">${kind('Sim')}${esc(s.name)} — none linked</div>`).join(''))
+         : ''}
      </div>`;
 }
 
