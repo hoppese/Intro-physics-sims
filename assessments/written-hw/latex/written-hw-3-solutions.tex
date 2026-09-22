@@ -4,9 +4,9 @@
 \begin{document}
 
 \hwsolhead{Written HW 3}{Problem statements from Knight, \emph{Physics for Scientists and
-Engineers} (5th ed., Global Edition), Chapter 23. $K = 8.99\times10^{9}$
-N$\cdot$m$^2$/C$^2$, $\varepsilon_0 = 8.85\times10^{-12}$ C$^2$/(N$\cdot$m$^2$), and
-$g = 9.8$ m/s$^2$ throughout.}
+Engineers} (5th ed., Global Edition), Chapter 23. $\dfrac{1}{4\pi\varepsilon_0} =
+8.99\times10^{9}$ N$\cdot$m$^2$/C$^2$, $\varepsilon_0 = 8.85\times10^{-12}$
+C$^2$/(N$\cdot$m$^2$), and $g = 9.8$ m/s$^2$ throughout.}
 
 %============================================================
 \problem{23.3}{2}{Two point charges, $q_A = +3.0$ nC and $q_B = -3.0$ nC, sit one above
@@ -29,7 +29,8 @@ opposite ways and will cancel; the vertical components both point down and will 
 \solve{Each charge is a distance $r = \sqrt{(5.0\text{ cm})^2+(5.0\text{ cm})^2} =
 7.07$ cm $= 0.0707$ m from the dot, so
 \[
-E_A = E_B = \frac{K|q|}{r^2} = \frac{(8.99\times10^{9})(3.0\times10^{-9})}{(0.0707\text{
+E_A = E_B = \frac{1}{4\pi\varepsilon_0}\frac{|q|}{r^2} =
+\frac{(8.99\times10^{9})(3.0\times10^{-9})}{(0.0707\text{
 m})^2} = 5.39\times10^{3}\text{ N/C}.
 \]
 Each field makes a $45^\circ$ angle with the vertical, so each has horizontal component
@@ -64,14 +65,16 @@ left of the dot, so its field at the dot points down and to the left, toward $q_
 
 \solve{$q_A$ is a distance $r_A = 5.0$ cm $=0.050$ m from the dot:
 \[
-E_A = \frac{Kq_A}{r_A^2} = \frac{(8.99\times10^{9})(3.0\times10^{-9})}{(0.050)^2} =
+E_A = \frac{1}{4\pi\varepsilon_0}\frac{q_A}{r_A^2} =
+\frac{(8.99\times10^{9})(3.0\times10^{-9})}{(0.050)^2} =
 1.08\times10^{4}\text{ N/C, in } +\hat{x}.
 \]
 $q_B$ is a distance $r_B = \sqrt{(5.0\text{ cm})^2+(10\text{ cm})^2} = 11.18$ cm
 $=0.1118$ m from the dot, and the unit vector from the dot toward $q_B$ is
 $(-5.0,-10)/11.18 = (-0.447,-0.894)$:
 \[
-E_B = \frac{K|q_B|}{r_B^2} = \frac{(8.99\times10^{9})(6.0\times10^{-9})}{(0.1118)^2} =
+E_B = \frac{1}{4\pi\varepsilon_0}\frac{|q_B|}{r_B^2} =
+\frac{(8.99\times10^{9})(6.0\times10^{-9})}{(0.1118)^2} =
 4.32\times10^{3}\text{ N/C},
 \qquad
 \vec{E}_B = (-1.93,-3.86)\times10^{3}\text{ N/C}.
@@ -101,7 +104,7 @@ rods?}
 \model{Each rod is a finite uniformly charged line. On the line through a rod's own
 midpoint, perpendicular to the rod, the field of a rod with charge $Q$ and length $L$ is
 \[
-E_{\text{rod}}(y) = \frac{KQ}{y\sqrt{y^2+(L/2)^2}},
+E_{\text{rod}}(y) = \frac{1}{4\pi\varepsilon_0}\frac{Q}{y\sqrt{y^2+(L/2)^2}},
 \]
 directed away from the rod if $Q>0$, toward it if $Q<0$. All three points lie on this
 line for \emph{both} rods at once (they're between the rods), so the total field is the
@@ -147,7 +150,8 @@ center. The bead is repelled from the rod with a force of 720 $\mu$N. What is th
 charge on the rod?}
 
 \model{The bead sits on the rod's perpendicular bisector, so its field there is
-$E=KQ_{\text{rod}}/\big(y\sqrt{y^2+(L/2)^2}\big)$. The force on the bead is $F=qE$.}
+$E=\dfrac{1}{4\pi\varepsilon_0}Q_{\text{rod}}\big/\big(y\sqrt{y^2+(L/2)^2}\big)$. The force
+on the bead is $F=qE$.}
 
 \visualize{The bead is \emph{repelled}, so the rod's charge must have the same sign as
 the bead's: the rod is positively charged.}
@@ -160,7 +164,7 @@ E = \frac{F}{q} = \frac{7.20\times10^{-4}\text{ N}}{8.0\times10^{-9}\text{ C}} =
 With $y=0.040$ m and $L/2=0.050$ m, $y\sqrt{y^2+(L/2)^2} = (0.040)\sqrt{0.0016+0.0025} =
 2.56\times10^{-3}$ m$^2$, so
 \[
-Q_{\text{rod}} = \frac{Ey\sqrt{y^2+(L/2)^2}}{K} =
+Q_{\text{rod}} = \frac{Ey\sqrt{y^2+(L/2)^2}}{1/(4\pi\varepsilon_0)} =
 \frac{(9.0\times10^{4})(2.56\times10^{-3})}{8.99\times10^{9}} =
 \boxed{+26\text{ nC}}.
 \]}
@@ -176,8 +180,7 @@ directed toward the wire. What is the charge (in nC) on a 5.0-cm-long segment of
 wire?}
 
 \model{Far from its ends, a long charged wire produces the field of an infinite line of
-charge, $E = \lambda/(2\pi\varepsilon_0 r) = 2K\lambda/r$, independent of the wire's
-total length.}
+charge, $E = \lambda/(2\pi\varepsilon_0 r)$, independent of the wire's total length.}
 
 \visualize{The field points \emph{toward} the wire, which is what a negative line charge
 does (it attracts a positive test charge in toward itself). So the wire is negatively
@@ -185,7 +188,7 @@ charged.}
 
 \solve{Solve for the linear charge density:
 \[
-\lambda = \frac{Er}{2K} = \frac{(1000\text{ N/C})(0.020\text{ m})}{2(8.99\times10^{9})} =
+\lambda = 2\pi\varepsilon_0 Er = 2\pi(8.85\times10^{-12})(1000\text{ N/C})(0.020\text{ m}) =
 1.11\times10^{-9}\text{ C/m}.
 \]
 The charge on a 5.0-cm $=0.050$ m segment is then
