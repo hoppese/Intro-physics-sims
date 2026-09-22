@@ -16,9 +16,26 @@ Checks:
   2. course map vs schedule    same days, topics and readings in the same order
   3. internal consistency      non-uniform settings within a kind (e.g. Preps
                                that allow a different number of attempts)
+  4. pre-class videos          missing, dead on YouTube, borrowed, over 10 min
+  5. readiness deadlines       is each item BUILT by the time it has to be
+
+Readiness rules (Seth, 2026-09-22). Everything for a class has to exist before
+the PREVIOUS class meets, so students get it the moment they walk out:
+
+    Prep / video / sims / handouts   ready by the previous class day
+    Written + online HW              ready 7 days before it closes
+    Kickoff (KO)                     ready the morning of its own class
+
+The KO exception is deliberate: it is gated by Restrict access to open at 9:50
+on the day, so building it late costs nothing. Everything else is a real
+deadline, and missing one means students have nothing to prepare with.
+
+Content readiness comes from the pull's optional 11th field ("empty"/"ready").
+Without it this check can only announce that a deadline has arrived, not
+whether the work is done.
 """
 import argparse, json, pathlib, re, subprocess, sys, tempfile
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SCHED = ROOT / 'data' / 'schedule.json'
@@ -36,12 +53,17 @@ def load_moodle(path):
         if len(p) < 10:
             continue
         n, mod, cmid, pts, att, ropen, _qopen, close, vis, grp = p[:10]
+        # Optional 11th field: content readiness, "empty" or "ready". Quizzes
+        # report it from "No questions have been added yet"; assignments from
+        # whether the description or an attachment actually carries problems.
+        content = p[10].strip() if len(p) > 10 else ''
         out[int(cmid)] = dict(name=n, mod=mod, cmid=int(cmid),
                               points=float(pts) if pts else None,
                               attempts=int(att) if att else None,
                               opens=ropen or None, closes=close or None,
                               visible=vis == '1',
-                              groups=[int(g) for g in grp.split('+') if g])
+                              groups=[int(g) for g in grp.split('+') if g],
+                              content=content or None)
     return out
 
 
@@ -87,6 +109,10 @@ def main():
     ap.add_argument('--moodle', help='pipe-separated Moodle pull')
     ap.add_argument('--days', type=int, default=7,
                     help='how far ahead counts as "soon" (default 7)')
+    ap.add_argument('--partial', action='store_true',
+                    help='the pull covers only some activities — skip the '
+                         '"missing from Moodle" check, which would otherwise '
+                         'flag every activity the pull left out')
     args = ap.parse_args()
 
     sched = json.loads(SCHED.read_text(encoding='utf-8'))
@@ -121,9 +147,10 @@ def main():
             seen.add(e['cmid'])
             rec = moodle.get(e['cmid'])
             if rec is None:
-                add(when, 'ERROR',
-                    f"{datestr} {e['label']}: cmid {e['cmid']} is in the schedule "
-                    f"but not in Moodle (deleted or moved?)")
+                if not args.partial:
+                    add(when, 'ERROR',
+                        f"{datestr} {e['label']}: cmid {e['cmid']} is in the schedule "
+                        f"but not in Moodle (deleted or moved?)")
                 continue
             for sk, mk in FIELDS:
                 sv, mv = e.get(sk), rec.get(mk)
@@ -231,6 +258,63 @@ def main():
         add(None, 'NOTE', f"{len(overlong)} pre-class video(s) run over 10 min — "
                           f"{', '.join(overlong[:6])}"
                           f"{'…' if len(overlong) > 6 else ''}")
+
+    # ---- 5. readiness deadlines ----------------------------------------------
+    # Seth's rule (2026-09-22): everything for a class must be built before the
+    # PREVIOUS class meets, so students get it the moment the prior class ends.
+    # Two exceptions, both deliberate:
+    #   KO  - opens 9:50 the morning of its own class, so it can be built late.
+    #   HW  - students need a week, so it is due ready 7 days before it closes.
+    classdays = []
+    for wk in sched['weeks']:
+        for d in wk['days']:
+            when = parse_day(d.get('date'), year)
+            if when and not ('No class' in (d.get('topic') or '')):
+                classdays.append((when, d))
+    classdays.sort(key=lambda t: t[0])
+    prev_class = {}
+    for i, (when, d) in enumerate(classdays):
+        prev_class[when] = classdays[i - 1][0] if i else None
+
+    def ready_by(kind, when):
+        if kind == 'KO':
+            return when                      # morning of, by design
+        if kind in ('HW', 'OHW'):
+            return when - timedelta(days=7)  # a week for the students
+        return prev_class.get(when)          # prep, video, sims, handouts
+
+    for when, d in classdays:
+        if when < today:
+            continue
+        deadline_items = []
+        for e in d.get('due', []):
+            rb = ready_by(e['kind'], when)
+            if rb is None:
+                continue
+            m = moodle.get(e['cmid']) if (moodle and e.get('cmid')) else None
+            notready = (m or {}).get('content') == 'empty'
+            if moodle is None:
+                # Can't see content; still surface the deadline as it arrives.
+                if today <= rb <= today + timedelta(days=args.days):
+                    deadline_items.append(f"{e['label']} (ready by {rb.isoformat()})")
+            elif notready and rb <= today + timedelta(days=args.days):
+                sev = 'ERROR' if rb <= today else 'DRIFT'
+                add(rb, sev, f"{e['label']} for {d.get('date')} has no content in Moodle "
+                             f"— needed ready by {rb.isoformat()}"
+                             f"{' (PAST DUE)' if rb < today else ''}")
+        if deadline_items:
+            add(when, 'NOTE', f"{d.get('date')}: build deadline reached for "
+                              f"{', '.join(deadline_items)}")
+        # The day's own teaching material rides the previous class's deadline.
+        rb = prev_class.get(when)
+        if rb and today <= rb <= today + timedelta(days=args.days):
+            v = d.get('video') or {}
+            if v.get('dead'):
+                add(rb, 'ERROR', f"{d.get('date')}: pre-class video is dead and this day's "
+                                 f"material is due ready by {rb.isoformat()}")
+            elif not v.get('id') and 'Catch up' not in (d.get('topic') or ''):
+                add(rb, 'DRIFT', f"{d.get('date')}: no pre-class video, due ready by "
+                                 f"{rb.isoformat()}")
 
     # ---- report --------------------------------------------------------------
     soon = [f for f in findings if (f[0] - today).days <= args.days]

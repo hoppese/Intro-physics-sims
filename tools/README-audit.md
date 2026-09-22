@@ -78,12 +78,47 @@ const tz=t=>t?new Date(t*1000).toLocaleString('sv-SE',
   {timeZone:'America/Indiana/Indianapolis'}).slice(0,16):null;
 window.__tsv=Object.values(window.__detail).map(x=>
   [x.name,x.mod,x.cmid,x.points??'',x.attempts??'',tz(x.rt)??'',x.quizOpen??'',
-   x.close??'',x.visible??'',(x.groups||[]).join('+')].join('|')).sort();
+   x.close??'',x.visible??'',(x.groups||[]).join('+'),x.content??''].join('|')).sort();
 window.__chunk=(i,n)=>window.__tsv.slice(i,i+n).join('\n');
 window.__chunk(0,9)         // read out ~9 rows at a time; the tool truncates ~1.5 kB
 ```
 
 Paste the rows into a `.psv` file and pass it with `--moodle`.
+
+### The 11th field: content readiness
+
+The readiness check needs to know whether each activity actually has questions
+or problems in it, which is the difference between "the deadline arrived" and
+"you missed the deadline". Collect it alongside the rest:
+
+```js
+window.__content=async(id,mod)=>{
+  const d=new DOMParser().parseFromString(
+    await fetch(`/mod/${mod}/view.php?id=${id}`,{credentials:'same-origin'}).then(r=>r.text()),'text/html');
+  const t=(d.body.textContent||'').replace(/\s+/g,' ');
+  if(mod==='quiz') return /No questions have been added yet/i.test(t)?'empty':'ready';
+  const files=[...d.querySelectorAll('a[href*="pluginfile"]')].length;
+  const blocks=[...d.querySelectorAll('.box, .activity-description, [id*="intro"], .no-overflow')]
+     .map(e=>e.textContent.replace(/\s+/g,' ').trim())
+     .filter(t=>t.length>20 && !/^Grading summary/.test(t));
+  return (files>0||blocks.length>0)?'ready':'empty';
+};
+```
+
+An assignment counts as ready if it has either a description with real text or
+an attached file. Checking only the description misses the ones where the
+problems are in an attached PDF — HW 3B is set up that way.
+
+### Auditing just the next class
+
+For a quick "is Friday ready?" pass you do not need all 95 activities. Pull only
+the cmids you care about and add `--partial`, which suppresses the "in the
+schedule but not in Moodle" check — without it every activity you left out of
+the pull is reported as deleted.
+
+```
+python3 tools/audit-schedule.py --moodle next-class.psv --partial --days 9
+```
 
 ### Things that do not work
 
