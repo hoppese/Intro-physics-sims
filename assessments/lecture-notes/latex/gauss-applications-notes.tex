@@ -14,6 +14,10 @@
 % See gauss-applications-notes-key.tex for the fully worked, all-figures
 % version of this same handout.
 \newcommand{\roomy}{itemsep=9pt,parsep=4pt,topsep=4pt}
+\newcommand{\eqline}[2][\linewidth]{%
+  \par\vspace{1mm}\noindent #2\par\vspace{-0.5mm}%
+  \noindent\textcolor{rulehue}{\rule{#1}{0.5pt}}\par\vspace{4mm}%
+}
 
 \begin{document}
 
@@ -31,9 +35,7 @@ uniformly charged sphere.}
 \begin{itemize}[itemsep=9pt,parsep=4pt,topsep=4pt]
 \item The number of electric field lines that exit or enter a \bl[5.2cm]\ is the same,
 no matter the \bl[4.4cm]\ of the surface. By ``number of field lines'' we mean \emph{flux}:
-\[
-\Phi = {}\bl[13cm]
-\]
+\eqline{$\Phi = $}
 \item The surface's area vector is \bl[4.0cm]\ to the surface and points \bl[3.2cm], by
 convention.
 \item If lines are exiting, $\Phi$ is \bl[3.0cm]; if entering, $\Phi$ is \bl[3.0cm].

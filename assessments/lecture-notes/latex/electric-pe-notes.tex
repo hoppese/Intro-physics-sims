@@ -1,0 +1,138 @@
+\documentclass[12pt]{article}
+\usepackage{notes-common}
+\geometry{margin=0.35in}
+\AtBeginDocument{\fontsize{14}{17}\selectfont}
+
+% Fri Sep 25 -- Electric potential energy. Same lesson for both tracks
+% (no calculus needed), so no PHYS 230/235 split.
+%
+% Print layout matches the redesigned Gauss's-law handout: small margins,
+% bigger base font, no ruled writing lines, no task/derivation boxes ---
+% just blank space. Unlike that handout, NO diagrams at all here (not
+% even the sheet/plate figures), except a pair of bare axes for sketching
+% U(theta). Major standalone equations are blanked as a labeled line
+% followed by its own underline (not an inline blank right after "="),
+% since that inline style doesn't leave room for a fraction.
+\newcommand{\eqline}[2][\linewidth]{%
+  \par\vspace{1mm}\noindent #2\par\vspace{-0.5mm}%
+  \noindent\textcolor{rulehue}{\rule{#1}{0.5pt}}\par\vspace{4mm}%
+}
+
+\begin{document}
+
+\noteshead{Electric Potential Energy}{}
+
+\goal{Understand where electric potential energy comes from --- summing over
+pairs of point charges, or pushing a charge against a field --- and use it to
+find the potential energy of an electric dipole in a uniform field. Along the
+way: a system can have \emph{negative} PE, and the configuration you call
+``zero'' is not always the lowest one available.}
+
+%============================================================
+\nsec{Potential energy of two point charges (from the class prep)}
+
+Pulling a pair of point charges apart, or pushing them together, takes work
+--- work that gets stored as potential energy.
+
+\eqline{$U(q_1,q_2) = $}
+
+\begin{itemize}[itemsep=9pt,parsep=4pt,topsep=4pt]
+\item Keep the \bl[3.2cm]\ of the charges --- $U$ can come out positive \emph{or}
+negative.
+\item As $r_{12}\to\infty$, $U\to$ \bl[2.4cm].
+\item For three or more charges, sum over every \bl[3.2cm] (not every charge).
+\end{itemize}
+
+\eqline{$U_{\text{total}} = $}
+
+\checkpoint{Two $+q$ charges are brought from far apart to a separation $r$.
+Is $U$ positive or negative? What about a $+q$ and a $-q$?}
+
+%============================================================
+\nsec{Why ``zero'' isn't always the lowest}
+
+We usually call the ground $h=0$ and say a ball resting on it has zero
+gravitational PE. Now picture a hole in the ground, right under the ball.
+
+\vspace{6cm}
+
+\checkpoint{If the ball falls into the hole, is its PE above or below the
+zero you originally chose? What does that tell you about calling a PE
+``zero''?}
+
+\begin{itemize}[itemsep=9pt,parsep=4pt,topsep=4pt]
+\item Opposite charges ($+$ and $-$): $U$ is \bl[2.4cm]\ at any finite
+separation, and $U\to0$ only as $r\to\infty$. So $U=0$ is actually the
+\bl[3.2cm]\ value here --- pulling the charges closer always finds a
+\emph{lower} (more negative) PE, like digging the hole deeper.
+\item Like charges (same sign): $U$ is \bl[2.4cm]\ at any finite separation,
+and again $U\to0$ as $r\to\infty$. Here $U=0$ \emph{is} the \bl[3.2cm]\
+value --- you can't push like charges to a lower PE than infinitely far
+apart.
+\end{itemize}
+
+%============================================================
+\nsec{Potential energy from pushing against a field}
+
+A uniform field $\vec E$ pushes a positive charge $q$ with force $qE$. Push
+the charge a distance $d$ the \emph{opposite} way --- straight against the
+field.
+
+\eqline{$\Delta U = $}
+
+\begin{itemize}[itemsep=9pt,parsep=4pt,topsep=4pt]
+\item This is exactly the ball-and-hole idea: you do \bl[2.4cm]\ work
+pushing against the field, and that work becomes stored PE.
+\item Let the charge go, and it moves \emph{with} the field instead: now
+$\Delta U$ is \bl[2.4cm] --- the field does the work, and spends the stored
+PE.
+\end{itemize}
+
+\checkpoint{A positive charge is released and moves along $\vec E$. Does its
+PE increase or decrease? Where did the energy go?}
+
+\vspace{5cm}
+
+%============================================================
+\nsec{The dipole in a field}
+
+A dipole is a $+q$ and a $-q$ separated by $\vec d$ (dipole moment
+$\vec p = q\vec d$), sitting in a uniform field $\vec E$, tilted at angle
+$\theta$ between $\vec p$ and $\vec E$. Each charge sits at a different
+place along $\vec E$ --- use \S3's pushing idea on each charge, then add.
+
+\vspace{7cm}
+
+\eqline{$U(\theta) = $}
+
+\begin{itemize}[itemsep=9pt,parsep=4pt,topsep=4pt]
+\item At $\theta=90^\circ$ (perpendicular to the field): $U=$ \bl[2.4cm].
+\item At $\theta=0^\circ$ (aligned with the field): $U=$ \bl[3.2cm] ---
+which is \bl[2.4cm]\ than the $\theta=90^\circ$ value!
+\item At $\theta=180^\circ$ (anti-aligned): $U=$ \bl[3.2cm].
+\end{itemize}
+
+\checkpoint{Which orientation is the most stable (lowest PE)? Is that the
+orientation where $U=0$? What does this have in common with the ball and
+the hole?}
+
+%============================================================
+\nsec{Sketch it: $U$ vs.\ $\theta$}
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \draw[gray!70, ->] (0,-2.1) -- (0,2.3) node[above, scale=0.8] {$U$};
+  \draw[gray!70, ->] (0,0) -- (9.2,0) node[right, scale=0.8] {$\theta$};
+  \foreach \x/\lab in {0/{$0^\circ$}, 2.2/{$90^\circ$}, 4.4/{$180^\circ$}, 6.6/{$270^\circ$}, 8.8/{$360^\circ$}}{
+    \draw[gray!50] (\x,0.08) -- (\x,-0.08);
+    \node[gray, scale=0.75] at (\x,-0.4) {\lab};
+  }
+\end{tikzpicture}
+\end{center}
+
+{\small\color{blankink} Check your curve, and the point-charge and
+uniform-field results above, against the \emph{Assembling Charges},
+\emph{PE vs.\ Separation}, and \emph{Electric Dipole in a Field} sims ---
+open their \textbf{Info} panels.}
+
+\end{document}
