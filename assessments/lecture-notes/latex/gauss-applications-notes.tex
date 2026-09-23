@@ -10,27 +10,80 @@
 \noteshead{More Gauss's Law --- the Three Symmetries}{PHYS 230/235 \quad$\cdot$\quad Wed Sep 23 \quad$\cdot$\quad Knight 24.4--24.6}
 \nameline
 
-\goal{Use Gauss's law to \emph{compute} $\vec{E}$ --- not just check it --- for the three
-distributions where symmetry makes it possible: an infinite line, an infinite sheet,
-and a uniformly charged sphere.}
+\goal{State Gauss's law and understand what it says, then use it to \emph{compute}
+$\vec{E}$ --- not just check it --- for the distributions where symmetry makes that
+possible: a point charge and a shell, an infinite line, an infinite sheet, and a
+uniformly charged sphere.}
 
 %============================================================
-\nsec{Why a symmetry argument is needed}
+\nsec{What Gauss's law says}
 
-Gauss's law, $\displaystyle\oint \vec{E}\cdot d\vec{A} = \frac{q_{\text{enc}}}{\varepsilon_0}$,
-is true for \emph{every} closed surface. But it only lets you \emph{solve} for $E$ when you
-can pull $E$ outside the integral. That needs two things to be true everywhere on the
-surface you choose:
+\emph{Flux} $\Phi$ counts electric field lines crossing a surface: a line leaving counts
+$+1$, a line entering counts $-1$, so a line that just passes through contributes
+\bl[1.2cm]\ net. For a \textbf{closed} surface,
+\[
+\Phi = \oint \vec{E}\cdot d\vec{A} \ \Big(= \oint E\cos\theta\, dA,\ \ \theta\text{ between
+}\vec E\text{ and the outward normal}\Big),\qquad d\vec{A}\text{ always points \bl[1.8cm].}
+\]
 
-\begin{enumerate}[leftmargin=*, itemsep=2mm, topsep=1mm]
+Gauss's law says that count is fixed by exactly one thing:
+\[
+\Phi = {}\bl[3.2cm]
+\]
+not the surface's size, not its shape, not how far it is from the charge.
+
+\checkpoint{A point charge sits at the center of a Gaussian sphere. If you double the
+sphere's radius, does $\Phi$ change? Does $E$ at the surface change? (Different questions!)}
+
+%============================================================
+\nsec{Using it: match the surface to the symmetry}
+
+Gauss's law holds for \emph{any} closed surface, but it only lets you \emph{solve} for $E$
+when you can pull $E$ outside the integral. Choose a Gaussian surface that shares the
+charge distribution's own symmetry --- \textbf{spherical}, \textbf{cylindrical}, or
+\textbf{planar} --- centered or aligned on the distribution, and two things become true
+everywhere on it:
+\begin{enumerate}[leftmargin=*, itemsep=1.5mm, topsep=1mm]
   \item $E$ has the same \bl[3cm]\ everywhere on it, and
-  \item $\vec{E}$ is everywhere either \bl[2.6cm]\ or \bl[2.6cm]\ to the surface.
+  \item $\vec{E}$ is everywhere either \bl[2.4cm]\ or \bl[2.4cm]\ to the surface.
 \end{enumerate}
+Then $\Phi = E\oint dA = EA$, and Gauss's law becomes plain algebra: $EA=q_{\text{enc}}/\varepsilon_0$.
 
-When both hold, the flux integral collapses to a single product: \qquad$\Phi = {}$\bl[3.5cm]
+{\small\color{blankink}\textit{What ``symmetric'' means:} if you closed your eyes while
+the charge distribution changed in a symmetric way, then opened them again, you
+couldn't tell anything had changed.}
 
-\checkpoint{Does the surface have to match the shape of the \emph{charge}, or the shape of
-the \emph{field}? Why does a cube fail for a point charge?}
+\checkpoint{Why does a cube fail as a Gaussian surface for a single point charge?}
+
+\newpage
+%============================================================
+\nsec{Warm-up: a point charge, then a shell}
+
+\begin{center}
+\begin{tikzpicture}[x=0.85cm,y=0.85cm]
+  \filldraw[red!70!black] (0,0) circle (0.09);
+  \node[red!70!black, scale=0.9] at (-0.4,-0.05) {$+q$};
+  \draw[gray!55, dashed] (0,0) circle (1.7);
+  \foreach \a in {20,65,110,155,200,250,295,340}{
+    \draw[cyan!65!black, ->, line width=0.8pt] (\a:0.25) -- (\a:1.7);}
+  \draw[gray, ->] (0,0) -- (40:1.7);
+  \node[scale=0.9] at (40:2.15) {\dlabel[0.9cm]};
+\end{tikzpicture}
+\end{center}
+\figtask{Label the Gaussian radius $r$.}
+
+By symmetry $\vec E$ is radial and constant in magnitude on the sphere, so
+$EA=q_{\text{enc}}/\varepsilon_0$ with $A=4\pi r^2$ and $q_{\text{enc}}=q$ gives
+$E={}$\bl[2.6cm] --- Coulomb's law, recovered from Gauss's law.
+
+Now make it a thin \textbf{shell} of charge $Q$, radius $R$, instead of a point.
+\textbf{Outside} ($r>R$): the Gaussian sphere encloses \bl[1.5cm], so
+$E={}$\bl[2.6cm] (identical to a point charge --- the shell might as well not have a
+size). \textbf{Inside} ($r<R$): the Gaussian sphere encloses \bl[1.5cm], so
+$E={}$\bl[1.5cm].
+
+\checkpoint{The sphere you'll work below is \emph{solid}, not a shell --- charge fills
+the whole volume. Will its field inside behave the same way as the shell's?}
 
 %============================================================
 \nsec{Infinite line of charge}
