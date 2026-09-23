@@ -1,0 +1,196 @@
+\documentclass[12pt]{article}
+\usepackage{notes-common}
+\geometry{margin=0.35in}
+\AtBeginDocument{\fontsize{14}{17}\selectfont}
+
+% Complete / filled-in reference version of electric-pe-notes.tex (the
+% skeleton students fill in by hand). Same structure and wording, but
+% every blank carries the answer, and the two student-drawn prompts
+% (ball-and-ground, charge-in-a-field) get an actual figure.
+\newcommand{\ANS}[1]{\textcolor{accent}{#1}}
+
+\begin{document}
+
+\noteshead{Electric Potential Energy \textcolor{accent}{(completed)}}{}
+
+\goal{
+\begin{itemize}[itemsep=5pt,parsep=2pt,topsep=2pt]
+\item Understand where electric potential energy comes from: summing over
+pairs of point charges, or pushing a charge against a field.
+\item Use that to find the potential energy of an electric dipole in a
+uniform field.
+\item See that a system can have \emph{negative} PE, and that ``zero'' PE
+is not always the lowest energy available.
+\end{itemize}}
+
+%============================================================
+\nsec{Potential energy of two point charges (from the class prep)}
+
+Pulling a pair of point charges apart, or pushing them together, takes work
+--- work that gets stored as potential energy.
+
+\[
+U(q_1,q_2) = \ANS{\dfrac{1}{4\pi\varepsilon_0}\dfrac{q_1 q_2}{r_{12}}}
+\]
+
+\begin{itemize}[itemsep=9pt,parsep=4pt,topsep=4pt]
+\item Keep the \ANS{signs} of the charges --- $U$ can come out positive \emph{or}
+negative.
+\item As $r_{12}\to\infty$, $U\to$ \ANS{$0$}.
+\item For three or more charges, sum over every \ANS{pair} (not every charge).
+\item Opposite charges ($+$ and $-$): $U$ is \ANS{negative} at any finite
+separation, and $U\to0$ only as $r\to\infty$. So $U=0$ is actually the
+\ANS{largest} value here --- pulling the charges closer always finds a
+\emph{lower} (more negative) PE.
+\item Like charges (same sign): $U$ is \ANS{positive} at any finite separation,
+and again $U\to0$ as $r\to\infty$. Here $U=0$ \emph{is} the \ANS{smallest}
+value --- you can't push like charges to a lower PE than infinitely far
+apart.
+\end{itemize}
+
+\[
+U_{\text{total}} = \ANS{\dfrac{1}{4\pi\varepsilon_0}\!\!\sum_{\text{pairs }(i,j)}\!\dfrac{q_i q_j}{r_{ij}}}
+\]
+
+\checkpoint{Two $+q$ charges are brought from far apart to a separation $r$.
+Is $U$ positive or negative? What about a $+q$ and a $-q$?}
+
+{\small\color{accent} $+q$ and $+q$: positive (repulsive, energy stored pushing
+them together). $+q$ and $-q$: negative (attractive).}
+
+%============================================================
+\nsec{Where is potential energy the lowest?}
+
+Draw a ball, and the ground below it.
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \draw[brown!60!black, line width=1.2pt] (-3,0) -- (3,0);
+  \foreach \x in {-2.7,-2.1,-1.5,-0.9,-0.3,0.3,0.9,1.5,2.1,2.7}{
+    \draw[brown!60!black] (\x,0) -- (\x-0.2,-0.25);}
+  \filldraw[gray!30] (0,1.4) circle (0.4);
+  \draw[gray!60!black] (0,1.4) circle (0.4);
+  \draw[gray!70, ->] (0,0.95) -- (0,0.15);
+  \node[gray!70, scale=0.8] at (0.35,0.55) {$mg$};
+  \node[scale=0.8] at (1.9,0.25) {ground, $h=0$};
+\end{tikzpicture}
+\end{center}
+
+\checkpoint{What is the ball's potential energy? Where is it the lowest?}
+
+{\small\color{accent} $U=mgh$; with $h$ measured from the ground, $U=0$
+there. As drawn, the ball can't go any lower than the ground --- so here
+$h=0$ really is the lowest available PE (unlike the attractive point
+charges above, there's no ``digging deeper'' available).}
+
+This is a \emph{uniform} gravitational field --- not a hole to fall into.
+Raising the ball, moving it against the field lines, gives it \emph{more}
+PE, and that PE is proportional to the distance you raise it.
+
+\[
+\Delta U_{\text{grav}} = \ANS{mgd}
+\]
+
+%============================================================
+\nsec{The same idea, for a charge in a uniform field}
+
+Now replace the ball with a positive charge $q$, and gravity with a
+uniform electric field $\vec E$. Draw the field, and the charge's starting
+and ending points, below.
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \foreach \x in {-2,-1,0,1,2}{
+    \draw[cyan!65!black, ->, line width=0.8pt] (\x,-1.3) -- (\x,1.3);}
+  \node[cyan!65!black, scale=0.8] at (2.9,1.1) {$\vec E$};
+  \filldraw[red!70!black] (0,-1.0) circle (0.09);
+  \node[red!70!black, scale=0.85] at (-0.45,-1.0) {$+q$};
+  \node[scale=0.75, accent] at (0.35,-1.15) {start};
+  \filldraw[red!70!black] (0,1.0) circle (0.09);
+  \node[red!70!black, scale=0.85] at (-0.4,1.15) {$+q$};
+  \node[scale=0.75, accent] at (0.4,0.85) {end};
+  \draw[accent, dashed, ->] (0,-0.85) -- (0,0.85);
+  \node[accent, scale=0.8] at (-0.5,0) {$d$};
+\end{tikzpicture}
+\end{center}
+
+The field pushes the charge with force $qE$. Push the charge a distance
+$d$ against the field --- the same motion as raising the ball.
+
+\[
+\Delta U = \ANS{qEd}
+\]
+
+\begin{itemize}[itemsep=9pt,parsep=4pt,topsep=4pt]
+\item This is exactly like raising the ball: you do \ANS{positive} work
+pushing against the field, and that work becomes stored PE, proportional
+to \ANS{the distance $d$}.
+\item Let the charge go, and it moves \emph{with} the field instead: now
+$\Delta U$ is \ANS{negative} --- the field does the work, and spends the stored
+PE.
+\end{itemize}
+
+\checkpoint{A positive charge is released and moves along $\vec E$. Does its
+PE increase or decrease? Where did the energy go?}
+
+{\small\color{accent} PE decreases --- the charge is moving \emph{with} the
+field, the way the ball falls rather than rises. The lost PE becomes kinetic
+energy.}
+
+%============================================================
+\nsec{The dipole in a field}
+
+A dipole is a $+q$ and a $-q$ separated by $\vec d$ (dipole moment
+$\vec p = q\vec d$), sitting in a uniform field $\vec E$, tilted at angle
+$\theta$ between $\vec p$ and $\vec E$. Each charge sits at a different
+place along $\vec E$ --- use \S3's pushing idea on each charge, then add.
+
+{\small\color{accent} Split $\vec d$ into a component along $\vec E$
+($d\cos\theta$) and a component across it. Only the along-$\vec E$ part
+matters (\S3): the $+q$ sits $\tfrac12 d\cos\theta$ further along $\vec E$
+than center, the $-q$ sits $\tfrac12 d\cos\theta$ behind it. Adding the two
+charges' PE (each $\propto -qEd$, from \S3, since moving \emph{with} $\vec
+E$ lowers PE) gives $U=-qEd\cos\theta = -\vec p\cdot\vec E$.}
+
+\[
+U(\theta) = \ANS{-pE\cos\theta}
+\]
+
+\begin{itemize}[itemsep=9pt,parsep=4pt,topsep=4pt]
+\item At $\theta=90^\circ$ (perpendicular to the field): $U=$ \ANS{$0$}.
+\item At $\theta=0^\circ$ (aligned with the field): $U=$ \ANS{$-pE$} ---
+which is \ANS{lower} than the $\theta=90^\circ$ value!
+\item At $\theta=180^\circ$ (anti-aligned): $U=$ \ANS{$+pE$}.
+\end{itemize}
+
+\checkpoint{Which orientation is the most stable (lowest PE)? Is that the
+orientation where $U=0$? What does this have in common with the ball in
+the gravitational field?}
+
+{\small\color{accent} $\theta=0^\circ$ (aligned) is most stable, at
+$U=-pE$ --- \emph{not} the $U=0$ orientation. Just like the ball: $U=0$ is
+just wherever we started measuring from, not necessarily the lowest energy
+the system can reach.}
+
+%============================================================
+\nsec{Sketch it: $U$ vs.\ $\theta$}
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \draw[gray!70, ->] (0,-2.1) -- (0,2.3) node[above, scale=0.8] {$U$};
+  \draw[gray!70, ->] (0,0) -- (9.2,0) node[right, scale=0.8] {$\theta$};
+  \foreach \x/\lab in {0/{$0^\circ$}, 2.2/{$90^\circ$}, 4.4/{$180^\circ$}, 6.6/{$270^\circ$}, 8.8/{$360^\circ$}}{
+    \draw[gray!50] (\x,0.08) -- (\x,-0.08);
+    \node[gray, scale=0.75] at (\x,-0.4) {\lab};
+  }
+  \draw[accent, line width=1pt, domain=0:8.8, samples=100]
+    plot (\x, {-1.9*cos(\x*360/8.8)});
+\end{tikzpicture}
+\end{center}
+
+{\small\color{blankink} Check your curve, and the point-charge and
+uniform-field results above, against the \emph{Assembling Charges},
+\emph{PE vs.\ Separation}, and \emph{Electric Dipole in a Field} sims ---
+open their \textbf{Info} panels.}
+
+\end{document}

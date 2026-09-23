@@ -9,10 +9,12 @@
 % Print layout matches the redesigned Gauss's-law handout: small margins,
 % bigger base font, no ruled writing lines, no task/derivation boxes ---
 % just blank space. Unlike that handout, NO diagrams at all here (not
-% even the sheet/plate figures), except a pair of bare axes for sketching
-% U(theta). Major standalone equations are blanked as a labeled line
-% followed by its own underline (not an inline blank right after "="),
-% since that inline style doesn't leave room for a fraction.
+% even the sheet/plate figures) -- students draw the ball-and-ground and
+% the charge-in-a-field themselves -- except a pair of bare axes for
+% sketching U(theta). Major standalone equations are blanked as a labeled
+% line followed by its own underline (not an inline blank right after
+% "="), since that inline style doesn't leave room for a fraction.
+% See electric-pe-notes-key.tex for the filled-in, all-diagrams version.
 \newcommand{\eqline}[2][\linewidth]{%
   \par\vspace{1mm}\noindent #2\par\vspace{-0.5mm}%
   \noindent\textcolor{rulehue}{\rule{#1}{0.5pt}}\par\vspace{4mm}%
@@ -22,11 +24,15 @@
 
 \noteshead{Electric Potential Energy}{}
 
-\goal{Understand where electric potential energy comes from --- summing over
-pairs of point charges, or pushing a charge against a field --- and use it to
-find the potential energy of an electric dipole in a uniform field. Along the
-way: a system can have \emph{negative} PE, and the configuration you call
-``zero'' is not always the lowest one available.}
+\goal{
+\begin{itemize}[itemsep=5pt,parsep=2pt,topsep=2pt]
+\item Understand where electric potential energy comes from: summing over
+pairs of point charges, or pushing a charge against a field.
+\item Use that to find the potential energy of an electric dipole in a
+uniform field.
+\item See that a system can have \emph{negative} PE, and that ``zero'' PE
+is not always the lowest energy available.
+\end{itemize}}
 
 %============================================================
 \nsec{Potential energy of two point charges (from the class prep)}
@@ -41,6 +47,14 @@ Pulling a pair of point charges apart, or pushing them together, takes work
 negative.
 \item As $r_{12}\to\infty$, $U\to$ \bl[2.4cm].
 \item For three or more charges, sum over every \bl[3.2cm] (not every charge).
+\item Opposite charges ($+$ and $-$): $U$ is \bl[2.4cm]\ at any finite
+separation, and $U\to0$ only as $r\to\infty$. So $U=0$ is actually the
+\bl[3.2cm]\ value here --- pulling the charges closer always finds a
+\emph{lower} (more negative) PE.
+\item Like charges (same sign): $U$ is \bl[2.4cm]\ at any finite separation,
+and again $U\to0$ as $r\to\infty$. Here $U=0$ \emph{is} the \bl[3.2cm]\
+value --- you can't push like charges to a lower PE than infinitely far
+apart.
 \end{itemize}
 
 \eqline{$U_{\text{total}} = $}
@@ -49,40 +63,38 @@ negative.
 Is $U$ positive or negative? What about a $+q$ and a $-q$?}
 
 %============================================================
-\nsec{Why ``zero'' isn't always the lowest}
+\nsec{Where is potential energy the lowest?}
 
-We usually call the ground $h=0$ and say a ball resting on it has zero
-gravitational PE. Now picture a hole in the ground, right under the ball.
+Draw a ball, and the ground below it.
 
 \vspace{6cm}
 
-\checkpoint{If the ball falls into the hole, is its PE above or below the
-zero you originally chose? What does that tell you about calling a PE
-``zero''?}
+\checkpoint{What is the ball's potential energy? Where is it the lowest?}
 
-\begin{itemize}[itemsep=9pt,parsep=4pt,topsep=4pt]
-\item Opposite charges ($+$ and $-$): $U$ is \bl[2.4cm]\ at any finite
-separation, and $U\to0$ only as $r\to\infty$. So $U=0$ is actually the
-\bl[3.2cm]\ value here --- pulling the charges closer always finds a
-\emph{lower} (more negative) PE, like digging the hole deeper.
-\item Like charges (same sign): $U$ is \bl[2.4cm]\ at any finite separation,
-and again $U\to0$ as $r\to\infty$. Here $U=0$ \emph{is} the \bl[3.2cm]\
-value --- you can't push like charges to a lower PE than infinitely far
-apart.
-\end{itemize}
+This is a \emph{uniform} gravitational field --- not a hole to fall into.
+Raising the ball, moving it against the field lines, gives it \emph{more}
+PE, and that PE is proportional to the distance you raise it.
+
+\eqline{$\Delta U_{\text{grav}} = $}
 
 %============================================================
-\nsec{Potential energy from pushing against a field}
+\nsec{The same idea, for a charge in a uniform field}
 
-A uniform field $\vec E$ pushes a positive charge $q$ with force $qE$. Push
-the charge a distance $d$ the \emph{opposite} way --- straight against the
-field.
+Now replace the ball with a positive charge $q$, and gravity with a
+uniform electric field $\vec E$. Draw the field, and the charge's starting
+and ending points, below.
+
+\vspace{6cm}
+
+The field pushes the charge with force $qE$. Push the charge a distance
+$d$ against the field --- the same motion as raising the ball.
 
 \eqline{$\Delta U = $}
 
 \begin{itemize}[itemsep=9pt,parsep=4pt,topsep=4pt]
-\item This is exactly the ball-and-hole idea: you do \bl[2.4cm]\ work
-pushing against the field, and that work becomes stored PE.
+\item This is exactly like raising the ball: you do \bl[2.4cm]\ work
+pushing against the field, and that work becomes stored PE, proportional
+to \bl[2.4cm].
 \item Let the charge go, and it moves \emph{with} the field instead: now
 $\Delta U$ is \bl[2.4cm] --- the field does the work, and spends the stored
 PE.
@@ -90,8 +102,6 @@ PE.
 
 \checkpoint{A positive charge is released and moves along $\vec E$. Does its
 PE increase or decrease? Where did the energy go?}
-
-\vspace{5cm}
 
 %============================================================
 \nsec{The dipole in a field}
@@ -113,8 +123,8 @@ which is \bl[2.4cm]\ than the $\theta=90^\circ$ value!
 \end{itemize}
 
 \checkpoint{Which orientation is the most stable (lowest PE)? Is that the
-orientation where $U=0$? What does this have in common with the ball and
-the hole?}
+orientation where $U=0$? What does this have in common with the ball in
+the gravitational field?}
 
 %============================================================
 \nsec{Sketch it: $U$ vs.\ $\theta$}
