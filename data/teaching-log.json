@@ -51,6 +51,13 @@
    "wish": "More class time for them to get going on the written HW.",
    "nextYear": "The dipole-torque derivation (dipole moment, tau = p x E) took a good deal of time on its own - budget for it explicitly rather than folding it in behind flux. None of it involved any calculus, so it does not need to be split by track: run the dipole material with the full class (230 and 235 together) and save the split for the day's calculus-dependent content. The electric-dipole-in-field sim is now linked from this day; use it.",
    "notes": "Did not use the electric dipole sim. It turned out one already existed and had since Sep 15 - electric-dipole-in-field, covering tau = p x E, U = -p.E and the rotational-pendulum swing - but it had never been added to the catalog, so it was effectively invisible. Fixed the same evening: added to the catalog, and wired to Sep 21 in the course map and schedule alongside the flux sim. Oct 30's dipole entry was a slug-less placeholder and now points at dipole-field-and-torque. Minutes per segment were not recorded for this day."
+  },
+  "2026-09-23": {
+   "covered": "The kickoff made clear students had not internalized Gauss's law, so pivoted to the skeleton worksheet (gauss-applications-notes.tex) and worked through the end of its first section before going back and answering the kickoff questions. That took longer than planned; only reached the point-charge example by the end of class. Derived E for a point charge from Gauss's law and emphasized it holds for any spherically symmetric charge distribution - even a non-uniform one - as long as the distribution respects the symmetry.",
+   "cut": "Did not get to the shell, or any of the other symmetry examples (line, sheet, sphere) in the worksheet.",
+   "struggled": "Came into class not having internalized Gauss's law itself, which is what forced the pivot back to re-teaching it before the kickoff could be answered.",
+   "nextYear": "Make sure students understand Gauss's law itself before this lecture (e.g. via the kickoff or a prior activity) so class time can go to the worked symmetry examples instead of re-teaching the law first.",
+   "materials": ["assessments/lecture-notes/gauss-applications-notes.pdf"]
   }
  },
  "materials": [
