@@ -1,25 +1,23 @@
-\documentclass[11pt]{article}
+\documentclass[12pt]{article}
 \usepackage{notes-common}
+\geometry{margin=0.4in}
+\AtBeginDocument{\fontsize{13}{16}\selectfont}
 
-% Diagram convention used throughout: field arrows live in one band, label
-% leaders in another. If a leader crosses an arrow the student cannot tell
-% which thing the blank belongs to.
+% Print layout for this handout: small margins, bigger base font (for
+% 2-up/"2 column" printing), no ruled writing lines, dense prose broken
+% into roomy bullet lists, sketch-your-own-diagram boxes removed in favor
+% of plain blank space, blanks doubled in width, open space upsized ~60%.
+% Kept as given: the 3D perspective sheet figure, the parallel-plate
+% figure, and the final E-vs-r sketch axes.
 %
-% This is the PHYS 235 (calc) version. Most setup diagrams are deliberately
-% left OUT and replaced with a blank boxed area -- students draw the
-% Gaussian surface themselves. The 3D perspective sheet figure and the
-% final E-vs-r sketch axes are the two exceptions, kept as given figures.
+% This is the PHYS 235 (calc) version.
 % See gauss-applications-notes-key.tex for the fully worked, all-figures
 % version of this same handout.
-
-% Document-local only (does not touch the shared notes-common.sty):
-% give each checkpoint blank lines to actually answer on.
-\newcommand{\checkpointsp}[2]{\checkpoint{#1}\lines{#2}}
+\newcommand{\roomy}{itemsep=9pt,parsep=4pt,topsep=4pt}
 
 \begin{document}
 
-\noteshead{More Gauss's Law --- the Three Symmetries}{PHYS 235 \quad$\cdot$\quad Wed Sep 23 \quad$\cdot$\quad Knight 24.4--24.6}
-\nameline
+\noteshead{More Gauss's Law --- the Three Symmetries}{}
 
 \goal{State Gauss's law and understand what it says, then use it to \emph{compute}
 $\vec{E}$ --- not just check it --- for the distributions where symmetry makes that
@@ -29,59 +27,60 @@ uniformly charged sphere.}
 %============================================================
 \nsec{What Gauss's law says}
 
-\textbf{a) Flux.} The number of electric field lines that exit or enter a \bl[2.6cm]\ is
-the same, no matter the \bl[2.2cm]\ of the surface. By ``number of field lines'' we mean
-\emph{flux}:
+\textbf{a) Flux.}
+\begin{itemize}[itemsep=9pt,parsep=4pt,topsep=4pt]
+\item The number of electric field lines that exit or enter a \bl[5.2cm]\ is the same,
+no matter the \bl[4.4cm]\ of the surface. By ``number of field lines'' we mean \emph{flux}:
 \[
-\Phi = {}\bl[6.5cm]
+\Phi = {}\bl[13cm]
 \]
-Notes: the surface's area vector is \bl[2.0cm]\ to the surface and points \bl[1.6cm], by
-convention. If lines are exiting, $\Phi$ is \bl[1.5cm]; if entering, $\Phi$ is \bl[1.5cm].
-A line that just passes through counts $+1$ for leaving and $-1$ for entering, so it
-contributes \bl[1.2cm]\ net.
+\item The surface's area vector is \bl[4.0cm]\ to the surface and points \bl[3.2cm], by
+convention.
+\item If lines are exiting, $\Phi$ is \bl[3.0cm]; if entering, $\Phi$ is \bl[3.0cm].
+\item A line that just passes through counts $+1$ for leaving and $-1$ for entering, so
+it contributes \bl[2.4cm]\ net.
+\end{itemize}
 
-\textbf{b) Relation to charge.} The number of field lines --- also called \bl[2.2cm] ---
-through a closed surface is equal to \bl[3.0cm]. Does it matter how far from the charge the surface
-is? \bl[1.3cm] The closed surface we integrate over is called a \bl[2.6cm].
+\textbf{b) Relation to charge.}
+\begin{itemize}[itemsep=9pt,parsep=4pt,topsep=4pt]
+\item The number of field lines --- also called \bl[4.4cm] --- through a closed surface
+is equal to \bl[6.0cm].
+\item Does it matter how far from the charge the surface is? \bl[2.6cm]
+\item The closed surface we integrate over is called a \bl[5.2cm].
+\end{itemize}
 
-\checkpointsp{A point charge sits at the center of a Gaussian sphere. If you double the
-sphere's radius, does $\Phi$ change? Does $E$ at the surface change? (Different questions!)}{2}
+\checkpoint{A point charge sits at the center of a Gaussian sphere. If you double the
+sphere's radius, does $\Phi$ change? Does $E$ at the surface change? (Different questions!)}
 
 %============================================================
 \nsec{Using it: match the surface to the symmetry}
 
-\textbf{a)} Use Gauss's law when the charge distribution has one of the three classical
-symmetries: \bl[2.2cm], \bl[2.2cm], \bl[2.2cm].
+\textbf{a)}
+\begin{itemize}[itemsep=9pt,parsep=4pt,topsep=4pt]
+\item Use Gauss's law when the charge distribution has one of the three classical
+symmetries: \bl[4.4cm], \bl[4.4cm], \bl[4.4cm].
+\end{itemize}
 
-\textit{Definition of symmetry:} \lines{2}
+\textit{Definition of symmetry:}
+\par\vspace{3.2cm}
 
-\textbf{b)} Choose a Gaussian surface that respects the \bl[2.0cm]\ of the charge
-distribution. If the distribution is spherically symmetric, make your surface spherically
-symmetric too, \bl[3.2cm]\ (similarly for cylindrical and planar symmetry).
+\textbf{b)}
+\begin{itemize}[itemsep=9pt,parsep=4pt,topsep=4pt]
+\item Choose a Gaussian surface that respects the \bl[4.0cm]\ of the charge
+distribution. If the distribution is spherically symmetric, make your surface
+spherically symmetric too, \bl[6.4cm]\ (similarly for cylindrical and planar symmetry).
+\item If you've done this, $\vec E$ will be everywhere either \bl[4.4cm]\ or
+\bl[4.4cm]\ to your Gaussian surface, and $\Phi=E\oint dA=EA$ --- Gauss's law becomes
+plain algebra: $EA=q_{\text{enc}}/\varepsilon_0$.
+\end{itemize}
 
-If you've done this, $\vec E$ will be everywhere either \bl[2.2cm]\ or \bl[2.2cm]\ to your
-Gaussian surface, and $\Phi=E\oint dA=EA$ --- Gauss's law becomes plain algebra:
-$EA=q_{\text{enc}}/\varepsilon_0$.
-
-\checkpointsp{Why does a cube fail as a Gaussian surface for a single point charge?}{2}
+\checkpoint{Why does a cube fail as a Gaussian surface for a single point charge?}
 
 %============================================================
 \nsec{Warm-up: a point charge, then a shell}
 
-\derivbox{3.8cm}{Sketch a point charge $+q$ with a Gaussian sphere of radius $r$ around it.}
-
-By symmetry $\vec E$ is radial and constant in magnitude on the sphere, so
-$EA=q_{\text{enc}}/\varepsilon_0$ with $A=4\pi r^2$ and $q_{\text{enc}}=q$ gives
-$E={}$\bl[2.6cm] --- Coulomb's law, recovered from Gauss's law.
-
-Now make it a thin \textbf{shell} of charge $Q$, radius $R$, instead of a point.
-\textbf{Outside} ($r>R$): the Gaussian sphere encloses \bl[1.5cm], so
-$E={}$\bl[2.6cm] (identical to a point charge --- the shell might as well not have a
-size). \textbf{Inside} ($r<R$): the Gaussian sphere encloses \bl[1.5cm], so
-$E={}$\bl[1.5cm].
-
-\checkpointsp{The sphere you'll work below is \emph{solid}, not a shell --- charge fills
-the whole volume. Will its field inside behave the same way as the shell's?}{2}
+\vspace*{\fill}
+\newpage
 
 %============================================================
 \nsec{Infinite line of charge}
@@ -90,10 +89,9 @@ Linear charge density $\lambda$. $\vec{E}$ points radially out from the wire and
 depend on position along it, so the Gaussian surface is a \emph{coaxial cylinder} of
 radius $r$ and length $L$.
 
-\derivbox{4.2cm}{Sketch the wire and a coaxial Gaussian cylinder of radius $r$ and length
-$L$. Label both, and the field arrows.}
+\vspace{6.7cm}
 
-\derivbox{3.2cm}{Which part of the cylinder carries flux (and which carries none)? Area $A$, then $q_{\text{enc}}$, then solve for $E$. Show $L$ cancelling.}
+\derivbox{5.1cm}{Which part of the cylinder carries flux (and which carries none)? Area $A$, then $q_{\text{enc}}$, then solve for $E$. Show $L$ cancelling.}
 
 \result{$E$ for an infinite line}
 
@@ -106,9 +104,6 @@ on both sides.
 
 \begin{center}
 \begin{tikzpicture}[x=1cm,y=1cm]
-  % --- the sheet in perspective: a tilted parallelogram, so it visibly extends
-  % in two directions instead of reading as a 1D line. A,B,C,D chosen so
-  % AB = DC and AD = BC (a genuine parallelogram, not just four points).
   \fill[red!12] (-2.4,-0.4) -- (1.8,-0.9) -- (2.6,0.5) -- (-1.6,1.0) -- cycle;
   \draw[red!70!black] (-2.4,-0.4) -- (1.8,-0.9) -- (2.6,0.5) -- (-1.6,1.0) -- cycle;
   \foreach \p in {(-1.6,-0.2),(-0.6,-0.35),(0.4,-0.5),(1.3,-0.65),
@@ -117,12 +112,9 @@ on both sides.
     \node[red!70!black, scale=0.55] at \p {$+$};}
   \node[red!70!black, scale=0.7] at (-2.75,-0.35) {$\infty$};
   \node[red!70!black, scale=0.7] at (2.95,0.55) {$\infty$};
-  % --- in-plane axes x,y, along the sheet's own edge directions
   \coordinate (O) at (0.1,0.05);
   \draw[gray!70, ->] (O) -- ++(1.29,-0.15) node[right, scale=0.7] {$x$};
   \draw[gray!70, ->] (O) -- ++(0.65,1.13) node[above, scale=0.7] {$y$};
-  % --- the field, straight out of the plane both ways --- this arrow pair
-  % doubles as the z axis, so no separate z-arrow is drawn on top of it.
   \draw[cyan!65!black, ->, line width=0.9pt] (O) -- ++(0,1.3) node[above right, scale=0.7, cyan!65!black] {$\vec E$};
   \node[gray!70, scale=0.7] at (-0.22,0.65) {$z$};
   \draw[cyan!65!black, ->, line width=0.9pt] (O) -- ++(0,-1.3);
@@ -134,21 +126,31 @@ and $\vec E$ points straight out along $z$ on either side.}
 Now look at it \emph{edge-on} (sighting along $y$, so the sheet appears as a line and the
 pillbox is easy to draw), with end caps of area $A_{\text{cap}}$:
 
-\derivbox{4.4cm}{Sketch the sheet edge-on, with a pillbox straddling it. Label the
-half-height, the cap area $A_{\text{cap}}$, and the field arrows.}
+\vspace{7cm}
 
-\derivbox{3.0cm}{Total area carrying flux, $q_{\text{enc}}$ in terms of $\eta$ and $A_{\text{cap}}$, then $E$.}
+\derivbox{4.8cm}{Total area carrying flux, $q_{\text{enc}}$ in terms of $\eta$ and $A_{\text{cap}}$, then $E$.}
 
 \result{$E$ for an infinite sheet}
 
-\checkpointsp{Two surprises. $A_{\text{cap}}$ cancelled --- why did it \emph{have} to? And the
-answer contains no $r$ at all. What does that say about walking away from the sheet?}{2}
+\checkpoint{Two surprises. $A_{\text{cap}}$ cancelled --- why did it \emph{have} to? And the
+answer contains no $r$ at all. What does that say about walking away from the sheet?}
 
 \textbf{Then: two parallel sheets}, one $+\eta$ and one $-\eta$. Superpose the two fields
 you just found --- nothing new to derive.
 
-\derivbox{4.4cm}{Sketch two parallel sheets, $+\eta$ and $-\eta$. Write $\vec E$ in each of
-the three regions: above, between, below.}
+\begin{center}
+\begin{tikzpicture}[x=0.9cm,y=0.9cm]
+  \draw[red!70!black, line width=0.8pt] (-2.6,0.9) -- (2.6,0.9);
+  \foreach \x in {-2.2,-1.4,-0.6,0.2,1.0,1.8}{
+    \node[red!70!black, scale=0.62] at (\x,1.14) {$+$};}
+  \draw[blue!60!black, line width=0.8pt] (-2.6,-0.9) -- (2.6,-0.9);
+  \foreach \x in {-2.2,-1.4,-0.6,0.2,1.0,1.8}{
+    \node[blue!60!black, scale=0.62] at (\x,-1.14) {$-$};}
+\end{tikzpicture}
+\end{center}
+
+Write $\vec E$ in each of the three regions: above \bl[3.0cm], between \bl[3.0cm], below
+\bl[3.0cm].
 
 %============================================================
 \nsec{Uniformly charged sphere}
@@ -156,24 +158,23 @@ the three regions: above, between, below.}
 Total charge $Q$ spread uniformly through a solid sphere of radius $R$. There are two
 regions, and the only difference between them is $q_{\text{enc}}$.
 
-\derivbox{4.2cm}{Sketch the solid sphere of radius $R$, and a Gaussian sphere of radius
-$r$ --- draw it once outside ($r>R$) and once inside ($r<R$).}
+\vspace{6.7cm}
 
-\textbf{Outside} ($r > R$): the Gaussian sphere encloses \bl[2.4cm]\ of the charge.
+\textbf{Outside} ($r > R$): the Gaussian sphere encloses \bl[4.8cm]\ of the charge.
 
-\derivbox{2.7cm}{$q_{\text{enc}}$, then $E$. What familiar result does this match?}
+\derivbox{4.3cm}{$q_{\text{enc}}$, then $E$. What familiar result does this match?}
 
 \result[1.3cm]{$E$ outside the sphere}
 
 \textbf{Inside} ($r < R$): only the charge within radius $r$ counts. The charge fills the
-\bl[2.0cm], so the fraction enclosed is the ratio of \bl[2.4cm].
+\bl[4.0cm], so the fraction enclosed is the ratio of \bl[4.8cm].
 
-\derivbox{3.0cm}{$q_{\text{enc}} = {}$?\quad then $E = {}$?}
+\derivbox{4.8cm}{$q_{\text{enc}} = {}$?\quad then $E = {}$?}
 
 \result[1.3cm]{$E$ inside the sphere}
 
-\checkpointsp{Sketch $E$ against $r$ across both regions (use the axes below). At $r=R$
---- jump, kink, or neither?}{1}
+\checkpoint{Sketch $E$ against $r$ across both regions (use the axes below). At $r=R$
+--- jump, kink, or neither?}
 
 \begin{center}
 \begin{tikzpicture}[x=1cm,y=1cm]
