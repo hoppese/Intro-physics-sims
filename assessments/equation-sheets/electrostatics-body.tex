@@ -13,12 +13,13 @@
 \section{Coulomb's law \& the electric field \quad {\normalfont\small (Knight 22.4--22.5, 23.1--23.2)}}
 \eqtab{
   \band{fundamental}
-  \R{Force between two point charges\newline\footnotesize(along the line joining them; repulsive for like signs; $F \propto 1/r^2$)}{F = \dfrac{1}{4\pi\varepsilon_0}\dfrac{|q_1 q_2|}{r_{12}^{2}}}
-  \R{Field --- force per unit test charge}{\vec E = \dfrac{\vec F_{\text{on }q}}{q}\,,\qquad \vec F = q\vec E}
-  \R{Field of a point charge\newline\footnotesize(away from $+$, toward $-$)}{E = \dfrac{1}{4\pi\varepsilon_0}\dfrac{|q|}{r^{2}}}
-  \R{Superposition (both are vector sums)}{\vec F_{\text{net}} = \textstyle\sum_i \vec F_i\,,\qquad \vec E_{\text{net}} = \textstyle\sum_i \vec E_i}
+  \R{Coulomb's law, vector form\newline\footnotesize($\hat r_{12}$ points from charge 1 to charge 2; force \emph{on} 2, \emph{due to} 1; repulsive for like signs, $F\propto1/r^2$)}{\vec F_{12} = \dfrac{1}{4\pi\varepsilon_0}\dfrac{q_1 q_2}{r_{12}^{2}}\,\hat r_{12}}
+  \R{Definition of the electric field}{\vec F = q\vec E}
+  \R{Superposition of forces}{\vec F_{\text{net}} = \textstyle\sum_i \vec F_i}
   \band{derived}
-  \R{Coulomb's law, full vector form\newline\footnotesize($\vec r_{12}$ points from charge 1 to charge 2; force \emph{on} 2, \emph{due to} 1)}{\vec F_{1\text{ on }2} = \dfrac{1}{4\pi\varepsilon_0}\dfrac{q_1 q_2}{r_{12}^{2}}\,\hat r_{12}}
+  \R{Field of a point charge\newline\footnotesize($\hat r$ points from the charge to the field point)}{\vec E = \dfrac{1}{4\pi\varepsilon_0}\dfrac{q}{r^{2}}\,\hat r}
+  \R{Superposition of fields}{\vec E_{\text{net}} = \textstyle\sum_i \vec E_i}
+  \R{Coulomb's law, alternate vector form}{\vec F_{12} = \dfrac{1}{4\pi\varepsilon_0}\,q_1 q_2\,\dfrac{\vec r_{12}}{r_{12}^{3}}}
 }
 
 %========================================================
@@ -28,10 +29,10 @@
   \R{Chop into pieces, add up (integrate)}{\vec E = \displaystyle\int d\vec E,\qquad dE = \dfrac{1}{4\pi\varepsilon_0}\dfrac{dq}{r^{2}}}
   \R{Charge densities}{\lambda = \dfrac{Q}{L},\qquad \eta = \dfrac{Q}{A},\qquad \rho = \dfrac{Q}{V}}
   \band{derived}
-  \R{Infinite line of charge (distance $r$)}{E = \dfrac{\lambda}{2\pi\varepsilon_0\,r}}
-  \R{Infinite plane / sheet of charge}{E = \dfrac{\eta}{2\varepsilon_0} \quad(\text{uniform --- no }r)}
-  \R{Ring of charge $Q$, radius $R$, on axis at $z$}{E = \dfrac{1}{4\pi\varepsilon_0}\dfrac{Qz}{(z^2+R^2)^{3/2}}}
-  \R{Disk of charge $Q$, radius $R$, on axis at $z$\newline\footnotesize($\eta=Q/\pi R^2$; $R\to\infty$ recovers the infinite sheet; $z\gg R$ recovers a point charge)}{E = \dfrac{\eta}{2\varepsilon_0}\left(1-\dfrac{z}{\sqrt{z^2+R^2}}\right)}
+  \R{Infinite line of charge (distance $r$)\newline\footnotesize(direction: radially outward from the line, for $\lambda>0$)}{E = \dfrac{\lambda}{2\pi\varepsilon_0\,r}}
+  \R{Infinite plane / sheet of charge\newline\footnotesize(direction: perpendicular to the sheet, away from it on both sides, for $\eta>0$)}{E = \dfrac{\eta}{2\varepsilon_0} \quad(\text{uniform --- no }r)}
+  \R{Ring of charge $Q$, radius $R$, on axis at $z$\newline\footnotesize(direction: along the axis, away from the ring for $Q>0$)}{E = \dfrac{1}{4\pi\varepsilon_0}\dfrac{Qz}{(z^2+R^2)^{3/2}}}
+  \R{Disk of charge $Q$, radius $R$, on axis at $z$\newline\footnotesize($\eta=Q/\pi R^2$; direction: along the axis, away from the disk for $Q>0$; $R\to\infty$ recovers the infinite sheet; $z\gg R$ recovers a point charge)}{E = \dfrac{\eta}{2\varepsilon_0}\left(1-\dfrac{z}{\sqrt{z^2+R^2}}\right)}
 }
 
 %========================================================
@@ -43,7 +44,7 @@
   \band{derived}
   \R{Uniform field through a flat area}{\Phi = E A \cos\theta \quad(\theta \text{ from the normal})}
   \R{Charge \emph{outside} a closed surface}{\Phi_{\text{net}} = 0}
-  \R{Sphere / spherical shell, total charge $Q$ ($r > R$)}{E = \dfrac{1}{4\pi\varepsilon_0}\dfrac{Q}{r^{2}} \quad(\text{same as a point charge})}
+  \R{Sphere / spherical shell, total charge $Q$ ($r > R$)\newline\footnotesize($\hat r$ points from the center outward)}{\vec E = \dfrac{1}{4\pi\varepsilon_0}\dfrac{Q}{r^{2}}\,\hat r \quad(\text{same as a point charge})}
 }
 
 %========================================================
@@ -64,9 +65,19 @@
   \band{fundamental}
   \R{Two point charges\newline\footnotesize(keep the signs; $U \to 0$ as $r_{12} \to \infty$; one power of $r$)}{U = \dfrac{1}{4\pi\varepsilon_0}\dfrac{q_1 q_2}{r_{12}}}
   \R{Energy conservation}{K_i + U_i = K_f + U_f\,,\qquad W_{\text{elec}} = -\Delta U}
-  \R{Potential --- energy per unit charge}{V = \dfrac{U}{q}\,,\qquad U = qV \qquad (1\ \text{V} = 1\ \text{J/C})}
+  \R{Definition of potential}{U = qV \qquad (1\ \text{V} = 1\ \text{J/C})}
   \R{Point charge\newline\footnotesize(scalar; keep the sign; $V \to 0$ as $r \to \infty$)}{V = \dfrac{1}{4\pi\varepsilon_0}\dfrac{q}{r}\,,\qquad V_{\text{net}} = \textstyle\sum_i \dfrac{1}{4\pi\varepsilon_0}\dfrac{q_i}{r_i}}
   \band{derived}
   \R{Three or more charges: sum over every \emph{pair}\newline\footnotesize(the work to assemble the whole arrangement --- order doesn't matter)}{U_{\text{total}} = \dfrac{1}{4\pi\varepsilon_0}\!\!\sum_{\text{pairs }(i,j)}\!\dfrac{q_i q_j}{r_{ij}}}
   \R{Equipotentials}{\perp \text{ field lines};\ \ \vec E \text{ points toward decreasing } V}
+  \R{Potential in a uniform field\newline\footnotesize($d$ measured along $\vec E$, from initial to final point)}{V_f - V_i = -Ed}
+}
+
+%========================================================
+\section{Electric dipoles \quad {\normalfont\small (Knight --- confirm section \#)}}
+\eqtab{
+  \band{fundamental}
+  \R{Dipole moment\newline\footnotesize($\vec d$ points from $-q$ to $+q$)}{\vec p = q\vec d}
+  \R{Torque on a dipole in a uniform field}{\vec \tau = \vec p \times \vec E}
+  \R{Potential energy of a dipole in a uniform field\newline\footnotesize(most stable, i.e.\ minimum $U$, when $\vec p \parallel \vec E$)}{U = -\vec p \cdot \vec E}
 }
