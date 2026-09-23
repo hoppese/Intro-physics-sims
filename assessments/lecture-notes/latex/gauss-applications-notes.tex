@@ -115,9 +115,16 @@ radius $r$ and length $L$.
   % --- length leader, off to the left
   \draw[gray, <->] (-2.6,-1.05) -- (-2.6,1.05);
   \node[scale=0.9] at (-3.5,0) {\dlabel[1.0cm]};
+  % --- orientation triad, tucked in the clear corner below the length leader:
+  % the wire runs along z, so this shows the whole picture is a 3D scene seen
+  % from an angle, not a flat 2D drawing.
+  \draw[gray!70, ->] (-3.0,-1.9) -- (-3.0,-1.35) node[above, scale=0.7] {$z$};
+  \draw[gray!70, ->] (-3.0,-1.9) -- (-3.4,-2.25) node[below left, scale=0.7] {$x$};
+  \draw[gray!70, ->] (-3.0,-1.9) -- (-2.55,-2.15) node[below right, scale=0.7] {$y$};
 \end{tikzpicture}
 \end{center}
-\figtask{Label the cylinder's radius, its length, and the field arrows.}
+\figtask{Label the cylinder's radius, its length, and the field arrows. (The wire runs
+along $z$ --- this is a 3D picture, seen at an angle.)}
 
 \derivbox{2.9cm}{Which part of the cylinder carries flux (and which carries none)? Area $A$, then $q_{\text{enc}}$, then solve for $E$. Show $L$ cancelling.}
 
@@ -127,9 +134,39 @@ radius $r$ and length $L$.
 %============================================================
 \nsec{Infinite sheet of charge}
 
-Surface charge density $\eta$. $\vec{E}$ points straight away from the sheet on both
-sides, so the Gaussian surface is a \emph{pillbox} straddling it, with end caps of
-area $A_{\text{cap}}$.
+Surface charge density $\eta$. This is a \emph{plane}, not a line: it extends forever in
+\emph{two} directions, $x$ and $y$, and $\vec{E}$ points straight away from it along $\pm z$
+on both sides.
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm]
+  % --- the sheet in perspective: a tilted parallelogram, so it visibly extends
+  % in two directions instead of reading as a 1D line. A,B,C,D chosen so
+  % AB = DC and AD = BC (a genuine parallelogram, not just four points).
+  \fill[red!12] (-2.4,-0.4) -- (1.8,-0.9) -- (2.6,0.5) -- (-1.6,1.0) -- cycle;
+  \draw[red!70!black] (-2.4,-0.4) -- (1.8,-0.9) -- (2.6,0.5) -- (-1.6,1.0) -- cycle;
+  \foreach \p in {(-1.6,-0.2),(-0.6,-0.35),(0.4,-0.5),(1.3,-0.65),
+                  (-1.0,0.3),(0.0,0.15),(1.0,0.0),(1.8,-0.15),
+                  (-0.3,0.7),(0.6,0.55)}{
+    \node[red!70!black, scale=0.55] at \p {$+$};}
+  \node[red!70!black, scale=0.7] at (-2.75,-0.35) {$\infty$};
+  \node[red!70!black, scale=0.7] at (2.95,0.55) {$\infty$};
+  % --- in-plane axes x,y, along the sheet's own edge directions
+  \coordinate (O) at (0.1,0.05);
+  \draw[gray!70, ->] (O) -- ++(1.29,-0.15) node[right, scale=0.7] {$x$};
+  \draw[gray!70, ->] (O) -- ++(0.65,1.13) node[above, scale=0.7] {$y$};
+  % --- the field, straight out of the plane both ways --- this arrow pair
+  % doubles as the z axis, so no separate z-arrow is drawn on top of it.
+  \draw[cyan!65!black, ->, line width=0.9pt] (O) -- ++(0,1.3) node[above right, scale=0.7, cyan!65!black] {$\vec E$};
+  \node[gray!70, scale=0.7] at (-0.22,0.65) {$z$};
+  \draw[cyan!65!black, ->, line width=0.9pt] (O) -- ++(0,-1.3);
+\end{tikzpicture}
+\end{center}
+\figtask{An infinite sheet, seen at an angle: it extends forever in $x$ \emph{and} $y$,
+and $\vec E$ points straight out along $z$ on either side.}
+
+Now look at it \emph{edge-on} (sighting along $y$, so the sheet appears as a line and the
+pillbox is easy to draw), with end caps of area $A_{\text{cap}}$:
 
 \begin{center}
 \begin{tikzpicture}[x=0.9cm,y=0.9cm]
@@ -139,6 +176,10 @@ area $A_{\text{cap}}$.
     \node[red!70!black, scale=0.62] at (\x,0.24) {$+$};}
   \node[red!70!black, scale=0.8] at (-3.4,0) {$\infty$};
   \node[red!70!black, scale=0.8] at (3.4,0) {$\infty$};
+  % --- small tags tying this back to the 3D figure above: the sheet line here
+  % is the x direction, seen edge-on; the field arrows are along z.
+  \node[gray!70, scale=0.7] at (2.3,-0.35) {$x$};
+  \node[gray!70, scale=0.7] at (0.75,1.55) {$z$};
   % --- pillbox
   \draw[gray!55, dashed] (-1.15,-0.9) rectangle (1.15,0.9);
   \draw[gray!55, dashed] (0,0.9) ellipse (1.15 and 0.28);
@@ -160,7 +201,7 @@ area $A_{\text{cap}}$.
 \end{center}
 \figtask{Label the pillbox half-height, the cap area, and the field arrows.}
 
-\derivbox{3.2cm}{Total area carrying flux, $q_{\text{enc}}$ in terms of $\eta$ and $A_{\text{cap}}$, then $E$.}
+\derivbox{2.6cm}{Total area carrying flux, $q_{\text{enc}}$ in terms of $\eta$ and $A_{\text{cap}}$, then $E$.}
 
 \result{$E$ for an infinite sheet}
 
