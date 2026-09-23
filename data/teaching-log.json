@@ -56,7 +56,7 @@
    "covered": "The kickoff made clear students had not internalized Gauss's law, so pivoted to the skeleton worksheet (gauss-applications-notes.tex) and worked through the end of its first section before going back and answering the kickoff questions. That took longer than planned; only reached the point-charge example by the end of class. Derived E for a point charge from Gauss's law and emphasized it holds for any spherically symmetric charge distribution - even a non-uniform one - as long as the distribution respects the symmetry.",
    "cut": "Did not get to the shell, or any of the other symmetry examples (line, sheet, sphere) in the worksheet.",
    "struggled": "Came into class not having internalized Gauss's law itself, which is what forced the pivot back to re-teaching it before the kickoff could be answered.",
-   "nextYear": "Make sure students understand Gauss's law itself before this lecture (e.g. via the kickoff or a prior activity) so class time can go to the worked symmetry examples instead of re-teaching the law first.",
+   "nextYear": "Make sure students understand Gauss's law itself before this lecture (e.g. via the kickoff or a prior activity) so class time can go to the worked symmetry examples instead of re-teaching the law first. Also, KO 11 (Fields from Gauss's Law) itself was too long/hard - it likely contributed to the pivot described above. Shorten it or make it easier next year.",
    "materials": ["assessments/lecture-notes/gauss-applications-notes.pdf"]
   }
  },
