@@ -5,8 +5,15 @@
 
 % Complete / filled-in reference version of electric-pe-notes.tex (the
 % skeleton students fill in by hand). Same structure and wording, but
-% every blank carries the answer, and the two student-drawn prompts
-% (ball-and-ground, charge-in-a-field) get an actual figure.
+% every blank carries the answer, and the student-drawn prompts (ball
+% above ground + hole, charge in a field) get an actual figure.
+%
+% Restructured 2026-09-24 per Seth: gravity (height, then a hole) first,
+% then a uniform E field for BOTH + and - charges, then the full
+% (non-uniform) Newtonian form of gravitational PE with its own graph
+% ("higher is more PE" even though U<0 everywhere), then electric PE of
+% point charges (with a sketch of U vs. r right after U(q_1,q_2), for
+% both opposite and like charges), and finally the dipole.
 \newcommand{\ANS}[1]{\textcolor{accent}{#1}}
 
 \begin{document}
@@ -15,23 +22,200 @@
 
 \goal{
 \begin{itemize}[itemsep=5pt,parsep=2pt,topsep=2pt]
-\item Understand where electric potential energy comes from: summing over
-pairs of point charges, or pushing a charge against a field.
-\item Use that to find the potential energy of an electric dipole in a
-uniform field.
-\item See that a system can have \emph{negative} PE, and that ``zero'' PE
-is not always the lowest energy available.
+\item Build the idea of potential energy with gravity first: height above
+the ground, and what happens if you keep going \emph{below} it.
+\item See the same idea for a charge pushed against a uniform field ---
+for both a $+$ and a $-$ charge.
+\item Write the \emph{full} (non-uniform) form of gravitational PE, and see
+that ``higher'' always means ``more PE,'' even though the value is negative.
+\item Use that same point-source structure to build the electric PE of two
+point charges, then a whole system of them.
+\item Combine two point charges' PE to get the potential energy of a
+dipole in a field.
 \end{itemize}}
 
 %============================================================
-\nsec{Potential energy of two point charges (from the class prep)}
+\nsec{Gravitational PE: height, then a hole}
+
+A ball sits a height $h$ above the ground. Ground level is our reference:
+$U=0$ there.
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \draw[brown!60!black, line width=1.2pt] (-3,0) -- (-0.9,0);
+  \draw[brown!60!black, line width=1.2pt] (0.9,0) -- (3,0);
+  \foreach \x in {-2.7,-2.1,-1.5}{\draw[brown!60!black] (\x,0) -- (\x-0.2,-0.25);}
+  \foreach \x in {1.4,2.0,2.6}{\draw[brown!60!black] (\x,0) -- (\x-0.2,-0.25);}
+  \draw[brown!60!black, line width=1.2pt] (-0.9,0) -- (-0.9,-2) -- (0.9,-2) -- (0.9,0);
+  \filldraw[gray!30, opacity=0.6] (0,1.7) circle (0.35);
+  \draw[gray!60!black, opacity=0.6] (0,1.7) circle (0.35);
+  \node[scale=0.75, accent] at (1.05,1.85) {start};
+  \filldraw[gray!30] (0,-1.65) circle (0.35);
+  \draw[gray!60!black] (0,-1.65) circle (0.35);
+  \node[scale=0.75, accent] at (0.95,-1.65) {end};
+  \draw[accent, dashed, ->] (-2.3,0) -- (-2.3,1.7);
+  \node[accent, scale=0.8] at (-2.65,0.85) {$h$};
+  \draw[accent, dashed, ->] (2.3,0) -- (2.3,-2);
+  \node[accent, scale=0.8] at (2.65,-1) {$d$};
+  \node[scale=0.75, blankink] at (-1.9,-1.15) {ground};
+  \node[scale=0.75] at (0,0.28) {$h=0$};
+\end{tikzpicture}
+\end{center}
+
+\[
+U(h) = \ANS{mgh}
+\]
+
+Now let the ball fall past ground level, into a hole of depth $d$.
+
+\[
+U(\text{bottom}) = \ANS{-mgd}
+\]
+
+{\small\color{accent} Ground is still where $h=0$. The bottom of the hole is
+\emph{below} that reference, at height $-d$, so $U=mg(-d)=-mgd$ --- our
+first negative PE.}
+
+\[
+\Delta U = U(\text{bottom}) - U(h) = \ANS{-mgd - mgh \;=\; -mg(h+d)}
+\]
+
+\checkpoint{The ball's PE at the bottom of the hole came out negative. Is
+that a problem?}
+
+{\small\color{accent} No --- ``zero'' was just our choice of ground level.
+PE can absolutely be negative below wherever you chose to measure from. Keep
+this in mind: we'll see the exact same thing with opposite charges.}
+
+%============================================================
+\nsec{The same idea, for a charge in a uniform field}
+
+Replace gravity with a uniform electric field $\vec E$ pointing
+\emph{down} (same visual sense as gravity), and try it with both signs of
+charge.
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm]
+  % legend, top right, clear of everything else
+  \draw[cyan!65!black, ->, line width=0.8pt] (7.6,1.9) -- (7.6,1.0);
+  \node[cyan!65!black, scale=0.8] at (8.05,1.45) {$\vec E$};
+  % --- left panel: +q ---
+  \draw[cyan!65!black, ->, line width=0.8pt] (-6.6,1.9) -- (-6.6,-1.9);
+  \draw[cyan!65!black, ->, line width=0.8pt] (-2.6,1.9) -- (-2.6,-1.9);
+  \filldraw[red!70!black] (-4.6,1.15) circle (0.1);
+  \node[red!70!black, scale=0.85] at (-4.6,1.55) {$+q$};
+  \draw[accent, ->, line width=0.9pt] (-4.95,0.95) -- (-4.95,0.05);
+  \node[accent, scale=0.75] at (-5.55,0.5) {$q\vec E$};
+  \draw[gray!40!black, dashed, ->, line width=0.8pt] (-4.1,-1.15) -- (-4.1,1.15);
+  \node[gray!40!black, scale=0.75, align=center] at (-3.35,0) {push\\[-2pt]$d$};
+  % --- right panel: -q ---
+  \draw[cyan!65!black, ->, line width=0.8pt] (2.6,1.9) -- (2.6,-1.9);
+  \draw[cyan!65!black, ->, line width=0.8pt] (6.6,1.9) -- (6.6,-1.9);
+  \filldraw[blue!55!black] (4.6,-1.15) circle (0.1);
+  \node[blue!55!black, scale=0.85] at (4.6,-1.55) {$-q$};
+  \draw[accent, ->, line width=0.9pt] (4.95,-0.95) -- (4.95,-0.05);
+  \node[accent, scale=0.75] at (5.55,-0.5) {$q\vec E$};
+  \draw[gray!40!black, dashed, ->, line width=0.8pt] (4.1,1.15) -- (4.1,-1.15);
+  \node[gray!40!black, scale=0.75, align=center] at (3.35,0) {push\\[-2pt]$d$};
+\end{tikzpicture}
+\end{center}
+
+\begin{itemize}[itemsep=9pt,parsep=4pt,topsep=4pt]
+\item Force on the $+q$: $q\vec E$ points \ANS{downward, the same direction
+as $\vec E$} --- that's its \emph{natural} (free) direction of motion.
+\item Force on the $-q$: $q\vec E$ points \ANS{upward, opposite $\vec E$} ---
+the sign flip turns the natural direction around.
+\end{itemize}
+
+Push each charge a distance $d$ \emph{against} its own natural direction ---
+the same idea as raising the ball.
+
+\[
+\Delta U_+ = \ANS{qEd} \qquad\qquad \Delta U_- = \ANS{|q|Ed}
+\]
+
+\begin{itemize}[itemsep=9pt,parsep=4pt,topsep=4pt]
+\item Both are \ANS{positive} --- pushing \emph{against} a charge's natural
+direction always stores positive PE, regardless of the charge's sign.
+\item Let either charge go instead, and it moves along its \emph{natural}
+direction: PE \ANS{decreases} either way --- the field does the work.
+\end{itemize}
+
+\checkpoint{A negative charge is released in this downward field. Which way
+does it move, and what happens to its PE?}
+
+{\small\color{accent} It moves \emph{upward} --- opposite $\vec E$, since the
+force on a negative charge is $q\vec E$ with $q<0$. Its PE decreases, same
+rule as always: released charges move toward lower PE.}
+
+%============================================================
+\nsec{Gravitational PE, the full (non-uniform) form}
+
+$U=mgh$ only works because $g$ barely changes over any height you can
+reach near Earth's surface. Zoom out far enough to leave that ``uniform
+field'' approximation, and the real, general form (valid at any separation
+$r$ between two masses) is:
+
+\[
+U(r) = \ANS{-\dfrac{GMm}{r}}
+\]
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \draw[gray!70, ->] (0,-6.3) -- (0,0.6) node[above, scale=0.8] {$U$};
+  \draw[gray!70, ->] (-0.3,0) -- (7.6,0) node[right, scale=0.8] {$r$};
+  \draw[gray!50, dashed] (0,0) -- (7.3,0);
+  \draw[accent, line width=1.1pt, domain=1:7.3, samples=120, smooth]
+    plot (\x, {-5.6/\x});
+  \draw[gray!50] (1,0.08) -- (1,-0.08);
+  \node[gray, scale=0.75] at (1,-0.4) {$R$};
+  \node[gray, scale=0.7] at (-0.32,0.28) {$0$};
+\end{tikzpicture}
+\end{center}
+
+\begin{itemize}[itemsep=9pt,parsep=4pt,topsep=4pt]
+\item As $r\to\infty$, $U\to$ \ANS{$0$} --- same rule as always: zero PE at
+infinite separation.
+\item Every value of $U(r)$ here is \ANS{negative}. But moving to a
+\emph{larger} $r$ (further from Earth, ``higher'') always makes $U$
+\ANS{less negative --- i.e.\ larger, higher on the graph}. Don't let the
+minus sign fool you: higher is \emph{always} more PE, on this curve or any
+other.
+\end{itemize}
+
+\checkpoint{True or false: since $U(r)$ is always negative here, moving
+\emph{further} from Earth makes $U$ smaller.}
+
+{\small\color{accent} False. Further away makes $U$ \emph{larger} (less
+negative, closer to zero) --- the graph is rising the whole way, it just
+never crosses above 0. ``Negative'' and ``smaller'' are not the same thing.}
+
+%============================================================
+\nsec{Electric PE of two point charges (from the class prep)}
 
 Pulling a pair of point charges apart, or pushing them together, takes work
---- work that gets stored as potential energy.
+--- work that gets stored as potential energy, exactly like the point-mass
+form above.
 
 \[
 U(q_1,q_2) = \ANS{\dfrac{1}{4\pi\varepsilon_0}\dfrac{q_1 q_2}{r_{12}}}
 \]
+
+Sketch $U$ vs.\ $r_{12}$ below, for an opposite-sign pair and a like-sign
+pair, on the same axes. (Same shape you just drew for gravity --- plus its
+mirror image.)
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \draw[gray!70, ->] (0,-3.6) -- (0,3.6) node[above, scale=0.8] {$U$};
+  \draw[gray!70, ->] (-0.3,0) -- (8.6,0) node[right, scale=0.8] {$r_{12}$};
+  \draw[gray!50, dashed] (0.55,0) -- (7.3,0);
+  \draw[red!65!black, line width=1.1pt, domain=0.55:7.3, samples=120, smooth]
+    plot (\x, {1.9/\x}) node[right, scale=0.72, yshift=4pt] {like};
+  \draw[blue!55!black, line width=1.1pt, domain=0.55:7.3, samples=120, smooth]
+    plot (\x, {-1.9/\x}) node[right, scale=0.72, yshift=-4pt] {opposite};
+\end{tikzpicture}
+\end{center}
 
 \begin{itemize}[itemsep=9pt,parsep=4pt,topsep=4pt]
 \item As $r_{12}\to\infty$, $U\to$ \ANS{$0$}.
@@ -54,86 +238,8 @@ U_{\text{total}} = \ANS{\dfrac{1}{4\pi\varepsilon_0}\!\!\sum_{\text{pairs }(i,j)
 Is $U$ positive or negative? What about a $+q$ and a $-q$?}
 
 {\small\color{accent} $+q$ and $+q$: positive (repulsive, energy stored pushing
-them together). $+q$ and $-q$: negative (attractive).}
-
-%============================================================
-\nsec{Where is potential energy the lowest?}
-
-Draw a ball, and the ground below it.
-
-\begin{center}
-\begin{tikzpicture}[x=1cm,y=1cm]
-  \draw[brown!60!black, line width=1.2pt] (-3,0) -- (3,0);
-  \foreach \x in {-2.7,-2.1,-1.5,-0.9,-0.3,0.3,0.9,1.5,2.1,2.7}{
-    \draw[brown!60!black] (\x,0) -- (\x-0.2,-0.25);}
-  \filldraw[gray!30] (0,1.4) circle (0.4);
-  \draw[gray!60!black] (0,1.4) circle (0.4);
-  \draw[gray!70, ->] (0,0.95) -- (0,0.15);
-  \node[gray!70, scale=0.8] at (0.35,0.55) {$mg$};
-  \node[scale=0.8] at (1.9,0.25) {ground, $h=0$};
-\end{tikzpicture}
-\end{center}
-
-\checkpoint{What is the ball's potential energy? Where is it the lowest?}
-
-{\small\color{accent} $U=mgh$; with $h$ measured from the ground, $U=0$
-there. As drawn, the ball can't go any lower than the ground --- so here
-$h=0$ really is the lowest available PE (unlike the attractive point
-charges above, there's no ``digging deeper'' available).}
-
-This is a \emph{uniform} gravitational field --- not a hole to fall into.
-Raising the ball, moving it against the field lines, gives it \emph{more}
-PE, and that PE is proportional to the distance you raise it.
-
-\[
-\Delta U_{\text{grav}} = \ANS{mgd}
-\]
-
-%============================================================
-\nsec{The same idea, for a charge in a uniform field}
-
-Now replace the ball with a positive charge $q$, and gravity with a
-uniform electric field $\vec E$. Draw the field, and the charge's starting
-and ending points, below.
-
-\begin{center}
-\begin{tikzpicture}[x=1cm,y=1cm]
-  \foreach \x in {-2,-1,0,1,2}{
-    \draw[cyan!65!black, ->, line width=0.8pt] (\x,-1.3) -- (\x,1.3);}
-  \node[cyan!65!black, scale=0.8] at (2.9,1.1) {$\vec E$};
-  \filldraw[red!70!black] (0,-1.0) circle (0.09);
-  \node[red!70!black, scale=0.85] at (-0.45,-1.0) {$+q$};
-  \node[scale=0.75, accent] at (0.35,-1.15) {start};
-  \filldraw[red!70!black] (0,1.0) circle (0.09);
-  \node[red!70!black, scale=0.85] at (-0.4,1.15) {$+q$};
-  \node[scale=0.75, accent] at (0.4,0.85) {end};
-  \draw[accent, dashed, ->] (0,-0.85) -- (0,0.85);
-  \node[accent, scale=0.8] at (-0.5,0) {$d$};
-\end{tikzpicture}
-\end{center}
-
-The field pushes the charge with force $qE$. Push the charge a distance
-$d$ against the field --- the same motion as raising the ball.
-
-\[
-\Delta U = \ANS{qEd}
-\]
-
-\begin{itemize}[itemsep=9pt,parsep=4pt,topsep=4pt]
-\item This is exactly like raising the ball: you do \ANS{positive} work
-pushing against the field, and that work becomes stored PE, proportional
-to \ANS{the distance $d$}.
-\item Let the charge go, and it moves \emph{with} the field instead: now
-$\Delta U$ is \ANS{negative} --- the field does the work, and spends the stored
-PE.
-\end{itemize}
-
-\checkpoint{A positive charge is released and moves along $\vec E$. Does its
-PE increase or decrease? Where did the energy go?}
-
-{\small\color{accent} PE decreases --- the charge is moving \emph{with} the
-field, the way the ball falls rather than rises. The lost PE becomes kinetic
-energy.}
+them together). $+q$ and $-q$: negative (attractive) --- just like the ball
+in the hole.}
 
 %============================================================
 \nsec{The dipole in a field}
@@ -141,13 +247,13 @@ energy.}
 A dipole is a $+q$ and a $-q$ separated by $\vec d$ (dipole moment
 $\vec p = q\vec d$), sitting in a uniform field $\vec E$, tilted at angle
 $\theta$ between $\vec p$ and $\vec E$. Each charge sits at a different
-place along $\vec E$ --- use \S3's pushing idea on each charge, then add.
+place along $\vec E$ --- use \S2's pushing idea on each charge, then add.
 
 {\small\color{accent} Split $\vec d$ into a component along $\vec E$
 ($d\cos\theta$) and a component across it. Only the along-$\vec E$ part
-matters (\S3): the $+q$ sits $\tfrac12 d\cos\theta$ further along $\vec E$
+matters (\S2): the $+q$ sits $\tfrac12 d\cos\theta$ further along $\vec E$
 than center, the $-q$ sits $\tfrac12 d\cos\theta$ behind it. Adding the two
-charges' PE (each $\propto -qEd$, from \S3, since moving \emph{with} $\vec
+charges' PE (each $\propto -qEd$, from \S2, since moving \emph{with} $\vec
 E$ lowers PE) gives $U=-qEd\cos\theta = -\vec p\cdot\vec E$.}
 
 \[
@@ -163,12 +269,12 @@ which is \ANS{lower} than the $\theta=90^\circ$ value!
 
 \checkpoint{Which orientation is the most stable (lowest PE)? Is that the
 orientation where $U=0$? What does this have in common with the ball in
-the gravitational field?}
+the hole?}
 
 {\small\color{accent} $\theta=0^\circ$ (aligned) is most stable, at
-$U=-pE$ --- \emph{not} the $U=0$ orientation. Just like the ball: $U=0$ is
-just wherever we started measuring from, not necessarily the lowest energy
-the system can reach.}
+$U=-pE$ --- \emph{not} the $U=0$ orientation. Just like the ball in the
+hole: $U=0$ is just wherever we started measuring from, not necessarily
+the lowest energy the system can reach.}
 
 %============================================================
 \nsec{Sketch it: $U$ vs.\ $\theta$}
@@ -186,7 +292,7 @@ the system can reach.}
 \end{tikzpicture}
 \end{center}
 
-{\small\color{blankink} Check your curve, and the point-charge and
+{\small\color{blankink} Check your curves, and the point-charge and
 uniform-field results above, against the \emph{Assembling Charges},
 \emph{PE vs.\ Separation}, and \emph{Electric Dipole in a Field} sims ---
 open their \textbf{Info} panels.}
