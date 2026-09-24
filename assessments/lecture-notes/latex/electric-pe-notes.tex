@@ -15,9 +15,17 @@
 % line followed by its own underline (not an inline blank right after
 % "="), since that inline style doesn't leave room for a fraction.
 % See electric-pe-notes-key.tex for the filled-in, all-diagrams version.
-\newcommand{\eqline}[2][\linewidth]{%
-  \par\vspace{1mm}\noindent #2\par\vspace{-0.5mm}%
-  \noindent\textcolor{rulehue}{\rule{#1}{0.5pt}}\par\vspace{4mm}%
+%
+% \eqline[gap]{label} -- [gap] is the blank space between the label and the
+% rule, i.e. the room a student actually has to write the answer. Default
+% (-0.5mm) suits a short answer (mgd, qEd, -pE\cos\theta). The two
+% point-charge formulas are two-level fractions (one of them a fraction
+% AND a sum-with-limits) -- measured directly off electric-pe-notes-key.pdf
+% at 300dpi, U(q_1,q_2)'s typeset ink is ~0.43in tall and U_total's is
+% ~0.54in, so their blanks pass an explicit taller gap.
+\newcommand{\eqline}[2][-0.5mm]{%
+  \par\vspace{1mm}\noindent #2\par\vspace{#1}%
+  \noindent\textcolor{rulehue}{\rule{\linewidth}{0.5pt}}\par\vspace{4mm}%
 }
 
 \begin{document}
@@ -40,7 +48,7 @@ is not always the lowest energy available.
 Pulling a pair of point charges apart, or pushing them together, takes work
 --- work that gets stored as potential energy.
 
-\eqline{$U(q_1,q_2) = $}
+\eqline[1.4cm]{$U(q_1,q_2) = $}
 
 \begin{itemize}[itemsep=9pt,parsep=4pt,topsep=4pt]
 \item As $r_{12}\to\infty$, $U\to$ \bl[2.4cm].
@@ -55,7 +63,7 @@ value --- you can't push like charges to a lower PE than infinitely far
 apart.
 \end{itemize}
 
-\eqline{$U_{\text{total}} = $}
+\eqline[1.7cm]{$U_{\text{total}} = $}
 
 \checkpoint{Two $+q$ charges are brought from far apart to a separation $r$.
 Is $U$ positive or negative? What about a $+q$ and a $-q$?}
