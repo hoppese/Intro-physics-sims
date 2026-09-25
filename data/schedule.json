@@ -1122,6 +1122,20 @@
      "test": 2,
      "special": true,
      "split": false,
+     "handouts": [
+      {
+       "name": "Equation sheet: Electrostatics (algebra)",
+       "kind": "Equations",
+       "file": "assessments/equation-sheets/electrostatics.pdf",
+       "pages": 3
+      },
+      {
+       "name": "Equation sheet: Electrostatics (calc)",
+       "kind": "Equations",
+       "file": "assessments/equation-sheets/electrostatics-calc.pdf",
+       "pages": 3
+      }
+     ],
      "due": [
       {
        "kind": "Test",
