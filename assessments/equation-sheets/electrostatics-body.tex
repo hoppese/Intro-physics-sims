@@ -5,9 +5,12 @@
 % with its own title block.
 %
 % Everything here is common to PHYS 230 (algebra) and PHYS 235 (calc):
-% neither track's version omits any of it. Track-specific material (the
-% continuous-distribution integrals, and the bonus E-U-V-F calculus
-% relations) lives only in electrostatics-calc.tex, after this \input.
+% neither track's version omits any of it. Track-specific material lives
+% only in electrostatics-calc.tex, after this \input -- that now includes
+% electric flux & Gauss's law (PHYS 230 never covered it, even
+% conceptually -- moved out 2026-09-25, was wrongly placed here) in
+% addition to the continuous-distribution integrals and the bonus
+% E-U-V-F calculus relations that were already calc-only.
 
 %========================================================
 \section{Coulomb's law \& the electric field \quad {\normalfont\small (Knight 22.4--22.5, 23.1--23.2)}}
@@ -33,18 +36,6 @@
   \R{Infinite plane / sheet of charge\newline\footnotesize(direction: perpendicular to the sheet, away from it on both sides, for $\eta>0$)}{E = \dfrac{\eta}{2\varepsilon_0} \quad(\text{uniform --- no }r)}
   \R{Ring of charge $Q$, radius $R$, on axis at $z$\newline\footnotesize(direction: along the axis, away from the ring for $Q>0$)}{E = \dfrac{1}{4\pi\varepsilon_0}\dfrac{Qz}{(z^2+R^2)^{3/2}}}
   \R{Disk of charge $Q$, radius $R$, on axis at $z$\newline\footnotesize($\eta=Q/\pi R^2$; direction: along the axis, away from the disk for $Q>0$; $R\to\infty$ recovers the infinite sheet; $z\gg R$ recovers a point charge)}{E = \dfrac{\eta}{2\varepsilon_0}\left(1-\dfrac{z}{\sqrt{z^2+R^2}}\right)}
-}
-
-%========================================================
-\section{Electric flux \& Gauss's law \quad {\normalfont\small (Knight 24.1--24.3)}}
-\eqtab{
-  \band{fundamental}
-  \R{Electric flux through a surface}{\Phi = \displaystyle\oint \vec E \cdot d\vec A}
-  \R{Gauss's law\newline\footnotesize(any closed surface; only the \emph{enclosed} charge matters)}{\Phi = \dfrac{Q_{\text{enc}}}{\varepsilon_0}}
-  \band{derived}
-  \R{Uniform field through a flat area}{\Phi = E A \cos\theta \quad(\theta \text{ from the normal})}
-  \R{Charge \emph{outside} a closed surface}{\Phi_{\text{net}} = 0}
-  \R{Sphere / spherical shell, total charge $Q$ ($r > R$)\newline\footnotesize($\hat r$ points from the center outward)}{\vec E = \dfrac{1}{4\pi\varepsilon_0}\dfrac{Q}{r^{2}}\,\hat r \quad(\text{same as a point charge})}
 }
 
 %========================================================
