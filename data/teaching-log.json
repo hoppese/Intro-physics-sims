@@ -39,6 +39,13 @@
   "synthesis": 10
  },
  "entries": {
+  "2026-09-25": {
+   "covered": "Kickoff + HW feedback, then welcomed the two sections back together after 3 lectures split. Stressed that F, E, U, and V are all linear quantities that obey superposition - e.g. the E field from a line of charge plus a point charge is just the vector sum of their individual contributions - and that this will be on Test 2. Then EPE: compared gravity and electrostatics side by side. Ball with U=mgh, then U in a hole of depth d (the -mgd sign flip is genuinely counterintuitive to them, good discussion). Constant E field with + and - charges. Full Newtonian gravitation - they hadn't seen the PE form before, only the near-Earth value - graphed PE for Earth and Moon and discussed why it's negative, compared back to electrostatics. Finished with U = -p . E for a dipole in a constant field.",
+   "timing": {"kickoff": 2},
+   "wish": "Wanted more time for the dipole discussion (U = -p . E) - it was landing really well right when time ran out.",
+   "landed": "The gravity-hole / electrostatics side-by-side comparison worked well, especially the sign-flip discussion. Universal gravitation PE graph (Earth-Moon) plus the 'why is it negative' discussion also landed.",
+   "notes": "Did NOT hand out the fill-in-the-blank electric-pe-notes skeleton handout - decided in the moment it might read as too much like a 'high school class' for this material. Worked the derivations from the mocked-up notes on the whiteboard instead, without the printed scaffold. Kickoff itself was better-scoped than the last one and wrapped in just a couple minutes."
+  },
   "2026-09-09": {
    "covered": "Test 1, in class. Four problems: standing waves in a pipe (15 pts, five multiple-choice parts), an oscillating spring (20 pts), a traveling wave (15 pts), and a 5-point extra-credit two-speaker interference problem. 50 points plus 5 extra credit.",
    "struggled": "The oscillating spring gave people the most trouble by far. It was also the heaviest problem at 20 points, and the one that asked them to go from initial conditions (x0 and v0) all the way to an explicit x(t) = A cos(wt + phi), including the phase constant, and then sketch it.",
