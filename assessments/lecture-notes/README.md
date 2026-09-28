@@ -32,3 +32,5 @@ Runs `pdflatex` twice and copies the PDF up one level. Shared macros are in
 | Day | File | Topic |
 |-----|------|-------|
 | Wed Sep 23 | `gauss-applications-notes.pdf` | More Gauss's law — line, sheet, sphere |
+| Fri Sep 25 | `electric-pe-notes.pdf` | Electric potential energy (gravity → uniform field → point charges → dipole) |
+| Mon Sep 28 | `electric-potential-notes.pdf` | Electric potential — height analogy, capacitor V vs. E, Examples 25.6 & 25.9 |
