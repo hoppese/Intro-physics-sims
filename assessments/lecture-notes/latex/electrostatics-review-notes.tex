@@ -1,0 +1,169 @@
+\documentclass[12pt]{article}
+\usepackage{worksheet-common}
+\usetikzlibrary{arrows.meta}
+\definecolor{accent}{RGB}{109,91,208}
+
+% Wed Sep 30 -- Catch up / Flex day, no new content. Review practice covering
+% the back half of electrostatics ahead of Test 2: dipole torque/PE/motion,
+% closing the "does V change evenly across a uniform field" loop from Monday's
+% electric-potential lecture, path-independence of Delta U, and superposition
+% of continuous distributions with a point charge. Built from Seth's own rough
+% notes. Uses worksheet-common.sty (in-class-practice family), not
+% notes-common.sty, since this is problem-solving practice for open stations,
+% not a fill-in-the-blank derivation handout -- copied here from
+% assessments/in-class-practice/latex-worksheets/ to sit alongside the other
+% lecture-notes PDFs where the master schedule links it.
+
+\begin{document}
+
+\worksheettitle{Electrostatics Review --- Flex Day, Sep 30}
+
+%============================================================
+\partsec{A}{Dipole: Torque, PE, and Motion}
+
+\prob A uniform field $\vec E = 40$ N/C points in $+\hat x$. A dipole is made of two
+$\pm3.0$ nC charges separated by $d=2.0$ mm, with its moment $\vec p$ tilted
+$30^\circ$ to the right of the $y$-axis (i.e.\ $60^\circ$ from $\vec E$).
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \draw[gray,->] (-2,0) -- (2,0) node[right,scale=0.8]{$x$};
+  \draw[gray,->] (0,-1.5) -- (0,2) node[above,scale=0.8]{$y$};
+  \draw[cyan!60!black,->,line width=1pt] (-2.3,1.6) -- (-1.3,1.6);
+  \node[cyan!60!black,scale=0.8] at (-1.8,1.9) {$\vec E$};
+  \draw[thick,-{Latex[length=3mm]},accent] (0,0) -- (60:1.6) node[midway,above right,scale=0.8]{$\vec p$};
+  \draw[gray!50,dashed] (0,0) -- (0,1.6);
+  \draw[gray!50] (0,1.2) arc (90:60:1.2);
+  \node[gray!50!black,scale=0.7] at (0.25,1.35) {$30^\circ$};
+\end{tikzpicture}
+\end{center}
+
+\textbf{(a)} What is the torque on the dipole, as a vector (magnitude and direction)?
+
+\worksp{sm}
+
+\textbf{(b)} What is the dipole's potential energy in this orientation?
+
+\worksp{sm}
+
+\textbf{(c)} The dipole is released from rest and rotates until $\vec p$ aligns with
+$\vec E$ (i.e.\ $\theta\to0$). Taking each charge's mass to be $m=1.2\times10^{-14}$
+kg, what speed does each charge have at the instant $\theta=0$?
+
+\textit{Hint: both charges move on a circle of the same radius about the center, so
+they share the same speed --- the dipole's lost PE becomes the total KE of both
+charges together.}
+
+\worksp{md}
+
+\clearpage
+%============================================================
+\partsec{B}{Even Steps in Potential, Uniform Field}
+
+\prob A parallel-plate capacitor has plate separation $6.0$ mm and a uniform field
+$E=3000$ N/C between the plates, pointing from the $+$ plate to the $-$ plate.
+
+\textbf{(a)} Draw the field lines between the plates (evenly spaced, pointing from
+$+$ to $-$).
+
+\textbf{(b)} Draw four equally-spaced equipotential lines between the plates, and
+label the potential of each one --- take $V=0$ at the negative plate.
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \draw[red!70!black,line width=1.6pt] (0,-2.2) -- (0,2.2);
+  \foreach \y in {-1.8,-1.0,-0.2,0.6,1.4}{\node[red!70!black,scale=0.75] at (-0.3,\y){$+$};}
+  \draw[blue!55!black,line width=1.6pt] (7,-2.2) -- (7,2.2);
+  \foreach \y in {-1.8,-1.0,-0.2,0.6,1.4}{\node[blue!55!black,scale=0.75] at (7.3,\y){$-$};}
+  \node[gray!50!black,scale=0.8] at (3.5,-2.7) {(plates are $6.0$ mm apart --- not drawn to scale)};
+\end{tikzpicture}
+\end{center}
+\worksp{md}
+
+\textbf{(c)} A $+4.0$ nC charge moves from the positive plate to a point $1.5$ mm
+away (one quarter of the way across). How much potential energy does it lose?
+
+\worksp{sm}
+
+%============================================================
+\partsec{C}{$V$ Doesn't Have to Change Evenly to Know $\Delta U$}
+
+\prob A charge moves from point A, where $V_A=+10$ V, to point B, where $V_B=+40$ V
+--- but the potential along the way is \emph{not} uniform: it rises and dips in
+between (like a bumpy hill, not a smooth ramp). Sketch a plausible bumpy $V(x)$ between
+A and B below, consistent with those two endpoint values.
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \draw[gray!60,->] (0,0) -- (9,0) node[right,scale=0.8]{position};
+  \draw[gray!60,->] (0,-0.3) -- (0,4.5) node[above,scale=0.8]{$V$};
+  \node[below,scale=0.8] at (1,-0.1) {A};
+  \node[below,scale=0.8] at (8,-0.1) {B};
+  \draw[gray!40,dashed] (1,0) -- (1,4.5);
+  \draw[gray!40,dashed] (8,0) -- (8,4.5);
+\end{tikzpicture}
+\end{center}
+\worksp{sm}
+
+\textbf{(a)} A $+2.0$ nC charge moves from A to B along this bumpy path. What is
+$\Delta U$?
+
+\worksp{sm}
+
+\textbf{(b)} Does the bumpiness of the path matter to your answer in (a)? Why or why
+not? (Think about the ball-on-a-hill analogy --- does it matter if the hill between
+the start and end points is smooth or bumpy?)
+
+\worksp{sm}
+
+\clearpage
+%============================================================
+\partsec{D}{Superposition with Continuous Distributions}
+
+\prob An infinite line of charge with density $\lambda=+2.0\times10^{-8}$ C/m runs
+along the $y$-axis. A point charge $q=+3.0$ nC sits on the $x$-axis at $x=10$ cm.
+Point $P$ sits on the $x$-axis at $x=5.0$ cm --- between the line and the point
+charge.
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \draw[red!70!black,line width=1.6pt] (0,-1.6) -- (0,1.6);
+  \foreach \y in {-1.2,-0.4,0.4,1.2}{\node[red!70!black,scale=0.7] at (-0.35,\y){$+$};}
+  \node[red!70!black,scale=0.8] at (0,1.9) {$\lambda$};
+  \draw[gray,->] (-0.7,0) -- (10.5,0) node[right,scale=0.8]{$x$};
+  \node[circle,draw,fill=white,inner sep=1.5pt] at (5,0) {};
+  \node[above,scale=0.8] at (5,0.2) {$P$};
+  \poscharge{10}{0}{0.35}
+  \node[below,scale=0.75] at (10,-0.5) {$q{=}{+}3.0$ nC};
+\end{tikzpicture}
+\end{center}
+
+\textbf{(a)} Find the field at $P$ due to the line alone.
+
+\worksp{sm}
+
+\textbf{(b)} Find the field at $P$ due to the point charge alone.
+
+\worksp{sm}
+
+\textbf{(c)} Add them as vectors (careful with directions!) to find the net field at
+$P$.
+
+\worksp{sm}
+
+\prob An infinite plane of charge with density $\eta=+1.0\times10^{-9}$ C/m$^2$ lies
+in the $yz$-plane. A point charge $q=+5.0$ nC sits on the $x$-axis at $x=2.0$ cm, on
+the same side as point $P$ at $x=1.0$ cm.
+
+\textbf{(a)} Find the field at $P$ due to the plane alone, and due to the point
+charge alone.
+
+\worksp{sm}
+
+\textbf{(b)} Add them as vectors to find the net field at $P$. Which source
+dominates, and does that surprise you given how differently each one's field falls
+off with distance?
+
+\worksp{md}
+
+\end{document}
