@@ -1,0 +1,241 @@
+\documentclass[11pt]{article}
+\usepackage{hw-solutions-common}
+
+\begin{document}
+
+\hwsolhead{Written HW 4}{Problem statements from Knight, \emph{Physics for Scientists and
+Engineers} (5th ed., Global Edition), Chapter 25. $\dfrac{1}{4\pi\varepsilon_0} =
+8.99\times10^{9}$ N$\cdot$m$^2$/C$^2$, $\varepsilon_0 = 8.85\times10^{-12}$
+C$^2$/(N$\cdot$m$^2$), and $g = 9.8$ m/s$^2$ throughout.}
+
+%============================================================
+\problem{25.6}{2}{What is the electric potential energy of the group of charges in
+Figure EX25.6? A $-4.0$ nC charge and a $+3.0$ nC charge sit 3.0 cm apart. A second
+$+3.0$ nC charge sits 4.0 cm from the $-4.0$ nC charge, at a right angle to the first
+pair, so the two $+3.0$ nC charges are 5.0 cm apart.}
+
+\model{For a set of point charges, the total electric potential energy is the sum of
+the potential energies of every distinct pair.}
+
+\visualize{Label the charges $q_1=-4.0$ nC, $q_2=+3.0$ nC, $q_3=+3.0$ nC, with
+$r_{12}=3.0$ cm, $r_{13}=4.0$ cm, and $r_{23}=5.0$ cm (the hypotenuse of the 3-4-5 right
+triangle formed by the three charges). Three pairs, three terms.}
+
+\solve{
+\[
+U = \frac{1}{4\pi\varepsilon_0}\left(\frac{q_1q_2}{r_{12}} + \frac{q_1q_3}{r_{13}} +
+\frac{q_2q_3}{r_{23}}\right)
+\]
+\[
+= (8.99\times10^{9})\left[\frac{(-4.0\times10^{-9})(3.0\times10^{-9})}{0.030} +
+\frac{(-4.0\times10^{-9})(3.0\times10^{-9})}{0.040} +
+\frac{(3.0\times10^{-9})(3.0\times10^{-9})}{0.050}\right]
+\]
+\[
+= -3.60\times10^{-6}\text{ J} - 2.70\times10^{-6}\text{ J} + 1.62\times10^{-6}\text{ J}
+= \boxed{-4.7\times10^{-6}\text{ J}}.
+\]}
+
+\review{The two negative terms (each involving the $-4.0$ nC charge paired with a
+$+3.0$ nC charge) outweigh the one positive term (the two $+3.0$ nC charges together),
+so the total comes out negative overall --- consistent with the $-4.0$ nC charge being
+closer to both $+3.0$ nC charges than they are to each other.}
+
+%============================================================
+\problem{25.8}{2}{Three charged particles sit at the corners of an equilateral triangle
+with 4.0 cm edges. One particle has charge $+4.0$ nC, a second has charge $+8.0$ nC.
+What charge must the third particle have for the total electric potential energy of the
+three particles to be zero?}
+
+\model{Every side of an equilateral triangle has the same length, so all three pairwise
+separations equal $d=4.0$ cm. Set the sum of the three pairwise potential energies to
+zero and solve for the unknown charge $q$.}
+
+\visualize{Call the known charges $q_1=+3.0$ nC and $q_2=+6.0$ nC and the unknown
+charge $q$ --- with both given charges positive, their pairwise energy $U_{12}$ is
+already positive, so $q$ must be negative to bring the total back down to zero.}
+
+\solve{
+\[
+U = \frac{1}{4\pi\varepsilon_0 d}\Big[q_1q_2 + q_1q + q_2q\Big] = 0
+\;\Rightarrow\;
+q_1q_2 = -(q_1+q_2)\,q
+\]
+\[
+(3.0\text{ nC})(6.0\text{ nC}) = -(9.0\text{ nC})\,q
+\;\Rightarrow\;
+q = \frac{18\text{ nC}^2}{-9.0\text{ nC}} = \boxed{-2.0\text{ nC}}.
+\]}
+
+\review{Both given charges are positive, so the pair between them contributes a
+positive term no matter what. The only way to zero out the total is a negative third
+charge, and that's exactly what falls out --- a good sign the setup is right before
+even checking the arithmetic.}
+
+%============================================================
+\problem{25.19}{3}{A proton travels along the $x$-axis at points where the electric
+potential is $V(x) = (200\text{ V/m})\,x$. As it passes $x=0$ m, the proton's speed is
+$2.5\times10^5$ m/s. What speed does it have when it reaches $x=1.0$ m?}
+
+\model{Energy is conserved. The proton's total mechanical energy, kinetic plus
+electric potential, is the same at both points.}
+
+\visualize{Call $x=0$ point 1 and $x=1.0$ m point 2, so $V_1=0$ V and $V_2=200$ V. The
+proton is positive and moving into higher potential, so it should lose kinetic energy
+--- we expect it to slow down.}
+
+\solve{Using $U=qV$ and conservation of energy,
+\[
+\tfrac12 m v_1^2 + qV_1 = \tfrac12 m v_2^2 + qV_2
+\;\Rightarrow\;
+v_2 = \sqrt{v_1^2 - \frac{2q}{m}(V_2-V_1)}
+\]
+\[
+= \sqrt{(2.5\times10^5)^2 - \frac{2(1.60\times10^{-19})}{1.67\times10^{-27}}(200\text{
+V})} = \boxed{1.5\times10^5\text{ m/s}}.
+\]}
+
+\review{The proton does slow down, as expected for a positive charge moving toward
+higher potential --- the same rule from the height analogy: a positive charge climbing
+toward higher $V$ trades kinetic energy for potential energy, just like a ball climbing
+a hill trades kinetic energy for gravitational PE.}
+
+%============================================================
+\problem{25.26}{3}{A proton is fired with speed $2.00\times10^5$ m/s from the midpoint
+of a parallel-plate capacitor, straight toward the positive plate. The plates are held
+at 0 V and $+500$ V. (a) Does the proton reach the positive plate? (b) What speed does
+it have when it returns to the negative plate? \emph{Also: do you have enough
+information to determine the $x$-position of the proton when it turns around? If so,
+what is that point? If not, what information is missing?}}
+
+\model{The potential inside a parallel-plate capacitor rises linearly from the negative
+plate to the positive plate, so the midpoint sits exactly halfway between the two plate
+voltages: $V_{\text{mid}} = 250$ V. Energy is conserved throughout.}
+
+\visualize{The proton starts at the midpoint moving toward the positive (higher-$V$)
+plate, so it decelerates. Whether it reaches the plate depends on whether its initial
+kinetic energy is enough to supply the potential-energy increase over the remaining
+$500\text{ V}-250\text{ V}=250\text{ V}$ it would still have to climb.}
+
+\solve{(a) The kinetic energy available is
+\[
+K = \tfrac12 m v^2 = \tfrac12(1.67\times10^{-27}\text{ kg})(2.00\times10^5\text{
+m/s})^2 = 3.34\times10^{-17}\text{ J}.
+\]
+Reaching the positive plate requires climbing the remaining $250$ V from the midpoint,
+which costs
+\[
+\Delta U = e\,\Delta V = (1.60\times10^{-19}\text{ C})(250\text{ V}) =
+4.00\times10^{-17}\text{ J}.
+\]
+Since $K < \Delta U$, \boxed{\text{the proton does not reach the positive plate}} --- it
+runs out of kinetic energy first and turns around.
+
+(b) The proton returns through the midpoint with its original speed (energy
+conservation is symmetric) and continues on to the negative plate, which is at
+\emph{lower} potential than the midpoint, so it speeds up over that stretch:
+\[
+v_f = \sqrt{v^2 + \frac{2e}{m}(250\text{ V} - 0\text{ V})} = \boxed{2.96\times10^5\text{
+m/s}}.
+\]
+
+\textbf{Turning point:} Yes, this is determined. At the instant it turns around, all of
+its initial kinetic energy has converted to potential energy, so the potential there,
+$V_{\text{turn}}$, satisfies $e(V_{\text{turn}}-250\text{ V}) = K = 3.34\times10^{-17}$
+J, giving $V_{\text{turn}} = 250\text{ V} + 209\text{ V} = 459$ V. Since $V$ rises
+linearly with position, that's $459/500 = 91.8\%$ of the way from the negative plate to
+the positive plate --- \emph{as a fraction of the full plate separation}. Converting
+that fraction into an actual distance (in mm, say) would need the plate spacing itself,
+which isn't needed for anything else in this problem and may or may not be given in the
+figure; if it is, multiply the plate spacing by 0.918 to get the position.}
+
+\review{Parts (a) and (b) both hinge on the same idea from lecture: $V$ doesn't have to
+change by equal amounts to change the outcome, but here it changes \emph{steadily}, so
+distance and potential are directly proportional --- which is exactly what makes the
+turning-point fraction (91.8\% of the gap) translate directly into a position, unlike a
+capacitor with a bumpier, non-uniform $V(x)$.}
+
+%============================================================
+\problem{25.30}{2}{What is the electric potential at the point indicated with the dot
+in Figure EX25.30? Three charges $+1.0$ nC, $+2.0$ nC, and $-2.0$ nC sit at the corners
+of a symmetric arrangement, each a horizontal distance of 1.5 cm from the dot's vertical
+line, at $30^\circ$ from the line to the dot.}
+
+\model{The net potential at a point is the scalar sum of the potentials from each
+charge --- no components, no angles needed once each distance to the dot is known.}
+
+\visualize{By the $30^\circ$ geometry, all three charges are the same distance $r$
+from the dot: $r = (1.5\text{ cm})/\cos30^\circ = 1.732$ cm.}
+
+\solve{
+\[
+V = \frac{1}{4\pi\varepsilon_0}\left(\frac{q_1}{r}+\frac{q_2}{r}+\frac{q_3}{r}\right) =
+(8.99\times10^9)\left[\frac{1.0\times10^{-9}}{0.01732} +
+\frac{2.0\times10^{-9}}{0.01732} + \frac{-2.0\times10^{-9}}{0.01732}\right]
+\]
+\[
+= \boxed{+520\text{ V}}.
+\]}
+
+\review{Since $r$ is the same for all three charges, the whole sum collapses to
+$\frac{1}{4\pi\varepsilon_0 r}(q_1+q_2+q_3)$ --- the net potential of three equidistant
+charges only cares about their \emph{total} charge, $+1.0$ nC in this case. That
+shortcut only works because all three distances happen to be equal; it would not apply
+if the charges sat at different distances from the dot.}
+
+%============================================================
+\problem{25.38}{5}{A $-10.0$ nC point charge and a $+20.0$ nC point charge are 15.0 cm
+apart on the $x$-axis, with the $+20.0$ nC charge at the origin. (a) What is the
+electric potential at the point on the $x$-axis where the electric field is zero?
+(b) At what point on the $x$-axis is the electric potential zero, and what is the
+magnitude of the electric field at that point?}
+
+\model{The point where $\vec E=0$ is found from the field magnitudes of the two
+charges; the point where $V=0$ is found separately from the (scalar) potentials. These
+are two different points in general --- nothing requires them to coincide.}
+
+\visualize{Call $Q_1=+20.0$ nC (at $x=0$) and $Q_2=-10.0$ nC (at $x=15.0$ cm). Since
+$Q_1$ is bigger, the field-canceling point must be on the far side of the smaller
+charge $Q_2$, at $x>15.0$ cm, where $Q_1$'s field (pointing away from $Q_1$) and
+$Q_2$'s field (pointing toward $Q_2$) point in opposite directions and can balance.}
+
+\solve{(a) Setting the two field magnitudes equal at position $x$:
+\[
+\frac{1}{4\pi\varepsilon_0}\frac{20.0\text{ nC}}{x^2} =
+\frac{1}{4\pi\varepsilon_0}\frac{10.0\text{ nC}}{(x-15.0\text{ cm})^2}
+\;\Rightarrow\;
+x^2 = 2(x-15.0\text{ cm})^2
+\]
+\[
+\Rightarrow x^2-(60.0\text{ cm})x+450\text{ cm}^2=0
+\;\Rightarrow\;
+x = 51.2\text{ cm (the other root, 8.8 cm, falls between the charges and doesn't fit).}
+\]
+The potential there is
+\[
+V = \frac{1}{4\pi\varepsilon_0}\left(\frac{20.0\times10^{-9}}{0.512} +
+\frac{-10.0\times10^{-9}}{0.512-0.150}\right) = \boxed{+103\text{ V}}.
+\]
+
+(b) Setting the potentials to cancel instead, at a point $x$ between the charges:
+\[
+\frac{20.0\text{ nC}}{x} + \frac{-10.0\text{ nC}}{15.0\text{ cm}-x} = 0
+\;\Rightarrow\;
+2(15.0\text{ cm}-x) = x
+\;\Rightarrow\;
+\boxed{x=10.0\text{ cm}}.
+\]
+The field there is the vector sum of both contributions (both pointing in $+\hat x$
+at this point, since it's to the right of $Q_1$ and to the left of $Q_2$):
+\[
+E = \frac{1}{4\pi\varepsilon_0}\frac{20.0\times10^{-9}}{(0.100)^2} +
+\frac{1}{4\pi\varepsilon_0}\frac{10.0\times10^{-9}}{(0.050)^2} =
+\boxed{5.40\times10^4\text{ N/C}}.
+\]}
+
+\review{The two answers land on genuinely different points (51.2 cm vs.\ 10.0 cm) ---
+a direct illustration that $E=0$ and $V=0$ are unrelated conditions. At the field-zero
+point the potential is a nonzero $+103$ V; at the potential-zero point the field is a
+very much nonzero $5.4\times10^4$ N/C. Knowing one tells you nothing about the other.}
+
+\end{document}
