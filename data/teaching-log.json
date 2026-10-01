@@ -49,7 +49,9 @@
   },
   "2026-09-30": {
    "covered": "Scheduled as a catch-up/flex day ahead of Test 2 (Oct 2); used it as review rather than new content. Went back to the parallel-plate capacitor and introduced the idea of evenly spaced equipotential surfaces inside it. Asked students to compare the force on a charge at different locations inside the capacitor and ran a short think-pair-share on that, using it to identify where the potential was high vs. low. Leaned on the height analogy: emphasized that if you know the beginning and final height (potential), that alone is enough to get the change in speed of an object -- you don't need anything else. Then worked HW problem 25.26 (a proton shot into a capacitor toward a wall, which turns around and comes back) and discussed how the problem changes if it's an electron instead of a proton. Switched to the electric dipole in a field: torque, the right-hand rule, and relating that to the direction of angular acceleration. Also covered dipole potential energy, with emphasis -- via the worked example -- that the angle given in a problem is not necessarily the angle between the dipole moment and the field, so students have to actually draw it out to get that angle right. Closed by revisiting that the lowest-potential-energy orientation is the thing you actually need to find.",
-   "landed": "Students picked up the HW 25.26 proton-vs-electron comparison well."
+   "landed": "Students picked up the HW 25.26 proton-vs-electron comparison well.",
+   "wish": "Wanted to get to superposition between a point charge's field and a plane/line of charge, but didn't reach it.",
+   "nextYear": "Unit-level note, not specific to this review day: across the whole electrostatics unit this year, almost no class time went to conductors & insulators or to polarization problems. The idea was introduced briefly in lecture but never followed up with a single class question on it. Make sure conductors/insulators and polarization get real class time and actual questions next year, not just a passing mention."
   },
   "2026-09-25": {
    "covered": "Kickoff + HW feedback, then welcomed the two sections back together after 3 lectures split. Stressed that F, E, U, and V are all linear quantities that obey superposition - e.g. the E field from a line of charge plus a point charge is just the vector sum of their individual contributions - and that this will be on Test 2. Then EPE: compared gravity and electrostatics side by side. Ball with U=mgh, then U in a hole of depth d (the -mgd sign flip is genuinely counterintuitive to them, good discussion). Constant E field with + and - charges. Full Newtonian gravitation - they hadn't seen the PE form before, only the near-Earth value - graphed PE for Earth and Moon and discussed why it's negative, compared back to electrostatics. Finished with U = -p . E for a dipole in a constant field.",
@@ -160,6 +162,34 @@
    "created": "2026-09-02",
    "usedOn": null,
    "note": "Equation Sheet: Oscillations & Waves - Lectures 1-6, Knight ch. 15-17. Covers exactly the Test 1 material, so it is linked from the Test 1 day as the unit reference. Not handed out on test day itself; usedOn left null because the day it was actually distributed is unconfirmed."
+  }
+ ],
+ "_demosComment": "Regular in-class physical demos (not sims, not handouts) -- requested by Seth 2026-10-01 so the master schedule can show which demos belong on which day. usedOn is the ISO date once confirmed; leave null rather than guess.",
+ "demos": [
+  {
+   "name": "Electroscope demo",
+   "unit": "electrostatics",
+   "usedOn": null,
+   "note": "Charging/grounding/induction demo with an electroscope. Per Seth 2026-10-01: landed very well this year even though it was quite humid. Exact class date not yet confirmed."
+  },
+  {
+   "name": "Rolling can demo",
+   "unit": "electrostatics",
+   "usedOn": null,
+   "note": "Induction demo -- rolling a can using a charged object brought near it, no contact. Per Seth 2026-10-01: landed very well this year even though it was quite humid. Exact class date not yet confirmed."
+  },
+  {
+   "name": "Standing waves in a pipe",
+   "unit": "waves",
+   "usedOn": null,
+   "note": "Per Seth 2026-10-01: the only waves-unit physical demo actually used this year. Exact class date not yet confirmed."
+  }
+ ],
+ "demosWishlist": [
+  {
+   "name": "Ukulele",
+   "unit": "waves",
+   "note": "Per Seth 2026-10-01: would be good to have for next year's waves-unit demos (plucked string -> standing wave) -- this year's waves demos were limited to standing waves in a pipe."
   }
  ]
 }
