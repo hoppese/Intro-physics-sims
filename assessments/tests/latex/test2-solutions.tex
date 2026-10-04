@@ -1,0 +1,317 @@
+\documentclass[11pt]{article}
+\usepackage{hw-solutions-common}
+\usepackage{amsmath,amssymb}
+
+\begin{document}
+
+\hwsolhead{Test 2}{Both tracks (PHYS 230 algebra / PHYS 235 calculus) share
+Sections 1--3; Section 4 differs by track and is given separately below.
+Constants used throughout: $\dfrac{1}{4\pi\varepsilon_0}=8.99\times10^{9}$
+N$\cdot$m$^2$/C$^2$, $\varepsilon_0=8.85\times10^{-12}$ C$^2$/(N$\cdot$m$^2$),
+$e=1.602\times10^{-19}$ C, $m_p=1.673\times10^{-27}$ kg.}
+
+%============================================================
+\problem{Section 1 --- P1: sign of $V$, direction of $\vec E$}{4}{$Q=+4.0$ nC
+sits at the origin, $q=-1.0$ nC sits at $x=5.0$ cm. P1 is on the axis at
+$x=4.0$ cm, 4.0 cm from $Q$ and 1.0 cm from $q$.}
+
+\solve{Superpose the two point-charge potentials (dropping the common factor
+$1/4\pi\varepsilon_0$ and units, as the hint allows):
+\[
+V_1 \propto \frac{Q}{r_Q}+\frac{q}{r_q} = \frac{4.0}{4.0}+\frac{-1.0}{1.0} = 1.0-1.0 =
+\boxed{0}.
+\]
+\textbf{(C) zero.} For the field: $Q$ is positive and P1 is to its right, so
+$\vec E_Q$ points away from $Q$, in $+\hat x$. $q$ is negative and P1 is to
+its left, so $\vec E_q$ points \emph{toward} $q$ -- also $+\hat x$. The two
+contributions add instead of fighting each other, so
+\[
+\boxed{\vec E_1 \text{ points in } +\hat x \text{ (due right, toward } q\text{)}}.
+\]}
+
+\review{P1 is the case where $V=0$ but $\vec E\neq 0$ -- the two potentials
+cancel exactly (closer to the smaller-magnitude charge by exactly the ratio
+that makes it work), but the two field contributions don't fight each other
+at all, they add. $V=0$ and $\vec E=0$ are not the same condition, and this
+point is designed to make that visible.}
+
+%============================================================
+\problem{Section 1 --- P2: sign of $V$, direction of $\vec E$}{4}{P2 is at
+$(5.0,\,2.4)$ cm -- directly above $q$, 2.4 cm away from it, and
+$\sqrt{5.0^2+2.4^2}=5.5$ cm from $Q$.}
+
+\solve{\[
+V_2 \propto \frac{4.0}{5.5}+\frac{-1.0}{2.4} = 0.73-0.42 = \boxed{+0.30}
+\;\Rightarrow\; \textbf{(A) positive}.
+\]
+For the field, weight each unit vector by $1/r^2$. $\vec E_Q$ points away
+from $Q$, along the line from $Q$ to P2 (up and to the right); $\vec E_q$
+points straight down toward $q$ (P2 sits directly above it). Using
+$ E\propto |charge|/r^2$:
+\[
+\vec E_{Q,2}\propto \frac{4.0}{5.5^2}(0.90,\,0.43) = (0.117,\,0.056),
+\qquad
+\vec E_{q,2}\propto \frac{1.0}{2.4^2}(0,\,-1) = (0,\,-0.174).
+\]
+Adding, $\vec E_2 \propto (0.117,\,-0.117)$ -- equal magnitude $+x$ and
+$-y$ components, i.e.
+\[
+\boxed{\vec E_2 \text{ points } 45^\circ \text{ below } +\hat x \text{ (southeast)}}.
+\]}
+
+\review{The $2.4$ cm height isn't an arbitrary number -- it's exactly the
+value that makes $Q$'s field and $q$'s field add up to a clean $45^\circ$
+direction, so a numeric sanity check (rather than just a qualitative
+``down-and-to-the-right'' guess) is the fastest way to confirm you have the
+right compass direction.}
+
+%============================================================
+\problem{Section 1 --- P3: sign of $V$, direction of $\vec E$}{4}{P3 is on
+the axis at $x=10$ cm, beyond $q$: 10 cm from $Q$, 5.0 cm from $q$.}
+
+\solve{\[
+V_3 \propto \frac{4.0}{10}+\frac{-1.0}{5.0} = 0.40-0.20 = \boxed{+0.20}
+\;\Rightarrow\; \textbf{(A) positive}.
+\]
+For the field: $\vec E_Q \propto Q/r_Q^2 = 4.0/10^2 = 0.040$, pointing away
+from $Q$ (i.e.\ $+\hat x$, since P3 is to the right of $Q$). $\vec E_q
+\propto |q|/r_q^2 = 1.0/5.0^2 = 0.040$, pointing \emph{toward} $q$ (i.e.\
+$-\hat x$, since P3 is to the right of $q$). Equal magnitude, opposite
+direction:
+\[
+\boxed{\vec E_3 = 0}.
+\]}
+
+\review{P3 is the mirror image of P1: there, $V$ canceled but $\vec E$
+didn't; here $\vec E$ cancels exactly (by design: $4.0/10^2$ and
+$1.0/5.0^2$ both equal $0.040$) while $V$ stays comfortably positive. Together
+the three points cover all three cases a student needs to tell apart:
+$V=0,\vec E\neq0$ (P1); both nonzero (P2); $V\neq0,\vec E=0$ (P3).}
+
+%============================================================
+\problem{Section 2 --- Part 1: the dipole moment}{5}{Charges of magnitude
+5 nC, separated by $6\ \mu$m, with $\vec E = 20$ N/C $\hat y$. The dipole
+moment points $60^\circ$ below the $x$-axis (``Orientation A'').}
+
+\solve{The dipole moment has magnitude
+\[
+p = qd = (5.0\times10^{-9}\text{ C})(6.0\times10^{-6}\text{ m}) =
+\boxed{3.0\times10^{-14}\text{ C}\cdot\text{m}},
+\]
+pointing (by definition, from $-q$ to $+q$) $60^\circ$ below the $+x$-axis,
+i.e.
+\[
+\vec p = p(\cos(-60^\circ),\,\sin(-60^\circ),\,0) = (1.5,\,-2.6,\,0)\times10^{-14}\text{
+C}\cdot\text{m}.
+\]
+\textbf{Drawing:} the $+x$-axis horizontal, $+y$ vertical. $\vec E$ is a
+vertical arrow pointing straight up ($+\hat y$). $\vec p$ is a separate arrow
+starting at the dipole's center, $60^\circ$ \emph{below} the $+x$-axis (down
+and to the right, into the fourth quadrant) -- \emph{not} aligned with
+$\vec E$ and not symmetric about either axis. The negative charge sits at
+the tail of $\vec p$, the positive charge at the head, $6\ \mu$m apart along
+that same line.}
+
+\review{A common error here is drawing $p$ at $60^\circ$ \emph{above} the
+axis, or measuring the angle from $\vec E$ instead of from the $x$-axis --
+read the setup's wording carefully (as the problem itself warns): the angle
+given is always relative to the axis stated, not to the field.}
+
+%============================================================
+\problem{Section 2 --- Part 2: torque}{4}{Same dipole and field as above.}
+
+\solve{$\vec\tau = \vec p\times\vec E$. Since $\vec p=(p_x,p_y,0)$ and
+$\vec E=(0,E_y,0)$ (purely $\hat y$),
+\[
+\vec\tau = (0,\,0,\,p_xE_y) = (0,\,0,\,(1.5\times10^{-14})(20)) =
+\boxed{(0,\,0,\,3.0\times10^{-13})\text{ N}\cdot\text{m}},
+\]
+i.e.\ $3.0\times10^{-13}$ N$\cdot$m in $+\hat z$ (out of the page).}
+
+\review{The torque vector's direction is the rotation \emph{axis}, found by
+the right-hand rule, not a push in some in-plane direction. $+\hat z$ means:
+curl the right hand's fingers from $\vec p$ toward $\vec E$ through the
+\emph{smaller} angle between them, and the thumb points out of the page --
+confirming the dipole is being spun counterclockwise (as drawn, with $+x$
+right and $+y$ up), rotating $\vec p$ up and to the left, toward alignment
+with $\vec E$.}
+
+%============================================================
+\problem{Section 2 --- Part 3: potential energy, Orientation A vs.\ B}{6}{Same
+dipole and field. Orientation B is whichever orientation has the lowest PE.}
+
+\solve{$U=-\vec p\cdot\vec E=-pE\cos\theta$, where $\theta$ is the angle
+between $\vec p$ and $\vec E$. This is minimized when $\cos\theta=1$, i.e.\
+$\vec p$ points the \emph{same direction as} $\vec E$ -- straight up,
+$+\hat y$. \textbf{Orientation B: $\vec p$ parallel to $\vec E$ (pointing
+straight up).}
+
+In Orientation A, $\vec p$ is at $-60^\circ$ and $\vec E$ is at $+90^\circ$
+(both measured from $+x$), so $\theta_A = 90^\circ-(-60^\circ)=150^\circ$:
+\[
+U_A = -pE\cos150^\circ = -(3.0\times10^{-14})(20)(-0.866) = +5.2\times10^{-13}\text{ J}.
+\]
+In Orientation B, $\theta_B=0$:
+\[
+U_B = -pE\cos0^\circ = -(3.0\times10^{-14})(20) = -6.0\times10^{-13}\text{ J}.
+\]
+So Orientation A has
+\[
+U_A-U_B = 5.2\times10^{-13}-(-6.0\times10^{-13}) = \boxed{1.1\times10^{-12}\text{
+J \emph{more} than Orientation B}}.
+\]}
+
+\review{$U_A-U_B = pE(1-\cos\theta_A)$ ranges from $0$ (if A already equals
+B) to $2pE=1.2\times10^{-12}$ J (if A is the \emph{worst} orientation,
+anti-aligned with $\vec E$). $150^\circ$ is close to that worst case
+($180^\circ$), so it makes sense that $U_A-U_B$ comes out close to, but
+just under, that $2pE$ ceiling.}
+
+%============================================================
+\problem{Section 3 --- parts 1 \& 2: two charged rods}{16}{\emph{PENDING --
+needs the figure.} The source file references an image, \texttt{rods.png},
+showing where points A, B, and C sit relative to the two rods (B is given as
+halfway between them, but A and C's exact positions/distances aren't
+recoverable from the \LaTeX{} source alone). Once I have that figure (or
+you just tell me how far A and C sit from their nearest rod, in terms of
+$d$), I'll fill in both parts -- same verified-numerically approach as the
+rest of this set. The method itself is straightforward superposition of
+$E=\lambda/2\pi\varepsilon_0 r$ from each rod (with sign/direction from each
+rod's charge), same pattern as Written HW 3's two-sheets problem.}
+
+%============================================================
+\begin{center}{\LARGE\bfseries Section 4 --- PHYS 235 (Calculus track): Gauss's Law}\end{center}
+\vspace{2mm}
+
+\problem{Part 1: enclosed charge}{8}{A cube with 3.0 cm sides. The field is
+purely in $\hat y$ everywhere. At the top face, $\vec E=\langle
+0,-34,0\rangle$ N/C; at the bottom face, $\vec E=\langle 0,+20,0\rangle$
+N/C.}
+
+\solve{Since $\vec E$ has no $x$ or $z$ component, the flux through all four
+side faces is zero (their outward normals are $\pm\hat x$ or $\pm\hat z$,
+perpendicular to $\vec E$). Only the top and bottom faces contribute. With
+$A=(0.030\text{ m})^2 = 9.0\times10^{-4}$ m$^2$:
+
+\emph{Top face}, outward normal $+\hat y$:
+$\Phi_{\text{top}} = \vec E_{\text{top}}\cdot\hat n\,A = (-34)(+1)A = -34A$.
+
+\emph{Bottom face}, outward normal $-\hat y$:
+$\Phi_{\text{bottom}} = \vec E_{\text{bottom}}\cdot\hat n\,A = (+20)(-1)A = -20A$.
+
+\[
+\Phi_{\text{total}} = -34A-20A = -54A = -54(9.0\times10^{-4}) = -0.0486\text{
+N}\cdot\text{m}^2/\text{C}.
+\]
+By Gauss's law,
+\[
+Q_{\text{enc}} = \varepsilon_0\Phi_{\text{total}} =
+(8.85\times10^{-12})(-0.0486) = \boxed{-4.3\times10^{-13}\text{ C} \approx
+-0.43\text{ pC}}.
+\]
+A drawing should show the cube with $\vec E$ arrows pointing \emph{down}
+into the top face (since $\vec E_{\text{top}}$ points in $-\hat y$, into the
+cube from above) and pointing \emph{up} into the bottom face (since
+$\vec E_{\text{bottom}}$ points in $+\hat y$, into the cube from below) --
+field lines converging into the cube from both the top and the bottom,
+consistent with a net negative charge trapped inside.}
+
+\review{The two faces don't need to have equal field strength for this to
+work -- Gauss's law only cares about the net flux. Here $34$ and $20$ N/C
+aren't equal, so the two faces don't exactly cancel, and that imbalance
+(both pointing inward, but by different amounts) is exactly what leaves a
+nonzero, negative $Q_{\text{enc}}$.}
+
+\problem{Part 2: what Gauss's law can and can't tell you}{4}{Same cube.}
+
+\solve{Gauss's law only ever gives the \emph{total} charge enclosed by a
+surface -- it has no way to say \emph{where} inside the cube that charge
+actually sits. The $-0.43$ pC found above could be a thin sheet right at the
+cube's center, spread uniformly through the whole volume, concentrated near
+one face, or any other distribution; this calculation can't distinguish
+between them, and nothing in the given field values (just two numbers, at
+the top and bottom) provides enough information to localize it further.
+
+For charge \emph{outside} the cube: this particular Gaussian surface (the
+cube itself) tells us nothing about it. To learn anything about charge
+outside, you'd need to draw a \emph{different} Gaussian surface that
+encloses some of that outside region, together with field information on
+that new surface -- neither of which this problem gives us. The one thing
+we \emph{can} say is that whatever is outside is consistent with the field
+being purely $\hat y$-directed everywhere (not just inside the cube): that's
+a strong symmetry statement (reminiscent of infinite charged sheets, where
+the field depends only on height, never on the horizontal position), but it
+still doesn't pin down a location or an amount.}
+
+\review{This pair of questions is really testing the same idea from two
+sides: Gauss's law is a statement about a \emph{surface integral} of the
+field, which only ever recovers the enclosed charge's \emph{total}, not its
+spatial distribution, and only for the one surface you chose to apply it to.}
+
+%============================================================
+\begin{center}{\LARGE\bfseries Section 4 --- PHYS 230 (Algebra track): Using Electric Potential}\end{center}
+\vspace{2mm}
+
+\problem{Part 1: does the proton reach point 2?}{6}{A proton passes point 1
+at $v_1=50{,}000$ m/s, crossing from the $30$ V equipotential to the $-10$ V
+equipotential at point 2.}
+
+\solve{Energy conservation for a charge $q$ moving through a potential
+difference: $\frac12mv_1^2+qV_1 = \frac12mv_2^2+qV_2$, so
+\[
+\frac12mv_2^2 = \frac12mv_1^2 + q(V_1-V_2).
+\]
+For the proton, $q=+e$, and $V_1-V_2 = 30-(-10)=40$ V, so the proton is
+moving from high to low potential -- a positive charge ``sliding downhill,''
+which \emph{speeds it up}:
+\[
+\tfrac12mv_1^2 = \tfrac12(1.673\times10^{-27})(50{,}000)^2 = 2.09\times10^{-18}\text{ J},
+\]
+\[
+q(V_1-V_2) = (1.602\times10^{-19})(40) = 6.41\times10^{-18}\text{ J},
+\]
+\[
+\tfrac12mv_2^2 = 2.09\times10^{-18}+6.41\times10^{-18} = 8.50\times10^{-18}\text{ J},
+\]
+\[
+v_2 = \sqrt{\frac{2(8.50\times10^{-18})}{1.673\times10^{-27}}} =
+\boxed{1.0\times10^{5}\text{ m/s. Yes, it reaches point 2.}}
+\]}
+
+\review{A proton moving from higher to lower potential is exactly like a
+ball rolling downhill -- it's expected to speed up, and it does (from
+$5.0\times10^4$ to $1.0\times10^5$ m/s, roughly double).}
+
+\problem{Part 2: does the antiproton reach point 2?}{6}{An antiproton (same
+mass, charge $-e$) passes point 1 with the \emph{same} speed, $50{,}000$
+m/s, along the same path.}
+
+\solve{Same equation, but now $q=-e$:
+\[
+\tfrac12mv_2^2 = \tfrac12mv_1^2 + q(V_1-V_2) = 2.09\times10^{-18} +
+(-1.602\times10^{-19})(40),
+\]
+\[
+\tfrac12mv_2^2 = 2.09\times10^{-18}-6.41\times10^{-18} =
+-4.32\times10^{-18}\text{ J}.
+\]
+That's negative, which is impossible for $\tfrac12mv_2^2$ -- \textbf{the
+antiproton does not reach point 2.} It's a negative charge moving from high
+to low potential, which is ``uphill'' for it, so it slows down and turns
+around before getting there. To find where: set the kinetic energy to zero
+at the turning point and solve for $V_{\text{turn}}$,
+\[
+\tfrac12mv_1^2 + qV_1 = 0 + qV_{\text{turn}}
+\;\Rightarrow\;
+V_{\text{turn}} = V_1 + \frac{\tfrac12mv_1^2}{q} = 30 +
+\frac{2.09\times10^{-18}}{-1.602\times10^{-19}} = 30-13.1 =
+\boxed{+17\text{ V}}.
+\]}
+
+\review{$17$ V sits between the $30$ V starting point and the $-10$ V target
+-- so the antiproton makes it about halfway there before running out of
+kinetic energy and turning back. Same mass, same starting speed, opposite
+charge, opposite outcome: this pair of problems is designed to make that
+contrast (speeds up vs.\ turns around) as stark as possible.}
+
+\end{document}

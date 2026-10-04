@@ -1,0 +1,58 @@
+% hw-solutions-common.sty
+% Shared macros for "Written HW N — Full Solutions" PDFs.
+%
+% Usage: \documentclass[11pt]{article} \usepackage{hw-solutions-common}
+%
+% Matches the MODEL / VISUALIZE / SOLVE / REVIEW structure Knight's own
+% textbook uses for worked examples, so the solutions read the same way the
+% students' textbook does. One problem per \problem block; each block starts
+% on its own page.
+%
+% Sibling of worksheet-common.sty (in-class-practice) and notes-common.sty
+% (lecture-notes) — same house style where it overlaps (no paragraph indent,
+% plain page style), but this one is plain prose, not a fill-in handout.
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{hw-solutions-common}[2026/09/22 v1.0 Written-HW-solutions helpers]
+
+\RequirePackage[letterpaper, margin=0.9in]{geometry}
+\RequirePackage{amsmath,amssymb}
+\RequirePackage{xcolor}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.6mm}
+
+\definecolor{pnum}{RGB}{178,52,25}     % problem-number heading
+\definecolor{faint}{RGB}{110,118,128}  % the intro/source line
+
+% ---------------------------------------------------------------
+% Title block. \hwsolhead{Written HW 3}{source + constants line}
+% ---------------------------------------------------------------
+\newcommand{\hwsolhead}[2]{%
+  \begin{center}{\LARGE\bfseries #1 --- Full Solutions}\end{center}%
+  \vspace{2mm}
+  {\small\color{faint} #2}\par\vspace{4mm}%
+}
+
+% ---------------------------------------------------------------
+% One problem. \problem{23.3}{2}{statement text}
+% Starts a fresh page for every problem after the first.
+% ---------------------------------------------------------------
+\newcounter{hwprobnum}
+\newcommand{\problem}[3]{%
+  \ifnum\value{hwprobnum}>0 \clearpage\fi
+  \stepcounter{hwprobnum}%
+  {\Large\bfseries\color{pnum}#1\ (#2\ pts)}\par\vspace{2mm}%
+  #3\par\vspace{3mm}%
+}
+
+% ---------------------------------------------------------------
+% The four steps. Bold all-caps label, inline with the text.
+% ---------------------------------------------------------------
+\newcommand{\model}[1]{\noindent\textbf{MODEL:} #1\par\vspace{2mm}}
+\newcommand{\visualize}[1]{\noindent\textbf{VISUALIZE:} #1\par\vspace{2mm}}
+\newcommand{\solve}[1]{\noindent\textbf{SOLVE:} #1\par\vspace{2mm}}
+\newcommand{\review}[1]{\noindent\textbf{REVIEW:} #1\par\vspace{2mm}}
+
+\endinput
