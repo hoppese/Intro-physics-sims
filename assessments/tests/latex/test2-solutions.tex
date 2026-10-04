@@ -168,16 +168,93 @@ anti-aligned with $\vec E$). $150^\circ$ is close to that worst case
 just under, that $2pE$ ceiling.}
 
 %============================================================
-\problem{Section 3 --- parts 1 \& 2: two charged rods}{16}{\emph{PENDING --
-needs the figure.} The source file references an image, \texttt{rods.png},
-showing where points A, B, and C sit relative to the two rods (B is given as
-halfway between them, but A and C's exact positions/distances aren't
-recoverable from the \LaTeX{} source alone). Once I have that figure (or
-you just tell me how far A and C sit from their nearest rod, in terms of
-$d$), I'll fill in both parts -- same verified-numerically approach as the
-rest of this set. The method itself is straightforward superposition of
-$E=\lambda/2\pi\varepsilon_0 r$ from each rod (with sign/direction from each
-rod's charge), same pattern as Written HW 3's two-sheets problem.}
+\problem{Section 3 --- Part 1: field at A, B, C}{10}{Positive rod
+($\lambda_0$) and negative rod ($-4\lambda_0$) separated by $2d$. A is a
+distance $d$ to the left of the positive rod; C is a distance $d$ to the
+right of the negative rod; B is halfway between (distance $d$ from each).}
+
+\solve{Put the positive rod at $x=0$ and the negative rod at $x=2d$, so
+$A=-d$, $B=d$, $C=3d$. All three points lie on the line through both rods,
+so each rod's field there is purely along $\hat x$: pointing \emph{away}
+from the positive rod, \emph{toward} the negative rod.
+
+\textbf{At A} ($r_{\text{pos}}=d$, $r_{\text{neg}}=3d$): the positive rod's
+field pushes left ($-\hat x$, away from it); the negative rod's field pulls
+right ($+\hat x$, toward it, since the negative rod is to A's right).
+\[
+E_A = -\frac{\lambda_0}{2\pi\varepsilon_0 d} + \frac{4\lambda_0}{2\pi\varepsilon_0(3d)}
+= \frac{\lambda_0}{2\pi\varepsilon_0 d}\Big(-1+\tfrac43\Big) =
+\boxed{\frac{\lambda_0}{6\pi\varepsilon_0 d}\ \ (+\hat x\text{, toward the rods})}.
+\]
+
+\textbf{At B} ($r_{\text{pos}}=r_{\text{neg}}=d$): now \emph{both} fields
+point the same way -- away from the (weaker) positive rod is $+\hat x$ here
+(B is to its right), and toward the (stronger) negative rod is also
+$+\hat x$ (B is to its left). They add, not cancel:
+\[
+E_B = \frac{\lambda_0}{2\pi\varepsilon_0 d} + \frac{4\lambda_0}{2\pi\varepsilon_0 d} =
+\boxed{\frac{5\lambda_0}{2\pi\varepsilon_0 d}\ \ (+\hat x)}.
+\]
+
+\textbf{At C} ($r_{\text{pos}}=3d$, $r_{\text{neg}}=d$): away from the
+positive rod is $+\hat x$ (C is to its right); toward the negative rod is
+$-\hat x$ (C is to its right of it, so ``toward'' means back to the left).
+\[
+E_C = \frac{\lambda_0}{2\pi\varepsilon_0(3d)} - \frac{4\lambda_0}{2\pi\varepsilon_0 d}
+= \frac{\lambda_0}{2\pi\varepsilon_0 d}\Big(\tfrac13-4\Big) =
+\boxed{-\frac{11\lambda_0}{6\pi\varepsilon_0 d}\ \ \big(\text{i.e.\ } \tfrac{11\lambda_0}{6\pi\varepsilon_0 d}\text{ in } -\hat x\text{, toward the rods}\big)}.
+\]
+With $d=6$ cm and $\lambda_0=400$ nC/m (the 80\%-credit numeric option):
+$E_A \approx 4.0\times10^4$ N/C, $E_B\approx6.0\times10^5$ N/C, $E_C\approx
+4.4\times10^5$ N/C.}
+
+\review{B and C both end up dominated by the much closer, 4$\times$-stronger
+negative rod (that's why both exceed $E_A$ by more than an order of
+magnitude), but A is the one case where the two contributions subtract
+instead of reinforcing -- which is exactly why $A$'s field comes out so much
+smaller than the others, even though it's also only a distance $d$ from its
+near rod, same as $B$ and $C$.}
+
+%============================================================
+\problem{Section 3 --- Part 2: is there a location where $\vec E=0$?}{6}{Same
+two rods, now fixing $d=6$ cm.}
+
+\solve{First: \emph{where} could a null point even be possible? At any point
+off the line through the two rods, the two rods' fields point in genuinely
+different (non-opposite) directions -- two nonzero vectors that aren't
+anti-parallel can never sum to zero, regardless of their magnitudes. So a
+null point, if one exists, must lie on the line through both rods (the same
+line $A$, $B$, $C$ sit on).
+
+On that line there are three regions to check. \emph{Between the rods}
+($0<x<2d$): both fields point the same way (as at $B$ above) -- they can
+only add, never cancel, so no zero there. \emph{Right of the negative rod}
+($x>2d$, like $C$): setting the two magnitudes equal,
+$\lambda_0/r_{\text{pos}} = 4\lambda_0/r_{\text{neg}}$ with $r_{\text{neg}} =
+r_{\text{pos}}-2d$, gives $x=-2d/3$ -- negative, so \emph{not} actually in
+this region. No zero here either.
+
+\emph{Left of the positive rod} ($x<0$, like $A$): here the positive rod's
+field points further left ($-\hat x$) and the negative rod's field points
+right ($+\hat x$, toward it) -- opposite directions, so cancellation is at
+least possible. Setting magnitudes equal, with $r_{\text{pos}}=|x|=-x$ and
+$r_{\text{neg}}=2d-x$:
+\[
+\frac{\lambda_0}{-x} = \frac{4\lambda_0}{2d-x}
+\;\Rightarrow\;
+2d-x = -4x
+\;\Rightarrow\;
+\boxed{x=-\tfrac{2d}{3}\text{, i.e.\ a distance }\tfrac{2}{3}d\text{ to the
+left of the positive rod}}.
+\]
+With $d=6$ cm, that's $4.0$ cm to the left of the positive (left) rod --
+between the positive rod and point $A$ (which sits a full $d=6$ cm out).}
+
+\review{It makes sense the null point sits \emph{closer} to the positive
+rod than $A$ does: since the negative rod is $4\times$ stronger, the field
+point has to huddle in close to the weaker rod -- well inside $A$'s
+distance -- for the weaker rod's $1/r$ advantage (from proximity) to
+offset the stronger rod's $4\times$ charge advantage.}
 
 %============================================================
 \begin{center}{\LARGE\bfseries Section 4 --- PHYS 235 (Calculus track): Gauss's Law}\end{center}
