@@ -1175,6 +1175,14 @@
       "prac": "Solve a 2-loop network for all currents."
      },
      "split": false,
+     "handouts": [
+      {
+       "name": "Battery & Resistor Circuits (lecture notes)",
+       "kind": "Lecture notes",
+       "file": "assessments/lecture-notes/circuits-intro-notes.pdf",
+       "pages": 4
+      }
+     ],
      "due": [
       {
        "kind": "KO",

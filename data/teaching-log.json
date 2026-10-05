@@ -125,6 +125,15 @@
    "note": "First of a new series. Scaffolded density: prose and setup given; key results, the crucial algebra step and all diagram labels left blank. 3 pages, one symmetry each (line; sheet, plus the two-parallel-sheet superposition; sphere). Printed and handed out; the derivations happen on the whiteboard."
   },
   {
+   "file": "assessments/lecture-notes/circuits-intro-notes.pdf",
+   "name": "Battery & Resistor Circuits",
+   "source": "assessments/lecture-notes/latex/circuits-intro-notes.tex",
+   "kind": "skeleton lecture notes (print-and-fill-in)",
+   "created": "2026-10-05",
+   "usedOn": null,
+   "note": "Built from Seth's rough notes for Mon Oct 5 (Ohm's law + Kirchhoff's laws). Scaffolded density: definitions, four rules (series/parallel/junction/loop), Ohm's law, then one resistor (ideal vs. real battery) -> series -> parallel, each with a symbols-only derivation and a clean numeric example. 4 pages. Whether it's actually printed/handed out vs. taught from the board is unconfirmed -- see the skeleton-lecture-notes memory: this has gone either way before depending on Seth's in-the-moment read of the material."
+  },
+  {
    "file": "assessments/written-hw/written-hw-1-solutions.pdf",
    "name": "Written HW 1 — full solutions",
    "source": null,
