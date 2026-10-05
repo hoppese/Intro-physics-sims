@@ -10,8 +10,14 @@
 % not included this time.
 
 \newcommand{\battv}[1]{% vertical battery symbol centered at (#1)
+  % explicit leads, guaranteeing the plates connect to the rest of the
+  % loop even if the background wire doesn't render cleanly behind them
+  \draw[line width=0.7pt] ($(#1)+(0,0.55)$) -- ($(#1)+(0,0.12)$);
+  \draw[line width=0.7pt] ($(#1)+(0,-0.12)$) -- ($(#1)+(0,-0.55)$);
   \draw[line width=1.1pt] ($(#1)+(-0.35,0.12)$) -- ($(#1)+(0.35,0.12)$);
   \draw[line width=2.4pt] ($(#1)+(-0.2,-0.12)$) -- ($(#1)+(0.2,-0.12)$);
+  \node[scale=0.75] at ($(#1)+(0.6,0.12)$) {$+$};
+  \node[scale=0.75] at ($(#1)+(0.6,-0.12)$) {$-$};
 }
 \newcommand{\reszig}[1]{% horizontal resistor zigzag centered at (#1)
   \fill[white] ($(#1)+(-0.65,-0.32)$) rectangle ($(#1)+(0.65,0.32)$);
@@ -86,7 +92,7 @@ the first resistor. Find $\Delta V_2$ across the second.
 \begin{center}
 \begin{tikzpicture}[x=1cm,y=1cm]
   \draw (0,0) -- (0,2) -- (6,2) -- (6,0) -- cycle;
-  \battv{0,1} \node[scale=0.8, anchor=east] at (-0.15,1) {$\varepsilon$};
+  \battv{0,1} \node[scale=0.8, anchor=east] at (-0.55,1) {$\varepsilon$};
   \reszig{2,2} \node[scale=0.8, anchor=south] at (2,2.45) {$\Delta V_1=12$ V};
   \reszig{4,2} \node[scale=0.8, anchor=south] at (4,2.45) {$\Delta V_2=\,?$};
 \end{tikzpicture}
@@ -105,7 +111,7 @@ series with a battery of $\varepsilon=18$ V.
 \begin{center}
 \begin{tikzpicture}[x=1cm,y=1cm]
   \draw (0,0) -- (0,2) -- (6,2) -- (6,0) -- cycle;
-  \battv{0,1} \node[scale=0.8, anchor=east] at (-0.15,1) {$\varepsilon$};
+  \battv{0,1} \node[scale=0.8, anchor=east] at (-0.55,1) {$\varepsilon$};
   \reszig{2,2} \node[scale=0.8, anchor=south] at (2,2.45) {$R_1$};
   \reszig{4,2} \node[scale=0.8, anchor=south] at (4,2.45) {$R_2$};
 \end{tikzpicture}
@@ -122,7 +128,7 @@ $R_3=5.0\ \Omega$, are in series with a battery of $\varepsilon=20$ V.
 \begin{center}
 \begin{tikzpicture}[x=1cm,y=1cm]
   \draw (0,0) -- (0,2) -- (8,2) -- (8,0) -- cycle;
-  \battv{0,1} \node[scale=0.8, anchor=east] at (-0.15,1) {$\varepsilon$};
+  \battv{0,1} \node[scale=0.8, anchor=east] at (-0.55,1) {$\varepsilon$};
   \reszig{2,2} \node[scale=0.8, anchor=south] at (2,2.45) {$R_1$};
   \reszig{4,2} \node[scale=0.8, anchor=south] at (4,2.45) {$R_2$};
   \reszig{6,2} \node[scale=0.8, anchor=south] at (6,2.45) {$R_3$};
@@ -141,7 +147,7 @@ parallel across a battery of $\varepsilon=12$ V.
 \begin{tikzpicture}[x=1cm,y=1cm]
   \draw (0,0) -- (0,2) -- (1.3,2) -- (1.3,2.9) -- (4.7,2.9) -- (4.7,2) -- (6,2) -- (6,0) -- cycle;
   \draw (1.3,2) -- (1.3,1.1) -- (4.7,1.1) -- (4.7,2);
-  \battv{0,1} \node[scale=0.8, anchor=east] at (-0.15,1) {$\varepsilon$};
+  \battv{0,1} \node[scale=0.8, anchor=east] at (-0.55,1) {$\varepsilon$};
   \reszig{3,2.9} \node[scale=0.8, anchor=south] at (3,3.35) {$R_1$};
   \reszig{3,1.1} \node[scale=0.8, anchor=north] at (3,0.65) {$R_2$};
 \end{tikzpicture}
@@ -160,7 +166,7 @@ battery is $5.0$ A.
 \begin{tikzpicture}[x=1cm,y=1cm]
   \draw (0,0) -- (0,2) -- (1.3,2) -- (1.3,2.9) -- (4.7,2.9) -- (4.7,2) -- (6,2) -- (6,0) -- cycle;
   \draw (1.3,2) -- (1.3,1.1) -- (4.7,1.1) -- (4.7,2);
-  \battv{0,1} \node[scale=0.8, anchor=east] at (-0.15,1) {$\varepsilon$};
+  \battv{0,1} \node[scale=0.8, anchor=east] at (-0.55,1) {$\varepsilon$};
   \reszig{3,2.9} \node[scale=0.8, anchor=south] at (3,3.35) {$R_1$};
   \reszig{3,1.1} \node[scale=0.8, anchor=north] at (3,0.65) {$R_2=\,?$};
 \end{tikzpicture}
