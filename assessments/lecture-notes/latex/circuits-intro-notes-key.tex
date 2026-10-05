@@ -1,0 +1,243 @@
+\documentclass[12pt]{article}
+\usepackage{notes-common}
+\usetikzlibrary{calc}
+\geometry{margin=0.35in}
+\AtBeginDocument{\fontsize{14}{17}\selectfont}
+
+% Complete / filled-in reference version of circuits-intro-notes.tex.
+% Mon Oct 5 -- Ohm's law + Kirchhoff's laws (Knight 27.5, 28.1-28.2).
+% Built from Seth's rough notes (uploaded).
+\newcommand{\ANS}[1]{\textcolor{accent}{#1}}
+
+% ---- same battery/resistor schematic pieces as the skeleton ----
+\newcommand{\battv}[1]{% vertical battery symbol centered at (#1)
+  \draw[line width=1.1pt] ($(#1)+(-0.35,0.12)$) -- ($(#1)+(0.35,0.12)$);
+  \draw[line width=2.4pt] ($(#1)+(-0.2,-0.12)$) -- ($(#1)+(0.2,-0.12)$);
+}
+\newcommand{\reszig}[1]{% horizontal resistor zigzag centered at (#1)
+  \draw ($(#1)+(-0.6,0)$)
+    -- ($(#1)+(-0.42,0.22)$) -- ($(#1)+(-0.24,-0.22)$)
+    -- ($(#1)+(-0.06,0.22)$) -- ($(#1)+(0.12,-0.22)$)
+    -- ($(#1)+(0.3,0.22)$) -- ($(#1)+(0.48,-0.22)$)
+    -- ($(#1)+(0.6,0)$);
+}
+
+\begin{document}
+
+\noteshead{Battery \& Resistor Circuits \textcolor{accent}{(completed)}}{}
+
+\goal{
+\begin{itemize}[itemsep=5pt,parsep=2pt,topsep=2pt]
+\item Pin down what current and $\Delta V$ actually mean, and the four
+rules that follow just from charge and energy conservation.
+\item Turn Ohm's law into a tool: given a resistor and a $\Delta V$ across
+it, get $I$.
+\item Work a single resistor both with an ideal battery and with a real
+one (internal resistance $r$), to see what $r$ costs you.
+\item Derive $R_S=R_1+R_2$ for series and $R_P=(1/R_1+1/R_2)^{-1}$ for
+parallel from the rules in \S1 --- not as formulas to memorize, but as
+consequences of ``same current'' and ``same $\Delta V$.''
+\end{itemize}}
+
+%============================================================
+\nsec{Definitions}
+
+\textbf{Current}: \ANS{the amount of charge passing a point (through an
+element) per second.} \quad $I\equiv\Delta q/\Delta t$.
+
+\hspace{1cm} units: \ANS{1 A $= 1$ C/s}
+
+\textbf{Change in voltage, $\Delta V$}: \ANS{the potential energy per
+charge gained or lost by a charge that crosses an element.}
+
+\vspace{2mm}
+\textbf{Series}: elements connected \ANS{back-to-back --- one shared wire
+between them, so the same charge has to pass through each in turn.}
+
+\textbf{Parallel}: elements connected \ANS{side-by-side, sharing \emph{both}
+endpoints (the same two nodes).}
+
+%============================================================
+\nsec{Four rules}
+
+\begin{itemize}[itemsep=7pt,parsep=3pt,topsep=3pt]
+\item Elements in series have \ANS{the same current passing through them.}
+\item Elements in parallel have \ANS{the same voltage change ($\Delta V$)
+across them.}
+\item Current is \ANS{conserved} at a junction.
+\item Around any closed loop, the $\Delta V$'s \ANS{sum to zero.}
+\end{itemize}
+
+\checkpoint{The last two rules are each a conservation law in disguise. Which
+one is charge conservation, and which one is energy conservation?}
+
+{\small\color{accent} The junction rule (current conserved) \emph{is} charge
+conservation --- charge can't pile up or vanish at a junction, so whatever
+flows in must flow out. The loop rule ($\Delta V$'s sum to zero) is energy
+conservation --- walk all the way around back to where you started, and the
+net PE per charge you gained and lost along the way has to cancel.}
+
+%============================================================
+\nsec{Ohm's law defines a resistor}
+
+\[
+\Delta V = \ANS{IR}
+\]
+\vspace{0.3cm}
+
+Given a resistor of resistance $R$ and a voltage difference $\Delta V$
+across it, the current through it is
+
+\[
+I = \ANS{\dfrac{\Delta V}{R}}
+\]
+
+%============================================================
+\nsec{One resistor and a battery}
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \draw (0,0) -- (0,2) -- (3,2) -- (3,0) -- cycle;
+  \battv{0,1}
+  \node[scale=0.8, anchor=east] at (-0.15,1) {$\varepsilon,\,r$};
+  \reszig{1.5,2}
+  \node[scale=0.8, anchor=south] at (1.5,2.45) {$R$};
+\end{tikzpicture}
+\end{center}
+
+\textbf{(a) Ideal battery}: $\varepsilon=12$ V, $r=0$, $R=4\ \Omega$.
+
+\[
+I = \dfrac{\varepsilon}{R} = \dfrac{12}{4} = \ANS{3.0\text{ A}}
+\qquad
+V_B = \varepsilon - Ir = 12-0 = \ANS{12\text{ V}}
+\]
+
+\textbf{(b) Real battery}: same $\varepsilon$ and $R$, but now $r=1\ \Omega$.
+
+\[
+I = \dfrac{\varepsilon}{R+r} = \dfrac{12}{5} = \ANS{2.4\text{ A}}
+\qquad
+V_B = \varepsilon - Ir = 12-(2.4)(1) = \ANS{9.6\text{ V}}
+\]
+
+\checkpoint{$V_B$ dropped in part (b). Where did that energy per charge go?}
+
+{\small\color{accent} Into the battery's own internal resistance $r$ ---
+the missing $12-9.6=2.4$ V is exactly $Ir=(2.4\text{ A})(1\ \Omega)=2.4$ V.
+That energy per charge is dissipated \emph{inside} the battery itself, not
+delivered to $R$.}
+
+%============================================================
+\nsec{Two resistors in series}
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \draw (0,0) -- (0,2) -- (6,2) -- (6,0) -- cycle;
+  \battv{0,1}
+  \node[scale=0.8, anchor=east] at (-0.15,1) {$\varepsilon$};
+  \reszig{2,2}
+  \node[scale=0.8, anchor=south] at (2,2.45) {$R_1$};
+  \reszig{4,2}
+  \node[scale=0.8, anchor=south] at (4,2.45) {$R_2$};
+\end{tikzpicture}
+\end{center}
+
+\textbf{Derive $R_S$} (symbols only --- use the series current rule and Ohm's
+law on each resistor, then the loop rule):
+
+{\small
+Series rule: the same current $I$ flows through both resistors. Ohm's law
+on each: $\Delta V_1 = IR_1$, $\Delta V_2 = IR_2$. Loop rule:
+\[
+\varepsilon = \Delta V_1+\Delta V_2 = IR_1+IR_2 = I(R_1+R_2).
+\]
+But by definition of the single equivalent resistor, $\varepsilon = IR_S$.
+Comparing the two:}
+
+\[
+\boxed{R_S = R_1+R_2}
+\]
+
+\textbf{Now with numbers}: $\varepsilon=12$ V, $R_1=4\ \Omega$, $R_2=8\ \Omega$
+(ideal battery).
+
+\[
+R_S = 4+8 = \ANS{12\ \Omega}
+\qquad
+I = \dfrac{\varepsilon}{R_S} = \dfrac{12}{12} = \ANS{1.0\text{ A}}
+\]
+\[
+\Delta V_1 = IR_1 = \ANS{4.0\text{ V}}
+\qquad
+\Delta V_2 = IR_2 = \ANS{8.0\text{ V}}
+\]
+
+\checkpoint{Check the loop rule with your two $\Delta V$'s above: do they
+add up to $\varepsilon$?}
+
+{\small\color{accent} Yes: $4.0+8.0=12$ V $=\varepsilon$. That's not a
+coincidence --- it's exactly the loop rule, built into how $R_S$ was
+derived.}
+
+%============================================================
+\nsec{Two resistors in parallel}
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \draw (0,0) -- (0,2) -- (1.3,2) -- (1.3,2.9) -- (4.7,2.9) -- (4.7,2) -- (6,2) -- (6,0) -- cycle;
+  \draw (1.3,2) -- (1.3,1.1) -- (4.7,1.1) -- (4.7,2);
+  \battv{0,1}
+  \node[scale=0.8, anchor=east] at (-0.15,1) {$\varepsilon$};
+  \reszig{3,2.9}
+  \node[scale=0.8, anchor=south] at (3,3.35) {$R_1$};
+  \reszig{3,1.1}
+  \node[scale=0.8, anchor=north] at (3,0.65) {$R_2$};
+\end{tikzpicture}
+\end{center}
+
+\textbf{Derive $R_P$} (symbols only --- use the parallel voltage rule and
+Ohm's law on each resistor, then the junction rule at the top node):
+
+{\small
+Parallel rule: both resistors see the same $\Delta V$ (here, $\Delta
+V=\varepsilon$, since each branch connects straight across the ideal
+battery). Ohm's law on each: $I_1=\Delta V/R_1$, $I_2=\Delta V/R_2$.
+Junction rule at the top node:
+\[
+I = I_1+I_2 = \dfrac{\Delta V}{R_1}+\dfrac{\Delta V}{R_2}
+= \Delta V\left(\dfrac1{R_1}+\dfrac1{R_2}\right).
+\]
+But by definition of the single equivalent resistor, $I=\Delta V/R_P$.
+Comparing the two:}
+
+\[
+\boxed{R_P = \left(\dfrac1{R_1}+\dfrac1{R_2}\right)^{-1}}
+\]
+
+\textbf{Now with numbers}: $\varepsilon=12$ V, $R_1=4\ \Omega$,
+$R_2=12\ \Omega$ (ideal battery).
+
+\[
+R_P = \left(\dfrac14+\dfrac1{12}\right)^{-1} = \left(\dfrac{3}{12}+\dfrac1{12}\right)^{-1}
+= \left(\dfrac{4}{12}\right)^{-1} = \ANS{3.0\ \Omega}
+\]
+\[
+I_1 = \dfrac{\varepsilon}{R_1} = \dfrac{12}{4} = \ANS{3.0\text{ A}}
+\qquad
+I_2 = \dfrac{\varepsilon}{R_2} = \dfrac{12}{12} = \ANS{1.0\text{ A}}
+\]
+\[
+I_{\text{total}} = I_1+I_2 = \ANS{4.0\text{ A}}
+\quad\big(\text{check: } \varepsilon/R_P = 12/3 = 4.0\text{ A}\ \checkmark\big)
+\]
+
+\checkpoint{Which resistor carries more current, and why does that make
+sense given which one is smaller?}
+
+{\small\color{accent} $R_1$ ($4\ \Omega$) carries more current ($3.0$ A vs.\
+$1.0$ A). Both resistors feel the \emph{same} $\Delta V$, and $I=\Delta
+V/R$ --- so the smaller resistance lets more current through for that same
+push. Smaller $R$ means less obstruction, not less current.}
+
+\end{document}
