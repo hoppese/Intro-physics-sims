@@ -1257,18 +1257,6 @@
        "opens": "2026-10-05 11:00",
        "closes": "2026-10-07 10:00",
        "visible": true
-      },
-      {
-       "kind": "HW",
-       "label": "HW 5",
-       "track": "both",
-       "cmid": 145977,
-       "module": "assign",
-       "points": 18.0,
-       "attempts": null,
-       "opens": "2026-09-30 11:00",
-       "closes": "2026-10-07 10:00",
-       "visible": true
       }
      ],
      "sims": [
@@ -1322,6 +1310,18 @@
        "attempts": 2,
        "opens": "2026-10-12 09:50",
        "closes": "2026-10-12 10:15",
+       "visible": true
+      },
+      {
+       "kind": "HW",
+       "label": "HW 5",
+       "track": "both",
+       "cmid": 145977,
+       "module": "assign",
+       "points": 18.0,
+       "attempts": null,
+       "opens": "2026-09-30 11:00",
+       "closes": "2026-10-12 10:00",
        "visible": true
       },
       {

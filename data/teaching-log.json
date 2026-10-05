@@ -39,6 +39,13 @@
   "synthesis": 10
  },
  "entries": {
+  "2026-10-05": {
+   "covered": "Ohm's law + Kirchhoff's laws (series/parallel intro). Worked through the circuits-intro-notes lecture notes -- definitions, the four rules, Ohm's law, then one resistor (ideal vs. real battery), series, and parallel, each with a derivation and a numeric example. Got through pretty much everything on the notes. Seth felt this lecture went better than recent ones.",
+   "struggled": "The Prep 14 video (introducing Kirchhoff's laws and circuits in general) was not recorded in time for this class -- that gap likely made the kickoff a little confusing for students going in without it.",
+   "landed": "Using the printed lecture notes (rather than teaching off the board with nothing handed out, as happened the last couple of times) -- Seth felt today's lecture went better.",
+   "nextYear": "Make sure the Prep 14 video (Kirchhoff's laws / circuits intro) is actually recorded before this class, not just the written prep -- its absence this year likely confused the kickoff.",
+   "notes": "Told students Test 2 would be handed back Wednesday (Oct 7) if possible, with a makeup opportunity for what they got wrong. Written HW 5 wasn't posted until today (Oct 5), so its due date got pushed to after the Oct 9 break (now Oct 12) rather than the original Oct 7 -- not Seth's preferred timing, but a consequence of the late posting. It includes extra-credit problems (Section 2, 1 pt each) alongside the required set."
+  },
   "2026-10-02": {
    "covered": "Test 2, in class (electrostatics unit).",
    "struggled": "Running long was the headline problem -- no students finished on time. Seth suspects two specific contributors, not yet confirmed: (1) the line-of-charge problem being an analytic (symbolic/calculus) setup may have been too hard, and separately students weren't efficient at that type of calculation generally (this was the first problem on the test, so slowness there likely ate into time for the rest). (2) Several students said afterward they didn't understand the Gauss's law problem -- surprising to Seth since they'd done homework problems in that same vein correctly; true as reported, but he doesn't yet have a clear read on why the disconnect happened on the test itself.",
