@@ -39,6 +39,12 @@
   "synthesis": 10
  },
  "entries": {
+  "2026-10-07": {
+   "covered": "Power from a resistor, then started Kirchhoff loops. Worked a circuit with one battery and one resistor in series with two resistors in parallel: reduced it to the equivalent circuit, found the current and voltage for every resistor, then introduced P = I*ΔV and solved for the power through everything. Showed that the total power matches in both directions -- the equivalent circuit's power equals the sum of the individual resistors' powers. Then switched to a classic Kirchhoff loop problem (two batteries, three resistors, a couple of loops) and started writing the first loop equations before class ended.",
+   "wish": "Didn't get through the full Kirchhoff loop problem -- class ended partway through writing down the first couple of loop equations.",
+   "landed": "The power-equivalence demonstration (equivalent-circuit power = sum of the individual resistors' power) landed well. Introducing P = IΔV here felt important/well-placed.",
+   "nextYear": "Still unsure whether Kirchhoff's laws should really be positioned as day 1 of this two-day set. This year, series/parallel formulas + Ohm's law + the other basic rules happened naturally on Monday (Oct 5), and Kirchhoff loops + P=IV filled Wednesday (today) -- worth revisiting whether the planned day-1/day-2 split matches how it actually teaches best. Also: some of the Kirchhoff-problem resistor values gave unrealistically large currents (~3 A) -- redo with resistor values that keep currents in a believable range (kΩ-scale resistors, not values that work out to amps)."
+  },
   "2026-10-05": {
    "covered": "Ohm's law + Kirchhoff's laws (series/parallel intro). Worked through the circuits-intro-notes lecture notes -- definitions, the four rules, Ohm's law, then one resistor (ideal vs. real battery), series, and parallel, each with a derivation and a numeric example. Got through pretty much everything on the notes. Seth felt this lecture went better than recent ones.",
    "struggled": "The Prep 14 video (introducing Kirchhoff's laws and circuits in general) was not recorded in time for this class -- that gap likely made the kickoff a little confusing for students going in without it.",
