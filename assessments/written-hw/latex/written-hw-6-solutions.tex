@@ -1,0 +1,202 @@
+\documentclass[11pt]{article}
+\usepackage{hw-solutions-common}
+
+\begin{document}
+
+\hwsolhead{Written HW 6}{Problem statements from Knight, \emph{Physics for Scientists and
+Engineers} (5th ed., Global Edition), Chapter 28. $g = 9.8$ m/s$^2$ throughout.}
+
+%============================================================
+\problem{28.17}{3}{The voltage across the terminals of a 9.0 V battery is 8.5 V when the
+battery is connected to a 20 $\Omega$ load. What is the battery's internal resistance?}
+
+\model{A real battery is an ideal emf $\varepsilon$ in series with a small internal
+resistance $r$. The terminal voltage is whatever's left of $\varepsilon$ after the
+current drops some of it across $r$.}
+
+\visualize{The load current is set by the terminal voltage across the external
+resistor, $I=\Delta V_{\text{bat}}/R$. The ``missing'' $\varepsilon-\Delta
+V_{\text{bat}}=0.5$ V is what gets dropped across $r$, by that same current.}
+
+\solve{
+\[
+I = \frac{\Delta V_{\text{bat}}}{R} = \frac{8.5\text{ V}}{20\ \Omega} = 0.425\text{ A}
+\]
+\[
+r = \frac{\varepsilon-\Delta V_{\text{bat}}}{I} = \frac{9.0\text{ V}-8.5\text{ V}}{0.425\text{
+A}} = \boxed{1.2\ \Omega}.
+\]}
+
+\review{An internal resistance around 1 $\Omega$ is typical for a battery this size, and
+it's exactly enough to knock the terminal voltage down by the stated 0.5 V at this load
+current --- consistent with the numbers given.}
+
+%============================================================
+\problem{28.20}{3}{A variable resistor $R$ is connected across the terminals of a
+battery. Figure EX28.20 shows the current in the circuit as $R$ is varied: the graph
+passes through roughly $(0\ \Omega, 6.0\text{ A})$ and $(10\ \Omega, 3.0\text{ A})$.
+What are the emf and internal resistance of the battery?}
+
+\model{Same real-battery loop rule as above, now solved the other direction: given
+$I$ at two different values of $R$, find $\varepsilon$ and $r$.}
+
+\visualize{The loop rule gives $\varepsilon = I(R+r)$ for any point on the curve. Reading
+off two points turns this into two equations in the two unknowns $\varepsilon$ and $r$.}
+
+\solve{At $R=0\ \Omega$: $\varepsilon = (6.0\text{ A})\,r$. At $R=10\ \Omega$: $\varepsilon
+= (3.0\text{ A})(r+10\ \Omega)$. Setting these equal,
+\[
+(6.0\text{ A})\,r = (3.0\text{ A})(r+10\ \Omega)
+\;\Rightarrow\;
+2r = r+10\ \Omega
+\;\Rightarrow\;
+\boxed{r = 10\ \Omega},
+\]
+\[
+\varepsilon = (6.0\text{ A})(10\ \Omega) = \boxed{60\text{ V}}.
+\]}
+
+\review{Check: at $R=10\ \Omega$, $I=\varepsilon/(R+r)=60\text{ V}/20\ \Omega=3.0$ A, which
+matches the second point exactly, and the curve $I(R)=60\text{ V}/(R+10\ \Omega)$
+decreases smoothly and concavely as $R$ grows, just like the figure.}
+
+%============================================================
+\problem{28.33}{2}{What is the time constant for the discharge of the capacitors in
+Figure EX28.33? The circuit has two 2 $\mu$F capacitors and two 1 k$\Omega$ resistors,
+all four connected directly across the same two rails (all in parallel with each
+other).}
+
+\model{With everything on the same two rails, the whole network reduces to one
+equivalent capacitor discharging through one equivalent resistor.}
+
+\visualize{Capacitors in parallel add directly; resistors in parallel combine by
+reciprocals.}
+
+\solve{
+\[
+C_{\text{eq}} = 2\ \mu\text{F}+2\ \mu\text{F} = 4\ \mu\text{F}, \qquad
+R_{\text{eq}} = \left(\frac{1}{1\text{ k}\Omega}+\frac{1}{1\text{
+k}\Omega}\right)^{-1} = 500\ \Omega
+\]
+\[
+\tau = R_{\text{eq}}C_{\text{eq}} = (500\ \Omega)(4\times10^{-6}\text{ F}) =
+\boxed{2.0\text{ ms}}.
+\]}
+
+\review{A millisecond-scale time constant is typical for $\mu$F capacitors discharging
+through kilohm-scale resistors --- the right order of magnitude.}
+
+%============================================================
+\problem{28.34}{2}{What is the time constant for the discharge of the capacitors in
+Figure EX28.34? Now the two 2 $\mu$F capacitors are in series with each other, and the
+two 1 k$\Omega$ resistors are in series with each other, around a single loop.}
+
+\model{Same idea as 28.33, but now both the capacitors and the resistors combine
+\emph{in series} instead of in parallel.}
+
+\visualize{Capacitors in series combine by reciprocals; resistors in series add
+directly --- the opposite pairing from the previous problem.}
+
+\solve{
+\[
+\frac{1}{C_{\text{eq}}} = \frac{1}{2\ \mu\text{F}}+\frac{1}{2\ \mu\text{F}}
+\;\Rightarrow\;
+C_{\text{eq}} = 1\ \mu\text{F}, \qquad
+R_{\text{eq}} = 1\text{ k}\Omega+1\text{ k}\Omega = 2\text{ k}\Omega
+\]
+\[
+\tau = R_{\text{eq}}C_{\text{eq}} = (2000\ \Omega)(1\times10^{-6}\text{ F}) =
+\boxed{2.0\text{ ms}}.
+\]}
+
+\review{This comes out to the \emph{same} 2.0 ms as the parallel arrangement in 28.33 ---
+but that's a coincidence of these particular numbers (the resistor combination
+quadruples while the capacitor combination quarters, and $4\times\frac14=1$), not a sign
+that series and parallel circuits behave the same way in general.}
+
+%============================================================
+\problem{28.36}{4}{The switch in Figure EX28.36 has been in position 1 for a long time.
+It is changed to position 2 at $t=0$ s. The battery is 9 V, the capacitor is 4
+$\mu$F, and the resistor is 25 $\Omega$. What are the charge $Q$ on the capacitor and
+the current $I$ through the resistor (a) immediately after the switch is closed? (b) at
+$t=50\ \mu$s? (c) at $t=200\ \mu$s?}
+
+\model{In position 1, the capacitor has had unlimited time to reach steady state, so no
+current flows into it and it sits at the full battery voltage. Moving the switch to
+position 2 disconnects the battery and leaves the capacitor discharging through the
+resistor alone --- a standard $RC$ discharge, $Q(t)=Q_0e^{-t/\tau}$.}
+
+\visualize{The capacitor's initial charge is set by the battery emf before the switch
+flips: $Q_0=C\varepsilon$. After the switch flips, both $Q$ and $I=I_0e^{-t/\tau}$ decay
+with the same time constant $\tau=RC$.}
+
+\solve{(a) Immediately before (and so also immediately after, since charge can't jump
+instantaneously) the switch moves,
+\[
+Q_0 = C\varepsilon = (4\times10^{-6}\text{ F})(9\text{ V}) = \boxed{36\ \mu\text{C}},
+\qquad
+I_0 = \frac{\Delta V_{\text{R}}}{R} = \frac{9\text{ V}}{25\ \Omega} = \boxed{0.36\text{
+A}}.
+\]
+
+(b)--(c) The time constant is
+\[
+\tau = RC = (25\ \Omega)(4\times10^{-6}\text{ F}) = 100\ \mu\text{s}.
+\]
+At $t=50\ \mu$s ($t/\tau=0.50$):
+\[
+Q = (36\ \mu\text{C})e^{-0.50} = \boxed{22\ \mu\text{C}}, \qquad
+I = (0.36\text{ A})e^{-0.50} = \boxed{0.22\text{ A}}.
+\]
+At $t=200\ \mu$s ($t/\tau=2.0$):
+\[
+Q = (36\ \mu\text{C})e^{-2.0} = \boxed{4.9\ \mu\text{C}}, \qquad
+I = (0.36\text{ A})e^{-2.0} = \boxed{49\text{ mA}}.
+\]}
+
+\review{$Q$ and $I$ decay together, both by the same factor $e^{-t/\tau}$ at every
+instant, since $I=dQ/dt$ is just proportional to $Q$ for a simple $RC$ discharge --- by
+$t=200\ \mu$s (two full time constants), both are down to about 14\% of their starting
+values, exactly $e^{-2.0}$.}
+
+%============================================================
+\problem{28.49}{4}{Suppose you have resistors 2.5 k$\Omega$, 3.5 k$\Omega$, and 4.5
+k$\Omega$ and a 100 V power supply. What is the ratio of the total power delivered to
+the resistors if they are connected in parallel to the total power delivered if they are
+connected in series?}
+
+\model{In both arrangements the \emph{same} 100 V is applied across the whole
+combination, so the total power delivered is $P=(\Delta V)^2/R_{\text{eq}}$ in each case
+--- the ratio of powers is just the inverse ratio of the two equivalent resistances.}
+
+\visualize{A parallel combination's equivalent resistance is always \emph{less} than the
+smallest individual resistor (1.1 k$\Omega$, say, versus the smallest resistor at 2.5
+k$\Omega$), while a series combination's equivalent resistance is the full sum (10.5
+k$\Omega$). Since smaller $R_{\text{eq}}$ means more power at fixed voltage, the parallel
+arrangement should deliver far more power.}
+
+\solve{
+\[
+R_{\text{eq,parallel}} = \left(\frac{1}{2.5\text{ k}\Omega}+\frac{1}{3.5\text{
+k}\Omega}+\frac{1}{4.5\text{ k}\Omega}\right)^{-1} = 1.10\text{ k}\Omega
+\;\Rightarrow\;
+P_{\text{parallel}} = \frac{(100\text{ V})^2}{1101\ \Omega} = 9.1\text{ W}
+\]
+\[
+R_{\text{eq,series}} = 2.5\text{ k}\Omega+3.5\text{ k}\Omega+4.5\text{ k}\Omega =
+10.5\text{ k}\Omega
+\;\Rightarrow\;
+P_{\text{series}} = \frac{(100\text{ V})^2}{10{,}500\ \Omega} = 0.95\text{ W}
+\]
+\[
+\frac{P_{\text{parallel}}}{P_{\text{series}}} = \frac{9.1\text{ W}}{0.95\text{ W}} =
+\boxed{9.5}.
+\]}
+
+\review{Because both cases share the same $\Delta V$, the power ratio is exactly the
+resistance ratio flipped: $R_{\text{eq,series}}/R_{\text{eq,parallel}} = 10{,}500/1101
+\approx 9.5$. The parallel combination dissipates almost ten times more power from the
+same supply --- a direct consequence of a parallel network's resistance always dropping
+below its smallest branch, while a series network's only ever grows.}
+
+\end{document}
