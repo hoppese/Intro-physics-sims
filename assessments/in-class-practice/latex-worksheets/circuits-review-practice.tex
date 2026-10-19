@@ -1,0 +1,94 @@
+\documentclass[12pt]{article}
+\usepackage{worksheet-common}
+
+% Circuits review: capacitors + Kirchhoff's rules. Fleshed out from rough
+% notes (uploaded 2026-10-?? as "Circuits review rough notes") describing
+% two themes: (1) finding charge on a capacitor from the loop rule at some
+% instant during charging, including a parallel-capacitor variant with the
+% knowns/unknowns swapped around; (2) the loop rule applied to a fully
+% charged (steady-state) capacitor, with two structurally different
+% circuits so students see both the case where series resistor values
+% drop out entirely (Part B, Problem 1) and the case where they still
+% matter because of a parallel resistive path (Part B, Problem 2). All
+% four answers verified with a script before typing into the key.
+
+\begin{document}
+
+\worksheettitle{Circuits Review --- Capacitors \& Kirchhoff's Rules}
+
+\noindent The loop rule applies to a capacitor just like it does to a
+resistor or a battery --- you just need $\Delta V_C = Q/C$ for whatever
+term the capacitor contributes. Part A uses that at some instant
+\emph{during} charging; Part B uses it once a circuit has reached steady
+state, when a fully charged capacitor carries no current.
+
+%============================================================
+\partsec{A}{Charge at an Instant (RC Charging)}
+
+\prob A capacitor $C$ is charging through a resistor $R$, connected to a
+battery $\varepsilon$, all in a single loop. At a certain moment, while
+charge is still building up, the current through the resistor is $I$.
+
+\begin{center}
+\begin{tabular}{l}
+$\varepsilon = 9.0$ V \quad $R = 2.0\ \text{k}\Omega$ \quad $C = 4.0\ \mu\text{F}$ \quad $I = 1.5$ mA (at this moment)
+\end{tabular}
+\end{center}
+
+\noindent What is the charge $Q$ on the capacitor at that same moment?
+
+\worksp{lg}
+
+\prob Two capacitors, $C_1 = 4.0\ \mu\text{F}$ and $C_2 = 6.0\
+\mu\text{F}$, are wired in parallel with each other. That parallel pair
+is in series with a resistor $R = 2.0\ \text{k}\Omega$ and a battery
+$\varepsilon = 15$ V --- so the full loop is battery $\to$ $R$ $\to$ the
+$C_1\,\|\,C_2$ pair $\to$ back to the battery.
+
+At a certain moment during charging, the charge on $C_1$ is measured to
+be $Q_1 = 20\ \mu\text{C}$.
+
+\noindent Find (a) the voltage across the parallel pair at that moment,
+(b) the current through $R$ at that moment, and (c) the charge $Q_2$ on
+$C_2$ at that same moment.
+
+\worksp{xl}
+
+\clearpage
+%============================================================
+\partsec{B}{Steady-State Capacitor Voltage}
+
+\prob A battery $\varepsilon = 10$ V is in series with two resistors,
+$R_1 = 1.5\ \text{k}\Omega$ and $R_2 = 2.5\ \text{k}\Omega$, and a
+capacitor $C = 3.0\ \mu\text{F}$ --- all in one single loop. The circuit
+has been connected for a long time (steady state).
+
+\noindent What is the charge $Q$ on the capacitor?
+
+\worksp{lg}
+
+\prob A battery $\varepsilon = 12$ V is in series with a resistor
+$R_1 = 2.0\ \text{k}\Omega$. That combination feeds a parallel pair: a
+second resistor $R_2 = 4.0\ \text{k}\Omega$ and a capacitor
+$C = 5.0\ \mu\text{F}$ (so $R_2$ and $C$ are in parallel with each other,
+and that whole pair is in series with $R_1$ and the battery). The circuit
+has reached steady state.
+
+\noindent Find (a) the current through $R_1$ (and through $R_2$), and
+(b) the charge $Q$ on the capacitor.
+
+\worksp{xl}
+
+\begin{answerkey}
+
+\akpart{Part A --- Charge at an Instant (RC Charging)}
+\akitem{1}{$Q = 24\ \mu\text{C}$}
+\akitem{2}{(a) $\Delta V = 5.0$ V\quad (b) $I = 5.0$ mA\quad (c) $Q_2 = 30\ \mu\text{C}$}
+
+\akpart{Part B --- Steady-State Capacitor Voltage}
+\akitem{3}{$Q = 30\ \mu\text{C}$ --- note $R_1$ and $R_2$ never mattered: at steady state $I=0$ everywhere in this loop, so neither resistor drops any voltage, and $Q = C\varepsilon$ regardless of their values.}
+\akitem{4}{(a) $I = 2.0$ mA\quad (b) $Q = 40\ \mu\text{C}$ --- here the resistor values \emph{do} matter, since $R_2$ gives current a path that doesn't go through $C$.}
+
+\end{answerkey}
+
+\end{document}

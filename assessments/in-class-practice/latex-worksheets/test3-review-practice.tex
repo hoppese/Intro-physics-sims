@@ -1,0 +1,148 @@
+\documentclass[12pt]{article}
+\usepackage{worksheet-common}
+
+% Test 3 review practice. Modeled on the harder problems from Written HW 5
+% (series & parallel resistors, Part A below) and Written HW 6 (real
+% batteries, RC circuits, power, Part B below) -- same problem types, new
+% numbers, so working them actually requires redoing the steps. Two
+% problems per type; within each pair the SECOND problem solves for a
+% different unknown than the first (e.g. "find the missing resistor"
+% instead of "find the current") rather than just repeating the same
+% unknown with new numbers. Component values follow the
+% realistic-circuit-numbers convention (kOhm resistors -> mA currents)
+% except where the physics itself calls for amp-scale current (battery
+% internal resistance, direct RC discharge), matching how Knight's own
+% textbook problems scale those.
+
+\begin{document}
+
+\worksheettitle{Test 3 Practice --- Circuits}
+
+\noindent These are modeled on the hardest problems from Written HW 5 and
+HW 6 -- same problem types, new numbers. Each pair of problems below
+tests the same idea but asks for a different unknown, so skim the whole
+question before you start plugging in. 
+The answer key on the last page.
+
+%============================================================
+\partsec{A}{Series \& Parallel Resistors}
+
+\prob Three resistors, $R_1=1.0\ \text{k}\Omega$, $R_2=1.5\ \text{k}\Omega$,
+and $R_3=2.5\ \text{k}\Omega$, are in series with a battery of
+$\varepsilon=9.0$ V. Find (a) the equivalent resistance, and (b) the
+current supplied by the battery.
+
+\worksp{md}
+
+\prob Three resistors are in series with a battery of $\varepsilon=12$ V.
+Two of them are known: $R_1=2.0\ \text{k}\Omega$ and
+$R_2=3.0\ \text{k}\Omega$. The current supplied by the battery is measured
+to be $1.5$ mA. Find the third resistor $R_3$.
+
+\worksp{md}
+
+\prob Two resistors are in parallel across a battery of $\varepsilon=15$
+V. $R_1=3.0\ \text{k}\Omega$, and the \emph{total} current measured from
+the battery is $8.0$ mA. Find (a) the current through $R_2$, and (b) the
+value of $R_2$.
+
+\worksp{md}
+
+\prob Two resistors, $R_1=2.0\ \text{k}\Omega$ and
+$R_2=6.0\ \text{k}\Omega$, are in parallel across a battery of
+$\varepsilon=18$ V. Find (a) the equivalent resistance, and (b) the total
+current supplied by the battery.
+
+\worksp{md}
+
+\clearpage
+%============================================================
+\partsec{B}{Real Batteries, RC Circuits, \& Power}
+
+\prob A real battery is connected to a variable resistor $R$. When
+$R=0$ (a dead short), the current is $6.0$ A. When $R=2.0\ \Omega$, the
+current drops to $4.0$ A. Find the battery's emf $\varepsilon$ and its
+internal resistance $r$.
+
+\worksp{lg}
+
+\prob A battery has emf $\varepsilon=20$ V and internal resistance
+$r=2.0\ \Omega$. What external resistance $R$ should be connected to the
+battery so that the current is $2.5$ A?
+
+\worksp{lg}
+
+\prob You have two resistors, $R_1=1.0\ \text{k}\Omega$ and
+$R_2=4.0\ \text{k}\Omega$, and two capacitors, $C_1=2.0\ \mu\text{F}$ and
+$C_2=3.0\ \mu\text{F}$. (a) If all four are wired onto the same two rails
+(parallel), find the time constant for discharging the combination.
+(b) If instead all four are wired into a single series loop, find the
+time constant.
+
+\worksp{lg}
+
+\prob Two resistors, $R_1=1.0\ \text{k}\Omega$ and $R_2=5.0\
+\text{k}\Omega$, and a capacitor $C_1=4.0\ \mu\text{F}$ are wired into a
+single series loop along with a second capacitor $C_2$. The measured time
+constant for this series combination is $\tau=18$ ms. Find $C_2$.
+
+\worksp{lg}
+
+\prob The switch in an RC circuit has been in the ``charge'' position for
+a long time, then flips to the ``discharge'' position at $t=0$,
+disconnecting the battery and leaving the capacitor to discharge through
+the resistor alone. The battery was $\varepsilon=8.0$ V, $C=5.0\
+\mu\text{F}$, and $R=40\ \Omega$. Find the charge $Q$ on the capacitor and
+the current $I$ through the resistor (a) immediately after the switch
+flips, (b) at $t=100\ \mu$s, and (c) at $t=400\ \mu$s.
+
+\worksp{xl}
+
+\prob The switch in an RC circuit flips from ``charge'' to ``discharge''
+at $t=0$. The battery was $\varepsilon=6.0$ V and $C=3.0\ \mu\text{F}$,
+and the measured time constant for the discharge is $\tau=150\ \mu$s.
+Find (a) the resistance $R$, and (b) the charge $Q$ and current $I$ at
+$t=300\ \mu$s.
+
+\worksp{lg}
+
+\prob You have three resistors --- $2.0\ \text{k}\Omega$,
+$4.0\ \text{k}\Omega$, and $8.0\ \text{k}\Omega$ --- and a $24$ V supply.
+Find the ratio of the total power delivered to the resistors when they're
+connected in parallel to the total power delivered when they're connected
+in series.
+
+\worksp{lg}
+
+\prob Three resistors --- $1.0\ \text{k}\Omega$, $3.0\ \text{k}\Omega$,
+and $6.0\ \text{k}\Omega$ --- are connected in series across a power
+supply. The supply delivers a total power of $40$ mW to this series
+combination. Find (a) the supply voltage $\Delta V$, and (b) the total
+power delivered if the same three resistors were instead connected in
+parallel across that same voltage.
+
+\worksp{lg}
+
+\begin{answerkey}
+\begin{multicols}{2}
+
+\akpart{Part A --- Series \& Parallel Resistors}
+\akitem{1}{$R_{\text{eq}}=5.0\ \text{k}\Omega$; $I=1.8$ mA}
+\akitem{2}{$R_3=3.0\ \text{k}\Omega$}
+\akitem{3}{$I_2=3.0$ mA; $R_2=5.0\ \text{k}\Omega$}
+\akitem{4}{$R_{\text{eq}}=1.5\ \text{k}\Omega$; $I_{\text{tot}}=12$ mA}
+
+\akpart{Part B --- Real Batteries, RC Circuits, \& Power}
+\akitem{5}{$r=4.0\ \Omega$; $\varepsilon=24$ V}
+\akitem{6}{$R=6.0\ \Omega$}
+\akitem{7}{(a) parallel: $\tau=4.0$ ms\quad (b) series: $\tau=6.0$ ms}
+\akitem{8}{$C_2=12.0\ \mu\text{F}$}
+\akitem{9}{(a) $Q_0=40\ \mu\text{C}$, $I_0=200$ mA\quad (b) $t=100\ \mu$s: $Q=24.3\ \mu\text{C}$, $I=121$ mA\quad (c) $t=400\ \mu$s: $Q=5.41\ \mu\text{C}$, $I=27.1$ mA}
+\akitem{10}{(a) $R=50\ \Omega$\quad (b) $Q=2.44\ \mu\text{C}$, $I=16.2$ mA}
+\akitem{11}{$P_{\text{parallel}}\approx504$ mW; $P_{\text{series}}\approx41.1$ mW; ratio $\approx12.25$}
+\akitem{12}{(a) $\Delta V=20$ V\quad (b) $P_{\text{parallel}}=600$ mW}
+
+\end{multicols}
+\end{answerkey}
+
+\end{document}

@@ -45,6 +45,9 @@
 \newcommand{\band}[1]{%
   \addlinespace[1.5pt]%
   \multicolumn{2}{@{}l@{}}{\rule{0pt}{1.0em}\footnotesize\bfseries\color{band}\textsc{#1}}\\[2pt]}
+% small bulleted note under a row's label -- chain multiple \bul calls for
+% multiple notes, e.g. \R{Label\bul{first note}\bul{second note}}{...}
+\newcommand{\bul}[1]{\par\vspace{1pt}\footnotesize$\bullet$~#1}
 
 \begin{document}
 
@@ -68,7 +71,7 @@
 $I$ & current (A $=$ C/s)        & $\mathcal{E}$ & emf (V)                       & $P$ & power (W) \\
 $V,\Delta V$ & potential difference (V) & $r$    & internal resistance ($\Omega$) & $Q$ & charge (C) \\
 $R$ & resistance ($\Omega$)      & $C$          & capacitance (F)               & $\tau$ & time constant (s) \\
-$\rho$ & resistivity ($\Omega\cdot$m) & $L,A$ & wire length / cross-section area & $e$ & $1.60\times10^{-19}$ C \\
+$e$ & $1.60\times10^{-19}$ C & & & & \\
 \end{tabular}
 \endgroup
 \vspace{0.1em}
@@ -78,21 +81,20 @@ $\rho$ & resistivity ($\Omega\cdot$m) & $L,A$ & wire length / cross-section area
 \section{Current, resistance \& Ohm's law \quad {\normalfont\small (Knight 26.1--26.5, 27.1--27.4)}}
 \eqtab{
   \band{fundamental}
-  \R{Current --- rate of charge flow}{I = \dfrac{dQ}{dt} \quad\xrightarrow{\ \text{steady}\ }\quad I = \dfrac{Q}{\Delta t}}
-  \R{Ohm's law\newline\footnotesize(for an ohmic resistor; also $\Delta V = IR$ across any $R$)}{I = \dfrac{\Delta V}{R}}
-  \R{Resistor power\newline\footnotesize(rate electrical energy $\to$ heat/light)}{P = I\,\Delta V = I^{2}R = \dfrac{(\Delta V)^{2}}{R}}
+  \R{Current --- rate of charge flow}{I = \tfrac{\Delta Q}{\Delta t}}
+  \R{Ohm's law\bul{for an ohmic resistor; also $\Delta V = IR$ across any $R$}}{I = \tfrac{\Delta V}{R}}
+  \R{Resistor power\bul{rate electrical energy $\to$ heat/light}}{P = I\,\Delta V}
   \band{derived}
-  \R{Resistance of a uniform wire}{R = \dfrac{\rho L}{A}}
-  \R{Conservation of charge at a wire}{I \text{ is the same all along a series path}}
+  \R{Resistor power, alternate forms}{P = I^{2}R = \dfrac{(\Delta V)^{2}}{R}}
 }
 
 %========================================================
 \section{EMF \& real batteries \quad {\normalfont\small (Knight 28.2--28.3)}}
 \eqtab{
   \band{fundamental}
-  \R{EMF --- energy supplied per unit charge}{\mathcal{E} = \dfrac{dW}{dq} \quad (\text{units of volts})}
+  \R{EMF --- energy supplied per unit charge}{\mathcal{E} = \dfrac{W}{q} \quad (\text{units of volts})}
   \band{derived}
-  \R{Terminal voltage of a real battery\newline\footnotesize(internal resistance $r$; equals $\mathcal{E}$ only when $I=0$)}{\Delta V_{\text{term}} = \mathcal{E} - I r}
+  \R{Terminal voltage of a real battery\bul{internal resistance $r$; equals $\mathcal{E}$ only when $I=0$}\bul{real batteries behave like ideal batteries with a single resistor in series}}{\Delta V_{\text{term}} = \mathcal{E} - I r}
   \R{Current from a single-loop source}{I = \dfrac{\mathcal{E}}{R + r}}
 }
 
@@ -100,12 +102,16 @@ $\rho$ & resistivity ($\Omega\cdot$m) & $L,A$ & wire length / cross-section area
 \section{Series \& parallel combinations \quad {\normalfont\small (Knight 28.4)}}
 \eqtab{
   \band{fundamental}
-  \R{Resistors in series\newline\footnotesize(same current; voltages add; $R_{\text{eq}}$ is bigger than any one)}{R_{\text{eq}} = R_1 + R_2 + \cdots}
-  \R{Resistors in parallel\newline\footnotesize(same voltage; currents add; $R_{\text{eq}}$ is smaller than any one)}{\dfrac{1}{R_{\text{eq}}} = \dfrac{1}{R_1} + \dfrac{1}{R_2} + \cdots}
+  \R{What's shared in series}{\text{same } I \text{ through every element}}
+  \R{What's shared in parallel}{\text{same } \Delta V \text{ across every element}}
+  \R{Resistors in series\bul{voltages add; $R_{\text{s}}$ is bigger than any one}}{R_{\text{s}} = R_1 + R_2 + \cdots}
+  \R{Resistors in parallel\bul{currents add; $R_{\text{p}}$ is smaller than any one}}{\dfrac{1}{R_{\text{p}}} = \dfrac{1}{R_1} + \dfrac{1}{R_2} + \cdots}
+  \R{Capacitors\bul{combine the opposite way to resistors}}{C_{\text{p}} = C_1 + C_2 + \cdots,\qquad \dfrac{1}{C_{\text{s}}} = \textstyle\sum \dfrac{1}{C_i}}
   \band{derived}
-  \R{Two resistors in parallel}{R_{\text{eq}} = \dfrac{R_1 R_2}{R_1 + R_2}}
-  \R{Capacitors\newline\footnotesize(combine the opposite way to resistors)}{C_{\text{par}} = C_1 + C_2 + \cdots,\qquad \dfrac{1}{C_{\text{ser}}} = \textstyle\sum \dfrac{1}{C_i}}
-  \R{Voltage divider (series $R_1,R_2$)}{\Delta V_1 = \Delta V_{\text{tot}}\,\dfrac{R_1}{R_1 + R_2}}
+  \R{Two resistors in series}{R_{\text{s}} = R_1 + R_2}
+  \R{Two resistors in parallel}{R_{\text{p}} = \dfrac{R_1 R_2}{R_1 + R_2}}
+  \R{Two capacitors in series}{C_{\text{s}} = \dfrac{C_1 C_2}{C_1 + C_2}}
+  \R{Two capacitors in parallel}{C_{\text{p}} = C_1 + C_2}
 }
 
 %========================================================
@@ -113,9 +119,15 @@ $\rho$ & resistivity ($\Omega\cdot$m) & $L,A$ & wire length / cross-section area
 \eqtab{
   \band{fundamental}
   \R{Junction rule (charge conservation)}{\textstyle\sum I_{\text{in}} = \sum I_{\text{out}}}
-  \R{Loop rule (energy conservation)\newline\footnotesize($+$ across a source from $-$ to $+$; $-IR$ across a resistor in the direction of $I$)}{\textstyle\sum_{\text{loop}} \Delta V = 0}
-  \band{derived}
-  \R{Ideal meters}{\text{ammeter: } R = 0 \text{ (in series)};\ \ \text{voltmeter: } R = \infty \text{ (in parallel)}}
+  \R{Loop rule (energy conservation)\bul{$+$ across a source from $-$ to $+$; $-IR$ across a resistor in the direction of $I$}}{\textstyle\sum_{\text{loop}} \Delta V = 0}
+}
+
+%========================================================
+\section{Meters \quad {\normalfont\small (Knight 28.5, 28.7)}}
+\eqtab{
+  \band{fundamental}
+  \R{Ammeter\bul{in-line, replacing a wire}}{\text{ideal: } R = 0 \text{ (in series)}}
+  \R{Voltmeter\bul{across the element being measured}}{\text{ideal: } R = \infty \text{ (in parallel)}}
 }
 
 %========================================================
@@ -125,9 +137,15 @@ $\rho$ & resistivity ($\Omega\cdot$m) & $L,A$ & wire length / cross-section area
   \R{Capacitor relation}{Q = C\,\Delta V_C}
   \R{Time constant}{\tau = RC}
   \band{derived}
-  \R{Discharging (starts at $Q_0$, $I_0$)\newline\footnotesize(both fall to $37\%$ after one $\tau$)}{Q(t) = Q_0\,e^{-t/\tau}\,,\qquad I(t) = I_0\,e^{-t/\tau}}
-  \R{Charging through a battery $\mathcal{E}$\newline\footnotesize(reaches $63\%$ of full charge after one $\tau$; $I$ decays)}{Q(t) = C\mathcal{E}\left(1 - e^{-t/\tau}\right)}
-  \R{Current is largest at $t=0$}{I_0 = \dfrac{\mathcal{E}}{R} \quad(\text{charging});\qquad I_0 = \dfrac{\Delta V_0}{R} \quad(\text{discharging})}
+  \R{Charging through a battery $\Delta V_B$\bul{starts at $Q=0$; $I_0 = \Delta V_B/R$}\bul{$Q,\Delta V_C$ climb to $63\%$ of final after one $\tau$; $I,\Delta V_R$ decay from their start}}{\begin{array}{@{}l@{}}
+    Q(t) = C\,\Delta V_B\left(1 - e^{-t/\tau}\right),\quad I(t) = I_0\,e^{-t/\tau} \\[4pt]
+    \Delta V_R(t) = \Delta V_B\,e^{-t/\tau},\quad \Delta V_C(t) = \Delta V_B\left(1 - e^{-t/\tau}\right)
+  \end{array}}
+  \addlinespace[7pt]
+  \R{Discharging\bul{starts at $Q_0$, $\Delta V_0 = Q_0/C$, $I_0 = \Delta V_0/R$}\bul{all four fall to $37\%$ after one $\tau$}}{\begin{array}{@{}l@{}}
+    Q(t) = Q_0\,e^{-t/\tau},\quad I(t) = I_0\,e^{-t/\tau} \\[4pt]
+    \Delta V_R(t) = \Delta V_0\,e^{-t/\tau},\quad \Delta V_C(t) = \Delta V_0\,e^{-t/\tau}
+  \end{array}}
 }
 
 \vfill
