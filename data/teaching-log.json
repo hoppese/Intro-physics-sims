@@ -39,6 +39,12 @@
   "synthesis": 10
  },
  "entries": {
+  "2026-10-12": {
+   "covered": "Started by reminding students of their test rewrites (due next Monday), written homework (due tomorrow, Oct 13), and that online homework had been due the previous evening (Oct 11) -- a lot of deadlines to surface at once. Then went over some Kirchhoff loop problems, which went okay. Ended class starting to go over RC circuits, but didn't have enough time to really get into it -- students have RC-circuit homework due tomorrow (Oct 13), so it remains to be seen how that goes.",
+   "wish": "Wanted more time on RC circuits/capacitors -- only started that material before class ended, and students have homework on it due tomorrow.",
+   "landed": "Kirchhoff loop problems went okay, not a standout.",
+   "nextYear": "Seth is second-guessing whether the Kirchhoff loop problems were the best use of today's class time -- leaning toward wanting to shift more time toward RC circuits/capacitors instead, since that's the topic he feels students need more help understanding."
+  },
   "2026-10-07": {
    "covered": "Power from a resistor, then started Kirchhoff loops. Worked a circuit with one battery and one resistor in series with two resistors in parallel: reduced it to the equivalent circuit, found the current and voltage for every resistor, then introduced P = I*ΔV and solved for the power through everything. Showed that the total power matches in both directions -- the equivalent circuit's power equals the sum of the individual resistors' powers. Then switched to a classic Kirchhoff loop problem (two batteries, three resistors, a couple of loops) and started writing the first loop equations before class ended.",
    "wish": "Didn't get through the full Kirchhoff loop problem -- class ended partway through writing down the first couple of loop equations.",
@@ -218,6 +224,46 @@
    "name": "Ukulele",
    "unit": "waves",
    "note": "Per Seth 2026-10-01: would be good to have for next year's waves-unit demos (plucked string -> standing wave) -- this year's waves demos were limited to standing waves in a pipe."
+  },
+  {
+   "name": "Oersted's experiment (compass deflects near a current-carrying wire)",
+   "unit": "magnetism",
+   "note": "Suggested 2026-10-16 for Oct 23 (Magnetic fields + Biot-Savart), the first magnetism class day. Flip the current direction and watch the compass deflection reverse. Cheap, fast, historically the original discovery of this whole unit."
+  },
+  {
+   "name": "Iron filings around a straight current-carrying wire",
+   "unit": "magnetism",
+   "note": "Suggested 2026-10-16 for Oct 23 (Magnetic fields + Biot-Savart), paired with Oersted's experiment same day. Filings on a card with the wire through a hole, tap to reveal concentric circles."
+  },
+  {
+   "name": "Iron filings around a loop / solenoid",
+   "unit": "magnetism",
+   "note": "Suggested 2026-10-16 for Oct 26 (B from a line + a loop). Contrast the single-wire circles with a loop's dipole-like pattern and a solenoid's uniform interior -- same filings technique as the Oct 23 demo, different source geometry."
+  },
+  {
+   "name": "Solenoid field-uniformity probe (compass or Hall probe along the axis, then outside)",
+   "unit": "magnetism",
+   "note": "Suggested 2026-10-16 for Oct 28 (Ampere's law). Constant reading inside, near-zero just outside -- makes the symmetry argument Ampere's law leans on tangible. A toroid, if the department has one, is an even more dramatic version (field essentially zero everywhere outside the torus)."
+  },
+  {
+   "name": "Simple DC motor (wire loop on an axle between magnet poles + battery)",
+   "unit": "magnetism",
+   "note": "Suggested 2026-10-16 for Oct 30 (Magnetic dipoles + torque). The classic torque-on-a-current-loop demo; a split-ring commutator keeps it spinning continuously instead of just twitching toward alignment. Doubles as material for the Nov 6 applications day if not fully used here."
+  },
+  {
+   "name": "CRT or e/m tube beam deflection by a magnet",
+   "unit": "magnetism",
+   "note": "Suggested 2026-10-16 for Nov 2 (Magnetic force on charges). Bringing a magnet near a CRT bends the beam -- direct, visual F = qv x B. An e/m tube (if available) is better still since the beam curves into a full circle, tying straight into r = mv/(qB). Needs department inventory check -- not confirmed available."
+  },
+  {
+   "name": "Jumping-wire demo (current-carrying wire between horseshoe-magnet poles)",
+   "unit": "magnetism",
+   "note": "Suggested 2026-10-16 for Nov 4 (Magnetic force + torque on wires). Wire visibly jumps when current flows (F = IL x B); reversing current reverses the jump direction. A two-parallel-wires attract/repel demo is a good second option the same day, and ties into how the Ampere itself is historically defined."
+  },
+  {
+   "name": "Cut-open speaker or galvanometer",
+   "unit": "magnetism",
+   "note": "Suggested 2026-10-16 for Nov 6 (Magnetism in action -- applications). A real voice coil or D'Arsonval movement makes the force-on-a-current-carrying-wire-in-a-field idea concrete as an actual device; pairs well with revisiting the DC motor from Oct 30."
   }
  ]
 }
