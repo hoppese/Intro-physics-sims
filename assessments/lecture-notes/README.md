@@ -45,3 +45,5 @@ which template built it.
 | Fri Sep 25 | `electric-pe-notes.pdf` | Electric potential energy (gravity → uniform field → point charges → dipole) |
 | Mon Sep 28 | `electric-potential-notes.pdf` | Electric potential — height analogy, capacitor V vs. E, Examples 25.6 & 25.9 |
 | Wed Sep 30 | `electrostatics-review-notes.pdf` | Flex-day review practice — dipole torque/PE/motion, even-step equipotentials, path-independent ΔU, superposition with continuous distributions |
+| Mon Oct 5 | `circuits-intro-notes.pdf` | Ohm's law + Kirchhoff's laws — current, ΔV, series/parallel rules, R_S and R_P derivations, real battery with internal resistance |
+| Mon Oct 12 | `circuits-devices-notes.pdf` | More circuits + devices — ideal ammeters & voltmeters (3 single-loop problems mixing I/V/ε), then 2-loop/2-battery circuits with junction + loop rules (3 more problems mixing I's/R/ε) |

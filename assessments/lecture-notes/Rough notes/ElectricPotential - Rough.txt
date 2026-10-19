@@ -1,0 +1,40 @@
+Electric potential 
+
+Does height give you potential energy?
+	-> You still need 2 things:
+		1) The mass of the object
+		2) Height relative to where?
+
+Electric potential is like height
+	-> You can get EPE if you provide 2 things:
+		1) The amount of charge
+		2) Potential relative to where?
+
+Electric potential is PE per charge => V = U/q, measured in Volts = J/C
+Height tells you PE per mass
+
+Parallel plate capacitor
+	-> Each plate gives \eta/2 \eps_0
+	-> Total field is \eta/\eps_0
+	-> Uniform E field away from edges
+	-> Does the potential stay constant when the E-field is constant?
+		- Does GPE stay constant when force of gravity is constant? No!
+
+
+Example 25.6
+
+
+Electric potential from point charge
+
+U_12 = 1/4 pi \eps_0 q1 q_2 / r_12
+
+V_1 = U_12 / q_2 =  1/4 pi \eps_0 q1 / r_12
+
+Given the potential from a point charge, what do you need to get EPE?
+	1) The amount of (the other) charge
+	2) Potential relative to where?
+
+
+Electric potential from multiple charges
+
+Example 25.9

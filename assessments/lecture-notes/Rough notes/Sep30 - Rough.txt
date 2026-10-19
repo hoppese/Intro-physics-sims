@@ -1,0 +1,16 @@
+Torque & PE of dipole
+	- E field points in +x direction
+	- Dipole points 30 deg to right of y axis.
+	- Torque? Direction?
+	- PE?
+	- Motion? Speed of particles when they move through theta = 0?
+Even steps in Potential in uniform field
+	-> Draw E field lines for a capacitor
+	-> Draw equipotentials
+	-> Label values
+Potential doesn't have to change evenly in order to know the change in PE.
+	-> Ball rolling down hill - could be bumpy
+Superposition of a line of charge 
+	- and a point charge? 
+	- and a plane of charge?
+

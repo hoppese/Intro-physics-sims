@@ -1,0 +1,48 @@
+Battery & Resistor Circuits
+
+Start with definitions:
+
+- Current: Charge passing through an elelment a point per second, 1 A = 1 C/s
+- Change in Voltage: Potential energy per charge over an element
+- Series - elements connected "back-to-back"
+- Parallel - elements connected "side-by-side"
+
+Rules:
+
+- Elements in series have same current passing through them
+- Elements in parallel have same voltage change over them
+- Current is conserved at junctions
+- Change in Voltage over the whole loop sums to zero
+
+
+Drawings of batteries & resistors giving examples of current and Delta voltage
+
+
+Ohm's law defines a resistor:
+
+\Delta V = I R
+
+	- Choose a resistor with resistance R
+	- Provide a voltage difference over a resistor of \Delta V
+	- Solve for the current I = \Delta V / R
+
+
+2 Examples of 1 resistor in series with a battery.
+	- Solve for I
+	- Solve for V_B
+
+2 resistors in series with a battery
+	- Start with symbols R1 & R2
+	- Use Ohm's law & current rule to derive RS = R1 + R2
+	- Then, example with numbers. 
+
+2 resistors in parallel with a battery
+	- Start with R1 & R2
+	- Use Ohm's law & loop current rule to derive RP = (1/R1 + 1/R2)^-1
+	- Then, example with numbers. 
+
+
+
+
+
+ 

@@ -1,0 +1,57 @@
+Gauss's Law
+
+1. What does it say?
+
+
+a) Information on flux:
+The number of electric lines that exit/enter a *closed surface* is the same, regardless of the *size/shape* of the surface.
+
+By "number of field lines" we mean flux:
+
+*\Phi = \oint \vec E dot d \vec A = same thing with cosine explicit*
+
+notes:
+
+- surface area vector is *perpendicular* to the surface, and points out, by convention.
+- So, if lines are exiting the surface, flux is *positive*. If they are leaving the flux is *negative*
+- Every time a line leaves it counts as +1, and every time it enters it is -1. So, a line that passes through will be *-1 + 1 = 0*
+
+
+b) Relation of flux to charge:
+The number of field lines (AKA *net flux*) is equal to *q_enc / eps_0*
+
+So, from "counting field lines" (i.e. computing the net flux through a surface), we can know how much *charge* there is inside.
+
+Does it matter how far away from the charge we are? *No!*
+
+Formally, we count the field lines by performing the surface integral (it's the same one you wrong above). 
+
+*\Phi = \oint \vec E dot d \vec A*
+
+The closed area over which we integrate is called a *Gaussian surface*
+
+
+2. How is it useful, in a practical sense?
+
+a) Use it when you have a charge distribution in one of the 3 classical symmetries:
+	- *Spherical*
+	- *Cylindrical*
+	- *Planar*
+
+Definition of Symmetry: *If you close your eyes and I change the system in a symmetric way, when you open your eyes, you can't tell*
+
+b) Define a gaussian surface that respects the *symmetry* of the charge distribution
+	- If the charge distribution is spherically symmetric, define your surface to be spherically symmetric,
+			*centered on the charge distribution*
+	- ... similarly for cylindrical and planar symmetries
+
+
+If you've done this, the electric field through your surface will be perpendicular to your Gaussian surface, and the integral will be easy. (Use the language you already about about perp & parallel)
+
+-> Time for an example with a point charge
+
+
+3. Use Gauss's law to show that spherical shells have the same field as point charges and no field inside. Also go over planar symmetry example.
+
+
+4. Finally, the examples you've already shown.

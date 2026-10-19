@@ -1,0 +1,7 @@
+Circuits review rough notes
+
+Examples of finding charge on a capacitor C when you're given the battery V, resistor R & current through R. Then, a second similar example. Put 2 caps in parallel & one resistor in series with that. Mix up the unknowns. Maybe give Q on one cap?
+
+Kirchhoff loop with capacitors
+
+2 examples, slightly different structures
