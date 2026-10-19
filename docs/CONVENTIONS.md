@@ -65,6 +65,20 @@ recorded here.
   (`⚠`, `background:#fff8e1`, `border:#f2c94c`, `color:#8a6d1d`) directly in
   the controls for that mode, not just in a commit message or memory file.
 
+## Circuit Lab grid rules
+
+- **Every component endpoint lands exactly on a grid point.** No node may
+  sit at a fractional/off-grid position — this is what makes the generic
+  collision, snapping, and connectivity logic (shared across every
+  component type) actually sound.
+- **No diagonal wires.** Every wire, resistor, battery, capacitor, etc.
+  runs strictly horizontal or vertical between two grid points. The one
+  explicit exception is the 2-position switch's own lever: its real body
+  is a pole → pivot (horizontal) → lever (genuinely diagonal, still
+  grid-point-to-grid-point) → contact (horizontal) path, so it alone is
+  allowed to carry one real diagonal segment. Nothing else gets this
+  exception — every other component stays axis-aligned end to end.
+
 ## Process conventions (how, not what)
 
 - **Bundle editing**: sims are generated single-file bundles — extract,
