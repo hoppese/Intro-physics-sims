@@ -1519,7 +1519,7 @@
       {
        "kind": "KO",
        "label": "KO 20",
-       "track": "both",
+       "track": "calc",
        "cmid": 145910,
        "module": "quiz",
        "points": 2.0,
@@ -1531,13 +1531,25 @@
       {
        "kind": "Prep",
        "label": "Prep 18",
-       "track": "both",
+       "track": "calc",
        "cmid": 145947,
        "module": "quiz",
        "points": 3.0,
        "attempts": 2,
        "opens": "2026-10-21 11:00",
        "closes": "2026-10-23 10:00",
+       "visible": true
+      },
+      {
+       "kind": "Quiz",
+       "label": "Magnetism Quiz 1",
+       "track": "alg",
+       "cmid": 151905,
+       "module": "assign",
+       "points": 5.0,
+       "attempts": null,
+       "opens": "2026-10-21 11:00",
+       "closes": "2026-10-23 11:00",
        "visible": true
       }
      ],
@@ -1571,12 +1583,12 @@
       "exp": "Superpose two wire fields; find the null point.",
       "prac": "Magnitude + direction at a point."
      },
-     "split": false,
+     "split": true,
      "due": [
       {
        "kind": "KO",
        "label": "KO 21",
-       "track": "both",
+       "track": "calc",
        "cmid": 145909,
        "module": "quiz",
        "points": 2.0,
@@ -1588,7 +1600,7 @@
       {
        "kind": "Prep",
        "label": "Prep 19",
-       "track": "both",
+       "track": "calc",
        "cmid": 145946,
        "module": "quiz",
        "points": 3.0,
@@ -1600,7 +1612,7 @@
       {
        "kind": "OHW",
        "label": "OHW 12",
-       "track": "both",
+       "track": "calc",
        "cmid": null,
        "module": null,
        "points": 6,
@@ -1609,6 +1621,30 @@
        "closes": null,
        "visible": null,
        "note": "lives in Mastering, not Moodle"
+      },
+      {
+       "kind": "Quiz",
+       "label": "Magnetism Quiz 2",
+       "track": "alg",
+       "cmid": 151906,
+       "module": "assign",
+       "points": 5.0,
+       "attempts": null,
+       "opens": "2026-10-23 11:00",
+       "closes": "2026-10-26 11:00",
+       "visible": true
+      },
+      {
+       "kind": "HW",
+       "label": "HW 7A",
+       "track": "alg",
+       "cmid": 151908,
+       "module": "assign",
+       "points": 10.0,
+       "attempts": null,
+       "opens": "2026-10-14 11:00",
+       "closes": "2026-10-26 10:00",
+       "visible": true
       }
      ],
      "sims": [
@@ -1616,7 +1652,9 @@
        "name": "Magnetic field of currents",
        "note": "Two-wire superposition mode."
       }
-     ]
+     ],
+     "calc": "Integrate Biot–Savart for a finite line and a loop center; superpose two wires by calculation.",
+     "alg": "Use B=μ₀I/2πr and the loop-center result for each wire; superpose by adding vectors, find the null point."
     },
     {
      "dow": "Wed",
@@ -1639,7 +1677,7 @@
       {
        "kind": "KO",
        "label": "KO 22",
-       "track": "both",
+       "track": "calc",
        "cmid": 145908,
        "module": "quiz",
        "points": 2.0,
@@ -1651,7 +1689,7 @@
       {
        "kind": "Prep",
        "label": "Prep 20",
-       "track": "both",
+       "track": "calc",
        "cmid": 145945,
        "module": "quiz",
        "points": 3.0,
@@ -1663,12 +1701,36 @@
       {
        "kind": "HW",
        "label": "HW 7",
-       "track": "both",
+       "track": "calc",
        "cmid": 145975,
        "module": "assign",
        "points": 18.0,
        "attempts": null,
        "opens": "2026-10-14 11:00",
+       "closes": "2026-10-28 10:00",
+       "visible": true
+      },
+      {
+       "kind": "Quiz",
+       "label": "Magnetism Quiz 3",
+       "track": "alg",
+       "cmid": 151907,
+       "module": "assign",
+       "points": 5.0,
+       "attempts": null,
+       "opens": "2026-10-26 11:00",
+       "closes": "2026-10-28 11:00",
+       "visible": true
+      },
+      {
+       "kind": "HW",
+       "label": "HW 7B",
+       "track": "alg",
+       "cmid": 151909,
+       "module": "assign",
+       "points": 10.0,
+       "attempts": null,
+       "opens": "2026-10-26 10:00",
        "closes": "2026-10-28 10:00",
        "visible": true
       }
@@ -1696,7 +1758,7 @@
       "exp": "Dipole sim — compare E/B dipole fields, then rotate one in a field for torque.",
       "prac": "Dipole field + torque/energy problems. (Merged from the old two dipole days.)"
      },
-     "split": false,
+     "split": true,
      "due": [
       {
        "kind": "KO",
@@ -1725,7 +1787,7 @@
       {
        "kind": "OHW",
        "label": "OHW 13",
-       "track": "both",
+       "track": "calc",
        "cmid": null,
        "module": null,
        "points": 6,
@@ -1734,6 +1796,18 @@
        "closes": null,
        "visible": null,
        "note": "lives in Mastering, not Moodle"
+      },
+      {
+       "kind": "HW",
+       "label": "HW 7C",
+       "track": "alg",
+       "cmid": 151910,
+       "module": "assign",
+       "points": 10.0,
+       "attempts": null,
+       "opens": "2026-10-28 10:00",
+       "closes": "2026-10-30 10:00",
+       "visible": true
       }
      ],
      "sims": [
@@ -1742,7 +1816,9 @@
        "note": "Electric vs magnetic dipole patterns, then rotate one in a field for torque τ=μ×B and energy U=−μ·B.",
        "slug": "dipole-field-and-torque"
       }
-     ]
+     ],
+     "calc": "Same lesson for both sections; the Calc set is Online HW 13.",
+     "alg": "Same lesson for both sections; Algebra does Written HW 7C instead of the online set."
     }
    ]
   },
