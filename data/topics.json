@@ -62,7 +62,7 @@
       "title": "Coulomb's Law & the Electric Field",
       "knight": "22.4–22.5",
       "videos": [{ "id": "vJn-GEh9cxM", "status": "unv" }],
-      "sims": ["electrostatics-explorer", "moving-charge-field"]
+      "sims": ["electrostatics-explorer"]
     },
     "field-superposition": {
       "title": "Electric Field Superposition",
@@ -208,16 +208,6 @@
       "cp": [
         ["Ch 18.3 Coulomb's Law", "18-3-coulombs-law"],
         ["Ch 18.4 Electric Field", "18-4-electric-field-concept-of-a-field-revisited"]
-      ]
-    },
-    "moving-charge-field": {
-      "up": [
-        ["Vol 2 · 5.4 Electric Field", "2/pages/5-4-electric-field"],
-        ["Vol 2 · 5.6 Electric Field Lines", "2/pages/5-6-electric-field-lines"]
-      ],
-      "cp": [
-        ["Ch 18.4 Electric Field", "18-4-electric-field-concept-of-a-field-revisited"],
-        ["Ch 18.5 Electric Field Lines", "18-5-electric-field-lines-multiple-charges"]
       ]
     },
     "field-superposition-explorer": {
