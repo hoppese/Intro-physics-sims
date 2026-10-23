@@ -1,0 +1,209 @@
+\documentclass[12pt]{article}
+\usepackage{notes-common}
+\usetikzlibrary{calc}
+\geometry{margin=0.35in}
+\AtBeginDocument{\fontsize{14}{17}\selectfont}
+
+% Fri Oct 23 -- Magnetic fields + Biot-Savart (Knight 29.1-29.3). Same lesson
+% for both tracks (vector algebra only, no calculus needed) -- matches
+% circuits-intro-notes.tex's layout conventions (small margins, bigger base
+% font). See biot-savart-intro-notes-key.tex for the filled-in version --
+% same structure, wording and diagrams, every blank carries the answer.
+% Built from Seth's rough notes (uploaded).
+\newcommand{\eqline}[2][-0.5mm]{%
+  \par\vspace{1mm}\noindent #2\par\vspace{#1}%
+  \noindent\textcolor{rulehue}{\rule{\linewidth}{0.5pt}}\par\vspace{4mm}%
+}
+% A compact "(___, ___, ___)" vector-component blank, reused for every
+% separation vector, unit vector and field vector below.
+\newcommand{\vecbl}[1][1.3cm]{$\big($\,\bl[#1]\,, \bl[#1]\,, \bl[#1]\,$\big)$}
+
+% ---- simple axis + point-charge diagram pieces, shared by all three figures ----
+\newcommand{\axesxy}[1][2.6]{% small x-y axes through the origin, half-extent #1 (cm)
+  \draw[-latex, line width=0.6pt, gray] (-#1,0) -- (#1,0) node[below right,scale=0.7]{$x$};
+  \draw[-latex, line width=0.6pt, gray] (0,-#1) -- (0,#1) node[above left,scale=0.7]{$y$};
+}
+\newcommand{\qdot}[2]{% a source charge marker at (#1), labelled #2
+  \filldraw[fill=accent!25, draw=accent] (#1) circle (2.6pt);
+  \node[scale=0.75, anchor=north, yshift=-2pt] at (#1) {#2};
+}
+\newcommand{\pdot}[2]{% a field-point marker at (#1), labelled #2
+  \filldraw[fill=white, draw=black] (#1) circle (2pt);
+  \node[scale=0.75, anchor=south, yshift=2pt] at (#1) {#2};
+}
+
+\begin{document}
+
+\noteshead{Intro to Biot--Savart}{}
+
+\goal{
+\begin{itemize}[itemsep=5pt,parsep=2pt,topsep=2pt]
+\item Warm up with something you already know: superpose the $\vec E$ field
+of a point charge at three locations, being explicit about separation
+vectors and unit vectors.
+\item Reuse that exact same geometry to introduce the Biot--Savart law for a
+single \emph{moving} point charge, $\vec B$.
+\item Compare $\vec E$ and $\vec B$ at those same three points --- same
+source, same locations, very different field.
+\item Scale up to three moving charges in a line and see their $\vec B$
+contributions add (not cancel) at an off-axis point.
+\item Make the leap from one moving charge ($q\vec v$) to a continuous
+current ($I\,d\vec\ell$) --- the form of Biot--Savart we'll actually use for
+wires, loops and solenoids.
+\end{itemize}}
+
+%============================================================
+\nsec{Warm-up: $\vec E$ from a point charge}
+
+A charge $q=+2.0\ \mu$C sits at $(-5,0,0)$ cm. Find $\vec E$ at three field
+points: $P_1=(-9,3,0)$, $P_2=(-5,3,0)$, $P_3=(-1,3,0)$ (all in cm).
+
+\begin{center}
+\begin{tikzpicture}[x=0.5cm,y=0.5cm]
+  \axesxy[5.5]
+  \qdot{-5,0}{$q$}
+  \pdot{-9,3}{$P_1$}
+  \pdot{-5,3}{$P_2$}
+  \pdot{-1,3}{$P_3$}
+\end{tikzpicture}
+\end{center}
+\figtask{Sketch the three separation vectors $\vec r_1,\vec r_2,\vec r_3$ from
+$q$ to each field point on the diagram above.}
+
+\textbf{Step 1 --- separation vectors} $\vec r_i = \vec r_{P_i}-\vec r_q$ (cm):
+
+$\vec r_1 = $ \vecbl
+
+$\vec r_2 = $ \vecbl
+
+$\vec r_3 = $ \vecbl
+
+\textbf{Step 2 --- magnitudes and unit vectors} $\hat r_i = \vec r_i / r_i$:
+
+$r_1 = $ \bl[1.2cm] cm, $\ \hat r_1 = $ \vecbl
+
+$r_2 = $ \bl[1.2cm] cm, $\ \hat r_2 = $ \vecbl
+
+$r_3 = $ \bl[1.2cm] cm, $\ \hat r_3 = $ \vecbl
+
+\textbf{Step 3 --- Coulomb's law}, $\displaystyle \vec E = \frac{1}{4\pi
+\varepsilon_0}\,\frac{q}{r^2}\,\hat r$:
+
+$\vec E_1 = $ \vecbl[1.6cm] N/C
+
+$\vec E_2 = $ \vecbl[1.6cm] N/C
+
+$\vec E_3 = $ \vecbl[1.6cm] N/C
+
+\checkpoint{$P_1$ and $P_3$ are the same distance from $q$. What's the same
+about $\vec E_1$ and $\vec E_3$, and what's different? Why?}
+
+%============================================================
+\nsec{Biot--Savart: the same charge, now moving}
+
+Same charge, same three points --- but now $q$ moves with velocity
+$\vec v = (12,0,0)$ m/s. The Biot--Savart law for a single point charge is
+
+\[
+\vec B = \frac{\mu_0}{4\pi}\,\frac{q\,\vec v\times\hat r}{r^2}, \qquad
+\frac{\mu_0}{4\pi} = 1\times10^{-7}\ \text{T}\!\cdot\!\text{m/A}.
+\]
+
+\textbf{Reuse your $\hat r_1,\hat r_2,\hat r_3$ from \S1} --- the geometry
+hasn't changed, only the source. Compute $\vec v\times\hat r_i$ first, then
+$\vec B_i$:
+
+$\vec v\times\hat r_1 = $ \vecbl[1.4cm] m/s
+
+$\vec v\times\hat r_2 = $ \vecbl[1.4cm] m/s
+
+$\vec v\times\hat r_3 = $ \vecbl[1.4cm] m/s
+
+$\vec B_1 = $ \vecbl[1.6cm] T
+
+$\vec B_2 = $ \vecbl[1.6cm] T
+
+$\vec B_3 = $ \vecbl[1.6cm] T
+
+\checkpoint{Is $\vec B_1$ the mirror image of $\vec B_3$, the way $\vec E_1$
+and $\vec E_3$ were? What's actually true about $\vec B_1$ and $\vec B_3$?}
+
+%============================================================
+\nsec{Compare $\vec E$ and $\vec B$}
+
+\begin{itemize}[itemsep=6pt,parsep=2pt,topsep=2pt]
+\item Which field is bigger here, $\vec E$ or $\vec B$ --- by roughly how
+many orders of magnitude? \bl[9cm]
+\item $\vec E_1,\vec E_2,\vec E_3$ point in \bl[7cm] directions (how do they
+relate to $\hat r$?).
+\item $\vec B_1,\vec B_2,\vec B_3$ all point \bl[7cm] (what direction, and
+why does every one of them end up that way)?
+\end{itemize}
+
+\checkpoint{$\vec v$ points along $+\hat x$ and every field point here has
+$z=0$. Could $\vec B$ ever have come out with a nonzero $x$- or
+$y$-component at these points? Why or why not?}
+
+%============================================================
+\nsec{Three moving charges in a line}
+
+Three charges, each $q=+1.0\ \mu$C, sit at $(1,-4,0)$, $(1,0,0)$, $(1,4,0)$
+cm, each moving with $\vec v = (0,10,0)$ m/s. Find the total $\vec B$ at
+field point $P=(-2,0,0)$ cm --- off to the side, not on the line of charges.
+
+\begin{center}
+\begin{tikzpicture}[x=0.45cm,y=0.45cm]
+  \axesxy[6]
+  \qdot{1,-4}{$q_1$}
+  \qdot{1,0}{$q_2$}
+  \qdot{1,4}{$q_3$}
+  \pdot{-2,0}{$P$}
+\end{tikzpicture}
+\end{center}
+\figtask{Sketch the three separation vectors from each charge to $P$.}
+
+$\vec r_1 = $ \vecbl \hspace{0.3cm} $r_1 = $ \bl[1.1cm] cm \hspace{0.3cm}
+$\hat r_1 = $ \vecbl
+
+$\vec r_2 = $ \vecbl \hspace{0.3cm} $r_2 = $ \bl[1.1cm] cm \hspace{0.3cm}
+$\hat r_2 = $ \vecbl
+
+$\vec r_3 = $ \vecbl \hspace{0.3cm} $r_3 = $ \bl[1.1cm] cm \hspace{0.3cm}
+$\hat r_3 = $ \vecbl
+
+\textbf{Each charge's contribution} $\vec B_i = \dfrac{\mu_0}{4\pi}\dfrac{q\,
+\vec v\times\hat r_i}{r_i^2}$:
+
+$\vec B_1 = $ \vecbl[1.5cm] T \qquad $\vec B_2 = $ \vecbl[1.5cm] T
+
+$\vec B_3 = $ \vecbl[1.5cm] T
+
+\result[1.3cm]{$\vec B_{\text{total}} = \vec B_1+\vec B_2+\vec B_3 = $}
+
+\checkpoint{Did the three contributions partly cancel, or did they add? Compare
+to what you'd expect from three point \emph{charges'} $\vec E$ fields at an
+off-axis point --- is $\vec B$ behaving the same way?}
+
+%============================================================
+\nsec{From one moving charge to a current}
+
+A current is just a huge number of moving charges, confined to a wire. Take
+a short piece of wire of length $d\ell$, carrying current $I$: in time $dt$,
+the charge that passes through it is $dq$, moving at the drift velocity
+$\vec v$ along the wire. The replacement rule is
+
+\[
+q\,\vec v \ \longrightarrow\ \bl[3cm]
+\]
+
+so the Biot--Savart law for one point charge, $\vec B = \dfrac{\mu_0}{4\pi}
+\dfrac{q\,\vec v\times\hat r}{r^2}$, becomes the law for one current
+element:
+
+\result[2.4cm]{$d\vec B = $}
+
+\checkpoint{Everything you did in \S1--\S4 above with separation vectors and
+unit vectors --- does any of it change once $q\vec v$ becomes $I\,d\vec
+\ell$? What's actually new?}
+
+\end{document}
