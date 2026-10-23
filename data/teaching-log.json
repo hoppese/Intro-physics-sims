@@ -39,6 +39,17 @@
   "synthesis": 10
  },
  "entries": {
+  "2026-10-21": {
+   "covered": "Test 3, in class (circuits unit).",
+   "landed": "Average score 41.5/50 -- much easier than Test 2, and students seemed noticeably more confident during it.",
+   "nextYear": "Multiple likely factors, not yet disentangled: (1) students generally find circuits more intuitive than the vector-heavy electrostatics material Test 2 covered, (2) Seth gave students sample problems to work from beforehand, (3) students were allowed to bring in their own notes. On (3) specifically: Seth wants to reconsider how much material to let students bring in to tests -- it may be discouraging real studying (students copying from notes rather than learning the material), and he's not confident how much genuine learning happened versus how much was just transcription during the test. Revisit this when prepping the spring term in January, not before.",
+   "notes": "Grading retrospective here covers difficulty/confidence only, not a breakdown of which specific problems students struggled with."
+  },
+  "2026-10-19": {
+   "covered": "RC circuits review (the designated flex/catch-up day), ahead of Test 3 on Wednesday (Oct 21). Went back over the class notes already made: charge on a capacitor at a single instant, using Kirchhoff's loop rule to write the loop equation for a single loop, adding capacitors together in parallel, and the charging equations for current and charge.",
+   "wish": "Wanted to get to problem 4 -- a steady-state case where the resistor values actually matter (Seth thinks it's a good problem) -- but ran out of time. Also didn't get to discharging at all, which still needs to be covered.",
+   "nextYear": "Discharging didn't get covered in this review day, and it's not clear from this entry alone whether it was covered earlier in the unit either -- check against the Oct 14 RC-circuits lecture log. The test itself (Test 3, Oct 21) includes a discharge problem (Section 4, Part 2), so confirm students actually saw discharging taught somewhere before being tested on it."
+  },
   "2026-10-12": {
    "covered": "Started by reminding students of their test rewrites (due next Monday), written homework (due tomorrow, Oct 13), and that online homework had been due the previous evening (Oct 11) -- a lot of deadlines to surface at once. Then went over some Kirchhoff loop problems, which went okay. Ended class starting to go over RC circuits, but didn't have enough time to really get into it -- students have RC-circuit homework due tomorrow (Oct 13), so it remains to be seen how that goes.",
    "wish": "Wanted more time on RC circuits/capacitors -- only started that material before class ended, and students have homework on it due tomorrow.",
