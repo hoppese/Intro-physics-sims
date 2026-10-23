@@ -200,6 +200,15 @@
         ["Ch 18.7 Conductors & Fields in Equilibrium", "18-7-conductors-and-electric-fields-in-static-equilibrium"]
       ]
     },
+    "moving-charge-field": {
+      "up": [
+        ["Vol 2 · 12.1 The Biot–Savart Law", "2/pages/12-1-the-biot-savart-law"]
+      ],
+      "cp": [
+        ["Ch 22.9 Magnetic Fields Produced by Currents", "22-9-magnetic-fields-produced-by-currents-amperes-law"]
+      ],
+      "cp_note": "Both readings derive the field of a current element; this sim shows the single-moving-charge case (charge times velocity) that a current element generalizes from."
+    },
     "electrostatics-explorer": {
       "up": [
         ["Vol 2 · 5.3 Coulomb's Law", "2/pages/5-3-coulombs-law"],
