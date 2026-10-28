@@ -64,6 +64,18 @@ recorded here.
 - **Beta / incomplete features**: mark with a small amber warning box
   (`⚠`, `background:#fff8e1`, `border:#f2c94c`, `color:#8a6d1d`) directly in
   the controls for that mode, not just in a commit message or memory file.
+- **Animated sims load paused.** Any sim with a running particle/animation
+  (Lorentz-force, moving-charge sims, etc.) must start paused on load/reset,
+  with a "▶ Run" button the student clicks to start it — never auto-play.
+  (Fixed 2026-10-28 in `lorentz-force`: `reset()` was setting `running=true`.)
+- **Per-embed mode/preset via URL query param.** A sim used in more than one
+  context (e.g. a multi-mode sim embedded in different Preps) should read its
+  initial mode/preset from the query string (`?mode=circle`) via a
+  `componentDidMount(){ this.applyUrlState(); }` + `applyUrlState()` pair —
+  the convention already used by the 3D sims (`discrete-current-builder-3d`,
+  `magnetic-field-3d`, etc.) — so a given embed can open directly into the
+  scenario it's actually testing instead of always showing the sim's generic
+  default.
 
 ## Circuit Lab grid rules
 
