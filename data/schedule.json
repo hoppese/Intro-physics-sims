@@ -1745,18 +1745,18 @@
     {
      "dow": "Fri",
      "date": "Oct 30",
-     "topic": "Magnetic dipoles + torque",
-     "reading": "29.5",
+     "topic": "Magnetic force on charges",
+     "reading": "29.7",
      "video": {
-      "id": "p_I_8hl-Gok",
+      "id": "9C8mRW43X0Q",
       "st": "unv",
-      "mins": 12.8,
+      "mins": 12.6,
       "own": false
      },
      "plan": {
-      "lec": "Dipole moment; the p↔μ analogy; torque τ=p×E and τ=μ×B; energy U=−μ·B.",
-      "exp": "Dipole sim — compare E/B dipole fields, then rotate one in a field for torque.",
-      "prac": "Dipole field + torque/energy problems. (Merged from the old two dipole days.)"
+      "lec": "F=qv×B; circular motion; radius r=mv/qB.",
+      "exp": "Lorentz-force sim — launch a charge into a field, trace the circle.",
+      "prac": "Cyclotron-radius and velocity-selector problems."
      },
      "split": true,
      "due": [
@@ -1812,9 +1812,8 @@
      ],
      "sims": [
       {
-       "name": "Dipole in a Field — Torque & Energy",
-       "note": "Electric vs magnetic dipole patterns, then rotate one in a field for torque τ=μ×B and energy U=−μ·B.",
-       "slug": "dipole-field-and-torque"
+       "name": "Lorentz-force particle",
+       "note": "Charge moving in adjustable E and B; traces helices/circles."
       }
      ],
      "calc": "Same lesson for both sections; the Calc set is Online HW 13.",
@@ -1830,18 +1829,18 @@
     {
      "dow": "Mon",
      "date": "Nov 2",
-     "topic": "Magnetic force on charges",
-     "reading": "29.7",
+     "topic": "Magnetic force + torque on wires",
+     "reading": "29.8–9",
      "video": {
-      "id": "9C8mRW43X0Q",
+      "id": "_saTdQ9AEnM",
       "st": "unv",
-      "mins": 12.6,
+      "mins": 13.4,
       "own": false
      },
      "plan": {
-      "lec": "F=qv×B; circular motion; radius r=mv/qB.",
-      "exp": "Lorentz-force sim — launch a charge into a field, trace the circle.",
-      "prac": "Cyclotron-radius and velocity-selector problems."
+      "lec": "F=IL×B; torque on a current loop → the motor.",
+      "exp": "Current-loop sim — see the loop torque and spin a simple motor.",
+      "prac": "Force-on-wire and motor-torque problems."
      },
      "split": false,
      "due": [
@@ -1885,26 +1884,26 @@
      ],
      "sims": [
       {
-       "name": "Lorentz-force particle",
-       "note": "Charge moving in adjustable E and B; traces helices/circles."
+       "name": "Current-loop / motor",
+       "note": "Force and torque on a current-carrying loop in a field."
       }
      ]
     },
     {
      "dow": "Wed",
      "date": "Nov 4",
-     "topic": "Magnetic force + torque on wires",
-     "reading": "29.8–9",
+     "topic": "Magnetic dipoles + torque",
+     "reading": "29.5",
      "video": {
-      "id": "_saTdQ9AEnM",
+      "id": "p_I_8hl-Gok",
       "st": "unv",
-      "mins": 13.4,
+      "mins": 12.8,
       "own": false
      },
      "plan": {
-      "lec": "F=IL×B; torque on a current loop → the motor.",
-      "exp": "Current-loop sim — see the loop torque and spin a simple motor.",
-      "prac": "Force-on-wire and motor-torque problems."
+      "lec": "Dipole moment; the p↔μ analogy; torque τ=p×E and τ=μ×B; energy U=−μ·B.",
+      "exp": "Dipole sim — compare E/B dipole fields, then rotate one in a field for torque.",
+      "prac": "Dipole field + torque/energy problems. (Merged from the old two dipole days.)"
      },
      "split": false,
      "due": [
@@ -1947,8 +1946,9 @@
      ],
      "sims": [
       {
-       "name": "Current-loop / motor",
-       "note": "Force and torque on a current-carrying loop in a field."
+       "name": "Dipole in a Field — Torque & Energy",
+       "note": "Electric vs magnetic dipole patterns, then rotate one in a field for torque τ=μ×B and energy U=−μ·B.",
+       "slug": "dipole-field-and-torque"
       }
      ]
     },
