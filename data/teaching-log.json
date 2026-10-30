@@ -39,6 +39,12 @@
   "synthesis": 10
  },
  "entries": {
+  "2026-10-30": {
+   "covered": "Started with KO23 (magnetic force on moving charges) -- the algebra-section students hadn't seen the Lorentz force equation yet, so that had to be reintroduced on the spot. Spent time handing back homework and tests to students who'd missed them, and rearranged seats; about a third of the class was absent, which is typical. Reviewed what the class had ended with last time (for the algebra students' benefit), including how to compute a cross product from components. Finished with Example 29.11 from the book (the cyclotron-radius example in cyclotron-helix-notes.tex) -- derived the cyclotron radius equation and the period for cyclotron motion. Did not reach cyclotron motion at a pitched angle (splitting v into v-parallel and v-perpendicular, the helix/pitch material in Sec. 3 of the same notes) -- that carries over to the next class.",
+   "cut": "Cyclotron motion at a pitched angle (v-parallel/v-perpendicular split, helix radius and pitch) -- Sec. 3 of cyclotron-helix-notes.tex, not reached.",
+   "struggled": "Algebra-section students hadn't seen the Lorentz force equation before KO23, which had to be reintroduced; about a third of the class was absent (usual pattern, not specific to this day).",
+   "nextYear": "Seth is unsure the cross-product-from-components review was worth the class time -- probably worth skipping next year, or finding a faster way to refresh it than walking through it live."
+  },
   "2026-10-28": {
    "covered": "Went over the kickoff (KO22, a couple of Amperian-loop questions) -- went fine. Gave a brief lecture on Ampere's law, not stressed too heavily, drawing the comparison to Coulomb's law and Gauss's law; used it to re-derive B for a long straight wire (same result Biot-Savart gave earlier in the unit). Introduced the solenoid B-field and worked a sample problem -- Knight Section 29.6, Example 29.9 (how many loops a solenoid needs to produce the field required for an MRI machine). Then moved on into the Lorentz force F=qv x B, again drawing the electric-vs-magnetic parallel (same equation, just with a v-cross term), ran a set of clicker-style conceptual questions with moving charges (mentioned the Aurora Borealis, which got good student questions), and closed with a numerical example. This ran ahead into material the schedule had slated for Oct 30 (Lorentz force / magnetic force on moving charges).",
    "landed": "The Aurora Borealis mention during the Lorentz-force clicker questions landed well -- got a couple of good follow-up questions, genuinely engaged the class.",
@@ -142,8 +148,8 @@
    "source": "assessments/lecture-notes/latex/cyclotron-helix-notes.tex",
    "kind": "lecture-notes",
    "created": "2026-10-30",
-   "usedOn": null,
-   "note": "Built for Fri Oct 30 (Magnetic force on moving charges). Sec.1-2 work Knight Example 29.11 (electron accelerated through 500 V, then cyclotron radius from a half-revolution time) in the scaffolded skeleton format; Sec.3 is a new (not-from-the-book) problem splitting v into components parallel/perpendicular to B for helical motion, solving for both the helix radius and the pitch (vertical drift per revolution). Key: cyclotron-helix-notes-key.pdf. Not yet confirmed handed out."
+   "usedOn": "2026-10-30",
+   "note": "Built for Fri Oct 30 (Magnetic force on moving charges). Sec.1-2 work Knight Example 29.11 (electron accelerated through 500 V, then cyclotron radius from a half-revolution time) in the scaffolded skeleton format; Sec.3 is a new (not-from-the-book) problem splitting v into components parallel/perpendicular to B for helical motion, solving for both the helix radius and the pitch (vertical drift per revolution). Key: cyclotron-helix-notes-key.pdf. Used in class through Example 29.11 (Sec.1-2) -- Sec.3 (pitched-angle/helix) was not reached and carries over, per the 2026-10-30 teaching-log entry."
   },
   {
    "file": "assessments/equation-sheets/magnetism-alg.pdf",
