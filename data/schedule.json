@@ -1662,8 +1662,13 @@
      "topic": "Ampère’s law",
      "reading": "29.6",
      "video": {
-      "none": 1,
-      "note": "Khan Ampère law, or record"
+      "id": "ryGzpGpTtIM",
+      "id2": "6CX_VbJWopE",
+      "st": "unv",
+      "mins": 10.0,
+      "own": false,
+      "mins2": 4.6,
+      "own2": false
      },
      "plan": {
       "lec": "Circulation; ∮B·dl=μ₀I_enc; Amperian loops. (Pairs with Biot–Savart as the two ways to find B.)",
@@ -1749,7 +1754,7 @@
      "reading": "29.7",
      "video": {
       "id": "9C8mRW43X0Q",
-      "st": "unv",
+      "st": "ok",
       "mins": 12.6,
       "own": false
      },
@@ -1759,6 +1764,14 @@
       "prac": "Cyclotron-radius and velocity-selector problems."
      },
      "split": true,
+     "handouts": [
+      {
+       "name": "Cyclotron Radius & Helical Motion (lecture notes)",
+       "kind": "Lecture notes",
+       "file": "assessments/lecture-notes/cyclotron-helix-notes.pdf",
+       "pages": 4
+      }
+     ],
      "due": [
       {
        "kind": "KO",
