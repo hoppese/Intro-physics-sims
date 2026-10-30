@@ -1,5 +1,6 @@
 \documentclass[12pt]{article}
 \usepackage{notes-common}
+\usepackage{graphicx}
 \geometry{margin=0.35in}
 \AtBeginDocument{\fontsize{14}{17}\selectfont}
 
@@ -71,20 +72,7 @@ field. Once in the field, it completes half a revolution in $2.0$ ns. What
 is the radius of its orbit?}
 
 \begin{center}
-\begin{tikzpicture}[x=0.9cm,y=0.9cm]
-  \draw[line width=1.6pt] (0,-1.6) -- (0,1.6);
-  \draw[line width=1.6pt] (1.0,-1.6) -- (1.0,1.6);
-  \node[scale=0.78, anchor=east, xshift=-2pt] at (0,-2.0) {$0$ V};
-  \node[scale=0.78, anchor=west, xshift=2pt] at (1.0,-2.0) {$500$ V};
-  \foreach \x in {1.8,2.6,3.4}{
-    \foreach \y in {-1.2,-0.4,0.4,1.2}{
-      \node[scale=0.75, gray] at (\x,\y) {$\times$};}}
-  \node[scale=0.78] at (3.95,1.6) {$\vec B$ (into page)};
-  \draw[-latex, accent, line width=1pt] (-0.7,0) -- (0.9,0);
-  \draw[-latex, accent, line width=1pt] (1.0,0) arc (180:0:0.8);
-  \filldraw[accent] (-0.7,0) circle (1.5pt);
-  \node[scale=0.75] at (-0.7,0.35) {$e^-$};
-\end{tikzpicture}
+\includegraphics[width=0.52\linewidth]{figures/knight-fig29-38-blank.png}
 \end{center}
 \figtask{Label the $0$ V and $500$ V plates, mark $\vec B$'s direction, and
 sketch the electron's path: straight across the gap, then curving once it
@@ -173,15 +161,7 @@ and (b) the \emph{pitch} --- the distance it drifts along $\vec B$ during
 one full revolution.}
 
 \begin{center}
-\begin{tikzpicture}[x=1cm,y=1cm]
-  \draw[-latex, gray, dashed, line width=0.9pt] (-0.4,-1.1) -- (6.4,-1.1);
-  \draw[-latex, gray, line width=1pt] (-0.4,0) -- (6.4,0) node[right,scale=0.8]{$\vec B$};
-  \draw[-latex, gray, dashed, line width=0.9pt] (-0.4,1.1) -- (6.4,1.1);
-  \foreach \x in {0,0.9,1.8,2.7,3.6,4.5,5.4}{
-    \draw[accent, line width=1.1pt] (\x,0) ellipse (0.42 and 1.05);}
-  \draw[<->, gray] (0,-1.5) -- (0.9,-1.5);
-  \node[scale=0.75] at (0.45,-1.8) {pitch};
-\end{tikzpicture}
+\includegraphics[height=5.4cm]{figures/knight-fig29-39a.png}
 \end{center}
 \figtask{Mark one full turn of the helix and label the pitch you're solving
 for.}
