@@ -1,0 +1,90 @@
+% magnetism-body.tex
+% Shared content for both track versions of the magnetism equation sheet.
+% \input this from a file that has already set up the preamble (packages,
+% colors, \eqtab/\R/\band macros) and opened \begin{document} with its own
+% title block.
+%
+% Everything here is common to PHYS 230 (algebra) and PHYS 235 (calc). The
+% guiding idea of this sheet: every magnetic law is an electric law with one
+% extra ingredient inserted -- a cross product with a velocity (forces/fields
+% of moving charges) or with a current element (sources). Section 1 states
+% that pattern explicitly; the rest of the sheet is built to keep showing it.
+%
+% Track-specific material (the actual Biot--Savart integral and the formal
+% statement of Ampere's law, $\oint\vec B\cdot d\vec l=\mu_0 I_{enc}$) lives
+% only in magnetism-calc.tex, after this \input -- PHYS 230 works entirely
+% from the given result formulas (wire, loop, solenoid) and from
+% enclosed-current counting, never from the path integral itself. Mirrors
+% how electrostatics-body.tex keeps Gauss's law calc-only, but here the
+% *idea* of "only the enclosed source matters" still belongs to both tracks,
+% so Ampere's law gets a conceptual (non-integral) fundamental statement here
+% rather than being omitted outright.
+
+%========================================================
+\section{The pattern: electric $\to$ magnetic \quad {\normalfont\small (how to read the rest of this sheet)}}
+\eqtab{
+  \band{insert a $\vec v\times$}
+  \R{Force on a charge\newline\footnotesize(same $q$; the field now has to be crossed with $\vec v$, not just multiplied)}{\vec F=q\vec E \quad\longrightarrow\quad \vec F=q\vec v\times\vec B}
+  \R{Field of a point charge (Coulomb's law) $\to$ field of a \emph{moving} point charge\newline\footnotesize(same $1/r^2$; direction is now set by the right-hand rule on $\vec v\times\hat r$, not just radially out)}{\vec E=\dfrac{1}{4\pi\varepsilon_0}\dfrac{q}{r^2}\hat r \quad\longrightarrow\quad \vec B=\dfrac{\mu_0}{4\pi}\dfrac{q\vec v\times\hat r}{r^2}}
+  \band{the source swap: $q\vec v \to I\,\Delta\vec L$}
+  \R{A single moving charge generalizes to a continuous current\newline\footnotesize(this is exactly how the moving-point-charge law above becomes the Biot--Savart law, Sec.~2 -- a current element is just a lot of moving charge packed into a short wire segment)}{q\vec v \quad\longrightarrow\quad I\,\Delta\vec L}
+  \band{electric dipole $\to$ magnetic dipole}
+  \R{Dipole moment, torque, and orientation energy all carry straight across\newline\footnotesize($\vec p\to\vec\mu$, $\vec E\to\vec B$ -- see Sec.~4 for the full set side by side)}{\vec p \to \vec\mu\,,\qquad \vec E \to \vec B}
+}
+
+%========================================================
+\section{Magnetic force on charges \& currents \quad {\normalfont\small (Knight 29.1--29.3, 29.7--29.8)}}
+\eqtab{
+  \band{fundamental}
+  \R{Force on a moving charge\newline\footnotesize($\perp$ to both $\vec v$ and $\vec B$; use the right-hand rule; zero if $\vec v \parallel \vec B$; compare $\vec F=q\vec E$, Sec.~1)}{\vec F = q\,\vec v \times \vec B\,,\qquad |\vec F| = |q|\,vB\sin\theta}
+  \R{Force on a straight current-carrying wire, length $L$}{\vec F = I\,\vec L \times \vec B\,,\qquad |\vec F| = BIL\sin\theta}
+  \band{derived}
+  \R{Charge in a uniform field ($\vec v \perp \vec B$)\newline\footnotesize(circular motion; magnetic force does no work, so $v$ is constant)}{r = \dfrac{mv}{|q|B}}
+  \R{Period / cyclotron frequency\newline\footnotesize(independent of $v$ and $r$)}{T = \dfrac{2\pi m}{|q|B}\,,\qquad f = \dfrac{|q|B}{2\pi m}}
+  \R{Velocity selector (crossed $\vec E$, $\vec B$)}{v = \dfrac{E}{B}}
+}
+
+%========================================================
+\section{Sources of magnetic field \quad {\normalfont\small (Knight 29.4--29.5)}}
+\eqtab{
+  \band{fundamental}
+  \R{Field of a single moving point charge\newline\footnotesize(the magnetic twin of Coulomb's law, Sec.~1 -- same $1/r^2$, direction by the right-hand rule on $\vec v\times\hat r$)}{\vec B = \dfrac{\mu_0}{4\pi}\dfrac{q\vec v \times \hat r}{r^{2}}}
+  \R{Chop a current into pieces, add up\newline\footnotesize(each short segment $\Delta\vec L$ of current $I$ acts like a swarm of moving charges, $I\Delta\vec L$ standing in for $q\vec v$ -- see Sec.~1)}{\Delta\vec B = \dfrac{\mu_0}{4\pi}\,\dfrac{I\,\Delta\vec L \times \hat r}{r^{2}}\,,\qquad \vec B = \textstyle\sum_i \Delta\vec B_i}
+  \band{derived --- given results, use these directly}
+  \R{Long straight wire (distance $r$)\newline\footnotesize(field circles the wire; $B \propto 1/r$)}{B = \dfrac{\mu_0 I}{2\pi r}}
+  \R{Center of a circular loop (radius $R$, $N$ turns)}{B = \dfrac{\mu_0 N I}{2R}}
+  \R{Inside a long solenoid\newline\footnotesize(uniform; independent of radius; $\approx 0$ outside)}{B = \mu_0 n I}
+}
+
+%========================================================
+\section{Amp\`ere's law --- the idea \quad {\normalfont\small (Knight 29.6)}}
+\eqtab{
+  \band{fundamental}
+  \R{Only the enclosed current matters\newline\footnotesize(any closed loop around a current; current entirely outside the loop contributes nothing; sign by the right-hand rule)}{I_{\text{enc}} = \textstyle\sum_i I_i \quad (\text{signed})}
+  \band{derived --- apply it with the Sec.~2 results}
+  \R{Straight wire (distance $r$)}{B=\dfrac{\mu_0 I}{2\pi r} \quad(\text{Sec.~2 --- Amp\`ere's law is how it's derived})}
+  \R{Inside a long solenoid}{B=\mu_0 nI \quad(\text{Sec.~2, same way})}
+}
+
+%========================================================
+\section{Magnetic dipoles \& torque \quad {\normalfont\small (Knight 29.5, 29.9)}}
+\eqtab{
+  \band{fundamental}
+  \R{Dipole moment of a current loop\newline\footnotesize(compare the electric dipole moment $\vec p=q\vec d$)}{\vec\mu = N I \vec A \qquad (|\vec\mu| = NIA)}
+  \R{Torque on a dipole in a field\newline\footnotesize(twists $\vec\mu$ toward $\vec B$; max at $\theta = 90^\circ$, zero when aligned; compare $\vec\tau=\vec p\times\vec E$)}{\vec\tau = \vec\mu \times \vec B\,,\qquad |\vec\tau| = \mu B \sin\theta}
+  \band{derived}
+  \R{Orientation energy\newline\footnotesize(minimum when $\vec\mu \parallel \vec B$; compare $U=-\vec p\cdot\vec E$)}{U = -\vec\mu \cdot \vec B = -\mu B \cos\theta}
+  \R{Net force on a dipole in a \emph{uniform} field}{\vec F_{\text{net}} = 0 \quad (\text{torque only})}
+}
+
+%========================================================
+\section{Magnetic flux \& electromagnetic induction \quad {\normalfont\small (Knight 30.1--30.7)}}
+\eqtab{
+  \band{fundamental}
+  \R{Magnetic flux through a loop\newline\footnotesize(uniform field: just area times the component of $\vec B$ along the normal)}{\Phi_B = BA\cos\theta}
+  \R{Faraday's law --- induced emf\newline\footnotesize(only a \emph{changing} flux induces an emf)}{\mathcal{E} = -N\,\dfrac{\Delta\Phi_B}{\Delta t}}
+  \R{Lenz's law}{\text{induced current opposes the change in flux}}
+  \band{derived}
+  \R{Motional emf (bar of length $L$, speed $v$, $\vec v \perp \vec B$)}{\mathcal{E} = BLv}
+  \R{Induced current and dissipated power}{I = \dfrac{\mathcal{E}}{R}\,,\qquad P = \dfrac{\mathcal{E}^{2}}{R} = F_{\text{pull}}\,v}
+}
