@@ -4,7 +4,7 @@
 \geometry{margin=0.35in}
 \AtBeginDocument{\fontsize{14}{17}\selectfont}
 
-% Complete / filled-in reference version of wire-force-levitation-notes.tex.
+% Complete / filled-in reference version of magnetic-force-torque-notes.tex.
 \newcommand{\eqline}[2][-0.5mm]{%
   \par\vspace{1mm}\noindent #2\par\vspace{#1}%
   \noindent\textcolor{rulehue}{\rule{\linewidth}{0.5pt}}\par\vspace{4mm}%
@@ -13,7 +13,7 @@
 
 \begin{document}
 
-\noteshead{Magnetic Force on a Current-Carrying Wire \textcolor{accent}{(completed)}}{}
+\noteshead{Magnetic Force and Torque on Current-Carrying Wires \textcolor{accent}{(completed)}}{}
 
 \goal{
 \begin{itemize}[itemsep=5pt,parsep=2pt,topsep=2pt]
@@ -26,6 +26,10 @@ that produces it.
 \item Work a full numerical example end to end: find the current that
 lets a wire ``float'' against gravity in a magnetic field (Example
 29.13).
+\item See why a current \emph{loop} in a field feels a net torque even
+though it feels no net force, and derive $\tau=mB\sin\theta$.
+\item Work a full numerical example applying $\tau=mB\sin\theta$ to a
+multi-turn coil.
 \end{itemize}}
 
 %============================================================
@@ -132,5 +136,105 @@ $\vec l$ and $\vec B$ are parallel (or antiparallel) --- $\sin\alpha=0$
 there. The lead-in wires run along $\vec B$'s direction, so they feel
 no magnetic force at all; only the horizontal segment, which is
 perpendicular to $\vec B$, does.}
+
+%============================================================
+\nsec{Torque on a current loop}
+
+Now put a whole square loop (side $l$, current $I$) in a uniform field
+$\vec B$, with the loop's normal --- its magnetic moment $\vec m$ ---
+at angle $\theta$ to $\vec B$. The field pushes on all four sides, but
+two of those forces, $\vec F_{\text{front}}$ and $\vec F_{\text{back}}$,
+are equal and opposite \emph{along the same line} and simply cancel.
+The other two, $\vec F_{\text{top}}$ and $\vec F_{\text{bottom}}$, are
+also equal and opposite --- so the \emph{net force} on the loop is
+still zero --- but they act along \ANS{different} lines, separated by a
+moment arm $d$. A force pair like that doesn't translate the loop; it
+\ANS{rotates} it.
+
+\begin{center}
+\includegraphics[width=0.62\linewidth]{figures/knight-fig29-48.png}
+\end{center}
+\figtask{Mark which pair of forces cancels outright, and which pair is
+the one producing the torque.}
+
+Each of $\vec F_{\text{top}}$, $\vec F_{\text{bottom}}$ has magnitude
+$F=IlB$ (Section 1's result, with $\theta=90^\circ$ between the wire
+and $\vec B$), and the moment arm for each is $d=\tfrac12 l\sin\theta$.
+Torque is force times moment arm, and there are two force/arm pairs
+acting together:
+
+\[
+\tau = 2Fd = 2(IlB)\left(\tfrac12 l\sin\theta\right) =
+\ANS{Il^2B\sin\theta}
+\]
+
+The combination $Il^2=IA$ (area $A=l^2$ for this square loop) is the
+loop's magnetic moment magnitude $m$ (or $m=NIA$ for $N$ turns instead
+of just one). This result turns out to hold for a loop of \emph{any}
+shape:
+
+\result[1.8cm]{$\tau = \ANS{mB\sin\theta}$}
+
+In vector form, since this is one more example of a cross product:
+
+\eqline[0.2cm]{$\vec\tau = \ANS{\vec m\times\vec B}$}
+
+\checkpoint{At what angle $\theta$ is this torque zero? At what angle
+is it maximum? A compass needle is a magnetic dipole --- use your
+answer to explain why a compass needle always ends up pointing along
+$\vec B$, not across it.}
+
+{\small\color{accent} Zero at $\theta=0^\circ$ or $180^\circ$ ($\vec m$
+aligned or anti-aligned with $\vec B$); maximum at $\theta=90^\circ$
+($\vec m\perp\vec B$). The torque always acts to twist $\vec m$ toward
+alignment, so $\theta=90^\circ$ --- pointing \emph{across} the field
+--- is exactly where the twisting force is strongest, not an
+equilibrium. The needle only stops turning once it reaches
+$\theta=0^\circ$, aligned with $\vec B$.}
+
+%============================================================
+\nsec{Worked example: torque on a coil}
+
+\textit{A flat coil has $N=40$ turns, each a square $l=3.0$ cm on a
+side. The coil carries a current $I=1.5$ A and sits in a uniform field
+$B=0.50$ T, with its magnetic moment at $\theta=35^\circ$ to the field
+(as in Figure 29.48). What is the magnitude of the torque on the
+coil?}
+
+\textbf{MODEL.} The coil is a magnetic dipole with moment
+$m=\ANS{NIA}$; the torque follows directly from $\tau=mB\sin\theta$.
+
+\textbf{SOLVE.} First find the area of one turn and the dipole moment:
+
+\[
+A = l^2 = \ANS{(0.030\text{ m})^2 = 9.0\times10^{-4}\text{ m}^2}
+\]
+
+\[
+m = NIA = \ANS{(40)(1.5\text{ A})(9.0\times10^{-4}\text{ m}^2) =
+0.054\text{ A}{\cdot}\text{m}^2}
+\]
+
+Now find the torque:
+
+\result[1.8cm]{$\tau = mB\sin\theta = \ANS{(0.054)(0.50)\sin35^\circ}$}
+
+Plug in the numbers:
+
+\eqline[0.2cm]{$\tau = \ANS{0.027\times0.574 = 1.5\times10^{-2}\text{
+N}{\cdot}\text{m}}$}
+
+\checkpoint{If you doubled the number of turns $N$ --- same loop size
+$l$, same current $I$ --- would the torque go up, down, or stay the
+same? What does that suggest about why real motors and galvanometers
+wind \emph{many turns} of wire around the same coil, rather than using
+a single loop?}
+
+{\small\color{accent} $m=NIA$, so doubling $N$ (with $l$ and $I$
+unchanged) doubles $m$, and therefore doubles $\tau=mB\sin\theta$ too.
+Winding many turns around the \emph{same} coil is a cheap way to
+multiply the torque for a given current and field --- which is exactly
+why real motors and galvanometers use coils of many turns rather than
+a single loop of wire.}
 
 \end{document}
