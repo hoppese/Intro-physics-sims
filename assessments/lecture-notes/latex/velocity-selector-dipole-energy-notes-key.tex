@@ -1,0 +1,130 @@
+\documentclass[12pt]{article}
+\usepackage{notes-common}
+\usepackage{graphicx}
+\geometry{margin=0.35in}
+\AtBeginDocument{\fontsize{14}{17}\selectfont}
+
+% Complete / filled-in reference version of
+% velocity-selector-dipole-energy-notes.tex.
+\newcommand{\eqline}[2][-0.5mm]{%
+  \par\vspace{1mm}\noindent #2\par\vspace{#1}%
+  \noindent\textcolor{rulehue}{\rule{\linewidth}{0.5pt}}\par\vspace{4mm}%
+}
+\newcommand{\ANS}[1]{\textcolor{accent}{#1}}
+
+\begin{document}
+
+\noteshead{Magnetic Field from a Force Balance, and Dipole Energy \textcolor{accent}{(completed)}}{}
+
+\goal{
+\begin{itemize}[itemsep=5pt,parsep=2pt,topsep=2pt]
+\item Apply the velocity-selector force balance to solve for the
+\emph{field} instead of the speed --- same equation, different unknown.
+\item Use $U=-\vec\mu\cdot\vec B=-\mu B\cos\theta$ to find a dipole's
+potential energy at a given orientation, and the \emph{change} in
+energy between two different orientations.
+\end{itemize}}
+
+%============================================================
+\nsec{Worked example: finding the field in a velocity selector}
+
+Recall the velocity selector: a charge moving through crossed
+$\vec E$ and $\vec B$ fields goes straight only when the electric and
+magnetic forces exactly cancel, $qE=qvB$. Last time you solved that
+for the speed $v$. This time you're given the speed and have to solve
+for the field.
+
+\textit{A charged particle moves with speed $v=3.0\times10^5$ m/s
+through a region containing a uniform electric field
+$E=6.0\times10^4$ N/C, directed vertically downward. The particle
+passes straight through without deflecting. What is the magnitude of
+the magnetic field $\vec B$ present in the region? Assume $\vec B$ is
+perpendicular to both $\vec v$ and $\vec E$, and the particle is
+positively charged.}
+
+\textbf{MODEL.} The particle goes straight only if the electric force
+and the magnetic force on it are \ANS{equal and opposite}, exactly
+canceling.
+
+\textbf{SOLVE.} Set the force magnitudes equal:
+
+\[
+qE = \ANS{qvB}
+\]
+
+The charge $q$ \ANS{cancels} --- the balance condition doesn't depend
+on it. Solve for $B$:
+
+\result[1.6cm]{$B = \ANS{\dfrac{E}{v}}$}
+
+Plug in the numbers:
+
+\eqline[0.2cm]{$B = \ANS{\dfrac{6.0\times10^4\text{ N/C}}{3.0\times10^5
+\text{ m/s}} = 0.20\text{ T}}$}
+
+\textbf{Direction.} The electric force on the positive charge points
+downward (along $\vec E$), so the magnetic force $q\vec v\times\vec B$
+must point \ANS{upward} to cancel it. With $\vec v$ horizontal, the
+right-hand rule then fixes which way $\vec B$ must point.
+
+\checkpoint{If the particle's speed were doubled but $E$ stayed the
+same, would the required $B$ go up, go down, or stay the same? Does
+that match your intuition --- does a faster particle need a
+\emph{stronger} or \emph{weaker} field to still be balanced?}
+
+{\small\color{accent} $B=E/v$, so doubling $v$ with $E$ fixed
+\emph{halves} the required $B$. That matches intuition: a faster
+particle already feels a bigger magnetic force at a given $B$ (since
+$F_B=qvB$ grows with $v$), so a \emph{weaker} field is enough to match
+the same electric force.}
+
+%============================================================
+\nsec{Worked example: energy of a magnetic dipole, two orientations}
+
+Recall the energy of a magnetic dipole in a field: $U=-\vec\mu\cdot
+\vec B=-\mu B\cos\theta$, lowest when $\vec\mu$ is aligned with
+$\vec B$ ($\theta=0$) and highest when anti-aligned ($\theta=180^\circ$).
+
+\textit{A magnetic dipole with moment $\mu=0.60\text{ A}{\cdot}\text{m}^2$
+sits in a uniform field $B=0.30$ T. Someone rotates it from
+$\theta_1=40^\circ$ to $\theta_2=110^\circ$ (both measured from
+$\vec B$). What is the \emph{change} in the dipole's potential energy?}
+
+\textbf{MODEL.} The energy change is just the energy in the final
+orientation minus the energy in the initial one:
+$\Delta U = \ANS{U_2-U_1}$.
+
+\textbf{SOLVE.} Find the energy at each angle separately:
+
+\[
+U_1 = -\mu B\cos\theta_1 = \ANS{-(0.60)(0.30)\cos40^\circ =
+-0.138\text{ J}}
+\]
+
+\[
+U_2 = -\mu B\cos\theta_2 = \ANS{-(0.60)(0.30)\cos110^\circ =
++0.0616\text{ J}}
+\]
+
+Now subtract:
+
+\result[1.8cm]{$\Delta U = U_2-U_1 = \ANS{0.0616-(-0.138)}$}
+
+Plug in the numbers:
+
+\eqline[0.2cm]{$\Delta U = \ANS{0.20\text{ J}}$}
+
+\checkpoint{Is $\Delta U$ positive or negative here? $\theta_1=40^\circ$
+is closer to alignment ($0^\circ$) than $\theta_2=110^\circ$ is. Does
+the sign of $\Delta U$ match the fact that torque always twists a
+dipole \emph{toward} alignment --- so moving \emph{away} from alignment
+should take energy \emph{in}, not give it up?}
+
+{\small\color{accent} $\Delta U$ is positive: energy went \emph{up}.
+That's exactly consistent with the torque always pulling $\vec\mu$
+toward alignment with $\vec B$ --- rotating the dipole \emph{away}
+from alignment (here, from $40^\circ$ to $110^\circ$, farther from
+$0^\circ$) works against that torque, which costs energy, just like
+lifting a pendulum away from its lowest point.}
+
+\end{document}
