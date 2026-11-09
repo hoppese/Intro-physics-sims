@@ -77,6 +77,80 @@ recorded here.
   scenario it's actually testing instead of always showing the sim's generic
   default.
 
+## Canvas label placement & readability
+
+Set 2026-11-08 after a hands-on pass through ~10 sims (pendulum,
+universal-gravitation, drop-and-toss, oscillation-explorer,
+discrete-charge-builder-3d, field-superposition-explorer,
+two-source-interference, magnetic-field-3d, ray-optics, circuit-lab,
+equipotential-explorer) specifically stress-testing each with extreme
+slider values, dragged-together objects, and multiple added
+charges/sources — the states a student is most likely to land in by
+accident. Found and fixed concrete label collisions in 5 sims (see the
+commit "Label readability pass" around this date for the before/after).
+Apply these rules to every sim going forward, and when revisiting an old
+one, check it against this list.
+
+- **A label anchored to a draggable/sizable object must float free of that
+  object, not just its nominal center.** Don't position a label at a fixed
+  offset from an object's *center* (`cy - 6`) when the object's on-screen
+  radius varies with a slider (mass, charge count, zoom). Offset from the
+  object's actual rendered edge (`cy - radius - 6`), and recompute every
+  frame — this is what let `universal-gravitation`'s `M₁`/`M₂` labels drift
+  into each other as the spheres' radii grew.
+- **When two objects can be dragged or sliders can push them together,
+  their labels need an explicit minimum on-screen gap, enforced
+  independent of the objects' own positions.** Compute the pair's
+  midpoint and clamp each label to at least `~17px` either side of it
+  (`universal-gravitation`'s `M₁`/`M₂` fix) rather than placing each label
+  purely relative to its own object — at small separation that naturally
+  collapses the gap to zero.
+- **A value readout or vector-tip label (arrow tip, probe dot, force
+  arrow) must get a dark translucent backing rectangle, not bare fill
+  text,** whenever it can land on top of a drawn curve, gridline, or
+  another label — which is most of the time, since these labels move with
+  live state. `rgba(15,23,34,0.72–0.78)` behind the text, sized to
+  `ctx.measureText` + ~4–8px padding, is the pattern used in this pass
+  (`field-superposition-explorer`'s `P` label, `magnetic-field-3d`'s
+  `B = … µT` probe readout). This is cheap, has no layout side effects,
+  and fixes the "text blends into the gridline number behind it" failure
+  mode outright rather than trying to dodge it.
+- **A label drawn directly against a background that's itself animated or
+  textured (wave ripples, field-line fields) needs a stroke halo, not just
+  a backing box** — `ctx.lineWidth=3; ctx.strokeStyle='rgba(15,23,34,0.8)';
+  ctx.strokeText(...)` drawn immediately before the matching `fillText`
+  (`two-source-interference`'s `S₁`/`S₂`). A solid backing rect reads as
+  a UI chrome element; a halo reads as "the label itself," which is right
+  for a label that sits inside the physics scene rather than overlaid on
+  it.
+- **3D axis tick labels need more clearance than a flat 2D sim's, because
+  three independent axes can project into similar on-screen directions
+  depending on orbit angle.** The existing per-axis tick offset (9px
+  perpendicular to that axis) is too tight once a tick's own number is
+  wider than the gap, and it gets worse when the labeled axis coincides
+  with a drawn object (a line/ring charge distribution lying along an
+  axis). Bumped to ~15px plus a stroke halo in `discrete-charge-builder-3d`
+  — meaningfully better, but **does not fully solve** the harder case of
+  two different axes' tick labels landing on each other near the origin at
+  certain orbit angles. That needs real pairwise bounding-box collision
+  checking across all three axes' ticks each frame (skip or nudge the
+  loser) — not yet implemented anywhere; worth building once as a shared
+  pattern rather than re-solving per 3D sim.
+- **Don't let a plotted trace silently clip against the canvas edge when a
+  slider's range exceeds the axis's fixed range.** Not a text-label bug,
+  but the same "readability" failure in spirit: cranking `oscillation-explorer`'s
+  amplitude to its slider max clips the sine curve flat against the top/bottom
+  of the canvas instead of the axis rescaling, and the phasor-mode circle
+  gets clipped off the left edge entirely. Either the axis range should
+  scale to the live value, or the control's range should be clamped to what
+  the fixed axis can actually show. Flagged, not yet fixed anywhere.
+- **A minimum readable font size for canvas labels is ~10–11px** at this
+  catalog's typical canvas size (~450×430 for a 2-panel sim). Several of
+  the collisions found above involved 8.5–9px text (3D axis ticks); small
+  text has near-zero margin for error once anything else is nearby.
+  Prefer 10.5–11px for tick/reference labels and reserve anything smaller
+  for truly secondary annotations.
+
 ## Circuit Lab grid rules
 
 - **Every component endpoint lands exactly on a grid point.** No node may
@@ -126,6 +200,13 @@ only open a sim to confirm before fixing.
   quantity shows units, not a bare number.
 - [ ] **Beta warnings** — confirm any explicitly-flagged incomplete feature
   still shows its warning (didn't get silently dropped in a later edit).
+- [ ] **Label collisions under stress** — on 2–3 recently-touched sims, drag
+  objects together / add the max number of charges-sources / crank a
+  slider to its extreme, and check for labels landing on each other, on a
+  drawn curve, or against a busy background per the **Canvas label
+  placement & readability** rules above. Don't just eyeball the default
+  state — the collisions found 2026-11-08 only showed up under deliberate
+  stress (small separation, many sources, extreme amplitude).
 
 Log what the audit found (even "nothing found") as a dated note in
 `sim-conventions-doc` memory so the next audit knows the catalog's last
