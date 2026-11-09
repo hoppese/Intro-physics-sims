@@ -13,4 +13,3 @@ Potential doesn't have to change evenly in order to know the change in PE.
 Superposition of a line of charge 
 	- and a point charge? 
 	- and a plane of charge?
-

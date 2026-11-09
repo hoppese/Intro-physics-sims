@@ -39,6 +39,20 @@
   "synthesis": 10
  },
  "entries": {
+  "2026-11-09": {
+   "covered": "Quick kickoff. Then built up magnetic force conceptually: force on a single charge moving right through a field into the board, then two charges, then three, generalizing to a current. Showed that a bar moving right induces a counterclockwise current, then looked at the reverse case and the induced B field it creates. Introduced the idea that nature abhors a change in flux, with a qualitative example of a changing B field and which way it induces a current. Introduced Faraday's law as ΔΦ/Δt (deliberately without derivatives), working a numerical example with B at one time, B at another, and the time between -- which also required talking through the angle. Students worked in groups of 3-4.",
+   "struggled": "Didn't realize until partway through that the algebra-track students hadn't seen electric flux yet, so they were a step behind when magnetic flux was introduced.",
+   "wish": "Didn't fully explain why the kickoff answer was what it was -- worth slowing down for that next time.",
+   "landed": "Skipping derivatives for Faraday's law (just giving B at two times and the time between) worked fine -- no need to introduce dB/dt formally here.",
+   "nextYear": "Algebra-track students need a flux refresher (or at least a flag that electric flux from earlier wasn't covered for them) before introducing magnetic flux.",
+   "notes": "Was worried we wouldn't cover enough for the homework, but we did. Pushed HW9's due date back to midnight Wednesday anyway (was 10am class time) -- schedule.json updated; still needs to be changed on the real Moodle assignment. Next class is demos."
+  },
+  "2026-11-06": {
+   "covered": "Opened with the charge-to-mass ratio demo -- told students they had superpowers before revealing it was just a magnet in hand, which worked out wonderfully as always. Used the new classroom randomizer for the first time to put students into groups of 4-5. Gave groups the current-balance problem, Knight Example 29.14: had them first work out the steps they were going to take, then work out the full solution. Closed by summarizing their solution as a class.",
+   "landed": "The charge-to-mass ratio demo landed wonderfully. Having groups plan their steps before solving the current-balance problem worked well, and the class didn't feel rushed -- one of the better classes recently.",
+   "wish": "Could have fit a bit more in, though the pacing itself felt fine, not rushed.",
+   "notes": "First time using the new classroom randomizer to form groups."
+  },
   "2026-11-02": {
    "covered": "Started by going over KO24 (force on a current-carrying wire, plus a torque-on-a-current-loop conceptual question). Students hadn't yet seen the force-on-a-wire material in lecture -- only in their pre-class prep -- so that needed a live introduction. KO24-B also tested torque on a current loop, which forced an impromptu intro to that too, even though it's technically Wednesday's/Prep23's material, not today's. Then picked up the helix/pitched-angle material carried over from Oct 30 (splitting v into v-parallel and v-perpendicular: v-perpendicular drives the circular motion, v-parallel gives the steady drift along B) -- that went well. Closed with the magnetic-levitation worked example (current needed for a copper wire to float against gravity in a field) -- also worked out well, though students needed some help setting it up.",
    "landed": "The v-parallel/v-perpendicular split for helical motion landed well -- clicked for students without much trouble.",
