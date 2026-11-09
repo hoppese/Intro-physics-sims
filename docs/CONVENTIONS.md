@@ -151,6 +151,80 @@ one, check it against this list.
   Prefer 10.5–11px for tick/reference labels and reserve anything smaller
   for truly secondary annotations.
 
+## Visual polish (lighting/shading)
+
+Set 2026-11-08, piloted on one sim from each of three different categories
+(wave-explorer, mirror-ray-tracer, rail-flux-bar) before rolling out
+catalog-wide, specifically so independent passes don't each invent their
+own look. Use these exact patterns — don't freelance a different gradient
+recipe per sim; the point is a consistent house style, not individually
+"nice" one-offs that don't match each other.
+
+- **Canvas background: a subtle radial vignette, not a flat fill.** Replace
+  `ctx.fillStyle='#0f1722'; ctx.fillRect(0,0,W,H);` with:
+  ```js
+  const bgGrad=ctx.createRadialGradient(W/2,H*0.45,0,W/2,H*0.45,Math.max(W,H)*0.75);
+  bgGrad.addColorStop(0,'#141f2c'); bgGrad.addColorStop(1,'#0a1119');
+  ctx.fillStyle=bgGrad; ctx.fillRect(0,0,W,H);
+  ```
+  This is the single highest-value, lowest-risk change — it applies to
+  almost every sim's canvas fill line regardless of what's drawn on top,
+  costs one gradient object per frame, and has zero layout/collision side
+  effects. Do this everywhere first, before anything else in this section.
+- **The sim's one "hero" curve/trace gets a soft glow; everything else
+  stays crisp.** For a wave/graph sim, the primary signal line (not axes,
+  not secondary/ghost curves, not ray-tracing lines — see below):
+  ```js
+  ctx.save();
+  ctx.strokeStyle=curveColor; ctx.shadowColor=curveColor; ctx.shadowBlur=9;
+  // ...draw the path...
+  ctx.stroke();
+  ctx.restore();  // don't let the shadow leak into grid/label drawing after
+  ```
+  Judgment call: only the one curve that's "the point" of the sim gets
+  this. A sim with multiple comparable curves (e.g. several basis
+  functions overlaid) should leave all of them crisp rather than glow one
+  arbitrarily.
+- **Ray-tracing lines (`ray-optics`, `lens-ray-tracer`, `mirror-ray-tracer`)
+  stay crisp — no glow.** Exact geometry and intersection points matter
+  pedagogically; a glow blurs the thing the student is meant to read
+  precisely. This is a deliberate exception to the rule above, not an
+  oversight.
+- **Elongated metal objects (a sliding bar, a rail, a rod)**: a linear
+  gradient *across* the object's width (perpendicular to its length), not
+  a flat fill, to read as a cylindrical metal cross-section:
+  ```js
+  const barGrad=ctx.createLinearGradient(cx-halfW,0,cx+halfW,0); // across the short axis
+  barGrad.addColorStop(0,darkEdge); barGrad.addColorStop(0.4,brightHighlight);
+  barGrad.addColorStop(0.55,baseColor); barGrad.addColorStop(1,darkEdge2);
+  ctx.strokeStyle=barGrad; // or fillStyle for a filled shape
+  ```
+  (`rail-flux-bar`'s sliding bar: edge `#5a4aa8`/`#4a3c8c`, highlight
+  `#cdbcff`, base `#9d8be6`.)
+- **Curved reflective surfaces (mirrors) and lens bodies**: a linear
+  gradient *along* the surface with a bright band at the midpoint, to read
+  as a specular highlight running down a curved glass/metal surface:
+  ```js
+  const surfGrad=ctx.createLinearGradient(x0,y0,x1,y1); // along the surface's own extent
+  surfGrad.addColorStop(0,lightTint); surfGrad.addColorStop(0.35,baseColor);
+  surfGrad.addColorStop(0.5,brightHighlight); surfGrad.addColorStop(0.65,baseColor);
+  surfGrad.addColorStop(1,darkTint);
+  ```
+  (`mirror-ray-tracer`'s arc: `#9db8f5`/`#5a7fd6`/`#d6e2ff`/`#5a7fd6`/`#42599e`.)
+- **Round physical objects** (balls, planets, probe markers, pivots):
+  already-established pattern from the earlier graphics-upgrade pass —
+  multi-stop radial gradient + a small specular-highlight ellipse + a dark
+  rim stroke. See `pendulum`/`universal-gravitation`/`drop-and-toss` for
+  the reference implementation; this doesn't change, just keep applying it
+  to remaining round objects as they're reached.
+- **Two things this section explicitly does NOT touch**, per established
+  convention: schematic circuit symbols (resistor zigzags, battery plates,
+  wire lines — `circuit-lab` and its siblings stay flat, that's the
+  correct convention for a circuit diagram, not an oversight) and abstract
+  point-charge/particle glyphs (a light gradient + tiny highlight is fine,
+  per the earlier electrostatics-family pass, but don't turn them into
+  heavy glossy spheres — they're meant to read as symbols, not objects).
+
 ## Circuit Lab grid rules
 
 - **Every component endpoint lands exactly on a grid point.** No node may
