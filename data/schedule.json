@@ -2036,7 +2036,7 @@
      "reading": "30.1–4",
      "video": {
       "id": "vcStzn55MG0",
-      "st": "unv",
+      "st": "ok",
       "mins": 5.6,
       "own": false
      },
@@ -2098,8 +2098,9 @@
      "topic": "Faraday’s law",
      "reading": "30.5–6",
      "video": {
-      "none": 1,
-      "note": "Crash Course #29 covers it, or record"
+      "id": "LDOa7UdfcMQ",
+      "st": "ok",
+      "own": false
      },
      "plan": {
       "lec": "EMF=−dΦ/dt; motional EMF.",
