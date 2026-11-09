@@ -1,3 +1,5 @@
+> **Note:** reports are now forwarded to the central bug-intake service (app `intro-physics-sims`) instead of being committed to this repo. Secret is `INTAKE_KEY`; any older GitHub-token instructions below are obsolete.
+
 # bug-worker
 
 Cloudflare Worker behind `sims-api.sethhopper.com`. The "Submit bug" menu item in
@@ -33,7 +35,7 @@ Prerequisites: `sethhopper.com` active on Cloudflare, `npx wrangler login` done.
 cd bug-worker
 
 # 1. GitHub token — fine-grained PAT, repo = Intro-physics-sims, Contents: read/write
-npx wrangler secret put GITHUB_TOKEN
+npx wrangler secret put INTAKE_KEY
 
 # 2. (optional) rate-limit KV
 npx wrangler kv namespace create RL
@@ -55,5 +57,5 @@ curl -sX POST http://localhost:8787/report \
   -d '{"sim":"pendulum","text":"test report from curl","pageUrl":"http://x","userAgent":"curl"}'
 ```
 
-(Local dev still needs `GITHUB_TOKEN` — `npx wrangler secret put GITHUB_TOKEN` or a
-`.dev.vars` file with `GITHUB_TOKEN=...`, which is gitignored.)
+(Local dev still needs `INTAKE_KEY` — `npx wrangler secret put GITHUB_TOKEN` or a
+`.dev.vars` file with `INTAKE_KEY=...`, which is gitignored.)

@@ -9,8 +9,7 @@ routes = [
 ]
 
 [vars]
-REPO = "hoppese/Intro-physics-sims"
-BRANCH = "main"
+INTAKE_URL = "https://bug-intake-hopper.web.app/v1/reports"
 # Tighten once the Moodle origin is known, e.g.:
 # ALLOWED_ORIGINS = "https://sims.sethhopper.com,https://<moodle-host>"
 ALLOWED_ORIGINS = "*"
@@ -22,5 +21,5 @@ ALLOWED_ORIGINS = "*"
 # binding = "RL"
 # id = "PASTE_KV_ID_HERE"
 
-# GITHUB_TOKEN is a secret, not a var:
-#   npx wrangler secret put GITHUB_TOKEN
+# INTAKE_KEY is a secret, not a var (create the app "intro-physics-sims" in the bug-intake dashboard):
+#   npx wrangler secret put INTAKE_KEY

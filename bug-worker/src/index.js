@@ -1,12 +1,11 @@
 /**
  * sethhopper-bug-worker — receives "Submit bug" reports from the physics sims
- * and commits one Markdown file per report to <sim>/bugs/ in the GitHub repo.
+ * and forwards them to the central bug-intake service (app: Intro Physics Sims).
  *
  * Route:  POST https://sims-api.sethhopper.com/report
  * Env:
- *   GITHUB_TOKEN  (secret)  fine-grained PAT, repo-scoped, Contents: read/write
- *   REPO          (var)     "hoppese/Intro-physics-sims"
- *   BRANCH        (var)     "main"
+ *   INTAKE_KEY    (secret)  per-app key "<appId>.<secret>" from the bug-intake dashboard
+ *   INTAKE_URL    (var)     https://bug-intake-hopper.web.app/v1/reports
  *   ALLOWED_ORIGINS (var)   comma-separated; "*" allows any. e.g. "https://sims.sethhopper.com,https://moodle.example.edu"
  *   RL            (KV)      optional rate-limit namespace
  */
@@ -70,43 +69,34 @@ export default {
       await env.RL.put(key, String(count + 1), { expirationTtl: RL_WINDOW });
     }
 
-    const now = new Date();
-    const stamp = now.toISOString().replace(/[:]/g, "-").replace(/\.\d+Z$/, "Z");
-    const rand = Math.random().toString(36).slice(2, 8);
-    const path = `${sim}/bugs/${stamp}_${rand}.md`;
-
-    const front = {
-      sim,
-      submitted: now.toISOString(),
-      status: "open",
-      email: clip(body.email, 200),
-      page_url: clip(body.pageUrl, 500),
-      user_agent: clip(body.userAgent, 400),
-      sim_state: body.simState ?? null,
+    // Forward to the central bug-intake service; reports are no longer committed to this public repo.
+    const report = {
+      version: clip(env.APP_VERSION || "web", 40) || "web",
+      screen: sim,
+      description: text,
+      userAgent: clip(body.userAgent, 300) || undefined,
+      context: JSON.stringify({
+        pageUrl: clip(body.pageUrl, 500),
+        reporterEmail: clip(body.email, 200),
+        simState: body.simState ?? null,
+      }).slice(0, 2000),
     };
-    const md =
-      "---\n" +
-      Object.entries(front).map(([k, v]) => `${k}: ${JSON.stringify(v)}`).join("\n") +
-      "\n---\n\n" + text + "\n";
-
-    const commitMsg = `bug(${sim}): ${text.replace(/\s+/g, " ").slice(0, 60)}`;
-    const api = `https://api.github.com/repos/${env.REPO}/contents/${path.split("/").map(encodeURIComponent).join("/")}`;
-    const gh = await fetch(api, {
-      method: "PUT",
-      headers: {
-        "Authorization": `Bearer ${env.GITHUB_TOKEN}`,
-        "Accept": "application/vnd.github+json",
-        "User-Agent": "sethhopper-bug-worker",
-        "X-GitHub-Api-Version": "2022-11-28",
-      },
-      body: JSON.stringify({ message: commitMsg, content: b64(md), branch: env.BRANCH || "main" }),
-    });
-
-    if (!gh.ok) {
-      const detail = (await gh.text()).slice(0, 300);
-      return reply({ error: "commit_failed", status: gh.status, detail }, 502, baseHeaders);
+    let res;
+    try {
+      res = await fetch(env.INTAKE_URL, {
+        method: "POST",
+        headers: { "X-API-Key": env.INTAKE_KEY, "Content-Type": "application/json" },
+        body: JSON.stringify(report),
+      });
+    } catch {
+      return reply({ error: "intake_unreachable" }, 502, baseHeaders);
     }
-    return reply({ ok: true, path }, 200, baseHeaders);
+    if (!res.ok) {
+      const detail = (await res.text()).slice(0, 300);
+      return reply({ error: "intake_failed", status: res.status, detail }, 502, baseHeaders);
+    }
+    const { id } = await res.json().catch(() => ({}));
+    return reply({ ok: true, id }, 200, baseHeaders);
   },
 };
 
@@ -116,12 +106,6 @@ function allowOrigin(origin, env) {
   return list.includes(origin) ? origin : "";
 }
 function clip(v, n) { return String(v == null ? "" : v).slice(0, n); }
-function b64(s) {
-  const bytes = new TextEncoder().encode(s);
-  let bin = "";
-  for (const byte of bytes) bin += String.fromCharCode(byte);
-  return btoa(bin);
-}
 function reply(obj, status, headers) {
   return new Response(JSON.stringify(obj), {
     status,
