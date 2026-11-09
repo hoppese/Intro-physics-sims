@@ -532,7 +532,9 @@ function draw() {
   const ctx = cv.getContext('2d');
   const W = cv.width, H = cv.height;
   ctx.clearRect(0,0,W,H);
-  ctx.fillStyle = '#0b0f16'; ctx.fillRect(0,0,W,H);
+  const bgGrad = ctx.createRadialGradient(W/2,H*0.45,0,W/2,H*0.45,Math.max(W,H)*0.75);
+  bgGrad.addColorStop(0,'#141f2c'); bgGrad.addColorStop(1,'#0a1119');
+  ctx.fillStyle = bgGrad; ctx.fillRect(0,0,W,H);
   _labelBoxes.length = 0;
 
   // ground wire preview while dragging the token
