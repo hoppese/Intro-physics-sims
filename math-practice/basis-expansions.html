@@ -325,7 +325,15 @@ function buildGrids() {
   bg.appendChild(b);
 }
 function renderCoefTable(ap, bkey) {
-  if (bkey === 'all') { $('coefTable').textContent = 'Compare-all mode — pick a single basis to see its coefficients.'; return; }
+  const el = $('coefTable');
+  if (bkey === 'all') {
+    // this is prose, not an aligned coefficient column — the table's own nowrap+scroll
+    // styling (for lining up c0/c1/.../cN) truncates it instead of wrapping normally
+    el.style.whiteSpace = 'normal'; el.style.overflowX = 'visible';
+    el.textContent = 'Compare-all mode — pick a single basis to see its coefficients.';
+    return;
+  }
+  el.style.whiteSpace = ''; el.style.overflowX = '';
   const rows = [];
   const arr = ap.c || null;
   if (bkey === 'fourier') {
@@ -334,7 +342,7 @@ function renderCoefTable(ap, bkey) {
   } else {
     for (let k = 0; k <= Math.min(9, exN); k++) rows.push('c' + k + ' = ' + fmt(arr[k], 5));
   }
-  $('coefTable').innerHTML = rows.join('<br>');
+  el.innerHTML = rows.join('<br>');
 }
 
 /* ================= quiz ================= */
