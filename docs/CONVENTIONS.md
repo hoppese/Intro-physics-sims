@@ -144,12 +144,10 @@ one, check it against this list.
   gets clipped off the left edge entirely. Either the axis range should
   scale to the live value, or the control's range should be clamped to what
   the fixed axis can actually show. Flagged, not yet fixed anywhere.
-- **A minimum readable font size for canvas labels is ~10–11px** at this
-  catalog's typical canvas size (~450×430 for a 2-panel sim). Several of
-  the collisions found above involved 8.5–9px text (3D axis ticks); small
-  text has near-zero margin for error once anything else is nearby.
-  Prefer 10.5–11px for tick/reference labels and reserve anything smaller
-  for truly secondary annotations.
+- **Canvas text has a size floor; see "Canvas text and symbol sizes" below.**
+  Several of the collisions found above involved 8.5–9px text (3D axis
+  ticks); small text has near-zero margin for error once anything else is
+  nearby.
 
 - **Overlay buttons (zoom −/+/1:1) are part of the collision problem.**
   They are HTML positioned over the canvas, so the canvas code can't see
@@ -162,6 +160,75 @@ one, check it against this list.
 - **Read-outs anchored to a canvas edge use the live size** (`this._W-12`),
   never a literal from the design size (`354`), or they drift into the
   middle of the enlarged canvas.
+
+## Canvas text and symbol sizes
+
+Written 2026-11-11 after `faraday-flux-explorer`'s into-the-page marks and
+its "B into page" label turned out too small and too heavy to read. Sizes
+are CSS px at the catalog's base canvas (about 450 × 430). On an enlarged
+canvas multiply by the sim's label scale (`LK`, the clamped square root of
+`G3.fit`), so text grows with the canvas but more slowly than the scene.
+
+| Role | Size | Weight / colour |
+|---|---|---|
+| Head read-out (the one number the canvas is about: "12 field lines through loop") | 13 px | bold, white at ≥ 0.9 alpha |
+| Label that names something in the scene (a field, a vector, an object, with its value) | 13 px mono, or 14–15 px italic serif for a symbol letter | 600; the object's own colour, lightened until it reads on the dark canvas |
+| Caption or hint ("drag edges to resize", "flux steady → no induced current") | 12 px | 500; ≥ 0.65 alpha |
+| Axis tick and reference numbers | 11 px (10.5 at the least) | regular; ≥ 0.6 alpha |
+| Anything smaller than 10.5 px | not used | |
+
+- **Nothing a student is meant to read is dimmer than 0.65 alpha.** Dimming
+  is for context (grid lines, marks outside the region of interest), never
+  for words. The label that failed was 11 px at 0.75 alpha in a mid-tone
+  colour: each choice was defensible, the product was not.
+- **A caption that has to sit over a pattern** (a lattice of field marks, a
+  grid, field lines) goes on a dark plate (`rgba(10,17,25,0.86)`, rounded)
+  or gets the `G3.label` halo. Never bare text over marks.
+- **Text anchored to opposite corners must not be able to meet.** Measure
+  both; when the canvas is too narrow, shorten the less important one
+  (drop the value in brackets) and never let them overlap.
+
+### Into / out of the page (⊗ and ⊙)
+
+- **Draw them with `G3.pageMark(ctx, x, y, r, col, {out, alpha, lw})`; never
+  type the ⊗ / ⊙ glyph into canvas text.** The font glyph is as tall as a
+  lower-case letter (about 6 px in an 11 px font) with a cross the same
+  weight as its ring, which is exactly the blob the user could not read.
+- **Size by the ring radius. r ≥ 5.5 px** (11 px across) for any mark that
+  is counted or read; 6–6.5 px for the single mark inside a text label.
+- **Stroke = r / 4**, never more than r / 3.5. Making a mark bigger and its
+  line heavier in the same step gets nowhere: what makes it legible is the
+  open space between the ring and the cross. The cross arms stop short of
+  the ring (0.48 r along each axis), and the ⊙ dot is 0.3 r.
+- **The same shape for every mark of the same field.** Marks that matter
+  (inside the loop) are bright; the rest are the same ⊗ at about 0.4 alpha
+  and a slightly thinner line, not a different, smaller symbol. A bare
+  small ring says "nothing here", not "the same field, outside".
+- **Marks keep ≥ 2.2 r between centres** at the densest setting; if the
+  densest setting cannot afford that, lower the density constant, not the
+  mark size.
+
+### Field marks and a boundary: always clearly in or out
+
+When marks are counted against a boundary (field lines through a loop,
+charges inside a Gaussian surface):
+
+- **No mark is ever drawn on the boundary.** Keep every mark's centre at
+  least `r + stroke/2 + wire/2 + 2 px` from the wire's centre line.
+- **Pick the lattice phase so the default state needs no adjustment**
+  (`faraday-flux-explorer`: columns half a spacing either side of the
+  loop's centre, rows through it, so a 10 × 8 cm loop at 60 mT has all four
+  wires mid-gap).
+- **For every other state, move the offending row or column, on the side it
+  really is on, and let its neighbours follow** by 2/3 and 1/3 so the
+  spacing stays close to even (`clearMap` in that sim). Move whole rows and
+  columns, not single marks, so the lattice stays a lattice.
+- **The count and the picture come from one function.** In that sim they
+  were two loops with different origins, and the canvas said 16 over a
+  picture of 15.
+- Stress-check by brute force over every reachable setting, not by eye:
+  the default looked fine for weeks because nobody tried 60 mT with a
+  10 cm loop until it became the default.
 
 ## Visual polish (lighting/shading)
 
@@ -430,6 +497,10 @@ only open a sim to confirm before fixing.
   quantity shows units, not a bare number.
 - [ ] **Beta warnings** — confirm any explicitly-flagged incomplete feature
   still shows its warning (didn't get silently dropped in a later edit).
+- [ ] **Canvas text and symbol sizes** — grep the sim scripts for
+  `font='` sizes under 10.5 px and for a typed `⊗` / `⊙` / `\u2297` /
+  `\u2299` in canvas text (outside the kit's own comment); check any hit
+  against **Canvas text and symbol sizes** above.
 - [ ] **Label collisions under stress** — on 2–3 recently-touched sims, drag
   objects together / add the max number of charges-sources / crank a
   slider to its extreme, and check for labels landing on each other, on a
@@ -455,6 +526,14 @@ known-clean date.
   in the catalog (its replacement is Charged Objects Explorer);
   `pe-vs-separation` formula hints still write `k q₁q₂ / r` (see the
   Coulomb's-constant rule under Notation).
+
+- Not yet brought up to **Canvas text and symbol sizes** (found by grep
+  2026-11-11, not opened): typed ⊗ / ⊙ glyphs in `rail-flux-bar`,
+  `lorentz-force` and `moving-charge-field`; canvas text under 10.5 px in
+  `gauss-applications`, `assembling-charges`, `relative-velocity`,
+  `moving-charge-field`, `magnetic-field-3d` and
+  `discrete-current-builder-3d`. Only `faraday-flux-explorer` has had its
+  sizes set by the table.
 
 - `written-hw-1-solutions.pdf` / `written-hw-2-solutions.pdf` use `K`
   throughout (pre-existing, uploaded PDFs, no LaTeX source in the repo).

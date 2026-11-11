@@ -15,6 +15,17 @@ const G3=(()=>{
   // depth cue: 0 (far side of the scene) .. 1 (near side), for a scene of half-size R world units
   const near=(d,R)=>clamp(0.5+0.5*d/(R||1),0,1);
 
+  // a field or current going into (\u2297) or out of (\u2299) the page. One shape everywhere, sized by the ring radius r:
+  // stroke r/4, cross arms that stop short of the ring, dot 0.3 r, so the inside of the ring never fills in.
+  // r >= 5.5 px for anything a student has to read (CONVENTIONS "Canvas text and symbol sizes").
+  function pageMark(ctx,x,y,r,col,o){ o=o||{}; const lw=o.lw||Math.max(1.2,r/4.2); x=Math.round(x*2)/2; y=Math.round(y*2)/2;
+    ctx.save(); if(o.alpha!=null) ctx.globalAlpha*=o.alpha; ctx.lineCap='butt'; ctx.setLineDash([]);
+    if(o.back){ ctx.fillStyle=o.back; ctx.beginPath(); ctx.arc(x,y,r+lw/2+1.5,0,TAU); ctx.fill(); }
+    ctx.strokeStyle=col; ctx.fillStyle=col; ctx.lineWidth=lw; ctx.beginPath(); ctx.arc(x,y,r,0,TAU); ctx.stroke();
+    if(o.out){ ctx.beginPath(); ctx.arc(x,y,Math.max(1.3,r*0.3),0,TAU); ctx.fill(); }
+    else { const k=r*0.48; ctx.beginPath(); ctx.moveTo(x-k,y-k); ctx.lineTo(x+k,y+k); ctx.moveTo(x+k,y-k); ctx.lineTo(x-k,y+k); ctx.stroke(); }
+    ctx.restore(); }
+
   // text with a dark halo so it survives crossing lines / surfaces
   function label(ctx,t,x,y,o){ o=o||{}; ctx.save(); ctx.font=o.font||'11px JetBrains Mono, monospace'; ctx.textAlign=o.align||'center'; ctx.textBaseline=o.base||'middle';
     ctx.lineJoin='round'; ctx.lineWidth=o.halo||3; ctx.strokeStyle='rgba(11,18,27,0.88)'; ctx.strokeText(t,x,y); ctx.fillStyle=o.col||'#dbe4ee'; ctx.fillText(t,x,y); ctx.restore(); }
@@ -134,6 +145,6 @@ const G3=(()=>{
   // scale factor that keeps a scene authored for a w0 x h0 canvas filling whatever canvas it gets
   const fit=(w,h,w0,h0)=>clamp(Math.min(w/w0,h/h0),0.55,3.2);
 
-  return {clamp,lite,dark,dim,alpha,near,label,sphere,tube,tubeD,seg,surface,arrow,arrow3,grid,axes,fit};
+  return {clamp,lite,dark,dim,alpha,near,pageMark,label,sphere,tube,tubeD,seg,surface,arrow,arrow3,grid,axes,fit};
 })();
 /* G3-KIT-END */
