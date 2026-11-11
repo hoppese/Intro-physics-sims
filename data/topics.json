@@ -288,6 +288,25 @@
         ["Ch 19.2 Potential in a Uniform Field", "19-2-electric-potential-in-a-uniform-electric-field"],
         ["Ch 19.4 Equipotential Lines", "19-4-equipotential-lines"]
       ]
+    },
+    "circuit-lab": {
+      "up": [
+        ["Vol 2 · 10.1 Electromotive Force", "2/pages/10-1-electromotive-force"],
+        ["Vol 2 · 10.2 Resistors in Series and Parallel", "2/pages/10-2-resistors-in-series-and-parallel"],
+        ["Vol 2 · 10.3 Kirchhoff's Rules", "2/pages/10-3-kirchhoffs-rules"],
+        ["Vol 2 · 10.4 Electrical Measuring Instruments", "2/pages/10-4-electrical-measuring-instruments"],
+        ["Vol 2 · 10.5 RC Circuits", "2/pages/10-5-rc-circuits"],
+        ["Vol 2 · 14.4 RL Circuits", "2/pages/14-4-rl-circuits"],
+        ["Vol 2 · 14.6 RLC Series Circuits", "2/pages/14-6-rlc-series-circuits"]
+      ],
+      "cp": [
+        ["Ch 21.1 Resistors in Series and Parallel", "21-1-resistors-in-series-and-parallel"],
+        ["Ch 21.2 Electromotive Force: Terminal Voltage", "21-2-electromotive-force-terminal-voltage"],
+        ["Ch 21.3 Kirchhoff's Rules", "21-3-kirchhoffs-rules"],
+        ["Ch 21.4 DC Voltmeters and Ammeters", "21-4-dc-voltmeters-and-ammeters"],
+        ["Ch 21.6 DC Circuits Containing Resistors and Capacitors", "21-6-dc-circuits-containing-resistors-and-capacitors"],
+        ["Ch 23.10 RL Circuits", "23-10-rl-circuits"]
+      ]
     }
   }
 }

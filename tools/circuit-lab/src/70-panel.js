@@ -58,7 +58,7 @@ class Panel {
       mk('↗', 'Share link', () => app.setState((s) => ({ showShare: true, menuOpen: false, shareCopied: false, shareHide: !!s.hide }))),   // the box starts as the sim is now
       mk('🐞', 'Submit bug', set({ showBug: true, menuOpen: false, bugText: '', bugEmail: '', bugResult: '', bugSending: false })),
     ];
-    return { menuItems, showMenuBtn: !app.big, menuOpen: !!st.menuOpen, onToggleMenu: () => app.setState((s) => ({ menuOpen: !s.menuOpen })), onCloseMenu: set({ menuOpen: false }),
+    return { menuItems, variantNote: Scope.on ? 'Probe variant: click any part to plot it' : '', showMenuBtn: !app.big, menuOpen: !!st.menuOpen, onToggleMenu: () => app.setState((s) => ({ menuOpen: !s.menuOpen })), onCloseMenu: set({ menuOpen: false }),
       menuBtnStyle: 'display:flex;align-items:center;justify-content:center;width:32px;height:30px;font-size:16px;border-radius:8px;cursor:pointer;border:1px solid ' + (st.menuOpen ? 'rgba(224,184,90,0.7)' : 'rgba(255,255,255,0.28)') + ';background:' + (st.menuOpen ? 'rgba(191,138,30,0.32)' : 'rgba(255,255,255,0.08)') + ';color:#cfe0f2;',
       onToggleHide: () => app.setState((s) => ({ hide: !s.hide, peek: {} })), hideLabel: st.hide ? 'Show solution' : 'Hide solution',
       hideDotStyle: 'display:inline-block;width:8px;height:8px;border-radius:50%;background:' + (st.hide ? '#7fd1a4' : 'rgba(255,255,255,0.45)') + ';',
@@ -103,8 +103,24 @@ class Panel {
       selIsSwitch: !!I.isSwitch, switchClosed: !!el.closed, onToggleSwitch: app.run(() => b.toggle(el)),
       switchBtnLabel: I.isThrow ? '◉ Position ' + el.position + ' — click for position ' + (3 - el.position) : (el.closed ? '● Closed — click to open' : '○ Open — click to close'),
       selIsMeter: !!I.isMeter, selMeterNote: I.note || '', selIsGround: el instanceof Ground,
+      ...this.plot(el),
       // kept for the template's older bindings
       selIsBattery: false, selIsSwdt: false }; }
+
+  // ---- the Probe variant: the selected part is on the graph. Its two readings are themselves the choice of which one is plotted (a row of chips of
+  //      their own made the card taller than the canvas), and Keep leaves the trace up once the selection moves on. In the plain sim all of this is inert. ----
+  plot(el) { const app = this.app, b = this.bench, nop = () => {};
+    if (!Scope.on || !Scope.takes(el)) return { plotVStyle: '', plotVTitle: '', onPlotV: nop, plotIStyle: '', plotITitle: '', onPlotI: nop, keepStyle: 'display:none;', keepLabel: '', keepTitle: '', onKeepTrace: nop };
+    const r = b.sim.scope.of(el), can = Scope.modes(el);
+    // the padding is cancelled by the margin, so a reading that is a button sits exactly where a plain one does
+    const pill = (m, ink, bg) => !can.includes(m) ? '' : 'padding:3px 7px;margin:-3px -7px;border-radius:7px;cursor:pointer;box-shadow:inset 0 0 0 1px ' + (r.mode === m ? ink : '#d3d8dd') + ';background:' + (r.mode === m ? bg : 'transparent') + ';';
+    const tip = (m, what) => !can.includes(m) ? '' : r.mode === m ? 'On the graph: the ' + what + ' this part' : 'Click to graph the ' + what + ' this part instead';
+    const go = (m) => can.includes(m) ? app.run(() => b.plot(m)) : nop;
+    return { plotVStyle: pill('v', '#b23843', '#fdeef0'), plotVTitle: tip('v', 'potential difference across'), onPlotV: go('v'),
+      plotIStyle: pill('i', '#4a8a2c', '#eef7e6'), plotITitle: tip('i', 'current through'), onPlotI: go('i'),
+      keepLabel: r.kept ? '✓ Kept' : 'Keep', onKeepTrace: app.run(() => b.keepTrace()),
+      keepTitle: r.kept ? 'Kept on the graph — click to take it off when this part is no longer selected' : 'Keep this trace on the graph when you click something else',
+      keepStyle: 'margin-left:auto;align-self:center;font-size:10.5px;font-weight:700;padding:4px 8px;border-radius:7px;cursor:pointer;border:1px solid ' + (r.kept ? '#8a6310' : '#d3d8dd') + ';background:' + (r.kept ? '#f6f0db' : '#fff') + ';color:' + (r.kept ? '#8a6310' : '#8a929b') + ';' }; }
 
   // ---- the meter list and whether the graph is showing ----
   meters() { const app = this.app, b = this.bench, names = b.circuit.labels(), list = b.circuit.ofType(Meter);
@@ -115,7 +131,22 @@ class Panel {
         onSelect: app.run(() => { b.select(m); b.probe = null; }), onGraph: (e) => { e.stopPropagation(); b.toggleGraph(m); app.refresh(); },
         graphBtnStyle: 'font-size:10px;font-weight:700;padding:4px 8px;border-radius:6px;cursor:pointer;border:1px solid ' + (on ? color : '#d3d8dd') + ';background:' + (on ? (volt ? '#fdeef0' : '#eef7e6') : '#fff') + ';color:' + (on ? color : '#8a929b') + ';',
         rowStyle: 'display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border-radius:9px;cursor:pointer;border:1px solid ' + (sel ? color : '#eceef0') + ';background:' + (volt ? '#fdf6f7' : '#f7fbef') + ';' }; });
-    return { hasMeters: list.length > 0, noMeters: list.length === 0, meterList, showGraph: b.sim.graphing, setGraphCanvas: app.setGraphCanvas }; }
+    return { hasMeters: list.length > 0, noMeters: list.length === 0, meterList, ...this.graph(names) }; }
+
+  // ---- the graph: docked along the bottom of the canvas, or enlarged to cover it ----
+  graph(names) { const app = this.app, b = this.bench, d = app.dock, c = b.circuit;
+    const btn = 'font-family:\'Source Sans 3\',sans-serif;font-size:11px;font-weight:700;line-height:1;height:22px;padding:0 8px;border-radius:6px;cursor:pointer;display:flex;align-items:center;gap:5px;border:1px solid rgba(255,255,255,0.2);background:rgba(20,31,44,0.92);color:#d7dee5;';
+    // enlarged, the circuit is out of sight: its switches can be thrown from here, to watch what follows
+    const switches = !d.big ? [] : c.parts.filter((s) => s.info.isSwitch).map((s) => { const name = (names.get(s.id) || {}).text || 'Switch', thrown = s.info.isThrow;
+      return { label: name + (thrown ? ' ◉ position ' + s.position : (s.closed ? ' ● closed' : ' ○ open')), title: thrown ? 'Throw ' + name + ' to position ' + (3 - s.position) : (s.closed ? 'Open ' : 'Close ') + name,
+        style: btn + 'color:' + (thrown || s.closed ? '#9be0b4' : '#f0b6b6') + ';', onClick: app.run(() => b.toggle(s)) }; });
+    const size = { label: d.big ? '✕' : '⤢', title: d.big ? 'Back to the circuit (Esc)' : 'Enlarge the graph', style: btn + (d.big ? '' : 'height:20px;padding:0 6px;font-size:12px;'), onClick: () => app.setState((s) => ({ graphBig: !s.graphBig })) };
+    // docked, the button sits in the top row against the plot's corner, clear of the numbers of a current axis
+    const inset = d.big ? 'top:5px;right:6px;' : 'top:1px;right:' + GraphPainter.gutter(d.h, b.traces().some((tr) => tr.kind === 'amm')) + 'px;';
+    return { showGraph: d.on, setGraphCanvas: app.setGraphCanvas, graphBtns: [...switches, size], graphBtnsStyle: 'position:absolute;' + inset + 'display:flex;align-items:center;gap:6px;', graphTip: d.big ? 'Click to go back to the circuit' : 'Click to enlarge',
+      graphDockStyle: 'position:absolute;left:0;right:0;bottom:0;z-index:3;overflow:hidden;height:' + (d.big ? d.full : d.h) + 'px;transition:height 0.2s ease;background:#0b121b;'
+        + 'border-radius:' + (d.big ? '10px' : '0 0 10px 10px') + ';box-shadow:0 -1px 0 rgba(255,255,255,0.16);cursor:' + (d.big ? 'zoom-out' : 'zoom-in') + ';',
+      zoomBoxStyle: 'position:absolute;bottom:' + (d.h + 10) + 'px;right:10px;display:flex;align-items:center;gap:4px;background:rgba(15,23,34,0.78);border:1px solid rgba(255,255,255,0.14);border-radius:8px;padding:4px;' }; }
 
   // ---- one line on what the circuit is doing ----
   summary() { const b = this.bench, c = b.circuit, sol = b.sol, sim = b.sim, n = (K) => c.ofType(K).length, plural = (k, one, many) => k ? k + ' ' + (k > 1 ? many : one) : '';

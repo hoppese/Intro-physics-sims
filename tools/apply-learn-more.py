@@ -12,8 +12,10 @@ Run from the repo root:
     python3 tools/apply-learn-more.py --apply    # write + node --check each bundle
 
 Only touches sims that already have a "Learn more" block (i.e. the ones this
-script installed). Adding it to a new sim: insert a placeholder block first
-(see the git history for f7ab979), or extend this script.
+script installed). Adding it to a new sim: give it a "sim_readings" entry in
+data/topics.json, insert a placeholder block as the last child of the Info
+modal's grid (the WRAP_OPEN div below holding one <div>Learn more</div>), then
+run this with --apply <slug>. A sim in no topic gets the readings and no video.
 """
 import json, re, subprocess, sys, pathlib
 
@@ -49,16 +51,19 @@ def li(pairs, base):
 
 def build_block(rd):
     note = f'<div {NOTE}>{rd["cp_note"]}</div>' if rd.get("cp_note") else ""
+    vids = rd["videos"]
+    # with no video beside them, the two books take a column each instead of one long list
+    split = not vids
     cols = (
         '<div>'
         f'<div {SUB}>OpenStax <em>University&nbsp;Physics</em> — calculus</div>'
         f'<ul {UL}>{li(rd["up"], UP_BASE)}</ul>'
-        f'<div {SUB2}>OpenStax <em>College&nbsp;Physics</em> — algebra</div>'
+        + ('</div><div>' if split else '') +
+        f'<div {SUB if split else SUB2}>OpenStax <em>College&nbsp;Physics</em> — algebra</div>'
         f'<ul {UL}>{li(rd["cp"], CP_BASE)}</ul>'
         f'{note}'
         '</div>'
     )
-    vids = rd["videos"]
     if vids:
         many = len(vids) > 1
         items = ""

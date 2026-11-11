@@ -17,33 +17,36 @@ class WorkedExample {
   build(bench) { bench.loadPreset(this.spec.preset); const c = bench.circuit; this.spec.apply(this.vals, { bat: c.ofType(Battery)[0], rs: c.ofType(Resistor), cap: c.ofType(Capacitor)[0], ind: c.ofType(Inductor)[0] }); bench.sim.reset(); }
 }
 // the bits of LaTeX every solution is written with
-// cur(): one unit for all of a problem's currents -- mA, as the meters read, unless one reaches 1 A
-WorkedExample.TEX = { f: (x, d) => x.toFixed(d == null ? 2 : d), sig: (x) => x.toPrecision(3), cur: (...all) => all.some((i) => Math.abs(i) >= 0.9995) ? (i) => i.toFixed(2) + '\\text{ A}' : (i) => (i * 1000).toFixed(Math.abs(i) < 0.0995 ? 1 : 0) + '\\text{ mA}', O: '\\,\\Omega', V: '\\text{ V}', A: '\\text{ A}', mA: '\\text{ mA}', s: '\\text{ s}', eps: '\\varepsilon', DV: '\\Delta V', gap: ',\\quad ' };
+// cur(): one unit for all of a problem's currents, set by the largest of them -- mA, as the meters
+// read, unless one reaches 1 A (or none reaches 1 mA). R(): a resistance, in kΩ from 1000 Ω up.
+WorkedExample.TEX = { f: (x, d) => x.toFixed(d == null ? 2 : d), sig: (x) => x.toPrecision(3), cur: (...all) => { const top = Math.max(...all.map(Math.abs)); return top >= 0.9995 ? (i) => i.toFixed(2) + '\\text{ A}' : top >= 0.9995e-3 ? (i) => Fmt.sig3(i * 1e3) + '\\text{ mA}' : (i) => Fmt.sig3(i * 1e6) + '\\,\\mu\\text{A}'; },
+  R: (x) => x >= 999.5 ? +(x / 1000).toPrecision(3) + '\\text{ k}\\Omega' : +x.toPrecision(3) + '\\,\\Omega', O: '\\,\\Omega', V: '\\text{ V}', A: '\\text{ A}', mA: '\\text{ mA}', s: '\\text{ s}', eps: '\\varepsilon', DV: '\\Delta V', gap: ',\\quad ' };
 WorkedExample.ORDER = [['series', 'Divider'], ['parallel', 'Parallel'], ['internal', 'Internal R'], ['rc', 'RC'], ['rl', 'RL']];
 WorkedExample.KINDS = {
   series: { title: 'Series voltage divider', preset: 'series',
     blurb: 'A battery drives two resistors in series. Find the current and how the source voltage splits between them.',
     tip: 'Build it and drop a voltmeter across each resistor to confirm.',
-    roll: (rnd) => { const R1 = rnd(10, 60, 5); let R2; do { R2 = rnd(10, 60, 5); } while (R2 === R1); return { emf: rnd(3, 12, 1), R1, R2 }; },
+    roll: (rnd) => { const R1 = rnd(1000, 6000, 500); let R2; do { R2 = rnd(1000, 6000, 500); } while (R2 === R1); return { emf: rnd(3, 12, 1), R1, R2 }; },
+    reject: (v) => WorkedExample.one(v.emf / (v.R1 + v.R2) * 1000),
     apply: (v, p) => { p.bat.setValue(v.emf); p.rs[0].setValue(v.R1); p.rs[1].setValue(v.R2); },
     solve: (v, T) => { const Req = v.R1 + v.R2, I = v.emf / Req, V1 = I * v.R1, V2 = I * v.R2, A = T.cur(I); return {
-      given: [T.eps + ' = ' + v.emf + T.V, 'R_1 = ' + v.R1 + T.O, 'R_2 = ' + v.R2 + T.O],
-      steps: [['Series adds', 'R_{\\text{eq}} = R_1 + R_2 = ' + Req + T.O],
+      given: [T.eps + ' = ' + v.emf + T.V, 'R_1 = ' + T.R(v.R1), 'R_2 = ' + T.R(v.R2)],
+      steps: [['Series adds', 'R_{\\text{eq}} = R_1 + R_2 = ' + T.R(Req)],
         ['Loop current', 'I = \\dfrac{' + T.eps + '}{R_{\\text{eq}}} = ' + A(I), 'same in both resistors'],
         ['Divider', T.DV + '_1 = I R_1 = ' + T.f(V1) + T.V + T.gap + T.DV + '_2 = I R_2 = ' + T.f(V2) + T.V],
         ['Check KVL', T.DV + '_1 + ' + T.DV + '_2 = ' + T.f(V1 + V2) + T.V + ' = ' + T.eps, 'the drops sum to the source']] }; } },
   parallel: { title: 'Parallel resistors', preset: 'parallel',
     blurb: 'Two resistors share the same voltage. Find each branch current and the total drawn from the battery.',
     tip: 'Build it and put the ammeter in each branch, then next to the battery.',
-    roll: (rnd) => { const R1 = rnd(10, 60, 5); let R2; do { R2 = rnd(10, 60, 5); } while (R2 === R1); return { emf: rnd(3, 12, 1), R1, R2 }; },
-    reject: (v) => WorkedExample.one(v.emf / v.R1, v.emf / v.R2, v.emf / v.R1 + v.emf / v.R2),
+    roll: (rnd) => { const R1 = rnd(1000, 6000, 500); let R2; do { R2 = rnd(1000, 6000, 500); } while (R2 === R1); return { emf: rnd(3, 12, 1), R1, R2 }; },
+    reject: (v) => WorkedExample.one(v.emf / v.R1 * 1000, v.emf / v.R2 * 1000, (v.emf / v.R1 + v.emf / v.R2) * 1000),
     apply: (v, p) => { p.bat.setValue(v.emf); p.rs[0].setValue(v.R1); p.rs[1].setValue(v.R2); },
     solve: (v, T) => { const I1 = v.emf / v.R1, I2 = v.emf / v.R2, A = T.cur(I1, I2, I1 + I2); return {
-      given: [T.eps + ' = ' + v.emf + T.V, 'R_1 = ' + v.R1 + T.O, 'R_2 = ' + v.R2 + T.O],
+      given: [T.eps + ' = ' + v.emf + T.V, 'R_1 = ' + T.R(v.R1), 'R_2 = ' + T.R(v.R2)],
       steps: [['Same voltage', T.DV + '_1 = ' + T.DV + '_2 = ' + T.eps + ' = ' + v.emf + T.V],
         ['Branch currents', 'I_1 = \\dfrac{' + T.eps + '}{R_1} = ' + A(I1) + T.gap + 'I_2 = \\dfrac{' + T.eps + '}{R_2} = ' + A(I2)],
         ['Currents add', 'I = I_1 + I_2 = ' + A(I1 + I2)],
-        ['Equivalent R', 'R_{\\text{eq}} = \\dfrac{R_1 R_2}{R_1 + R_2} = ' + T.f(v.R1 * v.R2 / (v.R1 + v.R2)) + T.O]] }; } },
+        ['Equivalent R', 'R_{\\text{eq}} = \\dfrac{R_1 R_2}{R_1 + R_2} = ' + T.R(v.R1 * v.R2 / (v.R1 + v.R2))]] }; } },
   internal: { title: 'Battery internal resistance', preset: 'single',
     blurb: 'A real battery drops some of its EMF across its own internal resistance under load.',
     tip: 'Build it and read the terminal voltage on the voltmeter; select the battery to change its internal R.',
@@ -59,11 +62,11 @@ WorkedExample.KINDS = {
   rc: { title: 'RC charging', preset: 'rc',
     blurb: 'A capacitor charges through a resistor toward the source voltage, with time constant τ = RC.',
     tip: 'Build it and turn on the voltmeter graph. Charging starts at t = 0 (press ↻ t=0 to run it again); read the voltage one time constant later.',
-    roll: (rnd) => ({ emf: rnd(3, 12, 1), R: rnd(50, 200, 10), C: rnd(4, 20, 2) }),
-    reject: (v) => WorkedExample.one(v.R * v.C / 1000),
+    roll: (rnd) => ({ emf: rnd(3, 12, 1), R: rnd(1000, 5000, 500), C: rnd(4, 20, 2) / 10 }),
+    reject: (v) => WorkedExample.one(v.R * v.C / 1000, v.emf / v.R * 1000),
     apply: (v, p) => { p.bat.setValue(v.emf); p.rs[0].setValue(v.R); p.cap.setValue(v.C); },
     solve: (v, T) => { const tau = v.R * v.C / 1000; return {
-      given: [T.eps + ' = ' + v.emf + T.V, 'R = ' + v.R + T.O, 'C = ' + v.C + '\\text{ mF}'],
+      given: [T.eps + ' = ' + v.emf + T.V, 'R = ' + T.R(v.R), 'C = ' + v.C + '\\text{ mF}'],
       steps: [['Time constant', '\\tau = RC = ' + T.sig(tau) + T.s],
         ['Initial current', 'I_0 = \\dfrac{' + T.eps + '}{R} = ' + T.cur(v.emf / v.R)(v.emf / v.R), 'an empty capacitor starts out like a wire'],
         ['Charging law', T.DV + '_C = ' + T.eps + '\\left(1 - e^{-t/\\tau}\\right)'],

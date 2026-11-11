@@ -1,4 +1,46 @@
 // =====================================================================
+// Scope -- traces taken straight from the parts, with no meter. This is the
+// Probe variant (circuit-lab-probe/, see variants/probe.js); in the main sim
+// it is off and does nothing.
+//
+// While it is on, every part's potential difference and current are recorded
+// all the time, so a part that is clicked has its last few seconds to show at
+// once. The graph plots the selected part, and any part that has been kept.
+//
+// A part has no + lead to say which way is positive, so each run is positive
+// the way it first went: a battery reads +6 V whichever way round it was
+// drawn, and a current that later reverses goes below zero.
+// =====================================================================
+class Scope {
+  static on = false;
+  static KEEP = 1500;                                   // samples a run holds: the graph's 8 s and to spare
+  static LIVE = { v: 1e-6, i: 5e-8 };                   // below this a run has not yet "gone" either way
+  constructor(circuit) { this.circuit = circuit; this.runs = new Map(); }       // part id -> { type, mode, kept, v, i, sv, si }
+  // every part that shows a voltage and a current in its card can be plotted
+  static takes(el) { return !!el && !!el.info.showMeas; }
+  // what can be plotted for it ('v' potential difference, 'i' current), and what is plotted first:
+  // the parts that are simply part of the line -- a wire, a switch -- show their current
+  static modes(el) { return el instanceof Wire ? ['i'] : ['v', 'i']; }
+  static firstMode(el) { return el instanceof Wire || el.info.isSwitch ? 'i' : 'v'; }
+  of(el) { let r = this.runs.get(el.id); if (!r || r.type !== el.type) this.runs.set(el.id, r = { type: el.type, mode: Scope.firstMode(el), kept: false, v: [], i: [], sv: 0, si: 0 }); return r; }
+  setMode(el, mode) { if (Scope.takes(el) && Scope.modes(el).includes(mode)) this.of(el).mode = mode; }
+  // keep a part's trace on the graph when it is no longer the selected part (or stop keeping it)
+  keep(el, on) { if (Scope.takes(el)) this.of(el).kept = !!on; }
+  // record every part at this instant, and forget the parts that have gone
+  sample(t, sol) { if (!Scope.on || !sol) return; const here = new Set();
+    for (const el of this.circuit.elements) { if (!Scope.takes(el)) continue; here.add(el.id); const r = this.of(el), m = sol.measure(el);
+      for (const [k, sign, x] of [['v', 'sv', m.dV], ['i', 'si', m.I]]) { if (!isFinite(x)) continue; if (!r[sign] && Math.abs(x) > Scope.LIVE[k]) r[sign] = Math.sign(x); Trace.put(r[k], t, x * (r[sign] || 1), Scope.KEEP); } }
+    for (const id of [...this.runs.keys()]) if (!here.has(id)) this.runs.delete(id); }
+  // a different circuit is on the bench: its parts are not the old ones, whatever their ids
+  clear() { this.runs.clear(); }
+  // empty every run (the clock was reset); what is kept and what each part plots stay as they are
+  reset() { for (const r of this.runs.values()) { r.v = []; r.i = []; r.sv = 0; r.si = 0; } }
+  // the traces to plot: the kept parts, and the part that is selected
+  traces(selId) { if (!Scope.on) return []; const out = [];
+    for (const [id, r] of this.runs) if (r.kept || id === selId) out.push({ id, part: true, kind: r.mode === 'i' ? 'amm' : 'volt', samples: r[r.mode] }); return out; }
+}
+
+// =====================================================================
 // Simulation -- the clock. Steps the circuit through time, keeps the latest
 // Solution, and feeds the meters that are being graphed.
 //
@@ -15,8 +57,9 @@ class Simulation {
   static DT = 0.002;
   static NOW = 1e-7;                  // a step so short it is "this instant"
   static RESTART = 2;
-  constructor(circuit) { this.circuit = circuit; this.t = 0; this.origin = 0; this.acc = 0; this.sol = null; this.playing = true; this.cold = Simulation.RESTART; }
-  get graphing() { return this.circuit.ofType(Meter).some((m) => m.graph); }
+  constructor(circuit) { this.circuit = circuit; this.scope = new Scope(circuit); this.t = 0; this.origin = 0; this.acc = 0; this.sol = null; this.playing = true; this.cold = Simulation.RESTART; }
+  // is the graph showing? (with the Scope on, always: it is where a clicked part's trace appears)
+  get graphing() { return Scope.on || this.circuit.ofType(Meter).some((m) => m.graph); }
   // is there anything here that changes with time?
   get timed() { return this.circuit.reactive || this.graphing; }
   get running() { return this.playing && this.timed; }
@@ -35,10 +78,13 @@ class Simulation {
   jolt() { const cut = [];
     if (this.circuit.reactive) { const was = new Map(this.circuit.ofType(Inductor).map((l) => [l, l.il]));
       Solver.step(this.circuit, this.envNow(), { flows: false });
-      for (const [l, i0] of was) if (Math.abs(i0) > 1e-4 && Math.abs(l.il) < 0.5 * Math.abs(i0)) cut.push(l); }
+      for (const [l, i0] of was) if (Math.abs(i0) > 1e-6 && Math.abs(l.il) < 0.5 * Math.abs(i0)) cut.push(l); }
     this.cold = Simulation.RESTART; this.refresh(); this.sample(); return cut; }
-  // give every graphed meter its reading at this instant
-  sample() { for (const m of this.circuit.ofType(Meter)) m.record(this.t, m.number(this.sol)); }
+  // what the graph plots: a trace for every meter whose graph is switched on (and, with the Scope on,
+  // for the parts it is showing -- `selId` is the selected part)
+  traces(selId) { return [...this.circuit.ofType(Meter).filter((m) => m.graph).map((m) => ({ id: m.id, kind: m.type, samples: m.samples })), ...this.scope.traces(selId)]; }
+  // give every meter its reading at this instant
+  sample() { for (const m of this.circuit.ofType(Meter)) m.record(this.t, m.number(this.sol)); this.scope.sample(this.t, this.sol); }
   // run for `elapsed` seconds of wall time; true if time moved
   advance(elapsed) { if (!this.running || !(elapsed > 0)) return false; const DT = Simulation.DT; this.acc += Math.min(elapsed, 0.1);
     const n = Math.floor(this.acc / DT); if (n < 1) return false; this.acc -= n * DT;
@@ -46,7 +92,7 @@ class Simulation {
     else { this.t += n * DT; this.refresh(); }
     this.sample(); return true; }
   // back to t = 0 with every capacitor empty, every inductor dead and every trace cleared
-  reset() { this.circuit.resetState(); this.t = 0; this.origin = 0; this.acc = 0; this.cold = Simulation.RESTART; this.refresh(); this.sample(); }
+  reset() { this.circuit.resetState(); this.scope.reset(); this.t = 0; this.origin = 0; this.acc = 0; this.cold = Simulation.RESTART; this.refresh(); this.sample(); }
   // call this instant zero on the clock face
   mark() { this.origin = this.t; }
 }
@@ -61,7 +107,7 @@ class Workbench {
   static NC = 64; static NR = 44;
   static SETTERS = { value: 'setValue', ri: 'setRi', freq: 'setFreq' };
   constructor() { this.circuit = new Circuit(Workbench.NC, Workbench.NR); this.history = new History(); this.view = new View(View.boardOf(Workbench.NC, Workbench.NR)); this.sim = new Simulation(this.circuit);
-    this.selId = null; this.probe = null; this.notice = null; this.flash = null; this.typing = null; }
+    this.selId = null; this.probe = null; this.notice = null; this.flash = null; this.turn = null; this.typing = null; }
   get sol() { return this.sim.sol; }
   get selected() { return this.selId == null ? null : this.circuit.byId(this.selId); }
   select(el) { this.endTyping(); this.selId = el ? el.id : null; }
@@ -84,7 +130,11 @@ class Workbench {
   jolt() { const cut = this.sim.jolt(); if (cut.length) this.say('The inductor’s current was cut off at once — in a real circuit that makes a spark'); }
   // the same, for an edit to the selected part
   act(verb, fn, tag) { const el = this.selected; if (!el) return null; const r = this.edit((c) => fn(c, el), tag); if (!r.ok) this.refuse(verb, r.why); else if (r.el) this.selId = r.el.id; return r; }
-  rotate(dir) { return this.act('rotate it', (c, el) => c.rotate(el, dir)); }
+  // `turn` is what the picture needs to show the turn happening (or being refused): see Component.draw
+  rotate(dir) { const el = this.selected; if (!el) return null; const pivot = el.pivot(), r = this.act('rotate it', (c, x) => c.rotate(x, dir));
+    this.turn = { id: el.id, pivot, dir, ok: r.ok, at: Date.now() };
+    if (r.ok && r.reversed) this.say('The ' + el.info.name.replace(/\b[A-Z](?=[a-z])/g, (ch) => ch.toLowerCase()) + ' is now connected the other way round (F flips it back)');
+    return r; }
   flip() { return this.act('flip it', (c, el) => c.flip(el)); }
   nudge(dc, dr) { return this.act('move it there', (c, el) => c.move(el, dc, dr), 'nudge' + this.selId); }
   remove() { const r = this.act('delete it', (c, el) => c.remove(el)); this.selId = null; return r; }
@@ -113,7 +163,7 @@ class Workbench {
     if (!this.typing) this.typing = { id: el.id, before: this.circuit.snapshot() };
     const ok = el[Workbench.SETTERS[field]](v); if (!ok) return false;
     const L = el.limits(field);
-    if (L && el[field] !== v) this.say(L.label + ' is kept between ' + L.min + ' and ' + L.max + ' ' + L.unit, false, 'limits'); else this.hush('limits');
+    if (L && el[field] !== v) { const say = L.say || ((x) => x + ' ' + L.unit); this.say(L.label + ' is kept between ' + say(L.min) + ' and ' + say(L.max), false, 'limits'); } else this.hush('limits');
     this.sim.jolt(); return true; }
   endTyping(cancel) { const t = this.typing; if (!t) return; this.typing = null; const el = this.circuit.byId(t.id), was = t.before.els.find((e) => e.id === t.id); if (!el || !was) return;
     const keys = Object.keys(Workbench.SETTERS), same = keys.every((k) => el[k] === was[k]); if (same) return;
@@ -123,6 +173,11 @@ class Workbench {
   // throw a switch; `position` picks a throw of a 2-position switch
   toggle(el, position) { if (position && el.position === position) return; el.toggle(); this.sim.mark(); this.jolt(); }
   toggleGraph(meter) { meter.graph = !meter.graph; this.sim.sample(); }
+  // what the graph is plotting just now
+  traces() { return this.sim.traces(this.selId); }
+  // the Probe variant: what the selected part's trace shows, and whether it stays on the graph afterwards
+  plot(mode) { const el = this.selected; if (el) this.sim.scope.setMode(el, mode); }
+  keepTrace() { const el = this.selected; if (el && Scope.takes(el)) this.sim.scope.keep(el, !this.sim.scope.of(el).kept); }
   probeAt(p) { this.probe = p && this.circuit.anchor(p) ? { c: p.c, r: p.r } : null; }
   get probeV() { const a = this.probe && this.sol ? this.circuit.anchor(this.probe) : null; return a ? this.sol.potential(a) : NaN; }
 
@@ -132,7 +187,7 @@ class Workbench {
     this.circuit.restore(other.snapshot()); this.history.record(before, true); this.fresh(); }
   loadPreset(name) { this.replace(PRESETS.build(name, Workbench.NC, Workbench.NR)); }
   // a different circuit is on the bench: nothing selected, clock at zero, brought into view
-  fresh() { this.selId = null; this.probe = null; this.sim.reset(); this.fit(); }
+  fresh() { this.selId = null; this.probe = null; this.sim.scope.clear(); this.sim.reset(); this.fit(); }
   // While the view is still the sim's own choice (the user has not zoomed or
   // panned), an edit that pushes a part or its label off the canvas re-fits it.
   keepInView() { if (!this.view.auto) return false; const box = Renderer.fitBox(this.circuit, this.view.labelScale); if (!box) return false;

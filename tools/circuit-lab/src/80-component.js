@@ -6,7 +6,7 @@
 // =====================================================================
 class Component extends DCLogic {
   state = { hide: false, peek: {}, menuOpen: false, addOpen: false, presetOpen: false, showShare: false, shareCopied: false, shareHide: false, showInfo: false, showExample: false, showSol: false,
-    showBug: false, bugText: '', bugEmail: '', bugSending: false, bugResult: '', draft: null };
+    showBug: false, bugText: '', bugEmail: '', bugSending: false, bugResult: '', draft: null, graphBig: false };
   big = false;
   _obBig = /[?&]big=1(&|$)/.test((typeof location !== 'undefined' && location.search) || '');
   bench = new Workbench();
@@ -38,7 +38,14 @@ class Component extends DCLogic {
     el.addEventListener('pointerdown', this.onDown); el.addEventListener('wheel', this.onWheel, { passive: false }); el.addEventListener('mousedown', this.onMouseDown);
     if (!this.started) { this.started = true; for (const [type, fn] of this.windowEvents()) window.addEventListener(type, fn); this.last = performance.now(); this.timer = setInterval(() => this.frame(), 1000 / 60); }
     this.draw(); };
-  setGraphCanvas = (el) => { this.gcanvas = el; this.gctx = null; if (!el) return; const dpr = window.devicePixelRatio || 1; el.width = GraphPainter.W * dpr; el.height = GraphPainter.H * dpr; this.gctx = el.getContext('2d'); };
+  // The graph sits along the bottom of the canvas. Clicking it enlarges it to cover the canvas, and again
+  // puts it back; the pointer over it reads the traces off.
+  setGraphCanvas = (el) => { if (el === this.gcanvas) return; this.gcanvas = el; this.gctx = null; this.ghover = null; if (!el) return; this.gctx = el.getContext('2d');
+    el.addEventListener('click', () => this.setState((s) => ({ graphBig: !s.graphBig })));
+    const over = (e) => { this.ghover = e.clientX - el.getBoundingClientRect().left; };
+    el.addEventListener('pointermove', over); el.addEventListener('pointerdown', over); el.addEventListener('pointerleave', () => { this.ghover = null; }); };
+  // how much of the canvas the graph takes while it is docked, and whether it is showing / enlarged
+  get dock() { const on = this.bench.sim.graphing, ch = this._ch || 400; return { on, big: on && !!this.state.graphBig, h: on ? Math.round(Math.max(126, Math.min(210, ch * 0.38))) : 0, full: ch }; }
   // keep the drawing buffer matched to the canvas's size on the page (taller in ?big=1)
   obResize() { const c = this.canvas; if (!c) return; const dpr = window.devicePixelRatio || 1;
     if (this._obBig) { const wNow = Math.round(c.clientWidth) || 560, th = Math.round(Math.max(400, Math.min(wNow * 0.62, (window.innerHeight || 820) - 210))); if (c.style.height !== th + 'px') c.style.height = th + 'px'; }
@@ -52,23 +59,36 @@ class Component extends DCLogic {
     if (moved && (this.ticks = (this.ticks || 0) + 1) % 4 === 0) this.dirty = true;
     this.draw(); if (this.dirty) this.refresh(); }
 
+  get still() { try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (err) { return false; } }
+
   // ---- drawing (changes no state but the view, which follows the canvas's size) ----
   draw() { const g = this.ctx, b = this.bench; if (!g) return; this.obResize();
-    if (b.view.resize(this._cw, this._ch)) { if (b.view.auto) b.fit(); this.dirty = true; }      // dirty: the zoom read-out has to follow
+    const dock = this.dock; if (this.state.graphBig && !dock.on) this.setState({ graphBig: false });
+    // the circuit has the canvas above the graph to itself
+    if (b.view.resize(this._cw, this._ch - dock.h)) { if (b.view.auto) b.fit(); this.dirty = true; }      // dirty: the zoom read-out has to follow
     const now = Date.now(), st = this.state, fade = (x) => Math.max(0, Math.min(1, x));
     const life = b.notice ? 2600 + 35 * Math.max(0, b.notice.text.length - 40) : 0;      // longer notices stay up longer
     if (b.notice && now - b.notice.at > life) b.notice = null; if (b.flash && now - b.flash.at > 700) b.flash = null;
+    // A turn is shown happening: the part swings round to where it now is, quickly at first. One that
+    // was refused starts the way it was asked to go and falls back. (Not when the reader has asked for less motion.)
+    let turn = null; const T = b.turn; if (T) { const u = (now - T.at) / (T.ok ? 260 : 300);
+      if (!(u >= 0 && u < 1) || this.still) b.turn = null;
+      else turn = { id: T.id, pivot: T.pivot, settled: T.ok ? u : 1, angle: T.ok ? -T.dir * (Math.PI / 2) * (1 - u) ** 2.4 : T.dir * 0.3 * Math.sin(Math.PI * u) * (1 - u) }; }
     const scene = { circuit: b.circuit, view: b.view, sol: b.sol, dpr: this.dpr, names: b.circuit.labels(), selId: b.selId, hide: !!st.hide, revealed: (id) => !!st.peek[id], flowing: true,
-      probe: b.probe, probeV: b.probeV,
+      probe: b.probe, probeV: b.probeV, turn,
       message: b.notice ? { text: b.notice.text, bad: b.notice.bad, alpha: fade((life - (now - b.notice.at)) / 400) } : null,
       flash: b.flash ? { segs: b.flash.segs, alpha: fade(1 - (now - b.flash.at) / 700) } : null };
     this.tool.decorate(scene); this.renderer.draw(g, scene);
     const cur = this.tool.cursor; if (this.canvas.style.cursor !== cur) this.canvas.style.cursor = cur;
-    if (this.gctx && b.sim.graphing) this.graphs.draw(this.gctx, { dpr: window.devicePixelRatio || 1, t: b.sim.t, origin: b.sim.origin,
-      meters: b.circuit.ofType(Meter).filter((m) => m.graph).map((el) => ({ el, name: (scene.names.get(el.id) || {}).text || '', shown: !st.hide || !!st.peek[el.id] })) }); }
+    if (this.gctx && dock.on) this.drawGraph(scene.names, dock); }
+  // the graph keeps its own buffer matched to its box, which changes size as it is enlarged
+  drawGraph(names, dock) { const c = this.gcanvas, b = this.bench, st = this.state, dpr = window.devicePixelRatio || 1, w = Math.round(c.clientWidth), h = Math.round(c.clientHeight); if (!(w > 40 && h > 40)) return;
+    if (c.width !== Math.round(w * dpr) || c.height !== Math.round(h * dpr)) { c.width = Math.round(w * dpr); c.height = Math.round(h * dpr); }
+    this.graphs.draw(this.gctx, { dpr, w, h, top: dock.big ? 30 : 0, clear: dock.big ? 0 : 28, t: b.sim.t, origin: b.sim.origin, hover: this.ghover, empty: Scope.on ? 'Click any part to see its trace.' : '',
+      traces: b.traces().map((tr) => ({ ...tr, name: (names.get(tr.id) || {}).text || 'Wire', shown: !st.hide || !!st.peek[tr.id] })) }); }
 
   // ---- pointer ----
-  at(e) { const r = this.canvas.getBoundingClientRect(), v = this.bench.view, sx = (e.clientX - r.left) * (v.w / (r.width || v.w)), sy = (e.clientY - r.top) * (v.h / (r.height || v.h)); return { sx, sy, ...v.toWorld(sx, sy), coarse: e.pointerType === 'touch' }; }
+  at(e) { const r = this.canvas.getBoundingClientRect(), v = this.bench.view, sx = (e.clientX - r.left) * (this._cw / (r.width || this._cw)), sy = (e.clientY - r.top) * (this._ch / (r.height || this._ch)); return { sx, sy, ...v.toWorld(sx, sy), coarse: e.pointerType === 'touch' }; }
   onMouseDown = (e) => { if (e.button === 1) e.preventDefault(); };      // no auto-scroll on a middle-button pan
   onDown = (e) => { if (e.button !== 0 && e.button !== 1) return; e.preventDefault();
     const a = document.activeElement; if (a && a !== document.body && a.blur) a.blur();     // commits a value being typed
@@ -91,6 +111,8 @@ class Component extends DCLogic {
   onKeyDown = (e) => { const b = this.bench, tag = (e.target && e.target.tagName) || '', key = e.key, mod = e.metaKey || e.ctrlKey;
     // a dialog owns the keyboard: Escape closes it wherever the focus is (its link box, its tick box, the report text)
     if (this.overlayOpen) { if (key === 'Escape') this.setState({ showShare: false, showInfo: false, showExample: false, showBug: false }); return; }
+    // the enlarged graph hides the circuit, so nothing may be edited behind it: Escape puts the graph back
+    if (this.state.graphBig) { if (key === 'Escape') { this.setState({ graphBig: false }); e.preventDefault(); } return; }
     if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') {
       if (tag === 'INPUT' && e.target.type === 'number') { if (key === 'Enter') e.target.blur(); else if (key === 'Escape') { this.endField(true); e.target.blur(); } }
       return; }

@@ -48,7 +48,7 @@ class Painter {
   paint(g, el, st) { this.leads(g, el, st); }
   label(el, name, st) { return null; }
   // value parts: name, value, and whatever the subclass adds
-  valueLabel(el, name, extra) { const lines = [{ t: name, px: 11, bold: true, color: INK.gold }, { t: Fmt.num(el.value, 3) + ' ' + el.info.unit, px: 9, color: INK.dim }];
+  valueLabel(el, name, extra) { const lines = [{ t: name, px: 11, bold: true, color: INK.gold }, { t: el.valueText(), px: 9, color: INK.dim }];
     for (const x of (extra || [])) lines.push({ t: x, px: 9, color: 'rgba(224,184,90,0.9)' }); return { lines }; }
   // { pts, gaps: [[from, to]] in px along pts, arrow: px along pts or null }
   track(el) { const f = this.frame(el), h = this.half(el); return { pts: [f.a, f.b], gaps: h > 0 && this.gap ? [[f.L / 2 - h, f.L / 2 + h]] : [], arrow: f.L * 0.85 }; }
@@ -69,7 +69,11 @@ class Painter {
     if (tr.arrow != null) { const p = at(tr.arrow), k = fwd ? 1 : -1, ux = p.ux * k, uy = p.uy * k; g.fillStyle = 'rgba(95,208,224,0.95)'; g.beginPath();
       g.moveTo(p.x + ux * 6, p.y + uy * 6); g.lineTo(p.x - ux * 4 - uy * 4, p.y - uy * 4 + ux * 4); g.lineTo(p.x - ux * 4 + uy * 4, p.y - uy * 4 - ux * 4); g.closePath(); g.fill(); } }
   // dot speed in px/s: rises with the current but levels off, so 0.1 A and 1 A both read
-  static speed(I) { return 12 + 70 * (1 - Math.exp(-Math.abs(I) / 0.3)); }
+  // How fast the current dots drift, in px/s. Logarithmic, because currents here run from µA (a 100 kΩ
+  // resistor) to tens of A: every tenfold increase adds the same step, so more current is always
+  // visibly faster and no working circuit sits at a standstill or at a blur. It depends on the
+  // current alone -- never on what else is in the circuit -- so the same current always looks the same.
+  static speed(I) { return 8 + 26 * Math.log10(1 + Math.abs(I) / 1e-4); }
 }
 Painter.SPACING = 32;
 

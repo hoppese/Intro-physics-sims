@@ -177,6 +177,9 @@ Verified in both variants:
 
 ## Variants built
 
+*(September 2026. Since the November 2026 rewrite neither is a fork: see
+`circuit-lab-variants.md` for what they are now.)*
+
 Two forks, both carrying findings #1, #2 and #4, differing only in how graphing
 is offered. Neither is in the sim catalog — they are for comparison.
 

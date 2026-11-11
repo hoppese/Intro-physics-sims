@@ -322,6 +322,11 @@ it works with each sim's own camera — perspective or orthographic.
   `if (type === ...)` chains anywhere else.
 - **A bug found by hand gets a test** in `tools/circuit-lab/test/t-fixes.js`
   before it is fixed.
+- **A variant is the same sources plus one small file.**
+  `tools/circuit-lab/variants/<name>.js` is read in just before the page
+  controller and `build.sh` writes `circuit-lab-<name>/`. Never fork the
+  bundle: a variant's markup is the main page's (bindings the main sim
+  leaves empty). See `docs/circuit-lab-variants.md`.
 
 ### Circuit Lab behaviour (settled 2026-11-10; change deliberately)
 
@@ -347,7 +352,12 @@ it works with each sim's own camera — perspective or orthographic.
   straightens parts and includes the wire clean-up.
 - **Rotate vs. Flip**: rotate changes layout only; Flip changes polarity /
   which way a part faces. Flip on a symmetric part (resistor) does nothing
-  and records no undo step.
+  and records no undo step. A rotation is always a quarter turn about the
+  part's middle, the way the button's arrow points: `r` or ↻ clockwise,
+  Shift+`R` or ↺ counter-clockwise, and four of either come back to the
+  start. The turn is shown (a 260 ms eased swing); a turn that cannot be
+  made says why, and the part starts the way it was asked and falls back.
+  No motion when the reader has asked for reduced motion.
 - **Undo** covers every layout edit including presets / New / Clear;
   arrow-key nudges of one part within 1.5 s are one step. What a part is
   doing right now (charge, switch position, meter trace) is not layout and
@@ -358,10 +368,22 @@ it works with each sim's own camera — perspective or orthographic.
 - **Labels**: never on a wire, never on the far side of another part,
   slide along the part before giving up; grid dots hide behind them. A new
   part is placed with a clear grid row/column around it.
-- **Numbers**: currents in mA below 1 A (graph axis switches to A at
-  1 A); worked examples quote currents in mA and τ to 3 figures; no preset
-  or worked example may give a computed answer of exactly 1 (see
-  `avoid-exactly-one` memory).
+- **Numbers**: a resistor runs from 0.5 Ω to 100 kΩ (new one: 1 kΩ) and
+  is labelled in kΩ from 1000 Ω up. The DC and RC presets and their worked
+  examples use kΩ and mA (`realistic-circuit-numbers` memory); RL, RLC and
+  the internal-resistance examples keep a few ohms, which is what gives a
+  watchable τ. Currents show to 3 figures in µA, mA or A, and the graph's
+  current axis picks the same unit from its largest value. Worked examples
+  quote τ to 3 figures; no preset or worked example may give a computed
+  answer of exactly 1 (see `avoid-exactly-one` memory).
+- **Graph**: the meter graph docks along the bottom of the canvas (the
+  circuit refits above it), never in the side panel: the panel must not
+  grow taller than the canvas, or a Moodle embed gets a scrollbar. Clicking
+  the graph or its ⤢ button enlarges it over the canvas; click, ✕ or Escape
+  brings it back. Enlarged, it carries a chip for each switch so a transient
+  can be started without leaving it, and hovering reads off the traces.
+- **Info overlay**: scrolls inside its own card. Its "Learn more" block is
+  generated from `data/topics.json` (`tools/apply-learn-more.py`).
 - **Hide-solution mode**: readings show "?", a hidden meter's graph trace
   and a capacitor's polarity marks are hidden too. The share dialog's
   "start hidden" box starts at the current mode and the link follows the

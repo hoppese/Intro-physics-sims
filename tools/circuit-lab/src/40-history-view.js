@@ -79,9 +79,14 @@ const Fmt = {
   none: '– – –',                       // "nothing to read": spaced out so it cannot be taken for a minus sign
   V(v) { if (!isFinite(v)) return '—'; if (Math.abs(v) < 0.005) return '0.00 V'; return (v > 0 ? '+' : '−') + Math.abs(v).toFixed(2) + ' V'; },
   absV(v) { return isFinite(v) ? Math.abs(v).toFixed(2) + ' V' : '—'; },
-  A(i) { if (!isFinite(i)) return '—'; const a = Math.abs(i); if (a < 5e-5) return '0 mA'; return a < 0.9995 ? (a * 1000).toFixed(a < 0.00995 ? 1 : 0) + ' mA' : a.toFixed(3) + ' A'; },
+  // a number from 0 to 1000 to three significant figures (never more than two decimals)
+  sig3(x) { return x.toFixed(x < 9.995 ? 2 : x < 99.95 ? 1 : 0); },
+  // A current, to three figures in whichever of µA, mA and A suits it: resistors run from 0.5 Ω to
+  // 100 kΩ, so currents span µA to tens of A. Anything under ZERO_A is no current at all.
+  ZERO_A: 5e-8,
+  A(i) { if (!isFinite(i)) return '—'; const a = Math.abs(i); if (a < Fmt.ZERO_A) return '0 mA'; return a < 0.9995e-3 ? Fmt.sig3(a * 1e6) + ' µA' : a < 0.9995 ? Fmt.sig3(a * 1e3) + ' mA' : Fmt.sig3(a) + ' A'; },
   // a signed current, for an ammeter (which has a direction)
-  signedA(i) { if (!isFinite(i)) return '—'; const s = Fmt.A(i); return (i < 0 && !/^0(\.0)? /.test(s) ? '−' : '') + s; },
+  signedA(i) { if (!isFinite(i)) return '—'; const s = Fmt.A(i); return (i < 0 && s !== '0 mA' ? '−' : '') + s; },
   Q(q) { if (!isFinite(q)) return '—'; const a = Math.abs(q), s = q < 0 ? '−' : ''; if (a < 5e-10) return '0 mC'; if (a >= 1e-3) return s + (a * 1e3).toFixed(2) + ' mC'; if (a >= 1e-6) return s + (a * 1e6).toFixed(1) + ' µC'; return s + (a * 1e9).toFixed(0) + ' nC'; },
   num(x, d) { const p = Math.pow(10, d == null ? 2 : d); return (Math.round(x * p) / p).toString(); },
 };

@@ -64,6 +64,7 @@ class Element {
   translated(dc, dr) { const g = this.geometry(); for (const f in g) g[f] = P.add(g[f], dc, dr); return g; }
   rotated(dir) { if (!this.info.rotatable) return null; const g = this.geometry(), pv = this.pivot(); for (const f in g) g[f] = P.turn(g[f], pv, dir); return g; }
   flipped() { return null; }                      // geometry after "Flip", or null when the part has no flip
+  turnEndForEnd() {}                              // ends a and b have just been exchanged: keep the state where it was in the circuit
   // the geometries "Flip" may use, best first (the next is tried when one does not fit)
   flipChoices() { const g = this.flipped(); return g ? [g] : []; }
   // how many grid steps of clear space lie between this part's body and another's
@@ -93,7 +94,10 @@ class Element {
   // ---- values ----
   setValue(v) { const I = this.info; if (!I.hasValue || !isFinite(v)) return false; this.value = Math.max(I.min, Math.min(I.max, v)); return true; }
   // the range a typed number is held to: { min, max, unit, label }, or null for a field this part lacks
-  limits(field) { const I = this.info; return field === 'value' && I.hasValue ? { min: I.min, max: I.max, unit: I.unit, label: I.valueLabel } : null; }
+  limits(field) { const I = this.info; return field === 'value' && I.hasValue ? { min: I.min, max: I.max, unit: I.unit, label: I.valueLabel, say: (x) => this.constructor.say(x) } : null; }
+  // a value of this kind of part, written out with its unit ("220 Ω", "4.7 kΩ", "0.47 mF")
+  static say(v) { return Fmt.num(v, 3) + ' ' + this.info.unit; }
+  valueText() { return this.constructor.say(this.value); }
 
   // ---- share link ----
   encodeGeom() { return this.a.c + '.' + this.a.r + '-' + this.b.c + '.' + this.b.r; }
@@ -114,8 +118,11 @@ class Wire extends Element {
 
 class Resistor extends Element {
   static type = 'resistor'; static code = 'r';
-  static info = { name: 'Resistor', prefix: 'R', sym: 'R', unit: 'Ω', valueLabel: 'Resistance', def: 10, min: 0.5, max: 1000, step: 1,
+  // 0.5 Ω to 100 kΩ: wide enough for the kΩ resistors (and mA currents) of a real bench, and still
+  // able to go low for the RL and RLC circuits, whose time constants need a few ohms to be watchable
+  static info = { name: 'Resistor', prefix: 'R', sym: 'R', unit: 'Ω', valueLabel: 'Resistance', def: 1000, min: 0.5, max: 100000, step: 1,
     hasValue: true, rotatable: true, showMeas: true, menu: { group: 'Load', label: 'Resistor', svg: 'resistor' } };
+  static say(v) { return v >= 1000 ? Fmt.num(v / 1000, 3) + ' kΩ' : Fmt.num(v, 3) + ' Ω'; }
   branch() { return { a: this.a, b: this.b, g: 1 / this.value, J: 0 }; }
 }
 
@@ -137,6 +144,7 @@ class Capacitor extends Element {
   resetState() { this.vc = 0; this.vc1 = null; }
   liveState() { return { vc: this.vc, vc1: this.vc1 }; }
   setLiveState(s) { this.vc = s.vc; this.vc1 = s.vc1; }
+  turnEndForEnd() { this.vc = -this.vc; if (this.vc1 != null) this.vc1 = -this.vc1; }
 }
 
 class Inductor extends Element {
@@ -156,6 +164,7 @@ class Inductor extends Element {
   resetState() { this.il = 0; this.il1 = null; }
   liveState() { return { il: this.il, il1: this.il1 }; }
   setLiveState(s) { this.il = s.il; this.il1 = s.il1; }
+  turnEndForEnd() { this.il = -this.il; if (this.il1 != null) this.il1 = -this.il1; }
 }
 
 class Battery extends Element {
@@ -190,6 +199,11 @@ class AcSource extends Element {
   decodeTail(tail) { super.decodeTail(tail); const m = /~([\d.]+)/.exec(tail || ''); if (m) this.setFreq(parseFloat(m[1])); }
 }
 
+// a run of [t, value] samples in time order, for the graph: the oldest go once there are more than `cap`
+const Trace = {
+  put(s, t, v, cap) { if (!isFinite(v)) return; const last = s[s.length - 1]; if (last && last[0] === t && last[1] === v) return; s.push([t, v]); if (s.length > cap) s.splice(0, s.length - cap); },
+};
+
 class Meter extends Element {
   constructor(a, b, value) { super(a, b, value); this.graph = false; this.samples = []; }
   encodeTail() { return this.graph ? '*' : ''; }
@@ -200,8 +214,7 @@ class Meter extends Element {
   // the reading as a bare number (volts or amps), NaN when there is nothing to read
   number(sol) { const r = sol ? this.reading(sol) : { err: 'unsolved' }; return r.err ? NaN : (r.dV != null ? r.dV : r.I); }
   // (a meter keeps its trace whether or not its graph is showing, so the graph has the whole run when it is opened)
-  record(t, v) { if (!isFinite(v)) return; const s = this.samples, last = s[s.length - 1]; if (last && last[0] === t && last[1] === v) return;
-    s.push([t, v]); if (s.length > 4000) s.splice(0, s.length - 4000); }
+  record(t, v) { Trace.put(this.samples, t, v, 4000); }
 }
 
 class Voltmeter extends Meter {

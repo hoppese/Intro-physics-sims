@@ -8,12 +8,13 @@ for (const name of Object.keys(PRESETS.nets)) { const c = PRESETS.build(name);
   const c2 = Circuit.decode(c.encode()); ok(c2.encode() === c.encode(), name + ' round trip');
   // no loose wire ends
   const E = c.wireEdges(), adj = Circuit.adjacency(E), terms = c.terminalMap(null); for (const [k, nb] of adj) ok(nb.length > 1 || terms.has(k), name + ' loose end at ' + k); }
-{ const c = PRESETS.build('series'), s = Solver.solve(c, { mode: 'dc' }); const R = c.ofType(Resistor); near(s.current(R[0]), 0.2, 1e-9, 'series I'); near(s.measure(R[1]).dV, 4, 1e-9, 'series V2'); near(s.current(c.ofType(Battery)[0]), 0.2, 1e-9, 'series Ibat'); }
-{ const c = PRESETS.build('parallel'), s = Solver.solve(c, { mode: 'dc' }); const R = c.ofType(Resistor); near(s.current(R[0]), 0.6, 1e-9, 'par I1'); near(s.current(R[1]), 0.3, 1e-9, 'par I2'); near(s.current(c.ofType(Battery)[0]), 0.9, 1e-9, 'par Ibat'); }
-{ const c = PRESETS.build('bridge'), s = Solver.solve(c, { mode: 'dc' }); const R = c.ofType(Resistor); ok(R[2].value === 25, 'bridge R3 is the bridge'); near(Math.abs(s.current(R[2])), 0.048, 1e-9, 'bridge I3: the preset is unbalanced, so the bridge carries current'); near(s.current(R[0]), 0.232, 1e-9, 'bridge I1'); near(s.current(c.ofType(Battery)[0]), 0.232 + 0.352 / 3, 1e-9, 'bridge Ibat'); }
+{ const c = PRESETS.build('series'), s = Solver.solve(c, { mode: 'dc' }); const R = c.ofType(Resistor); near(s.current(R[0]), 0.002, 1e-12, 'series I'); near(s.measure(R[1]).dV, 3.6, 1e-9, 'series V2'); near(s.current(c.ofType(Battery)[0]), 0.002, 1e-12, 'series Ibat'); }
+{ const c = PRESETS.build('parallel'), s = Solver.solve(c, { mode: 'dc' }); const R = c.ofType(Resistor); near(s.current(R[0]), 0.005, 1e-12, 'par I1'); near(s.current(R[1]), 0.002, 1e-12, 'par I2'); near(s.current(c.ofType(Battery)[0]), 0.007, 1e-12, 'par Ibat'); }
+{ const c = PRESETS.build('bridge'), s = Solver.solve(c, { mode: 'dc' }); const R = c.ofType(Resistor); ok(R[2].value === 2500, 'bridge R3 is the bridge'); near(Math.abs(s.current(R[2])), 0.00048, 1e-12, 'bridge I3: the preset is unbalanced, so the bridge carries current'); near(s.current(R[0]), 0.00232, 1e-12, 'bridge I1'); near(s.current(c.ofType(Battery)[0]), 0.00232 + 0.00352 / 3, 1e-12, 'bridge Ibat'); }
 { const c = PRESETS.build('rc'); const cap = c.ofType(Capacitor)[0], am = c.ofType(Ammeter)[0], vm = c.ofType(Voltmeter)[0], sw = c.ofType(ThrowSwitch)[0];
-  let s = run(c, 2.2); near(cap.vc, 6 * (1 - Math.exp(-1)), 0.02, 'rc vc(tau)'); near(vm.reading(s).dV, cap.vc, 1e-6, 'rc voltmeter = +vc'); ok(am.reading(s).I > 0, 'rc ammeter + while charging');
-  sw.toggle(); s = run(c, 2.2); near(cap.vc, 6 * (1 - Math.exp(-1)) * Math.exp(-1), 0.02, 'rc discharge'); ok(am.reading(s).I < 0, 'rc ammeter - while discharging'); }
+  const tau = 4700 * 0.47e-3, k = Math.exp(-2.2 / tau); ok(Math.abs(tau - 2.209) < 1e-9, 'rc tau = 2.2 s');
+  let s = run(c, 2.2); near(cap.vc, 6 * (1 - k), 0.02, 'rc vc(2.2 s)'); near(vm.reading(s).dV, cap.vc, 1e-6, 'rc voltmeter = +vc'); ok(am.reading(s).I > 0, 'rc ammeter + while charging');
+  sw.toggle(); s = run(c, 2.2); near(cap.vc, 6 * (1 - k) * k, 0.02, 'rc discharge'); ok(am.reading(s).I < 0, 'rc ammeter - while discharging'); }
 { const c = PRESETS.build('rl'); const L = c.ofType(Inductor)[0], am = c.ofType(Ammeter)[0], vm = c.ofType(Voltmeter)[0], sw = c.ofType(Switch)[0];
   let s = run(c, 0.5); near(L.il, 0, 1e-9, 'rl open: no current'); sw.toggle(); s = Solver.step(c, { mode: 'tran', dt: 0.002, t: 0 }); near(vm.reading(s).dV, 6, 0.02, 'rl V_L(0)=emf');
   s = run(c, 1.5); near(am.reading(s).I, 0.6 * (1 - Math.exp(-1)), 0.005, 'rl I(tau)'); ok(vm.reading(s).dV > 0, 'rl V_L positive'); }
@@ -22,5 +23,6 @@ for (const name of Object.keys(PRESETS.nets)) { const c = PRESETS.build(name);
 // history keeps live state
 { const c = PRESETS.build('rc'), h = new History(); const cap = c.ofType(Capacitor)[0], r = c.ofType(Resistor)[0]; run(c, 1); const v = cap.vc; ok(v > 1, 'charged');
   h.record(c.snapshot()); r.setValue(100); h.record(c.snapshot()); ok(c.move(r, 0, -1).ok || true, ''); run(c, 0.1); const v2 = cap.vc;
-  h.undo(c); near(cap.vc, v2, 1e-12, 'undo keeps charge'); ok(r.value === 100, 'undo 1 keeps value'); h.undo(c); ok(r.value === 220, 'undo 2 restores value'); near(cap.vc, v2, 1e-12, 'still charged'); h.redo(c); ok(r.value === 100, 'redo'); ok(c.problems().length === 0, 'history clean'); }
+  h.undo(c); near(cap.vc, v2, 1e-12, 'undo keeps charge'); ok(r.value === 100, 'undo 1 keeps value'); h.undo(c); ok(r.value === 4700, 'undo 2 restores value'); near(cap.vc, v2, 1e-12, 'still charged'); h.redo(c); ok(r.value === 100, 'redo'); ok(c.problems().length === 0, 'history clean'); }
 console.log(fails ? fails + ' FAILED of ' + n : 'presets: all ' + n + ' checks passed');
+process.exit(fails ? 1 : 0);

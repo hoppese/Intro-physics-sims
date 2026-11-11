@@ -12,9 +12,9 @@ const run = (sim, seconds) => { for (let i = 0, k = Math.round(seconds * 500); i
 const load = (net) => { const b = new Workbench(); b.view.resize(560, 400); b.replace(Circuit.decode(net.replace(/ /g, '_'), Workbench.NC, Workbench.NR)); return b; };
 
 // ---- F12: second-order integration ----
-// RC charging against the exact curve (the RC preset: 6 V, 220 ohm, 10 mF, tau = 2.2 s)
+// RC charging against the exact curve (the RC preset: 6 V, 4.7 kΩ, 0.47 mF, tau = 2.209 s)
 { const b = bench('rc'), cap = b.circuit.ofType(Capacitor)[0]; let worst = 0;
-  for (let k = 1; k <= 10; k++) { run(b.sim, 0.5); worst = Math.max(worst, Math.abs(Math.abs(cap.vc) - 6 * (1 - Math.exp(-b.sim.t / 2.2)))); }
+  for (let k = 1; k <= 10; k++) { run(b.sim, 0.5); worst = Math.max(worst, Math.abs(Math.abs(cap.vc) - 6 * (1 - Math.exp(-b.sim.t / 2.209)))); }
   ok(worst < 2e-4, 'RC charging tracks the exact curve to 0.2 mV: ' + worst.toExponential(2)); near(b.sim.t, 5, 1e-6, 'five seconds'); }
 // a lossless LC loop keeps its energy (backward Euler lost ~10% a second here)
 { const b = load('c12.8-12.12@10 l20.8-20.12@1 w12.8-20.8 w12.12-20.12'), cap = b.circuit.ofType(Capacitor)[0], ind = b.circuit.ofType(Inductor)[0];
@@ -29,7 +29,7 @@ const load = (net) => { const b = new Workbench(); b.view.resize(560, 400); b.re
 
 // ---- F6: what is shown at an instant is that instant ----
 { const b = bench('rc'), c = b.circuit, vm = c.ofType(Voltmeter)[0], am = c.ofType(Ammeter)[0];
-  near(Math.abs(vm.number(b.sol)), 0, 1e-4, 'RC at t = 0: capacitor voltage is zero'); near(Math.abs(am.number(b.sol)), 6 / 220, 1e-5, 'RC at t = 0: I = emf / R'); }
+  near(Math.abs(vm.number(b.sol)), 0, 1e-4, 'RC at t = 0: capacitor voltage is zero'); near(Math.abs(am.number(b.sol)), 6 / 4700, 1e-6, 'RC at t = 0: I = emf / R'); }
 
 // ---- F4: an open switch carries exactly no current ----
 { const b = bench('rl'), sw = b.circuit.ofType(Switch)[0]; ok(!sw.closed, 'RL preset starts open'); ok(b.sol.current(sw) === 0, 'open switch current is 0, not NaN: ' + b.sol.current(sw)); ok(Fmt.A(b.sol.current(sw)) === '0 mA', 'and prints as 0 mA'); }
@@ -62,9 +62,9 @@ const load = (net) => { const b = new Workbench(); b.view.resize(560, 400); b.re
 
 // ---- F25: a typed value outside the allowed range says what the range is ----
 { const b = bench('series'), r1 = b.circuit.ofType(Resistor)[0], bat = b.circuit.ofType(Battery)[0]; b.select(r1);
-  b.type('value', 5000); ok(r1.value === 1000, 'clamped to the maximum'); ok(b.notice && /between 0.5 and 1000 Ω/.test(b.notice.text) && !b.notice.bad, 'range notice: ' + (b.notice && b.notice.text));
+  b.type('value', 500000); ok(r1.value === 100000, 'clamped to the maximum'); ok(b.notice && /between 0\.5 Ω and 100 kΩ/.test(b.notice.text) && !b.notice.bad, 'range notice: ' + (b.notice && b.notice.text));
   b.type('value', 500); ok(r1.value === 500 && !b.notice, 'an allowed value clears it'); b.endTyping();
-  b.select(bat); b.type('ri', 80); ok(bat.ri === 50 && b.notice && /Internal resistance is kept between 0 and 50 Ω/.test(b.notice.text), 'internal resistance range: ' + (b.notice && b.notice.text)); b.endTyping(); }
+  b.select(bat); b.type('ri', 80); ok(bat.ri === 50 && b.notice && /Internal resistance is kept between 0 Ω and 50 Ω/.test(b.notice.text), 'internal resistance range: ' + (b.notice && b.notice.text)); b.endTyping(); }
 
 // ---- F22: the 2-position switch flips ----
 { const b = bench('rc'), sw = b.circuit.ofType(ThrowSwitch)[0], before = b.circuit.encode(); b.select(sw); const r = b.flip();
@@ -109,8 +109,12 @@ const load = (net) => { const b = new Workbench(); b.view.resize(560, 400); b.re
   const b2 = load('r14.10-18.10@10'), t2 = new PointerTool(b2); drag(b2, t2, P.of(12, 10), P.of(16, 10)); ok(b2.circuit.wires.length === 0, 'cannot end a wire inside a part'); }
 
 // ---- formatting ----
-ok(Fmt.A(0) === '0 mA' && Fmt.A(2e-5) === '0 mA' && Fmt.A(0.0005) === '0.5 mA' && Fmt.A(0.0273) === '27 mA' && Fmt.A(1.5) === '1.500 A', 'currents: ' + [Fmt.A(0), Fmt.A(0.0005), Fmt.A(0.0273), Fmt.A(1.5)].join(' | '));
-ok(Fmt.signedA(-1e-7) === '0 mA' && Fmt.signedA(-0.02) === '−20 mA', 'signed zero has no sign'); ok(Fmt.V(-0.001) === '0.00 V' && Fmt.V(1.5) === '+1.50 V', 'voltages'); ok(Fmt.Q(0) === '0 mC' && Fmt.Q(1e-13) === '0 mC', 'no charge is 0 mC');
+// F44: three figures in µA, mA or A, so a kΩ circuit's currents are not all "0.5 mA" or "0 mA"
+ok(Fmt.A(0) === '0 mA' && Fmt.A(2e-8) === '0 mA' && Fmt.A(6e-5) === '60.0 µA' && Fmt.A(0.00048) === '480 µA' && Fmt.A(0.00128) === '1.28 mA' && Fmt.A(0.0273) === '27.3 mA' && Fmt.A(0.6) === '600 mA' && Fmt.A(0.9997) === '1.00 A' && Fmt.A(1.5) === '1.50 A' && Fmt.A(48) === '48.0 A', 'currents: ' + [0, 2e-8, 6e-5, 0.00048, 0.00128, 0.0273, 0.6, 0.9997, 1.5, 48].map(Fmt.A).join(' | '));
+{ const R = L.Resistor; ok(R.say(220) === '220 Ω' && R.say(999) === '999 Ω' && R.say(1000) === '1 kΩ' && R.say(4700) === '4.7 kΩ' && R.say(100000) === '100 kΩ' && R.say(0.5) === '0.5 Ω', 'resistances from 1000 Ω up are written in kΩ: ' + [220, 1000, 4700, 100000].map((x) => R.say(x)).join(' | '));
+  // the current dots: faster for more current over the whole range, and never stopped or a blur
+  const sp = [6e-5, 0.00048, 0.002, 0.027, 0.6, 12].map(L.Painter.speed); ok(sp.every((v, i) => !i || v > sp[i - 1] + 5), 'more current, visibly faster dots: ' + sp.map((v) => v.toFixed(0)).join(' ')); ok(sp[0] > 10 && sp[5] < 160, 'between a crawl and a blur'); }
+ok(Fmt.signedA(-1e-9) === '0 mA' && Fmt.signedA(-0.02) === '−20.0 mA', 'signed zero has no sign'); ok(Fmt.V(-0.001) === '0.00 V' && Fmt.V(1.5) === '+1.50 V', 'voltages'); ok(Fmt.Q(0) === '0 mC' && Fmt.Q(1e-13) === '0 mC', 'no charge is 0 mC');
 
 // ---- "Clean up circuit" straightens; it does not shrink or rearrange ----
 { // a tidy drawing has nothing to tidy: every preset comes back untouched
@@ -162,9 +166,26 @@ ok(Fmt.signedA(-1e-7) === '0 mA' && Fmt.signedA(-0.02) === '−20 mA', 'signed z
 // ---- the graph's current axis follows the meters: mA below 1 A, A from there up ----
 { const { GraphPainter, Ammeter: Am } = L; const texts = []; const grad = { addColorStop() {} };
   const g = new Proxy({}, { get: (t, k) => k === 'fillText' ? (s) => texts.push(String(s)) : k === 'measureText' ? () => ({ width: 10 }) : (k === 'createRadialGradient' || k === 'createLinearGradient') ? () => grad : (typeof k === 'string' && /^[a-z]/.test(k) && !(k in t) ? () => {} : t[k]), set: (t, k, v) => { t[k] = v; return true; } });
-  const axis = (peak) => { texts.length = 0; const el = { type: 'amm', samples: [[0, 0], [1, peak / 2], [2, peak]] }; new GraphPainter().draw(g, { dpr: 1, t: 2, origin: 0, meters: [{ el, name: 'A1', shown: true }] }); return texts.slice(); };
+  const draw = (o) => { texts.length = 0; new GraphPainter().draw(g, { dpr: 1, w: 550, h: 150, top: 0, t: 2, origin: 0, hover: null, ...o }); return texts.slice(); };
+  const axis = (peak, size) => draw({ ...size, traces: [{ kind: 'amm', name: 'A1', shown: true, samples: [[0, 0], [1, peak / 2], [2, peak]] }] });
   const lo = axis(0.82), hi = axis(1.2);
-  ok(lo.includes('mA') && lo.includes('1000'), 'up to 1 A the axis is in mA: ' + lo.join(' ')); ok(hi.includes('A') && !hi.includes('mA') && !hi.includes('1500') && hi.includes('1.5'), 'from 1 A it is in A: ' + hi.join(' ')); }
+  ok(lo.includes('mA') && lo.includes('1000'), 'up to 1 A the axis is in mA: ' + lo.join(' ')); ok(hi.includes('A') && !hi.includes('mA') && !hi.includes('1500') && hi.includes('1.5'), 'from 1 A it is in A: ' + hi.join(' '));
+  // F41: ... and in µA below 1 mA, so a kΩ circuit's trace is not a flat line on a 0-10 mA axis
+  const tiny = axis(0.00042); ok(tiny.includes('µA') && tiny.includes('400') && !tiny.includes('mA'), 'below 1 mA the axis is in µA: ' + tiny.join(' '));
+  // F42: the graph draws at whatever size it is given: more marks on both axes when it is enlarged
+  const small = axis(0.82, { w: 294, h: 150 }), big = axis(0.82, { w: 550, h: 392, top: 30 }), marks = (list) => list.filter((x) => /^−?\d+(\.\d+)?$/.test(x)).length;
+  ok(marks(big) > marks(small) + 4, 'the enlarged graph has more axis marks: ' + marks(small) + ' -> ' + marks(big)); ok(small.includes('2') && !small.includes('1') && big.includes('1'), 'a time mark every second once there is room');
+  ok(small.includes('A1') && big.includes('A1'), 'the key names the trace');
+  // F43: with the pointer over it, the graph reads each trace off at that instant -- and nothing beyond the present
+  const two = [{ kind: 'volt', name: 'V1', shown: true, samples: [[0, 0], [1, 3], [2, 6]] }, { kind: 'amm', name: 'A1', shown: true, samples: [[0, 0], [1, 0.012], [2, 0.024]] }];
+  const xAt = (t) => { const x0 = Math.round(9 * 4.2), x1 = 550 - Math.round(9 * 4.8); return x0 + t / 8 * (x1 - x0); };
+  const read = draw({ traces: two, hover: xAt(1.001) }); ok(read.includes('t = 1.00 s') && read.includes('V1 +3.00 V') && read.includes('A1 12.0 mA'), 'reads the traces under the pointer: ' + read.join(' | '));
+  const ahead = draw({ traces: two, hover: xAt(5) }); ok(!ahead.some((x) => /^t = /.test(x)) && ahead.includes('V1') && ahead.includes('A1'), 'no reading where nothing has happened yet: ' + ahead.join(' | '));
+  const hid = draw({ traces: two.map((m) => ({ ...m, shown: false })), hover: xAt(1) }); ok(!hid.some((x) => /3\.00|12\.0 mA/.test(x)), 'hidden traces are not read out: ' + hid.join(' | '));
+  // F45: the enlarge button sits against the plot's corner, not over the current axis's numbers; the key keeps clear of it
+  ok(GraphPainter.gutter(150, true) === 550 - (xAt(8)) && GraphPainter.gutter(150, false) === 14, 'the strip beside the plot is as wide as the numbers need: ' + GraphPainter.gutter(150, true));
+  const narrow = { w: 180, h: 150, traces: two }; ok(draw(narrow).includes('V1') && !draw({ ...narrow, clear: 28 }).includes('V1'), 'no key where it would run under the button');
+  ok(GraphPainter.at([[0, 5], [1, 6], [2, 7]], 1.5)[1] === 6, 'the sample at or before a time'); ok(GraphPainter.at([[1, 6]], 0.5) === null, 'nothing before the first sample'); }
 
 // ---- a shorted-out part keeps both its leads when it is moved ----
 { const c = bench('blank'); const load = (net) => { c.circuit = L.Circuit.decode(net, Workbench.NC, Workbench.NR); c.sim.circuit = c.circuit; c.sim.reset(); };
@@ -252,7 +273,7 @@ ok(Fmt.signedA(-1e-7) === '0 mA' && Fmt.signedA(-0.02) === '−20 mA', 'signed z
 // ---- a meter's graph, opened part-way through a run, shows the run from its start ----
 { const b = bench('rc'), am = b.circuit.ofType(Ammeter)[0]; ok(!am.graph, 'RC preset opens with the graphs off'); run(b.sim, 2);
   b.toggleGraph(am); ok(am.graph && am.samples.length > 100 && am.samples[0][0] < 0.01, 'graph opened at t = 2 s has the trace from t = 0 (' + am.samples.length + ' samples from t = ' + am.samples[0][0] + ')');
-  near(Math.abs(am.samples[0][1]), 6 / 220, 2e-3, 'starting at the full charging current');
+  near(Math.abs(am.samples[0][1]), 6 / 4700, 1e-4, 'starting at the full charging current');
   b.toggleGraph(am); b.toggleGraph(am); ok(am.samples[0][0] < 0.01, 'closing and re-opening the graph keeps it'); b.sim.reset(); ok(am.samples.length <= 1, 't = 0 clears it'); }
 
 // ---- a detour may end on the wire that already leads to where it was aimed ----
@@ -265,4 +286,31 @@ ok(Fmt.signedA(-1e-7) === '0 mA' && Fmt.signedA(-0.02) === '−20 mA', 'signed z
   // dragging between two points that a wire already joins is still refused, not re-routed
   const n2 = b.circuit.wires.length; ok(b.circuit.detour(P.of(19, 12), P.of(17, 15)) === null, 'no detour between points already joined by wire'); ok(b.circuit.wires.length === n2, 'and nothing added'); }
 
+// ---- F40: a turn is the turn asked for, or nothing ----
+// (Seth, 2026-11-10: "rotate left wasn't acting consistently". A wired part used to fall back to
+//  the opposite quarter turn, or to a turn about one end, whenever its wires could not follow:
+//  a third of all turns on the presets were not the turn asked for.)
+{ const seqs = [[1, 1, 1, 1], [-1, -1, -1, -1], [1, -1, 1, -1], [-1, 1, -1, 1], [1, 1, -1, -1], [-1, -1, 1, 1]]; let turns = 0, refused = 0;
+  for (const name of ['single', 'series', 'parallel', 'bridge', 'rc', 'rl', 'rlc']) { const count = PRESETS.build(name).parts.length;
+    for (let idx = 0; idx < count; idx++) for (const seq of seqs) { const b = bench(name), c = b.circuit, el = c.parts[idx]; if (!el.info.rotatable) continue;
+      const home = JSON.stringify(el.geometry()), tag = name + ' ' + el.type + '#' + idx + ' ' + seq.join(''); let all = true; b.select(el);
+      for (const d of seq) { const want = JSON.stringify(el.rotated(d)), was = c.encode(), r = b.rotate(d); turns++;
+        if (r.ok) ok(JSON.stringify(el.geometry()) === want, tag + ': the part was turned some other way'); else { refused++; all = false; ok(c.encode() === was, tag + ': a refused turn changed the circuit'); ok(b.notice && b.notice.bad, tag + ': a refused turn says why'); }
+        ok(b.turn && b.turn.id === el.id && b.turn.dir === d && b.turn.ok === r.ok, tag + ': the picture is told which way it turned');
+        clean(b, tag); ok(b.sol && b.sol.solved, tag + ': still solves'); }
+      if (all) ok(JSON.stringify(el.geometry()) === home, tag + ': four turns (or there and back) come home'); } }
+  ok(turns > 700 && refused < turns / 10, 'turns tried: ' + turns + ', refused: ' + refused); }
+// a wired battery turned half way round is reversed, and says so; the other way round it is reversed back
+{ const b = bench('series'), bat = b.circuit.ofType(Battery)[0], R = b.circuit.ofType(Resistor)[0], I0 = b.sol.current(R); b.select(bat);
+  b.rotate(1); near(b.sol.current(R), I0, 1e-9, 'a quarter turn leaves the circuit alone'); ok(!b.notice, 'and says nothing');
+  b.rotate(1); near(b.sol.current(R), -I0, 1e-9, 'a half turn reverses the battery'); ok(b.notice && !b.notice.bad && /other way round/.test(b.notice.text), 'and says so: ' + (b.notice && b.notice.text));
+  b.rotate(-1); b.rotate(-1); near(b.sol.current(R), I0, 1e-9, 'two turns back undo it'); }
+// a part with no direction is the same part end for end: a charged capacitor keeps its charge where it was
+{ const b = bench('rc'), cap = b.circuit.ofType(Capacitor)[0], R = b.circuit.ofType(Resistor)[0]; run(b.sim, 3); const drop = () => b.sol.drop(P.of(24, 11), P.of(24, 15)), v0 = drop(), I0 = b.sol.current(R);
+  ok(Math.abs(v0) > 3, 'charged: ' + v0); b.select(cap); const a0 = P.key(cap.a); b.rotate(-1); b.rotate(-1); ok(P.key(cap.b) === a0, 'turned end for end');
+  near(drop(), v0, 1e-6, 'the same plate is still the positive one'); near(b.sol.current(R), I0, 1e-6, 'and the current did not jump'); ok(!b.notice, 'nothing to report: ' + (b.notice && b.notice.text)); }
+{ const b = bench('rl'), ind = b.circuit.ofType(Inductor)[0], sw = b.circuit.ofType(Switch)[0], R = b.circuit.ofType(Resistor)[0]; if (!sw.closed) b.toggle(sw); run(b.sim, 2); const I0 = b.sol.current(R);
+  ok(Math.abs(I0) > 0.3, 'current built up: ' + I0); b.select(ind); b.rotate(-1); b.rotate(-1); near(b.sol.current(R), I0, 1e-6, 'an inductor turned end for end carries on'); ok(!b.notice, 'no spark: ' + (b.notice && b.notice.text)); }
+
 console.log(bad ? bad + ' of ' + n + ' FAILED' : 'fixes: all ' + n + ' checks passed');
+process.exit(bad ? 1 : 0);

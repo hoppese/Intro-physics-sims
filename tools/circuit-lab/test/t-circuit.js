@@ -50,10 +50,17 @@ function loop() {
   for (const [dc, dr] of walk) { c.move(c.byId(b.id), dc, dr); ok(c.problems().length === 0 && sig(c) === s0, 'T4 battery move ' + dc + ',' + dr + ' ' + c.problems()); }
 }
 // ---- T5 rotate x4 comes home ----
+// (a half turn of a part wired in line exchanges its ends: see Circuit.rotate)
 {
+  const swapEnds = (list, id) => list.map((l) => l.map((t) => t === id + ':a' ? id + ':b' : t === id + ':b' ? id + ':a' : t).sort());
   for (const dir of [1, -1]) { const { c, r, b } = loop(); const s0 = sig(c);
-    for (const el of [r, b]) { const g0 = JSON.stringify(c.byId(el.id).geometry());
-      for (let i = 0; i < 4; i++) { const res = c.rotate(c.byId(el.id), dir); ok(res.ok, 'T5 rotate ' + el.type + ' #' + i + ' dir ' + dir + ': ' + res.why); ok(c.problems().length === 0, 'T5 problems ' + c.problems()); ok(sig(c) === s0, 'T5 wiring changed by rotate'); }
+    for (const el of [r, b]) { const g0 = JSON.stringify(c.byId(el.id).geometry()); let swaps = 0;
+      for (let i = 0; i < 4; i++) { const x = c.byId(el.id), want = JSON.stringify(x.rotated(dir)), before = c.netSignature(null), res = c.rotate(x, dir);
+        ok(res.ok, 'T5 rotate ' + el.type + ' #' + i + ' dir ' + dir + ': ' + res.why); ok(c.problems().length === 0, 'T5 problems ' + c.problems());
+        ok(JSON.stringify(x.geometry()) === want, 'T5 ' + el.type + ' turned the way asked'); if (res.swapped) swaps++;
+        ok(Circuit.compatible(res.swapped ? swapEnds(before, x.id) : before, c.netSignature(null), false), 'T5 wiring changed by rotate'); }
+      ok(swaps === 2, 'T5 ' + el.type + ': two of the four turns are end for end, got ' + swaps);
+      ok(sig(c) === s0, 'T5 the circuit is the same after four turns');
       ok(JSON.stringify(c.byId(el.id).geometry()) === g0, 'T5 ' + el.type + ' back home after 4 turns: ' + JSON.stringify(c.byId(el.id).geometry()) + ' vs ' + g0); } }
 }
 // ---- T6 splice by dropping a part onto a wire ----
@@ -136,9 +143,10 @@ function loop() {
       worst = Math.max(worst, Date.now() - t0); moves++; if (!res.ok) { refused++; ok(c.encode() === enc0, 'T12 refused edit changed the circuit (' + res.why + ')'); }
       const p = c.problems(); ok(p.length === 0, 'T12 trial ' + trial + ' step ' + step + ' op ' + op + ': ' + p.slice(0, 3).join('; ') + '\n  before ' + enc0 + '\n  after  ' + c.encode());
       if (op === 8 && !(el instanceof ThrowSwitch)) ok(wiresOf(c) === w0, 'T12 a/b flip moved wires');
-      else ok(Circuit.compatible(before, c.netSignature(null), !!(res.ok && res.spliced)), 'T12 wiring changed, trial ' + trial + ' step ' + step + ' op ' + op + ' ok=' + res.ok + ' el=' + el.type + el.id + '\n  before ' + enc0 + '\n  after  ' + c.encode());
+      else ok(Circuit.compatible(res.ok && res.swapped ? before.map((l) => l.map((t) => t === el.id + ':a' ? el.id + ':b' : t === el.id + ':b' ? el.id + ':a' : t).sort()) : before, c.netSignature(null), !!(res.ok && res.spliced)), 'T12 wiring changed, trial ' + trial + ' step ' + step + ' op ' + op + ' ok=' + res.ok + ' el=' + el.type + el.id + '\n  before ' + enc0 + '\n  after  ' + c.encode());
       if (fails > 12) break; }
     if (fails > 12) break; }
   console.log('fuzz: ' + moves + ' edits, ' + refused + ' refused, slowest ' + worst + ' ms');
 }
 console.log(fails ? fails + ' FAILED of ' + checks : 'all ' + checks + ' checks passed');
+process.exit(fails ? 1 : 0);

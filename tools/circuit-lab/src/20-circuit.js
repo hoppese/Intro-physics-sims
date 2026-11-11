@@ -13,8 +13,9 @@
 //   * every wire is horizontal or vertical, on the grid;
 //   * a wire never lies on a part's body and never touches the inside of one;
 //   * two parts never overlap;
-//   * moving / rotating / flipping a part never changes what its wired
-//     terminals are connected to -- the wires are re-routed to follow it.
+//   * moving or turning a part never changes what its wired terminals are
+//     connected to -- the wires are re-routed to follow it. (The exceptions
+//     are deliberate: Flip, and a half turn in place; see rotate.)
 // Every edit is all-or-nothing: it returns {ok:false, why} and leaves the
 // circuit exactly as it was when it cannot be done legally.
 // =====================================================================
@@ -243,18 +244,37 @@ class Circuit {
   // ---- part edits ----
   insert(el) { return this.reshape(el, el.geometry()); }
   move(el, dc, dr) { if (el.isWire) return this.moveWire(el, dc, dr); return this.reshape(el, el.translated(dc, dr)); }
-  // A quarter turn. Rotation is a layout change, never an electrical one: each
-  // terminal stays on its own net. So when the turned part would land with its
-  // ends on each other's wires (a half turn of a part wired in line), the same
-  // footprint is used the other way round -- which is the tidy drawing of the
-  // same circuit. To reverse a battery or meter electrically, use Flip.
+  // A quarter turn about the part's own middle, in the direction asked. What is
+  // drawn afterwards is always that turn, or the part does not move at all:
+  // the same key never turns a part one way now and the other way later.
+  // The wires follow the terminals, so the circuit is unchanged -- when they
+  // can. Half way round, a part wired in line sits on its old footprint with
+  // its ends exchanged: the wires cannot follow that, or can only by each
+  // running the length of the part to reach the far end (`crossed`). The part
+  // is then turned end for end under its wires instead, as it would be on a
+  // bench. That reverses a battery or a meter (`reversed`: the caller says
+  // so) and changes nothing at all for a part with no direction, whose state
+  // is carried over (turnEndForEnd). A turn there is no room for is refused,
+  // with the reason.
   rotate(el, dir) { if (!el.info.rotatable) return { ok: false, why: 'cannot be rotated' };
-    const first = el.rotated(dir), r = this.reshape(el, first); if (r.ok) return r;
-    const other = el.rotated(-dir), foot = (g) => el.clone().setGeometry(g).bodyPoints().map(P.key).sort().join(' ');
-    if (foot(other) === foot(first)) { const r2 = this.reshape(el, other); if (r2.ok) return r2; }
-    // no room about the middle: try turning about either end before giving up
-    for (const f of el.terminalFields()) { const g = el.geometry(); for (const k in g) g[k] = P.turn(g[k], el[f], dir); const r3 = this.reshape(el, g); if (r3.ok) return r3; }
-    return r; }
+    const want = el.rotated(dir), pl = this.plan(el, want);
+    if (pl.ok && !this.crossed(el, want, pl)) return this.reshape(el, want);
+    const back = { a: want.b, b: want.a }, foot = (g) => el.clone().setGeometry(g).bodyPoints().map(P.key).sort().join(' ');
+    if (el.fields().length !== 2 || foot(back) !== foot(want) || !this.reshape(el, back).ok) return pl.ok ? this.reshape(el, want) : pl;
+    el.setGeometry(want); el.turnEndForEnd();
+    return { ok: true, el, swapped: true, reversed: el.flipChoices().length > 0 }; }
+  // Would this placement leave a two-ended part wired back to front: each wired
+  // end's wiring starting on the far side of the part's middle? ("Starts":
+  // where the lead the sim lays to follow the part meets the rest of the wire.)
+  crossed(el, geom, pl) { if (el.fields().length !== 2) return false;
+    const E = pl.edges, others = this.terminalMap(el), mid = { c: (geom.a.c + geom.b.c) / 2, r: (geom.a.r + geom.b.r) / 2 }, u = { c: Math.sign(geom.b.c - geom.a.c), r: Math.sign(geom.b.r - geom.a.r) };
+    const root = (p) => { let k = P.key(p), from = null; if (others.has(k)) return p;
+      for (let guard = 0; guard < 600; guard++) { const o = P.parse(k), nb = [];
+        for (const q of [P.add(o, 1, 0), P.add(o, -1, 0), P.add(o, 0, 1), P.add(o, 0, -1)]) { const e = P.edge(o, q); if (E.has(e) && e !== from) nb.push({ e, k: P.key(q) }); }
+        if (!nb.length && from === null) return null; if (nb.length !== 1 || !pl.auto.has(nb[0].e)) break; from = nb[0].e; k = nb[0].k; if (others.has(k)) break; }
+      return P.parse(k); };
+    const side = (p) => (p.c - mid.c) * u.c + (p.r - mid.r) * u.r, ra = root(geom.a), rb = root(geom.b);
+    return (!!ra || !!rb) && (!ra || side(ra) > 0) && (!rb || side(rb) < 0); }
   flip(el) { const choices = el.flipChoices(); if (!choices.length) return { ok: false, why: 'has no flip' };
     const pts = (o) => o.terminals().map((t) => P.key(t.p)).sort().join(' '); let first = null;
     for (const g of choices) { const ghost = el.clone().setGeometry(g);
