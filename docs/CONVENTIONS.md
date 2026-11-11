@@ -280,11 +280,22 @@ it works with each sim's own camera — perspective or orthographic.
 - **A bounded scene fills its canvas.** A scene with a natural size (one
   loop, one magnet, a ring of charges, an orbit) is authored for its
   design-size canvas and scaled by `G3.fit(w,h,w0,h0)` — or the 2D
-  equivalent, a `_fs=W/W0` factor in the scene transform, as in
+  equivalent, a `_fs=min(W/W0, H/H0)` factor in the scene transform, as in
   `keplers-laws` — so the Bigger view actually gets bigger and a narrow
   phone canvas doesn't clip. Only genuinely unbounded scenes (2D field
   grids, the charge-placement planes) keep the older "wider canvas shows
   more scene" behaviour.
+- **A canvas is never stretched.** The resize handle can give a
+  `data-ob-responsive` canvas any shape, so its drawing buffer is sized from
+  the canvas's real width *and* height (`getBoundingClientRect` /
+  `clientWidth` + `clientHeight`), never from the width and a fixed aspect
+  ratio, and the scene is scaled by one factor and centred in the room left
+  over. A layout with a smallest drawable size does not clamp the buffer to
+  that size (that squashes the picture when the canvas is smaller): it
+  shrinks everything by one factor `k=min(1, w/minW, h/minH)` in the
+  context transform, as in `rc-charging`. Check: after dragging the handle
+  to a wide, short shape, `canvas.width/canvas.height` must equal the
+  canvas's on-screen width/height — text is the first thing to look wrong.
 
 ## Circuit Lab grid rules
 
