@@ -300,6 +300,62 @@ it works with each sim's own camera — perspective or orthographic.
   allowed to carry one real diagonal segment. Nothing else gets this
   exception — every other component stays axis-aligned end to end.
 
+### Circuit Lab code
+
+- **Source of truth is `tools/circuit-lab/src/`**, one class per concern
+  (see the README there). Edit those files and run
+  `sh tools/circuit-lab/build.sh`; never edit the bundle's script directly.
+- **A kind of part is a class.** Everything that differs from part to part
+  (shape, rotate/flip, electrical behaviour, value range, menu entry,
+  share-link letter) lives in its `Element` subclass and its `Painter`. No
+  `if (type === ...)` chains anywhere else.
+- **A bug found by hand gets a test** in `tools/circuit-lab/test/t-fixes.js`
+  before it is fixed.
+
+### Circuit Lab behaviour (settled 2026-11-10; change deliberately)
+
+- **Pointer**: click a part's body = select only. Click a terminal or a
+  wire = voltage probe. A switch toggles only on its lever or contact
+  rings. Drag from a grid dot or terminal = lay wire; drag a part = move it
+  (its wires follow). A refused action says why on the canvas and a
+  refused drop snaps back. Escape cancels a drag and closes any dialog.
+- **Touch**: one finger does what the mouse does, with bigger hit targets
+  and a 9 px tap tolerance. Two fingers pinch-zoom and pan; a second
+  finger landing mid-drag cancels the drag.
+- **Wheel**: zooms the canvas only when the sim is the whole page. Inside
+  a frame (Moodle embed) the wheel scrolls the page; pinch or Ctrl/⌘+wheel
+  zooms. Never trap page scroll.
+- **View**: follows the circuit automatically (re-fits when a part leaves
+  the canvas or lands under the zoom control) until the user zooms or
+  pans; the fit button turns that back on. The board can't be dragged off
+  the canvas. Fit never exceeds 100 % on the normal canvas.
+- **Wires**: an auto-routed wire takes the elbow that fits, else goes
+  round the part in the way, else is refused. It may end on the wire
+  already leading to the point aimed at. Dropping an ammeter on a wire
+  puts it in-line; deleting it closes the wire again. "Clean up circuit"
+  straightens parts and includes the wire clean-up.
+- **Rotate vs. Flip**: rotate changes layout only; Flip changes polarity /
+  which way a part faces. Flip on a symmetric part (resistor) does nothing
+  and records no undo step.
+- **Undo** covers every layout edit including presets / New / Clear;
+  arrow-key nudges of one part within 1.5 s are one step. What a part is
+  doing right now (charge, switch position, meter trace) is not layout and
+  is left alone by undo.
+- **Time**: throwing a switch restarts the clock at t = 0 while the meter
+  graph stays continuous (earlier time shows as negative t). Meters record
+  all the time, so a graph opened mid-run shows the run from its start.
+- **Labels**: never on a wire, never on the far side of another part,
+  slide along the part before giving up; grid dots hide behind them. A new
+  part is placed with a clear grid row/column around it.
+- **Numbers**: currents in mA below 1 A (graph axis switches to A at
+  1 A); worked examples quote currents in mA and τ to 3 figures; no preset
+  or worked example may give a computed answer of exactly 1 (see
+  `avoid-exactly-one` memory).
+- **Hide-solution mode**: readings show "?", a hidden meter's graph trace
+  and a capacitor's polarity marks are hidden too. The share dialog's
+  "start hidden" box starts at the current mode and the link follows the
+  box.
+
 ## Process conventions (how, not what)
 
 - **Bundle editing**: sims are generated single-file bundles — extract,
@@ -309,7 +365,8 @@ it works with each sim's own camera — perspective or orthographic.
   does the extract, kit re-inline, syntax check, escaping and round-trip
   verification in one step. It cannot see pixels: always open the sim
   afterwards, with a fresh `?v=N` so the browser doesn't serve the old
-  bundle.
+  bundle. `circuit-lab` is the exception: its script is built from
+  `tools/circuit-lab/src/` (see **Circuit Lab code** above).
 - **Content audits**: Info-panel formulas + worked examples get hand
   fact-checked in passes; status tracked in `content-audit-status` memory,
   writeups in `docs/*.html`.
