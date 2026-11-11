@@ -151,6 +151,18 @@ one, check it against this list.
   Prefer 10.5–11px for tick/reference labels and reserve anything smaller
   for truly secondary annotations.
 
+- **Overlay buttons (zoom −/+/1:1) are part of the collision problem.**
+  They are HTML positioned over the canvas, so the canvas code can't see
+  them. Keep canvas captions out of the corner they sit in (bottom
+  captions are left-aligned for this reason), put the buttons in the top
+  corner when the bottom edge carries axis numbers (`center-of-mass`), and
+  give the canvas column `align-self:flex-start` so a taller side panel
+  can't stretch it and leave the buttons floating below the canvas
+  (`lorentz-force`, `radiation-wiggling-charge`). Added 2026-11-10.
+- **Read-outs anchored to a canvas edge use the live size** (`this._W-12`),
+  never a literal from the design size (`354`), or they drift into the
+  middle of the enlarged canvas.
+
 ## Visual polish (lighting/shading)
 
 Set 2026-11-08, piloted on one sim from each of three different categories
@@ -225,6 +237,55 @@ recipe per sim; the point is a consistent house style, not individually
   per the earlier electrostatics-family pass, but don't turn them into
   heavy glossy spheres — they're meant to read as symbols, not objects).
 
+## 3D scenes (the G3 kit)
+
+Set 2026-11-10. Every sim with a 3D-projected canvas draws through one
+shared helper block, `G3`, inlined ahead of `class Component` between
+`/* G3-KIT-BEGIN … G3-KIT-END */`. The source of truth is
+`tools/g3-kit.js`; **never edit an inlined copy** — edit the kit, then run
+`python3 tools/sim-script.py rekit` (and `check` to confirm every sim is in
+sync). Sims on the kit: `discrete-charge-builder-3d`,
+`discrete-current-builder-3d`, `magnetic-field-3d`, `moving-charge-field`,
+`field-line-density-3d`, `faraday-induction`, `faraday-flux-explorer`,
+`gauss-flux`, `gauss-applications`, `current-loop-motor`,
+`polarization-malus`, and the 3D mode of `electrostatics-explorer` (+ its
+two forks) and `field-superposition-explorer`.
+
+Everything in the kit takes a projector `P(world{x,y,z}) → {x,y,d,s}`
+(screen px, depth with larger = nearer the viewer, px per world unit), so
+it works with each sim's own camera — perspective or orthographic.
+
+- **Depth has to be readable without rotating.** Far things are dimmer and
+  thinner than near things (`G3.tubeD`, `G3.seg`, `G3.near`), and anything
+  that can pass behind something else is painter-sorted by `d` rather than
+  drawn in a fixed order. A ring or coil seen edge-on must overlap itself
+  correctly.
+- **Reference frame = `G3.grid` + `G3.axes`, not hand-drawn axis lines.**
+  The grid is a faint floor that fades with distance; the axes fade from
+  the negative end to a bright positive end with a cone tip, and put tick
+  numbers on round values only, dropping any that would collide or bunch
+  up. Pass `box:{w,h}` so the tips stay inside the canvas, and
+  `avoid:[{x,y,w,h},…]` (screen-space centre + size) for scene labels the
+  tick numbers must keep clear of.
+- **Vectors are `G3.arrow3`** (world → world): the cone head foreshortens,
+  and an arrow pointing away from the viewer shows the cone's dark base, so
+  toward/away is visible. Glow (`glow:`) only on the hero vector, as in
+  the 2D rule above.
+- **Solid objects are lit from the upper left**: `G3.sphere` for balls and
+  charges, `G3.tube` for wires/rods, `G3.surface` for translucent discs,
+  plates and Gaussian caps. Point charges stay light glyphs (small sphere +
+  sign), not heavy glossy balls.
+- **Every label on a 3D canvas goes through `G3.label`** (dark halo), since
+  in 3D a label can end up over any line at some camera angle.
+- **A bounded scene fills its canvas.** A scene with a natural size (one
+  loop, one magnet, a ring of charges, an orbit) is authored for its
+  design-size canvas and scaled by `G3.fit(w,h,w0,h0)` — or the 2D
+  equivalent, a `_fs=W/W0` factor in the scene transform, as in
+  `keplers-laws` — so the Bigger view actually gets bigger and a narrow
+  phone canvas doesn't clip. Only genuinely unbounded scenes (2D field
+  grids, the charge-placement planes) keep the older "wider canvas shows
+  more scene" behaviour.
+
 ## Circuit Lab grid rules
 
 - **Every component endpoint lands exactly on a grid point.** No node may
@@ -243,7 +304,12 @@ recipe per sim; the point is a consistent house style, not individually
 
 - **Bundle editing**: sims are generated single-file bundles — extract,
   edit, re-splice, verify (JSON reparse, tag balance, `node --check`, zero
-  literal `</`). See `sims-are-generated-bundles` memory.
+  literal `</`). See `sims-are-generated-bundles` memory. For script-only
+  changes `tools/sim-script.py extract <slug>` / `apply <slug> <file.js>`
+  does the extract, kit re-inline, syntax check, escaping and round-trip
+  verification in one step. It cannot see pixels: always open the sim
+  afterwards, with a fresh `?v=N` so the browser doesn't serve the old
+  bundle.
 - **Content audits**: Info-panel formulas + worked examples get hand
   fact-checked in passes; status tracked in `content-audit-status` memory,
   writeups in `docs/*.html`.
@@ -287,6 +353,18 @@ Log what the audit found (even "nothing found") as a dated note in
 known-clean date.
 
 ## Known gaps (not yet fixed, don't re-discover these)
+
+- Seen in the 2026-11-10 graphics pass and left alone (small, or needs a
+  decision): `mirror-ray-tracer` "C" and "object" labels run together when
+  the object sits near C; `magnetic-field-of-currents` edge tick "16" is
+  clipped; `thin-film-interference` legend overlaps the plot curve;
+  `rail-flux-bar` "B_ind ⊗ in" label sits on the top rail; `rc-charging`
+  τ labels crowd the axes; `relative-velocity` vector labels still crowd
+  when the vectors are nearly parallel; `lorentz-force` energy read-out
+  box touches the first E-field arrow; `electroscope` is the plainest sim
+  in the catalog (its replacement is Charged Objects Explorer);
+  `pe-vs-separation` formula hints still write `k q₁q₂ / r` (see the
+  Coulomb's-constant rule under Notation).
 
 - `written-hw-1-solutions.pdf` / `written-hw-2-solutions.pdf` use `K`
   throughout (pre-existing, uploaded PDFs, no LaTeX source in the repo).
