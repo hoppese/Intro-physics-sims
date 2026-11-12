@@ -39,6 +39,14 @@
   "synthesis": 10
  },
  "entries": {
+  "2026-11-11": {
+   "covered": "Started with the kickoff (KO28), which needed the motional-EMF formula ε = BLv -- had to hand it to them, and only derived it after the kickoff was over. Asked for homework questions: one, on the HW9 problem (pushed to tonight) about the acceleration of a proton in a changing magnetic field -- the changing B induces an E field, which hadn't been covered yet, so the answer had to wait. Then: the current induced in a wire loop moving through a region of magnetic field -- one direction as it enters, the other as it leaves, none while it is fully inside or fully outside. Used that as the way in to the induced electric field: a changing B field induces an E field even when there is no wire, and this is a different case from the moving loop -- when the loop moves you can get the EMF from the Lorentz force, but when the loop sits still and B changes you have to use Faraday's law directly. That answered the student's proton question. Came back to the loop moving through the field to show where the braking forces come from, then did two eddy-current demos: a small pendulum swinging through a magnet, and a magnet dropped through a pipe.",
+   "cut": "The demo of a magnet moved in and out of a coil of wire producing an EMF -- no time. Doing it Friday Nov 13.",
+   "landed": "Both eddy-current demos (pendulum through a magnet, magnet dropped through a pipe) -- great, keep them. The moving-loop picture (enter / inside / leave) worked as the lead-in to both the induced E field and the braking force.",
+   "struggled": "The kickoff asked for ε = BLv before it had been derived in class, so the formula had to be given cold.",
+   "nextYear": "Don't put ε = BLv on a kickoff before students have seen where it comes from. Either derive it the class before, or have them watch a short video on the moving bar ahead of time (not sure which). Also teach the induced E field before the homework problem that needs it comes due (the proton in a changing B field).",
+   "notes": "The homework question could not be answered when it was asked because it depended on material planned for later in the same class."
+  },
   "2026-11-09": {
    "covered": "Quick kickoff. Then built up magnetic force conceptually: force on a single charge moving right through a field into the board, then two charges, then three, generalizing to a current. Showed that a bar moving right induces a counterclockwise current, then looked at the reverse case and the induced B field it creates. Introduced the idea that nature abhors a change in flux, with a qualitative example of a changing B field and which way it induces a current. Introduced Faraday's law as ΔΦ/Δt (deliberately without derivatives), working a numerical example with B at one time, B at another, and the time between -- which also required talking through the angle. Students worked in groups of 3-4.",
    "struggled": "Didn't realize until partway through that the algebra-track students hadn't seen electric flux yet, so they were a step behind when magnetic flux was introduced.",
@@ -299,6 +307,24 @@
    "unit": "waves",
    "usedOn": null,
    "note": "Per Seth 2026-10-01: the only waves-unit physical demo actually used this year. Exact class date not yet confirmed."
+  },
+  {
+   "name": "Eddy-current pendulum",
+   "unit": "induction",
+   "usedOn": "2026-11-11",
+   "note": "Small pendulum swinging through a magnet; eddy-current braking. Per Seth 2026-11-11: great demo. Shown right after working out the braking force on a loop moving through a field."
+  },
+  {
+   "name": "Magnet dropped through a pipe",
+   "unit": "induction",
+   "usedOn": "2026-11-11",
+   "note": "Magnet falls slowly through a conducting pipe; eddy-current braking. Per Seth 2026-11-11: great demo. Paired with the eddy-current pendulum."
+  },
+  {
+   "name": "Magnet in and out of a coil",
+   "unit": "induction",
+   "usedOn": null,
+   "note": "Moving a magnet in and out of a coil of wire gives an EMF. Planned for 2026-11-11 but cut for time; planned for Fri 2026-11-13. Set usedOn once it has happened."
   }
  ],
  "demosWishlist": [
