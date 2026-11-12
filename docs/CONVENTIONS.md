@@ -68,6 +68,29 @@ recorded here.
   (Lorentz-force, moving-charge sims, etc.) must start paused on load/reset,
   with a "▶ Run" button the student clicks to start it — never auto-play.
   (Fixed 2026-10-28 in `lorentz-force`: `reset()` was setting `running=true`.)
+  Settled in the 2026-11-11 catalog pass:
+  - The button reads exactly **"▶ Run"** and **"❚❚ Pause"** (one space), in
+    every sim including Circuit Lab. Not Play, Start, or Go. A button that
+    performs one named action keeps its verb (Charge, Discharge, Release,
+    "Bring in q₃").
+  - Paused means a frozen frame of the same scene, not a blank or a
+    different view. Reset returns to that paused frame.
+  - Dragging an object and letting go may start the motion (a pendulum bob,
+    a dipole): the student has asked for it.
+  - Check it by script, not by eye: load, hash the canvas twice (must
+    match), click Run (label flips, canvas changes), click Reset (label
+    back, canvas still).
+- **A hidden-values problem hides the answer everywhere.** When "Random
+  problem" hides a result in the panel, the canvas must not print the same
+  number in a read-out or label (`rail-flux-bar` did).
+- **A zero reads "0 unit"** ("0 J"), never "0.00×10⁰ J" or "−0.0 mJ".
+- **Number, space, unit** ("+10 A", "5.0 cm"); the degree sign is the only
+  unit that touches its number.
+- **No e-notation anywhere a student reads** ("5.2e-3"). Use ×10ⁿ, or an
+  SI prefix (mJ, µT), or a scaled axis title ("U (×10⁻⁶ J)") for a column
+  of ticks.
+- **URL parameters are clamped** to the same range as the control they set,
+  so a bad link cannot open a state the controls could never reach.
 - **Per-embed mode/preset via URL query param.** A sim used in more than one
   context (e.g. a multi-mode sim embedded in different Preps) should read its
   initial mode/preset from the query string (`?mode=circle`) via a
@@ -161,6 +184,37 @@ one, check it against this list.
   never a literal from the design size (`354`), or they drift into the
   middle of the enlarged canvas.
 
+Added in the 2026-11-11 catalog pass:
+
+- **Labels have a pecking order, and the lower one gives way.** Scene
+  labels and the head read-out stay put; axis names and tick numbers are
+  skipped (not nudged) wherever they would touch a scene label, a mark, a
+  drawn boundary or the head read-out (`tickFree` in `ampere-loop`; the
+  ring ticks in `gauss-applications`; the top y tick and the x-axis name in
+  `electrostatics-explorer`). A missing tick number costs nothing; two
+  numbers printed on top of each other cost both.
+- **Draw a label after everything that could cover it.** Collect labels
+  while drawing the scene and paint them last (`pairLabels` in
+  `assembling-charges`, which used to be painted under the charges).
+- **A label that belongs to a line clears its own line**, by half its box
+  along the normal plus 3 px, on the side facing away from the rest of the
+  group. When several are placed, test each candidate against the boxes of
+  every object, every object name and every label already placed, and take
+  the first that is free.
+- **A label next to an object chooses its side.** Try below, above, right,
+  left and score each by clearance from the boundary, the other objects and
+  the labels already placed (`wireLabels` in `ampere-loop`). A fixed
+  "always below" is how a label ends up straddling the Amperian loop.
+- **Distances between collinear objects are dimension brackets**, stacked
+  with the shortest span nearest the objects. Labels at the midpoints of
+  overlapping spans cannot be told apart.
+- **Subscripts are real subscripts.** On canvas use the Unicode subscript
+  (q₁, I₂) or a smaller offset glyph; never a full-size digit ("q1") or an
+  underscore.
+- **The default state of every scene is drawn clean.** No conductor, mark
+  or label sits on a boundary the student is about to count against
+  (`ampere-loop` now has a default loop per scene for this reason).
+
 ## Canvas text and symbol sizes
 
 Written 2026-11-11 after `faraday-flux-explorer`'s into-the-page marks and
@@ -187,6 +241,13 @@ canvas multiply by the sim's label scale (`LK`, the clamped square root of
 - **Text anchored to opposite corners must not be able to meet.** Measure
   both; when the canvas is too narrow, shorten the less important one
   (drop the value in brackets) and never let them overlap.
+- **A sign drawn inside a charge dot is a mark, not text**, and is sized to
+  the dot (the `bold 9px` "+" / "−" in `gauss-applications`' small dots is
+  the one size under 10.5 px left in the catalog, on purpose).
+- **Ticks on a small inset graph** may use the 10.5 px floor; ticks on the
+  main scene use 11 px.
+- The whole catalog was brought to this table on 2026-11-11. A new grep hit
+  under 10.5 px is a regression, not a leftover.
 
 ### Into / out of the page (⊗ and ⊙)
 
@@ -207,6 +268,13 @@ canvas multiply by the sim's label scale (`LK`, the clamped square root of
 - **Marks keep ≥ 2.2 r between centres** at the densest setting; if the
   densest setting cannot afford that, lower the density constant, not the
   mark size.
+- **Exception: a wire drawn in cross-section.** The large disc that *is*
+  the conductor (R ≈ 12 in `ampere-loop` and `magnetic-field-of-currents`)
+  and the torque glyph in `dipole-field-and-torque` (R = 9) keep their own
+  drawing, with the dot or cross inside at the same proportions. Small
+  repeated marks (solenoid turns, field lattices) always use `G3.pageMark`.
+- **Marks whose size encodes strength** (the B marks in
+  `radiation-wiggling-charge`) never fade below 0.4 alpha.
 
 ### Field marks and a boundary: always clearly in or out
 
@@ -474,6 +542,13 @@ it works with each sim's own camera — perspective or orthographic.
   Sun/Tue/Thu cadence; see `phys-prep-vetting-check` memory. Report-only —
   never edit `data/schedule.json` or write to Moodle without being asked.
 
+- **Patching a bundle: print the slice before anchoring on it.** A sim's
+  script may hold a character as itself (`−`) or as an escape (`\u2212`),
+  and the form can change after `sim-script.py` rewrites the bundle. An
+  exact-string patch written from memory fails on the second run.
+- **Screenshot checks need a cache-buster that no sim reads.** Use `_cb=`;
+  `v=` is a real parameter in several sims.
+
 ## Monthly audit checklist
 
 Run this against the sim catalog roughly once a month (or after a batch of
@@ -501,6 +576,9 @@ only open a sim to confirm before fixing.
   `font='` sizes under 10.5 px and for a typed `⊗` / `⊙` / `\u2297` /
   `\u2299` in canvas text (outside the kit's own comment); check any hit
   against **Canvas text and symbol sizes** above.
+- [ ] **Run / Pause** — every sim with a Run button loads still, starts on
+  "▶ Run", reads "❚❚ Pause" while running, and is still again after Reset
+  (script it: hash the canvas before and after each click).
 - [ ] **Label collisions under stress** — on 2–3 recently-touched sims, drag
   objects together / add the max number of charges-sources / crank a
   slider to its extreme, and check for labels landing on each other, on a
@@ -515,25 +593,51 @@ known-clean date.
 
 ## Known gaps (not yet fixed, don't re-discover these)
 
-- Seen in the 2026-11-10 graphics pass and left alone (small, or needs a
-  decision): `mirror-ray-tracer` "C" and "object" labels run together when
-  the object sits near C; `magnetic-field-of-currents` edge tick "16" is
-  clipped; `thin-film-interference` legend overlaps the plot curve;
-  `rail-flux-bar` "B_ind ⊗ in" label sits on the top rail; `rc-charging`
-  τ labels crowd the axes; `relative-velocity` vector labels still crowd
-  when the vectors are nearly parallel; `lorentz-force` energy read-out
-  box touches the first E-field arrow; `electroscope` is the plainest sim
-  in the catalog (its replacement is Charged Objects Explorer);
-  `pe-vs-separation` formula hints still write `k q₁q₂ / r` (see the
-  Coulomb's-constant rule under Notation).
+Rewritten after the 2026-11-11 catalog pass. Everything in the earlier
+list was fixed in that pass except the entries repeated here.
 
-- Not yet brought up to **Canvas text and symbol sizes** (found by grep
-  2026-11-11, not opened): typed ⊗ / ⊙ glyphs in `rail-flux-bar`,
-  `lorentz-force` and `moving-charge-field`; canvas text under 10.5 px in
-  `gauss-applications`, `assembling-charges`, `relative-velocity`,
-  `moving-charge-field`, `magnetic-field-3d` and
-  `discrete-current-builder-3d`. Only `faraday-flux-explorer` has had its
-  sizes set by the table.
+Seen and left alone (small, or needs a decision from Seth):
+
+- `faraday-induction` and `circuit-lab-probe` still **auto-run on load**.
+  `faraday-induction` was held because Prep 27 (due 2026-11-13) tells
+  students to "press Reset and let the magnet run"; change it after that
+  prep closes. The Probe variant auto-runs by design; undecided.
+- `rc-charging`: the Run / Pause button reads "❚❚ Pause" on load although
+  nothing moves until Charge is pressed; its τ labels still crowd the axes.
+- **No "Random problem"**: `circuit-lab`, `circuit-lab-probe`,
+  `e-fields-conductors-and-insulators`, `magnetic-field-3d`,
+  `radiation-wiggling-charge`. **No "Worked example"**: `magnetic-field-3d`.
+- **Hyphen for a negative number** in several result pills ("-2.25 J",
+  "-339 N·m²/C") where other sims use a true minus ("−"). No rule yet.
+- `gauss-applications`: the "r = 10.0" label sits close to the E arrow tip.
+- `gauss-flux`: the "+3 nC" label is touched by the surface arrowheads.
+- `relative-velocity`: "current →" markers are still drawn when the river
+  speed is 0.
+- `thin-film-interference`: the "iridescent color" swatch is an odd blob.
+- `electrostatics-explorer`: the q₁ value label sits on the x axis; the
+  bottom tick "−40" is clipped by the canvas edge.
+- `dipole-field-and-torque`: unit labels read "×0.1 T" / "×0.1 A·m²".
+- `assembling-charges`: the frame is fixed for d = 12, so charges overlap
+  at small d; the "▶ Bring in q₃" button wraps to two lines.
+- `wave-explorer`, `oscillation-explorer`, `interference-explorer` redraw
+  through `forceUpdate` every 0.12 s rather than every frame (choppier than
+  the rest, and nearly invisible to a headless check).
+- `circuit-builder` canvas is not device-pixel-ratio scaled; several sims'
+  `applyUrlState` still accept unclamped values (only `rail-flux-bar` was
+  clamped).
+- `kinetic-theory-speeds`: upper canvas is blank in headless Chrome; not
+  yet confirmed in a real browser.
+- `electroscope` is the plainest sim in the catalog (its replacement is
+  Charged Objects Explorer).
+- Shell differences never audited: the mechanics sims' "↗ Share link" menu
+  row and their `big`-mode "Tools & help" dark sidebar; card widths differ
+  between families; `electrostatics-explorer` nests a card in a card; the
+  Circuit Lab family has its own toolbar and extra menu rows.
+- Hand-authored pages (`charged-objects-explorer`, `circuit-lab-scope`,
+  `master-schedule`, `math-practice/*`) are not bundles and were not
+  audited against this doc.
+- `prep26.xml` embeds `rail-flux-bar` at height 560; the card is about
+  490 px tall at an 800 px wrapper (gray band below). Prep already closed.
 
 - `written-hw-1-solutions.pdf` / `written-hw-2-solutions.pdf` use `K`
   throughout (pre-existing, uploaded PDFs, no LaTeX source in the repo).

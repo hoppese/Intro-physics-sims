@@ -80,7 +80,7 @@ class Panel {
       presetOpen: !!st.presetOpen, onTogglePreset: () => app.setState((s) => ({ presetOpen: !s.presetOpen, addOpen: false })), onClosePreset: set({ presetOpen: false }), presetItems, presetBtnStyle: UI.drop(st.presetOpen),
       onNewCircuit: () => { b.loadPreset('blank'); app.setState({ addOpen: false, presetOpen: false }); },
       onUndo: app.run(() => b.undo()), onRedo: app.run(() => b.redo()), undoStyle: UI.step(b.history.canUndo), redoStyle: UI.step(b.history.canRedo),
-      showTime: sim.timed, onPlay: app.run(() => { sim.playing = !sim.playing; }), playLabel: playing ? '❙❙ Pause' : '▶ Play',
+      showTime: sim.timed, onPlay: app.run(() => { sim.playing = !sim.playing; }), playLabel: playing ? '❚❚ Pause' : '▶ Run',
       playStyle: 'font-size:11px;font-weight:700;padding:6px 11px;border-radius:8px;cursor:pointer;border:1px solid ' + (playing ? '#bf8a1e' : '#5a9e3a') + ';background:' + (playing ? '#f6f0db' : '#eef7e6') + ';color:' + (playing ? '#8a6310' : '#4a8a2c') + ';',
       onResetTime: app.run(() => sim.reset()), timeStr: 't = ' + sim.shown.toFixed(2) + ' s',
       zoomBtns: [zoom('−', 'Zoom out', () => b.view.zoomBy(1 / 1.25)), zoom('⤡', 'Fit the circuit in view', () => b.fit()), zoom('+', 'Zoom in', () => b.view.zoomBy(1.25))], zoomPct: b.view.percent }; }
