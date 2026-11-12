@@ -74,7 +74,7 @@
 \begin{tabular}{@{}r@{\ \ }l@{\hspace{1.4em}}r@{\ \ }l@{\hspace{1.4em}}r@{\ \ }l@{}}
 $\vec B$ & magnetic field (T $=$ N/A$\cdot$m) & $I$ & current (A)                   & $\Phi_B$ & magnetic flux (Wb $=$ T$\cdot$m$^2$) \\
 $q$ & charge (C)                    & $n$ & turns per unit length (1/m)   & $\mathcal{E}$ & induced emf (V) \\
-$\vec v$ & velocity (m/s)            & $N$ & number of turns               & $\vec\mu$ & magnetic dipole moment (A$\cdot$m$^2$) \\
+$\vec v$ & velocity (m/s)            & $N$ & number of turns               & $\vec m$ & magnetic dipole moment (A$\cdot$m$^2$) \\
 $\theta$ & angle between the two vectors & $r,d$ & distance (m)             & $\mu_0$ & $4\pi\times10^{-7}$ T$\cdot$m/A \\
 $d\vec l$ & \multicolumn{5}{@{}l@{}}{the Biot--Savart differential: an infinitesimal piece of wire, carrying current $I$ -- the calculus limit of $\Delta\vec L$} \\
 \end{tabular}
@@ -85,17 +85,13 @@ $d\vec l$ & \multicolumn{5}{@{}l@{}}{the Biot--Savart differential: an infinites
 \input{magnetism-body}
 
 %========================================================
-% Calc-only: the actual path integral and the Biot--Savart differential.
-% PHYS 230 works entirely from the Sec.~2/3 given results and
-% enclosed-current counting; this is the machinery that produces them.
-\section{Doing the calculus: Biot--Savart \& Amp\`ere's law \quad {\normalfont\small (Knight 29.4--29.6)}}
+% Calc-only: the Biot--Savart differential, the machinery behind the
+% Sources section's given results. (Ampere's law was here too until
+% 2026-11-12; Seth is not testing it, so it is off both sheets.)
+\section{Doing the calculus: the Biot--Savart law \quad {\normalfont\small (Knight 29.4)}}
 \eqtab{
   \band{fundamental}
-  \R{Biot--Savart law --- field of a current element\newline\footnotesize(the calculus limit of Sec.~2's chop-and-add rule: $\Delta\vec L\to d\vec l$, sum $\to$ integral)}{d\vec B = \dfrac{\mu_0}{4\pi}\,\dfrac{I\,d\vec l \times \hat r}{r^{2}}\,,\qquad \vec B=\displaystyle\int d\vec B}
-  \R{Amp\`ere's law\newline\footnotesize(any closed loop; $I_{\text{enc}}$ is the \emph{signed} current through the loop -- this is the formal version of Sec.~3's "only enclosed current matters")}{\oint \vec B \cdot d\vec l = \mu_0 I_{\text{enc}}}
-  \band{derived}
-  \R{Evaluating an Amperian-loop integral\newline\footnotesize(pick a loop where $B$ is constant and $\parallel$ to $d\vec l$ everywhere)}{\oint \vec B\cdot d\vec l = B\!\oint dl = B\,L_{\text{loop}} \ \Rightarrow\ B=\dfrac{\mu_0 I_{\text{enc}}}{L_{\text{loop}}}}
-  \R{Current entirely outside the loop}{\oint \vec B \cdot d\vec l = 0}
+  \R{Biot--Savart law --- field of a current element\newline\footnotesize(the calculus limit of Sec.~\ref{sec:sources}'s chop-and-add rule: $\Delta\vec L\to d\vec l$, sum $\to$ integral)}{d\vec B = \dfrac{\mu_0}{4\pi}\,\dfrac{I\,d\vec l \times \hat r}{r^{2}}\,,\qquad \vec B=\displaystyle\int d\vec B}
 }
 
 %========================================================
@@ -104,12 +100,12 @@ $d\vec l$ & \multicolumn{5}{@{}l@{}}{the Biot--Savart differential: an infinites
   \bonusband{torque $\leftrightarrow$ energy}
   \R{Torque is the (negative) slope of $U$ with respect to angle\newline\footnotesize(same relationship as $F_x=-dU/dx$ on the electrostatics sheet, just swap position for angle)}{\tau_\theta = -\dfrac{dU}{d\theta}}
 }
-{\footnotesize\color{bonus} Check it: $U=-\mu B\cos\theta \Rightarrow -dU/d\theta = -\mu B\sin\theta$, which matches $|\vec\tau|=\mu B\sin\theta$ (Sec.~4) up to the sign convention for which way $\theta$ increases.}
+{\footnotesize\color{bonus} Check it: $U=-mB\cos\theta \Rightarrow -dU/d\theta = -mB\sin\theta$, which matches $|\vec\tau|=mB\sin\theta$ (Sec.~\ref{sec:dipoles}) up to the sign convention for which way $\theta$ increases.}
 
 \vfill
 {\footnotesize\color{gray}\raggedright
 Companion simulations at \texttt{hoppese.github.io/Intro-physics-sims/}\,:
-\texttt{moving-charge-field}, \texttt{magnetic-field-of-currents}, \texttt{discrete-current-builder-3d}, \texttt{ampere-loop},
+\texttt{moving-charge-field}, \texttt{magnetic-field-of-currents}, \texttt{discrete-current-builder-3d},
 \texttt{dipole-field-and-torque}, \texttt{lorentz-force}, \texttt{current-loop-motor},
 \texttt{faraday-induction}, \texttt{faraday-flux-explorer}, \texttt{rail-flux-bar}.\par}
 
