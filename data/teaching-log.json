@@ -39,6 +39,15 @@
   "synthesis": 10
  },
  "entries": {
+  "2026-11-13": {
+   "covered": "Started with the kickoff (KO29). One of the online homework problems had the wrong figure on Pearson's side, so told students their grades will be fixed if they did not get full points on that question. Kevin handed back homework (no real problems with it) and the regraded Test 2 went back. Moved everyone to new seats with the randomizer. Had students draw the magnetic field of a magnet moving toward and away from a coil, seen face on, and work out whether the induced current runs clockwise or counterclockwise from which pole faces the coil and whether the magnet is approaching or moving away. Then showed it with two demos: one with a bar magnet as the source, one with a solenoid as the source. Went back over the force between two parallel wires (parallel currents attract, opposite currents repel) to set up the jumping-ring demo: a ring above a changing current gets an induced current in the opposite direction, so the force on it is repulsive. Did the jumping ring at room temperature, then again after cooling the aluminum ring in liquid nitrogen borrowed from the chemists. Ended with a very brief explanation of where the speed of light comes from.",
+   "cut": "The explanation of where the speed of light comes from: only a very brief version at the very end, not enough time to talk about it properly.",
+   "wish": "Time to do the speed-of-light explanation properly. It is a cool moment.",
+   "landed": "The magnet-and-coil demos (bar magnet, then solenoid as the source): a good demo. The jumping ring impressed the students when it went into the air; after the liquid nitrogen the ring's resistance dropped to basically zero and it shot up and smacked into the ceiling.",
+   "struggled": "The force between two current-carrying wires. They were really struggling with it, which was a surprise: it had been gone through explicitly and they had done problems on it.",
+   "nextYear": "Three things. (1) Make sure students really have the force between two parallel wires (attract / repel) before this day; it did not stick this year even after being taught explicitly and practiced. (2) Prioritize the explanation of where the speed of light comes from and give it real time; this year it got squeezed into the last moments. (3) The liquid-nitrogen jumping ring is a little dangerous indoors (it hit the ceiling). Consider doing it outside, and bring gloves for handling the cold ring; there were none this year.",
+   "notes": "Follow-up owed: fix the grades of students who lost points on the online homework problem where Pearson showed the wrong figure. Liquid nitrogen came from the chemistry department. Minutes per segment were not recorded for this day."
+  },
   "2026-11-11": {
    "covered": "Started with the kickoff (KO28), which needed the motional-EMF formula ε = BLv -- had to hand it to them, and only derived it after the kickoff was over. Asked for homework questions: one, on the HW9 problem (pushed to tonight) about the acceleration of a proton in a changing magnetic field -- the changing B induces an E field, which hadn't been covered yet, so the answer had to wait. Then: the current induced in a wire loop moving through a region of magnetic field -- one direction as it enters, the other as it leaves, none while it is fully inside or fully outside. Used that as the way in to the induced electric field: a changing B field induces an E field even when there is no wire, and this is a different case from the moving loop -- when the loop moves you can get the EMF from the Lorentz force, but when the loop sits still and B changes you have to use Faraday's law directly. That answered the student's proton question. Came back to the loop moving through the field to show where the braking forces come from, then did two eddy-current demos: a small pendulum swinging through a magnet, and a magnet dropped through a pipe.",
    "cut": "The demo of a magnet moved in and out of a coil of wire producing an EMF -- no time. Doing it Friday Nov 13.",
@@ -323,8 +332,20 @@
   {
    "name": "Magnet in and out of a coil",
    "unit": "induction",
-   "usedOn": null,
-   "note": "Moving a magnet in and out of a coil of wire gives an EMF. Planned for 2026-11-11 but cut for time; planned for Fri 2026-11-13. Set usedOn once it has happened."
+   "usedOn": "2026-11-13",
+   "note": "Moving a bar magnet toward and away from a coil of wire gives an EMF; the current direction depends on which pole faces the coil and on whether the magnet approaches or retreats. Cut for time on 2026-11-11, done Fri 2026-11-13 right after students drew the field and predicted clockwise vs. counterclockwise. Per Seth 2026-11-13: a good demo."
+  },
+  {
+   "name": "Solenoid as the source for an induced current",
+   "unit": "induction",
+   "usedOn": "2026-11-13",
+   "note": "Same idea as the magnet-and-coil demo, with a solenoid as the source of the field instead of a bar magnet. Per Seth 2026-11-13: done as the second of the two induction demos that day."
+  },
+  {
+   "name": "Jumping ring (room temperature, then liquid nitrogen)",
+   "unit": "induction",
+   "usedOn": "2026-11-13",
+   "note": "Aluminum ring above a coil carrying a changing current: the induced current in the ring runs opposite to the coil's, so the ring is repelled and jumps. Set up by reviewing the force between parallel currents. Per Seth 2026-11-13: students were impressed; after cooling the ring in liquid nitrogen (borrowed from the chemists) its resistance dropped to basically zero and it hit the ceiling. A little dangerous indoors: consider doing it outside, and bring gloves for the cold ring."
   }
  ],
  "demosWishlist": [
