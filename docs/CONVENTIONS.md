@@ -91,6 +91,21 @@ recorded here.
   of ticks.
 - **URL parameters are clamped** to the same range as the control they set,
   so a bad link cannot open a state the controls could never reach.
+- **A ± stepper never snaps.** Snap points (f, 2f, C) are for dragging and
+  typing only. A snap tolerance larger than one step makes the stepper stick:
+  in `lens-ray-tracer` and `mirror-ray-tracer` stepping 8.0 → 8.5 snapped back
+  to 8.0, so a student on the focal length could not leave it with the
+  buttons. Fixed 2026-11-14; check any new snap against its own step size.
+- **A result that lands outside the drawing is announced at the edge**, with
+  its value and a direction arrow ("real image at s′ = 72.0 cm (off screen) →"),
+  on a dark plate. Never leave the object silently missing. While a problem's
+  values are hidden the note says only that it is off screen.
+- **A degenerate case says so.** An image at infinity (s = f) reads "No image
+  (rays parallel)" with "none (at infinity)" and "—", never the label of the
+  nearest ordinary case.
+- **Every sim a Prep embeds takes URL presets** (all of the optics sims that
+  schedule Preps do as of 2026-11-14; see `docs/optics-sims-audit-2026-11-14.md`
+  for the ones that still do not).
 - **Per-embed mode/preset via URL query param.** A sim used in more than one
   context (e.g. a multi-mode sim embedded in different Preps) should read its
   initial mode/preset from the query string (`?mode=circle`) via a
