@@ -93,7 +93,7 @@ siblings, and the repo has no shared kit for 2D optics the way `G3` serves the 3
    s′ = 72.0 cm (off screen) →"; it withholds the number while a problem's values are
    hidden.
 4. **URL presets** (DONE): `?type=converging|diverging&s=&f=&h=`, clamped.
-5. **Only two of the three principal rays are drawn** (PROPOSED). The sim draws the ray
+5. **Only two of the three principal rays are drawn** (DONE 2026-11-16: violet focal ray, meets the other two at the image tip). The sim draws the ray
    parallel to the axis and the ray through the lens center; the Final asks students to
    "draw all three of the primary rays". Add the ray through the near focal point, with a
    per-ray show/hide so the sim can be used for predict-then-check. Cosmetic carry-over:
@@ -107,7 +107,7 @@ siblings, and the repo has no shared kit for 2D optics the way `G3` serves the 3
    note now says so. A virtual image behind the mirror that falls off the right edge is
    handled by the same note.
 4. **URL presets** (DONE): `?type=concave|convex&s=&f=&h=`.
-5. **Third principal ray and a cluttered convex view** (PROPOSED). Only two rays are
+5. **Third principal ray and a cluttered convex view** (third ray DONE 2026-11-16; convex clutter still PROPOSED). Only two rays are
    drawn (parallel to the axis, and to the vertex); the ray aimed at C, which reflects
    back on itself, is the third. Convex mirror with small s puts "object", "virtual" and
    three dashed rays within a few pixels; give those labels the dark backing plate the
