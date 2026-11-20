@@ -114,6 +114,20 @@ ok(new Workbench().add('nonsense') === null, 'an unknown key adds nothing');
   near(L.Angle.diff(lens.angle, turned.angle), 45, 1e-6, 'turned, in 5-degree steps'); t.up(at(b, V.add(lens.pos, V.polar(a0 + 47, r)))); ok(b.history.past.length === 1, 'one undo step'); b.undo(); ok(snap(b) === s0, 'undone');
   b.select(b.scene.get(lens.id)); const h2 = t.handle(b.selected); t.down(at(b, h2)); t.move(at(b, V.add(lens.pos, V.polar(a0 + 12.4, r)), { shift: true })); near(L.Angle.diff(lens.angle, b.selected.angle), 12, 1e-6, 'Shift turns in 1-degree steps'); t.cancel(); ok(snap(b) === s0, 'cancelled'); }
 
+// ---- dragging a focal point ----
+{ const b = new Workbench(); b.view.resize(560, 400); b.edit((s) => { s.add({ t: 'lens', x: 0, y: 0, f: 20, height: 30 }); s.add({ t: 'mirror', x: 60, y: 0, flat: 0, f: 15, height: 30 }); }); b.fit(); b.history.clear();
+  const t = new PointerTool(b), [lens, mir] = b.scene.els, s0 = snap(b), A = (x) => at(b, V.at(lens.pos, lens.dir, x));
+  const F = at(b, V.at(lens.pos, lens.dir, 20)); t.move(F); ok(t.overFocus && b.hotFocus && b.hotFocus.k === 1, 'hovering F is noticed'); ok(t.cursor === 'grab', 'and the cursor offers to grab it');
+  t.down(F); ok(t.mode === 'focus' && b.selId === lens.id, 'pressing F starts a focus drag and selects the lens');
+  t.move(A(32.4)); near(b.scene.get(lens.id).f, 32, 1e-9, 'dragging F out lengthens f, in 1 cm steps'); t.up(A(32.4)); ok(b.history.past.length === 1 && !b.hotFocus, 'one undo step, and the highlight goes');
+  t.down(A(32)); t.move(A(-25)); const L2 = b.scene.get(lens.id); near(L2.f, -25, 1e-9, 'dragged through the lens, it turns diverging'); ok(!L2.converging, 'and says so');
+  near(V.dist(V.at(L2.pos, L2.dir, L2.f), V.at(lens.pos, lens.dir, -25)), 0, 1e-9, 'the F that was dragged stays under the pointer'); t.move(A(18)); near(b.scene.get(lens.id).f, 18, 1e-9, 'and back to converging'); t.up(A(18));
+  const Fb = at(b, V.at(lens.pos, lens.dir, -18)); t.down(Fb); t.move(at(b, V.at(lens.pos, lens.dir, -30))); near(b.scene.get(lens.id).f, 30, 1e-9, 'the F on the other side works too'); t.cancel(); near(b.scene.get(lens.id).f, 18, 1e-9, 'Escape puts f back');
+  t.down(Fb); t.move(at(b, V.at(lens.pos, lens.dir, -12.37), { shift: true })); near(b.scene.get(lens.id).f, 12.4, 1e-9, 'Shift gives 0.1 cm steps'); t.cancel();
+  const M = (x) => at(b, V.at(mir.pos, mir.dir, x)); t.down(M(30)); ok(t.mode === 'focus' && t.k === 2, "a mirror's C can be dragged"); t.move(M(50)); near(b.scene.get(mir.id).f, 25, 1e-9, 'C at 50 cm means f = 25 cm'); t.up(M(50));
+  t.down(M(25)); t.move(M(-10)); ok(b.scene.get(mir.id).f === -10 && b.scene.get(mir.id).kind === 'Convex mirror', 'F dragged behind the mirror makes it convex'); t.up(M(-10));
+  while (b.history.canUndo) b.undo(); ok(snap(b) === s0, 'all undone'); }
+
 // ---- picking: a thin element in front of glass wins; of two overlapping, the later one ----
 { const b = new Workbench(); b.view.resize(560, 400); b.edit((s) => { s.add({ t: 'block', x: 0, y: 0, width: 40, height: 40 }); s.add({ t: 'lens', x: 0, y: 0, f: 20, height: 30 }); s.add({ t: 'block', x: 30, y: 0, width: 40, height: 40 }); }); b.fit();
   const t = new PointerTool(b), [b1, lens, b2] = b.scene.els; ok(t.pick(at(b, { x: 0, y: 5 })) === lens, 'the lens inside the block is picked'); ok(t.pick(at(b, { x: -12, y: 5 })) === b1, 'the block elsewhere');

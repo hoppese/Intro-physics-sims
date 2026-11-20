@@ -17,7 +17,7 @@ class Renderer {
   draw(g, bench, tool) { const v = bench.view, sc = bench.scene, res = bench.result, C = Renderer.C; this.g = g; this.v = v; this.sc = sc; this.s = v.scale; this.w = v.w; this.h = v.h;
     const hidden = bench.hidden, opts = sc.opts, sel = bench.selected, hov = bench.hoverId && bench.hoverId !== bench.selId ? sc.get(bench.hoverId) : null;
     // where words already are (to begin with: the zoom buttons, and the pointer read-out in the corner)
-    this.boxes = [{ x0: this.w - 262, y0: this.h - 52, x1: this.w, y1: this.h }, { x0: 0, y0: 0, x1: 150, y1: 24 }]; this.letters = [];
+    this.boxes = [{ x0: this.w - 262, y0: this.h - 52, x1: this.w, y1: this.h }, { x0: 0, y0: 0, x1: 150, y1: 24 }]; this.letters = []; this.hotFocus = bench.hotFocus || null;
     // ... and where the light runs, so that a label can keep off a ray when there is a clear place for it
     // ... and where the light sources sit: a label is kept off a neighbouring source's body (a copy lands close by)
     this.bodies = []; for (const el of sc.els) { if (!el.emits) continue; const bb = el.bounds(), p = this.P({ x: bb.x0, y: bb.y1 }), q = this.P({ x: bb.x1, y: bb.y0 }); this.bodies.push({ x0: p.x, y0: p.y, x1: q.x, y1: q.y }); }
@@ -124,9 +124,11 @@ class Renderer {
     g.lineWidth = o.closed ? 5 : Math.max(11, 2 * el.pad * this.s + 9); g.stroke(); }
   axis(el) { const g = this.g, a = this.P(V.at(el.pos, el.dir, -600)), b = this.P(V.at(el.pos, el.dir, 600)); g.save(); g.strokeStyle = 'rgba(255,255,255,0.24)'; g.lineWidth = 1; g.setLineDash([7, 5]); this.line(a, b); g.restore(); }
   element(el) { if (el instanceof Lens) this.lens(el); else if (el instanceof Mirror) this.mirror(el); else if (el instanceof Screen) this.screen(el); else if (el instanceof Laser) this.laser(el); else if (el instanceof Beam) this.beam(el); else if (el instanceof Lamp) this.lamp(el); else if (el instanceof Figure) this.figure(el); }
-  focal(p, letter, color) { const c = this.P(p); if (c.x < -20 || c.y < -20 || c.x > this.w + 20 || c.y > this.h + 20) return; this.dot(c, 2.6, color); this.keep(c, 4); this.letters.push({ str: letter, c, color }); }
+  // a focal point; the one under the pointer (or being dragged) is drawn larger, ringed in gold, to show it can be pulled
+  focal(p, letter, color, el, k) { const c = this.P(p); if (c.x < -20 || c.y < -20 || c.x > this.w + 20 || c.y > this.h + 20) return; const hf = this.hotFocus;
+    if (hf && el && hf.id === el.id && hf.k === k) { this.g.save(); this.g.lineWidth = 1.6; this.g.shadowColor = 'rgba(240,200,96,0.8)'; this.g.shadowBlur = 8; this.dot(c, 5.5, color, Renderer.C.gold); this.g.restore(); } else this.dot(c, 2.6, color); this.keep(c, 4); this.letters.push({ str: letter, c, color }); }
 
-  lens(el) { if (el.real) { this.focal(V.at(el.pos, el.dir, el.f), 'F', Renderer.C.lens); this.focal(V.at(el.pos, el.dir, -el.f), 'F', Renderer.C.lens); return; }
+  lens(el) { if (el.real) { this.focal(V.at(el.pos, el.dir, el.f), 'F', Renderer.C.lens, el, 1); this.focal(V.at(el.pos, el.dir, -el.f), 'F', Renderer.C.lens, el, -1); return; }
     const g = this.g, C = Renderer.C, [e0, e1] = el.ends.map((p) => this.P(p)), d = this.D(el.dir), t = this.D(el.across), mid = this.P(el.pos), len = Math.hypot(e1.x - e0.x, e1.y - e0.y);
     const bw = Math.max(3.5, Math.min(10, len * 0.085)), at = (p, a, b) => ({ x: p.x + d.x * a + t.x * b, y: p.y + d.y * a + t.y * b });
     g.setLineDash([]); g.beginPath();
@@ -138,7 +140,7 @@ class Renderer {
     // the ray-diagram symbol: arrowheads pointing out for a converging lens, in for a diverging one
     const head = (e, sign) => { const s = el.converging ? -1 : 1, a = at(e, 5, sign * s * 7), b = at(e, -5, sign * s * 7); g.beginPath(); g.moveTo(a.x, a.y); g.lineTo(e.x, e.y); g.lineTo(b.x, b.y); g.stroke(); };
     head(e0, -1); head(e1, 1);
-    this.focal(V.at(el.pos, el.dir, el.f), 'F', C.lens); this.focal(V.at(el.pos, el.dir, -el.f), 'F', C.lens); }
+    this.focal(V.at(el.pos, el.dir, el.f), 'F', C.lens, el, 1); this.focal(V.at(el.pos, el.dir, -el.f), 'F', C.lens, el, -1); }
 
   mirror(el) { const g = this.g, C = Renderer.C, o = el.outline().pts.map((p) => this.P(p)), N = this.D(el.dir), a = el.sphere ? el.arc : null, cc = a ? this.P(a.c) : null; g.setLineDash([]);
     // the hatching on the side that does not reflect
@@ -152,7 +154,7 @@ class Renderer {
     if (el.curved && !el.sphere) { const e0 = o[0], e1 = o[o.length - 1], l = Math.hypot(e1.x - e0.x, e1.y - e0.y) || 1, u = { x: (e1.x - e0.x) / l, y: (e1.y - e0.y) / l }, k = el.f > 0 ? 1 : -1;
       g.moveTo(e0.x, e0.y); g.quadraticCurveTo(e0.x - u.x * 5, e0.y - u.y * 5, e0.x - u.x * 6 + N.x * k * 7, e0.y - u.y * 6 + N.y * k * 7); g.moveTo(e1.x, e1.y); g.quadraticCurveTo(e1.x + u.x * 5, e1.y + u.y * 5, e1.x + u.x * 6 + N.x * k * 7, e1.y + u.y * 6 + N.y * k * 7); }
     g.stroke();
-    if (el.curved) { this.focal(V.at(el.pos, el.dir, el.f), 'F', C.mirror); this.focal(V.at(el.pos, el.dir, 2 * el.f), 'C', 'rgba(238,243,248,0.7)'); } }
+    if (el.curved) { this.focal(V.at(el.pos, el.dir, el.f), 'F', C.mirror, el, 1); this.focal(V.at(el.pos, el.dir, 2 * el.f), 'C', 'rgba(238,243,248,0.7)', el, 2); } }
 
   screen(el) { const g = this.g, [e0, e1] = el.ends.map((p) => this.P(p)), N = this.D(el.dir); g.setLineDash([]);
     g.strokeStyle = '#4a5868'; g.lineWidth = 4; g.lineCap = 'butt'; this.line({ x: e0.x - N.x * 3, y: e0.y - N.y * 3 }, { x: e1.x - N.x * 3, y: e1.y - N.y * 3 });

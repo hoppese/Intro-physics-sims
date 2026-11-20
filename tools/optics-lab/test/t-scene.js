@@ -18,6 +18,7 @@ for (const t of Object.keys(ELEMENTS)) { const el = Element.from({ t });
   const copy = el.clone(); ok(copy !== el && JSON.stringify(copy.toJSON()) === JSON.stringify(el.toJSON()), t + ' clones exactly');
   // turning by the handle: the grip ends up under the pointer
   for (const a of [0, 45, 200]) { const target = V.add(el.pos, V.polar(a, 20)); el.aim(target); const g = el.toWorld(el.grip), d = Angle.diff(Angle.of(V.sub(g, el.pos)), a); near(d, 0, 1e-4, t + ' turns to face the pointer at ' + a); }
+  if (el.type === 'object') { const g = el.toWorld(el.grip); near(V.dist(g, el.tip), 0, 1e-9, 'the object\'s handle hangs off its tip, not off to the side'); }
   el.aim(V.add(el.pos, V.polar(33, 20)), 5); near(el.angle % 5, 0, 1e-9, t + ' snaps to 5 degrees when asked'); }
 
 // focal lengths: never zero, and the type buttons only change the sign

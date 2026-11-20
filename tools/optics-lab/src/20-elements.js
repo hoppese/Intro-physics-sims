@@ -186,6 +186,8 @@ class Figure extends Source {
   outline() { const sh = this.shape, h = this.height; if (sh.u0 === sh.u1) return { pts: [this.pos, this.tip], closed: false };
     return { pts: [{ x: sh.u0 * h, y: 0 }, { x: sh.u1 * h, y: 0 }, { x: sh.u1 * h, y: h }, { x: sh.u0 * h, y: h }].map((p) => this.toWorld(p)), closed: true }; }
   get pad() { return this.picture === 'arrow' ? 1.6 : 0.5; }
+  // (the turning handle hangs off the tip, in line with the arrow, not off to the side like a lamp's)
+  get grip() { return { x: 0, y: this.height }; }
 }
 
 // ---------------------------------------------------------------------

@@ -4,7 +4,7 @@
 // so the traced light (`result`) is always the light of the scene as it is.
 // =====================================================================
 class Workbench {
-  constructor() { this.scene = new Scene(); this.history = new History(); this.view = new View(); this.selId = 0; this.hoverId = 0;
+  constructor() { this.scene = new Scene(); this.history = new History(); this.view = new View(); this.selId = 0; this.hoverId = 0; this.hotFocus = null;
     this.notice = null; this.hidden = false; this._result = null; this.dirty = true; this.typing = null; this.stroke = null;
     this.rev = 0;                      // counts changes to what is on the bench (the side panel follows it)
     this.jumps = new Set();            // whole-bench changes (a preset, New), as "before\nafter": undoing one re-fits the view

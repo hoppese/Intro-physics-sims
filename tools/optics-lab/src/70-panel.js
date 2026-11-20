@@ -56,7 +56,8 @@ class Panel {
     laser: 'One ray. Turn on View ▸ Angles at surfaces to read its angle at every surface it meets.',
     beam: 'Parallel rays: light from a very distant object.',
     lamp: 'One point of an object. Its rays fan out through Spread, centred on Angle.',
-    object: 'Rays leave its tip; its foot is on the gold-handled end. Its image is drawn whole, so you can see if it is upright or inverted.',
+    object: 'Rays leave its tip, the end with the gold handle; drag the handle to turn it about its foot. Its image is drawn whole, so you can see if it is upright or inverted.',
+    mirror: 'Curved: drag F or C to change f. Drag F behind the mirror and it becomes convex.',
     prism: 'Index n is for yellow light (589 nm). Dispersion is n for violet (400 nm) minus n for red (700 nm).',
     block: 'Index n is for yellow light (589 nm). Dispersion is n for violet (400 nm) minus n for red (700 nm).',
     half: 'Aim a ray at the centre of the flat face: it crosses the curved face without bending, so only the flat face refracts it.',
@@ -139,7 +140,7 @@ class Panel {
     if (el.real) { const s = el.form, cap = s.capped ? ' A lens this strong cannot be taller than ' + Fmt.cm(2 * s.h) + ': its faces would meet.' : '';
       return 'A real glass lens: two spherical faces of radius ' + Fmt.cm(s.R) + ', refracting by Snell’s law. Rays near the axis focus at F; rays far from it focus nearer (spherical aberration).' + cap + glass; }
     if (el.chroma) return 'An ideal thin lens whose glass disperses: f is for yellow light, and violet focuses nearer than red (chromatic aberration).' + glass;
-    return 'An ideal thin lens: every ray obeys the thin-lens equation, however far it is from the axis. Tick Real to see what a glass one does.'; }
+    return 'An ideal thin lens: every ray obeys the thin-lens equation, however far it is from the axis. Drag either F to change f (through the lens, it turns diverging). Tick Real to see what a glass one does.'; }
 
   // what a single ray meets, surface by surface: "Block 1   θ₁ = 40.0°, θ₂ = 25.1°"
   log(el) { const b = this.bench, L = b.scene.labels(), path = b.result.paths.find((p) => p.src === el.id), out = []; if (!path) return out;
