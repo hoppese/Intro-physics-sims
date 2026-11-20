@@ -172,15 +172,32 @@ class Renderer {
         const cost = (hits(b) ? 1000 : 0) + (crosses(b) ? 60 : 0) + r * 0.6 + Math.abs(turn) * 8; if (cost < bestCost) { bestCost = cost; best = { cx, cy, b }; } if (cost < 30) break; }
       this.boxes.push(best.b); let x = best.cx - w / 2;
       for (const pass of [0, 1]) { let xx = x; for (const r of L.runs) { g.font = r.f; g.textAlign = 'left'; g.textBaseline = 'middle'; if (!pass) { g.lineJoin = 'round'; g.lineWidth = 3.5; g.strokeStyle = 'rgba(10,16,24,0.92)'; g.strokeText(r.t, xx, best.cy + (r.dy || 0)); } else { g.fillStyle = r.col; g.fillText(r.t, xx, best.cy + (r.dy || 0)); } xx += g.measureText(r.t).width; } } } }
+  // Text with its symbols typeset: a lone K, U, E, m, g, h, v, n, r or θ is an italic serif variable, X_sub gets a lowered
+  // subscript (one letter italic, a word like rot or th upright), and an m right after a number is the unit, left upright.
+  static VARS = new Set(['K', 'U', 'E', 'm', 'g', 'h', 'v', 'n', 'r', 'θ']);
+  static rich(text, w, px, face) { const out = [], plain = w + ' ' + px + 'px ' + face, it = 'italic ' + w + ' ' + (px * 1.12).toFixed(1) + 'px ' + Renderer.SERIF;
+    const sub = (x) => (x.length === 1 && /[a-zθ]/.test(x) ? 'italic ' : '') + w + ' ' + (px * 0.74).toFixed(1) + 'px ' + (x.length === 1 && /[a-zθ]/.test(x) ? Renderer.SERIF : face);
+    const re = /([A-Za-zθ]+)(?:_([A-Za-z0-9]+))?/g; let k = 0, mt; text = text.replace(/v₀/g, 'v_0');
+    const add = (t, f, dy) => { if (!t) return; const l = out[out.length - 1]; if (l && l.f === f && (l.dy || 0) === (dy || 0)) l.t += t; else out.push({ t, f, dy }); };
+    while ((mt = re.exec(text))) { const [all, base, s] = mt, before = text.slice(0, mt.index), unit = /\d\s?$/.test(before) && !s;
+      add(text.slice(k, mt.index), plain); k = mt.index + all.length;
+      if (!Renderer.VARS.has(base) || unit) { add(base + (s ? '_' + s : ''), plain); continue; }
+      add(base, it); if (s) add(s, sub(s), px * 0.32); }
+    add(text.slice(k), plain); return out; }
+  static runsW(g, runs) { let w = 0; for (const r of runs) { g.font = r.f; w += g.measureText(r.t).width; } return w; }
   card(sim, i, measure) { const D = sim.describe(i), g = this.g, maxW = Math.min(this.W - 24, 600), pad = 10;
-    const wrap = (text, font, w) => { g.font = font; const out = []; let cur = ''; for (const word of text.split(' ')) { const t = cur ? cur + ' ' + word : word; if (g.measureText(t).width > w && cur) { out.push(cur); cur = word; } else cur = t; } if (cur) out.push(cur); return out; };
-    const F = { head: '700 12.5px ' + Renderer.SANS, body: '500 11.5px ' + Renderer.SANS, tally: '600 10px ' + Renderer.MONO };
-    const rows = [...wrap((i + 1) + ' of ' + sim.events.length + ' · ' + D.title, F.head, maxW - 2 * pad).map((t) => ({ t, f: F.head, c: '#f0c860', h: 17 })), ...wrap(D.why, F.body, maxW - 2 * pad).map((t) => ({ t, f: F.body, c: '#e6edf3', h: 15 })),
-      ...(D.tally ? wrap(D.tally, F.tally, maxW - 2 * pad).map((t, k) => ({ t, f: F.tally, c: '#9fb2c4', h: 14, gap: k === 0 ? 4 : 0 })) : [])];
-    let wd = 0; for (const r of rows) { g.font = r.f; wd = Math.max(wd, g.measureText(r.t).width); } wd += 2 * pad; const h = rows.reduce((a, r) => a + r.h + (r.gap || 0), 0) + 10, x = Math.max(12, (this.W - wd) / 2), y = 10;
+    // wrap typeset text into lines of runs
+    const wrap = (text, w, px, face, width) => { const sp = Renderer.rich(' ', w, px, face), lines = []; let cur = [], cw = 0;
+      for (const word of text.split(' ')) { const R = Renderer.rich(word, w, px, face), ww = Renderer.runsW(g, R), sw = cur.length ? Renderer.runsW(g, sp) : 0;
+        if (cur.length && cw + sw + ww > width) { lines.push(cur); cur = R.slice(); cw = ww; } else { if (cur.length) cur.push(...sp); cur.push(...R); cw += sw + ww; } }
+      if (cur.length) lines.push(cur); return lines; };
+    const inner = maxW - 2 * pad, S = Renderer.SANS;
+    const rows = [...wrap((i + 1) + ' of ' + sim.events.length + ' · ' + D.title, 700, 12.5, S, inner).map((t) => ({ t, c: '#f0c860', h: 18 })), ...wrap(D.why, 500, 11.5, S, inner).map((t) => ({ t, c: '#e6edf3', h: 16 })),
+      ...(D.tally ? wrap(D.tally, 600, 10, Renderer.MONO, inner).map((t, k) => ({ t, c: '#9fb2c4', h: 15, gap: k === 0 ? 4 : 0 })) : [])];
+    let wd = 0; for (const r of rows) wd = Math.max(wd, Renderer.runsW(g, r.t)); wd += 2 * pad; const h = rows.reduce((a, r) => a + r.h + (r.gap || 0), 0) + 10, x = Math.max(12, (this.W - wd) / 2), y = 10;
     if (measure) return { x0: x, y0: y, x1: x + wd, y1: y + h };
     g.save(); g.fillStyle = 'rgba(14,22,33,0.93)'; g.strokeStyle = 'rgba(240,200,96,0.55)'; g.lineWidth = 1; g.beginPath(); if (g.roundRect) g.roundRect(x, y, wd, h, 8); else g.rect(x, y, wd, h); g.fill(); g.stroke();
-    g.textAlign = 'left'; g.textBaseline = 'middle'; let yy = y + 5; for (const r of rows) { yy += r.gap || 0; g.font = r.f; g.fillStyle = r.c; g.fillText(r.t, x + pad, yy + r.h / 2); yy += r.h; }
+    g.textAlign = 'left'; g.textBaseline = 'middle'; let yy = y + 5; for (const r of rows) { yy += r.gap || 0; g.fillStyle = r.c; let xx = x + pad; for (const q of r.t) { g.font = q.f; g.fillText(q.t, xx, yy + r.h / 2 + (q.dy || 0)); xx += g.measureText(q.t).width; } yy += r.h; }
     // and a ring round the rider, where it happened
     const p = this.P(sim.ride.now().p); g.strokeStyle = 'rgba(240,200,96,0.9)'; g.lineWidth = 1.6; g.setLineDash([3, 3]); g.beginPath(); g.arc(p.x, p.y - (sim.ride.now().mode === 'air' ? 0 : 0), Math.max(14, Renderer.BALL * this.s + 7), 0, 2 * Math.PI); g.stroke(); g.restore(); }
   static segBox(x1, y1, x2, y2, b) { const inside = (x, y) => x > b.x0 && x < b.x1 && y > b.y0 && y < b.y1; if (inside(x1, y1) || inside(x2, y2)) return true;
