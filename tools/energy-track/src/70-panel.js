@@ -122,7 +122,7 @@ class Panel {
     return { evPrevStyle: btn(canPrev), evNextStyle: btn(canNext), onPrevEvent: app.run(() => s.prevEvent()), onNextEvent: app.run(() => s.nextEvent()),
       evLabel: D ? (at >= 0 ? 'Event ' + (at + 1) + ' of ' + E.length + ': ' : 'After ' + (cur + 1) + ': ') + D.short : 'Events',
       evTitle: D ? (cur + 1) + '. ' + D.title + ' — ' + D.why : 'Step through the run’s noteworthy moments',
-      evLabelStyle: "font-family:'Source Sans 3',sans-serif;font-size:11px;font-weight:700;margin-bottom:3px;padding:0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px;cursor:help;color:" + (at >= 0 ? '#8a6310' : '#8a929b') + ';' }; }
+      evLabelStyle: "font-family:'Source Sans 3',sans-serif;font-size:11px;font-weight:700;margin-bottom:3px;padding:0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:190px;flex:none;box-sizing:border-box;text-align:center;cursor:help;color:" + (at >= 0 ? '#8a6310' : '#8a929b') + ';' }; }
 
   share() { const app = this.app, st = this.ui;
     return { showShare: !!st.showShare, onCloseShare: () => app.setState({ showShare: false }), shareUrl: st.showShare ? Link.url(this.sim, st.shareHide) : '', onCopyShare: () => app.copyShare(), copyLabel: st.shareCopied ? 'Copied' : 'Copy',
