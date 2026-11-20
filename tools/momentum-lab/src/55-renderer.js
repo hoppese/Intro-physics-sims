@@ -203,7 +203,7 @@ class Renderer {
   static tag(b) { return b.name.length <= 2 ? b.name : b.name.indexOf('Star ') === 0 ? b.name.slice(5) : b.name[0]; }
   // ---- the vectors ----
   // a symbol with an arrow over it (and a subscript), then its value
-  sym(l, sub, col, value, arrow) { const out = [{ t: l, f: 'italic 600 14px ' + Renderer.SERIF, col, arrow: arrow !== false }]; if (sub) out.push({ t: sub, f: '600 9.5px ' + Renderer.SANS, col, dy: 4 }); if (value) out.push({ t: ' = ' + value, f: '600 11px ' + Renderer.MONO, col, val: true }); return out; }
+  sym(l, sub, col, value, arrow) { const out = [{ t: l, f: 'italic 600 14px ' + Renderer.SERIF, col, arrow: arrow !== false }]; if (sub) out.push({ t: sub, f: '600 9.5px ' + Renderer.SANS, col, dy: 4 }); if (value && this.lab.show.nums !== false) out.push({ t: ' = ' + value, f: '600 11px ' + Renderer.MONO, col, val: true }); return out; }
   arrow(A, B, col, o) { if (Math.hypot(B.x - A.x, B.y - A.y) < 3) return false; G3.arrow(this.g, A, B, col, o); return true; }
   // a vector of length len px from A along u (screen), capped so it stays on the canvas
   tip(A, vec, k, cap) { const L = Math.min(V.len(vec) * k, cap || this.W * 0.42), u = V.unit(vec); return { x: A.x + u.x * L, y: A.y - u.y * L }; }

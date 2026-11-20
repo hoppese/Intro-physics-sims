@@ -31,6 +31,13 @@ for (const mode of Object.keys(PRESETS)) for (const p of PRESETS[mode]) { const 
 { const s = new Lab(); s.load('space', 'moon'); s.setVec('B', 'v', 'y', '0.9'); near(s.body('B').vy, 900, 1e-9, 'space: v₀ typed in km/s, kept in m/s'); s.setField('B', 'm', '1e23'); near(s.body('B').m, 1e23, 1, 'space: mass in e-notation'); }
 { const s = new Lab(); s.load('space', 'rocket'); s.setField('A', 'fuel', '600'); near(s.body('A').m, 1050, 1e-9, 'rocket: less fuel, less mass'); s.setField('A', 'u', '3'); near(s.body('A').rocket.u, 3000, 1e-9, 'rocket: exhaust speed in km/s'); }
 { const s = new Lab(); s.load('track', 'explosion'); s.place('A', { x: -0.5, y: 0 }); near(s.body('B').x - s.body('A').x, 0.2, 1e-9, 'a latched pair moves together'); s.setCharge('E', '0.3'); near(s.setup.charges[0].E, 0.3, 1e-12, 'spring energy typed'); }
+// Numbers off: every arrow keeps its symbol but loses its number; on again, the numbers are back; the link carries it
+{ const vals = (lab) => { lab.view.resize(600, 400); r.draw(g, lab); return r.labels.filter((l) => l.runs.some((x) => x.val || / = /.test(x.t))).length; };
+  for (const [mode, key] of [['track', 'equal'], ['table', 'glancing'], ['space', 'moon'], ['space', 'rocket']]) { const lab = new Lab(); lab.load(mode, key); lab.show.v = true; lab.play(); for (let i = 0; i < 90; i++) lab.tick(1 / 60);
+    const on = vals(lab), syms = r.labels.length; lab.toggleShow('nums'); const off = vals(lab); ok(on > 0 && off === 0 && r.labels.length === syms, mode + '/' + key + ': Numbers off keeps every arrow label, without its number');
+    lab.toggleShow('nums'); ok(vals(lab) === on, mode + '/' + key + ': and on again brings them back'); }
+  const a = new Lab(); a.load('table', 'pool'); a.toggleShow('nums'); const u = Link.url(a), b = new Lab(); Link.apply(b, u.slice(u.indexOf('?'))); ok(u.includes('values=0') && b.show.nums === false, 'share link: Numbers off comes back off');
+  const c = new Lab(); c.load('table', 'pool'); ok(!Link.url(c).includes('values') && c.show.nums, 'Numbers are on by default, and not in the link'); }
 // the share link: everything comes back; values are clamped; a cache-buster ?v=3 changes nothing
 { const a = new Lab(); a.load('table', 'glancing'); a.setE(0.55); a.setVec('A', 'v', 'y', '0.25'); a.hide(true); const url = Link.url(a, true), b = new Lab(); Link.apply(b, url.slice(url.indexOf('?')));
   ok(b.mode === 'table' && b.setup.preset === 'glancing' && b.setup.e === 0.55 && Math.abs(b.body('A').vy - 0.25) < 1e-9 && b.hidden, 'share link: the setup comes back as it was');

@@ -132,7 +132,7 @@ class Panel {
         { label: '↺', title: s.driving ? 'Back to the start: a new try' : 'Back to the start', style: UI.sq, onClick: app.run(() => s.reset()) }, { label: '⏭', title: 'Step on 1/30 s', style: UI.sq, onClick: app.run(() => s.step()) },
         { label: sp === 1 ? '1×' : sp === 0.5 ? '½×' : '¼×', title: 'Speed: full, half or quarter (slow motion)', style: UI.tool(sp < 1), onClick: app.run(() => { const k = Sim.SPEEDS.indexOf(sp); s.speed = Sim.SPEEDS[(k + 2) % 3]; s.bump(); }) }],
       timeStr: 't = ' + Fmt.time(s.t),
-      showChips: [['hints', 'Slope & area', 'The tangent to x–t (its slope is vₓ) and the area under v–t (Δx) and a–t (Δvₓ), up to the moment shown'], ['dots', 'Motion diagram', 'A dot where it was every so often'], ['arrows', 'v and a arrows', 'The velocity (white) and acceleration (magenta) arrows on the track']]
+      showChips: [['hints', 'Slope & area', 'The tangent to x–t (its slope is vₓ) and the area under v–t (Δx) and a–t (Δvₓ), up to the moment shown'], ['dots', 'Motion diagram', 'A dot where it was every so often'], ['arrows', 'v and a arrows', 'The velocity (white) and acceleration (magenta) arrows on the track'], ['nums', 'Values', 'The numbers on the track: x, and the size of each arrow (off: just the symbols vₓ, aₓ)']]
         .map(([k, label, title]) => ({ label, title, style: UI.chip(s.show[k]), onClick: app.run(() => s.toggleShow(k)) })) }; }
 
   share() { const app = this.app, st = this.ui;
@@ -166,8 +166,9 @@ const Link = {
     if (sim.mode === 'cars') { if (sim.carsKey) q.set('preset', sim.carsKey); else { for (const k of ['A', 'B']) { const c = sim.cars[k]; q.set('start' + k, c.x0); q.set('velocity' + k, c.v0); q.set('accel' + k, c.a); } q.set('time', sim.cars.time); } }
     if (sim.mode === 'program') { const v = sim.byVel; q.set('build', v ? 'velocity' : 'acceleration'); q.set('start', sim.prog.x0); if (!v) q.set('velocity', sim.prog.v0); q.set('pieces', sim.pieces.map((p) => (v ? p.v : p.a) + ':' + p.d).join(',')); }
     if (sim.mode === 'diagram') { if (sim.caseKey) q.set('case', sim.caseKey); else { q.set('start', sim.diag.x0); q.set('velocity', sim.diag.v0); q.set('accel', sim.diag.a); } }
+    if (!sim.show.nums) q.set('values', '0');
     let base = ''; try { base = location.origin + location.pathname; } catch (e) {} return base + '?' + q.toString(); },
-  apply(sim, search) { let q; try { q = new URLSearchParams(search == null ? location.search : search); } catch (e) { return false; } const k = q.get('activity'); if (!k || !sim.choose(k)) return false; const has = (n) => q.get(n) != null && q.get(n) !== '';
+  apply(sim, search) { let q; try { q = new URLSearchParams(search == null ? location.search : search); } catch (e) { return false; } if (q.get('values') === '0') sim.show.nums = false; const k = q.get('activity'); if (!k || !sim.choose(k)) return false; const has = (n) => q.get(n) != null && q.get(n) !== '';
     if (k === 'match') { if (has('task')) sim.setTask(q.get('task')); if (has('target')) sim.setTarget(q.get('target')); if (has('sketch')) sim.setSketchOf(q.get('sketch')); }
     if (k === 'cars') { if (has('preset')) sim.setCars(q.get('preset')); for (const c of ['A', 'B']) for (const [n, key] of [['start', 'x0'], ['velocity', 'v0'], ['accel', 'a']]) if (has(n + c)) sim.setCar(c, key, q.get(n + c)); if (has('time')) sim.setTime(q.get('time')); }
     if (k === 'program') { if (has('build')) sim.setBuild(q.get('build') === 'velocity' ? 'v' : 'a'); if (has('pieces')) { const key = sim.byVel ? 'v' : 'a'; const P = q.get('pieces').split(',').slice(0, Sim.MAXPIECES).map((s) => s.split(':').map(Number)).filter((p) => p.length === 2 && p.every(isFinite));

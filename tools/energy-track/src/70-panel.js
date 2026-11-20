@@ -120,12 +120,12 @@ class Panel {
       bugMsg: res.replace(/^(ok|err):/, ''), bugMsgColor: res.slice(0, 3) === 'ok:' ? '#7fd1a4' : '#f0a5a5' }; }
 }
 
-// ---- the address: ?track=<preset>&rider=&mass=&along=<start, m along the track>&speed=&zero=&friction=&points=x:y,x:y…&graph=&hide=1
+// ---- the address: ?track=<preset>&rider=&mass=&along=<start, m along the track>&speed=&zero=&friction=&points=x:y,x:y…&graph=&hide=1&values=0 (values=0: arrows, height and bars without their numbers)
 // (full names, so a cache-buster like ?v=3 is never read; every value clamped to its slider) ----
 const Link = {
   url(sim, hide) { const q = new URLSearchParams(), r2 = (x) => String(Math.round(x * 100) / 100); q.set('track', sim.key); q.set('rider', sim.rider); if (sim.loopMode) q.set('loop', sim.loopMode); if (sim.loopMode === 'circle') q.set('radius', String(sim.vals.r)); q.set('mass', String(sim.vals.m)); q.set('along', r2(sim.s0)); q.set('speed', String(sim.vals.v0));
     q.set('zero', String(sim.vals.y0)); q.set('friction', sim.friction ? String(sim.vals.mu) : '0'); if (sim.custom) q.set('points', sim.track.pts.map((p) => r2(p.x) + ':' + r2(p.y)).join(','));
-    if (sim.graph !== 'time') q.set('graph', sim.graph); if (hide) q.set('hide', '1'); let base = ''; try { base = location.origin + location.pathname; } catch (e) {} return base + '?' + q.toString(); },
+    if (sim.graph !== 'time') q.set('graph', sim.graph); if (hide) q.set('hide', '1'); if (!sim.show.nums) q.set('values', '0'); let base = ''; try { base = location.origin + location.pathname; } catch (e) {} return base + '?' + q.toString(); },
   apply(sim, search) { let q; try { q = new URLSearchParams(search == null ? location.search : search); } catch (e) { return false; } const has = (k) => q.get(k) != null && q.get(k) !== '';
     let any = false; if (has('track') && PRESETS[q.get('track')]) { sim.choose(q.get('track')); any = true; }
     if (has('points')) { const pts = q.get('points').split(',').map((s) => { const [x, y] = s.split(':').map(Number); return Track.clampPt({ x, y }); }); if (pts.every((p) => isFinite(p.x) && isFinite(p.y)) && sim.setPoints(pts)) any = true; }
@@ -133,5 +133,5 @@ const Link = {
     if (has('rider')) sim.setRider(q.get('rider')); if (has('mass')) sim.set('m', q.get('mass')); if (has('speed')) sim.set('v0', q.get('speed')); if (has('zero')) sim.set('y0', q.get('zero'));
     if (has('friction')) { const f = Number(q.get('friction')); if (f > 0) { sim.set('mu', f); sim.setFriction(true); } else sim.setFriction(false); }
     if (has('along')) { const a = Number(q.get('along')); if (isFinite(a)) sim.setRelease(a); }
-    if (has('graph')) sim.setGraph(q.get('graph')); if (q.get('hide') === '1') sim.hide(true); return any; },
+    if (has('graph')) sim.setGraph(q.get('graph')); if (q.get('hide') === '1') sim.hide(true); if (q.get('values') === '0') sim.show.nums = false; return any; },
 };

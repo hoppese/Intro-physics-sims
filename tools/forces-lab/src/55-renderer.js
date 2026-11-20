@@ -26,7 +26,7 @@ class Renderer {
   // a magnitude, the way it is written by hand: w = 19.6 N (no arrow, no bars)
   static magnitude(l, sub, value) { return [...Renderer.sym(l, sub), { t: ' = ' + value, f: '700 12px ' + Renderer.MONO }]; }
 
-  draw(g, bench, tool) { const v = bench.view, sc = bench.scene, w = bench.world, C = Renderer.C; this.g = g; this.v = v; this.sc = sc; this.w = v.w; this.h = v.h; this.s = v.scale; this.world = w;
+  draw(g, bench, tool) { const v = bench.view, sc = bench.scene, w = bench.world, C = Renderer.C; this.g = g; this.bench = bench; this.v = v; this.sc = sc; this.w = v.w; this.h = v.h; this.s = v.scale; this.world = w;
     const opts = sc.opts, sel = bench.selected, hov = bench.hoverId && bench.hoverId !== bench.selId ? sc.get(bench.hoverId) : null, hidden = bench.hidden;
     this.boxes = [{ x0: this.w - 262, y0: this.h - 52, x1: this.w, y1: this.h }, { x0: 0, y0: this.h - 52, x1: 250, y1: this.h }, { x0: 0, y0: 0, x1: 150, y1: 24 }]; this.lines = []; this.seen = new Set(); this.massOut = new Set();
     // (labels keep off the blocks themselves)
@@ -273,7 +273,7 @@ class Renderer {
       g.setLineDash([]); g.strokeStyle = 'rgba(6,10,16,0.75)'; g.fillStyle = 'rgba(6,10,16,0.75)'; g.lineWidth = 5; this.arrow(c, tip, 10.5);
       g.strokeStyle = spec.col; g.fillStyle = spec.col; g.lineWidth = 2.6; this.arrow(c, tip, 9); this.lines.push([c.x, c.y, tip.x, tip.y]);
       if (components) { const u = V.polar(b.ang), v = V.left(u); g.lineWidth = 1.2; g.setLineDash([3, 3]); for (const ax of [u, v]) { const comp = V.dot(f.F, ax); if (Math.abs(comp) < 1e-6) continue; const e = this.D(V.mul(ax, comp * k)), end = { x: c.x + e.x, y: c.y + e.y }; this.arrow(c, end, 6); this.lines.push([c.x, c.y, end.x, end.y]); } g.setLineDash([]); }
-      const str = Renderer.magnitude(spec.l, spec.s, Fmt.N(f.m)), side = { x: -d.y, y: d.x }, out = [14, 26].map((r) => ({ x: tip.x + d.x * r, y: tip.y + d.y * r }));
+      const str = this.bench.values ? Renderer.magnitude(spec.l, spec.s, Fmt.N(f.m)) : Renderer.sym(spec.l, spec.s), side = { x: -d.y, y: d.x }, out = [14, 26].map((r) => ({ x: tip.x + d.x * r, y: tip.y + d.y * r }));
       for (const s of [1, -1]) out.push({ x: tip.x + side.x * s * 16 - d.x * 6, y: tip.y + side.y * s * 16 - d.y * 6, align: side.x * s > 0.3 ? 'left' : side.x * s < -0.3 ? 'right' : undefined });
       out.push({ x: tip.x + d.x * 40, y: tip.y + d.y * 40 });
       this.fbdLabels.push({ str, at: out, col: spec.col, tip, key: 'f' + b.id + f.k }); }
@@ -302,7 +302,7 @@ class Renderer {
     this.put(str, [{ x: m.x - n.x * 18, y: m.y - n.y * 18 }, { x: m.x - n.x * 34, y: m.y - n.y * 34 }, { x: a.x - n.x * 18, y: a.y - n.y * 18 }], { font: '600 11px ' + Renderer.MONO, color: selected ? '#f6e3ad' : Renderer.C.dim, anchor: m, key: 's' + s.id }); }
   ropeName(r, name) { const geo = r.rope.geo; if (!geo || geo.pts.length < 2) return; let best = null, bl = 0; for (let i = 0; i + 1 < geo.pts.length; i++) { const l = V.dist(geo.pts[i], geo.pts[i + 1]); if (l > bl) { bl = l; best = i; } }
     if (best === null || bl * this.s < 40) return; const a = this.P(geo.pts[best]), b = this.P(geo.pts[best + 1]), m = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 }, u = { x: (b.x - a.x) / (bl * this.s), y: (b.y - a.y) / (bl * this.s) };
-    this.put([...Renderer.sym('T', ''), { t: ' = ' + Fmt.N(r.T), f: '600 11px ' + Renderer.MONO }], [{ x: m.x - u.y * 14 + 4, y: m.y + u.x * 14, align: 'left' }, { x: m.x + u.y * 14 - 4, y: m.y - u.x * 14, align: 'right' }], { font: '600 11px ' + Renderer.MONO, color: '#c7e8b3', anchor: m, key: 'r' + r.rope.id }); }
+    this.put([...Renderer.sym('T', ''), ...(this.bench.values ? [{ t: ' = ' + Fmt.N(r.T), f: '600 11px ' + Renderer.MONO }] : [])], [{ x: m.x - u.y * 14 + 4, y: m.y + u.x * 14, align: 'left' }, { x: m.x + u.y * 14 - 4, y: m.y - u.x * 14, align: 'right' }], { font: '600 11px ' + Renderer.MONO, color: '#c7e8b3', anchor: m, key: 'r' + r.rope.id }); }
 
   // ---- the motion diagram: where each block was every TRAIL seconds (the latest MAXIMG of them), a dot at its
   // centre and its velocity there, drawn as the distance it would cover in one interval ----

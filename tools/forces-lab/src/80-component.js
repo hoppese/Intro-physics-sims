@@ -25,7 +25,7 @@ class Component extends DCLogic {
     if (!document.title) document.title = 'Forces Lab';
     // (a preset by name goes through loadPreset, which also frames the view the preset asks for)
     if (!(link.lab && scene) && link.preset && PRESET(link.preset)) b.loadPreset(link.preset); else if (scene) b.replace(scene); else b.loadPreset('incline');
-    if (link.hide) b.hide(true);
+    if (link.hide) b.hide(true); if (link.values === false) b.showValues(false);
     b.history.clear(); this.publish(); this.refresh(); }
   componentDidUpdate() { this.publish(); }
   componentWillUnmount() { clearInterval(this.timer); this.started = false; for (const [type, fn] of this.windowEvents()) window.removeEventListener(type, fn); }
@@ -133,10 +133,10 @@ class Component extends DCLogic {
   // ---- what the page tells the outside world ----
   publish() { try { const b = this.bench, snap = b.snapshot(); window.simState = { sim: 'forces-lab', ...snap };
     window.simAPI = { get: () => b.snapshot(), set: () => {}, hideValues: (on) => { b.hide(on); this.refresh(); }, preset: (key) => { const ok = b.loadPreset(key); this.refresh(); return ok; },
-      share: () => ShareLink.url(b.scene, b.hidden) };
+      share: () => ShareLink.url(b.scene, b.hidden, b.values) };
     if (window.parent && window.parent !== window) window.parent.postMessage({ type: 'sim-state', sim: 'forces-lab', ...snap }, '*'); } catch (e) {} }
 
-  copyShare() { const url = ShareLink.url(this.bench.scene, this.state.shareHide), done = () => this.setState({ shareCopied: true });
+  copyShare() { const url = ShareLink.url(this.bench.scene, this.state.shareHide, this.bench.values), done = () => this.setState({ shareCopied: true });
     try { const r = navigator.clipboard && navigator.clipboard.writeText(url); if (r && r.then) r.then(done, done); else done(); } catch (e) { done(); } }
 
   submitBug() { const st = this.state, text = (st.bugText || '').trim(); if (text.length < 3) { this.setState({ bugResult: 'err:Please describe the problem first.' }); return; } if (st.bugSending) return;

@@ -118,4 +118,19 @@ for (const key of ['pair', 'push', 'stack']) { const b = new Workbench(); b.view
   ok(t.handle(push) === null, 'and the handle goes away instead of staying where the crate was');
   b.reset(); ok(b.time === 0 && !!t.handle(push), 'back at the start, the handle is back'); }
 
+// ---- Values: the arrows keep their symbols, the numbers come and go ----
+{ const { ShareLink } = L; let texts = []; const rec = new Proxy({}, { get: (t, k) => k === 'fillText' ? (str) => texts.push(String(str)) : k === 'measureText' ? () => ({ width: 30 }) : (k === 'createRadialGradient' || k === 'createLinearGradient') ? () => grad : (typeof k === 'string' && /^[a-z]/.test(k) && !(k in t) ? () => {} : t[k]), set: (t, k, v) => { t[k] = v; return true; } });
+  const r = new Renderer(), num = () => texts.some((x) => /=\s*-?[0-9]/.test(x) && /N\b/.test(x));
+  for (const p of PRESETS) { const b = new Workbench(); b.view.resize(900, 520); b.loadPreset(p.key); const t = new PointerTool(b), panel = new Panel(fakeApp(b));
+    texts = []; r.draw(rec, b, t); const had = num(); b.showValues(false); texts = []; r.draw(rec, b, t); const gone = !num();
+    const syms = texts.some((x) => /^[wnTfF]$/.test(x)); ok(!had || (gone && syms), p.key + ': Values off drops the numbers, keeps the symbols');
+    b.scene.opts.fbd = false; texts = []; r.draw(rec, b, t); ok(!num(), p.key + ': and a rope’s T has no number either'); b.scene.opts.fbd = true;
+    b.showValues(true); texts = []; r.draw(rec, b, t); ok(num() === had, p.key + ': back on, the numbers return');
+  }
+  const b = new Workbench(); b.loadPreset('incline'); b.history.clear(); const panel = new Panel(fakeApp(b)), item = () => panel.all().viewItems.find((x) => x.label === 'Values');
+  ok(item() && item().mark === '✓', 'the View menu has Values, ticked'); item().onClick(); ok(!b.values && item().mark === '', 'clicking it turns the numbers off'); ok(!b.history.canUndo, 'which is not an undo step');
+  b.loadPreset('table'); ok(!b.values, 'and stays off on another preset');
+  const u = ShareLink.url(b.scene, false, b.values); ok(/values=0/.test(u), 'the share link carries values=0'); const back = ShareLink.read(u.slice(u.indexOf('?'))); ok(back.values === false, 'and reads back off');
+  ok(ShareLink.read('?preset=incline').values === true && !/values/.test(ShareLink.url(b.scene, false, true)), 'on is the default, left out of the link'); }
+
 done('bench');

@@ -20,7 +20,7 @@ const ADD_MENU = [
 class Workbench {
   static SPEEDS = [0.25, 0.5, 1];
   constructor() { this.scene = new Scene(); this.history = new History(); this.view = new View(); this.selId = 0; this.hoverId = 0;
-    this.notice = null; this.hidden = false; this.typing = null; this.stroke = null; this.rev = 0; this.jumps = new Set();
+    this.notice = null; this.hidden = false; this.values = true; this.typing = null; this.stroke = null; this.rev = 0; this.jumps = new Set();
     this._world = null; this.playing = false; this.speed = 1; this.link = null; this.dirty = true; this.measure = new Measure(this);
     this.graph = 'motion'; this.axis = 'x'; }   // which graphs show under the bench (null: none), and the axis the motion graphs use
 
@@ -44,6 +44,9 @@ class Workbench {
   setGraph(kind) { this.graph = kind || null; this.rev++; this.dirty = true; }
   setAxis(axis) { this.axis = axis; this.rev++; this.dirty = true; }
   stepOnce() { if (this.scene.blocks.length === 0) return; this.playing = false; this.world.advance(1 / 30); this.rev++; this.dirty = true; }
+  // the numbers on the arrows (W = 19.6 N ...): off leaves each arrow with just its symbol. A way of looking, like hide:
+  // not part of the set-up, so it is not undone and survives a new preset.
+  showValues(on) { on = !!on; if (on === this.values) return; this.values = on; this.dirty = true; this.rev++; }
   hide(on) { on = !!on; if (on === this.hidden) return; this.endTyping(); this.hidden = on; this.dirty = true; this.rev++; }
 
   get selected() { return this.scene.get(this.selId); }
@@ -144,7 +147,7 @@ class Workbench {
 
   // ---- what the page reports to whoever embeds it ----
   snapshot() { const L = this.scene.labels(), w = this.world, num = (x) => (isFinite(x) ? Math.round(x * 1000) / 1000 : null);
-    return { hidden: this.hidden, time: num(w.t), playing: this.playing, selected: this.selId ? L.get(this.selId) || null : null, opts: { ...this.scene.opts },
+    return { hidden: this.hidden, values: this.values, time: num(w.t), playing: this.playing, selected: this.selId ? L.get(this.selId) || null : null, opts: { ...this.scene.opts },
       elements: this.scene.els.map((e) => ({ label: L.get(e.id), kind: e.kind, ...e.toJSON() })),
       blocks: this.hidden ? [] : w.bodies.map((b) => ({ label: L.get(b.id), x: num(b.p.x), y: num(b.p.y), vx: num(b.v.x), vy: num(b.v.y), ax: num(w.sol.a[b.i].x), ay: num(w.sol.a[b.i].y),
         forces: w.forcesOn(b.id).map((f) => ({ kind: f.kind, by: f.by ? L.get(f.by.id) || null : null, Fx: num(f.F.x), Fy: num(f.F.y) })) })),

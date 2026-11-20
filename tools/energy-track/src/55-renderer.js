@@ -127,14 +127,14 @@ class Renderer {
   // the height above the zero of U_g, as a dimension line
   height(sim, n) { const g = this.g, x = this.X(n.p.x) - 14, y1 = this.Y(n.p.y), y0 = this.Y(sim.vals.y0); if (Math.abs(y1 - y0) < 4) return; g.save(); g.strokeStyle = 'rgba(95,208,196,0.85)'; g.lineWidth = 1.2; g.setLineDash([2, 3]);
     g.beginPath(); g.moveTo(x, y0); g.lineTo(x, y1); g.stroke(); g.setLineDash([]); for (const y of [y0, y1]) { g.beginPath(); g.moveTo(x - 4, y); g.lineTo(x + 4, y); g.stroke(); } g.restore(); this.lines.push([x, y0, x, y1]);
-    this.labels.push({ runs: [{ t: 'h', f: 'italic 600 13px ' + Renderer.SERIF, col: '#8fe3d9' }, { t: ' = ' + Fmt.m(n.p.y - sim.vals.y0), f: '600 11px ' + Renderer.MONO, col: '#8fe3d9' }], at: { x: x - 4, y: (y0 + y1) / 2 }, dir: { x: -1, y: 0 } }); }
+    this.labels.push({ runs: [{ t: 'h', f: 'italic 600 13px ' + Renderer.SERIF, col: '#8fe3d9' }, ...(sim.show.nums ? [{ t: ' = ' + Fmt.m(n.p.y - sim.vals.y0), f: '600 11px ' + Renderer.MONO, col: '#8fe3d9' }] : [])], at: { x: x - 4, y: (y0 + y1) / 2 }, dir: { x: -1, y: 0 } }); }
 
   // ---- the vectors, from the ball's centre: flat arrows with a dark edge, as in Forces Lab's free-body diagrams ----
   flat(a, c, col, lw, head) { const g = this.g, l = Math.hypot(c.x - a.x, c.y - a.y); if (l < 1) return; const u = { x: (c.x - a.x) / l, y: (c.y - a.y) / l };
     const draw = (w, h, colr) => { const hb = { x: c.x - u.x * h, y: c.y - u.y * h }; g.strokeStyle = colr; g.fillStyle = colr; g.lineWidth = w; g.beginPath(); g.moveTo(a.x, a.y); g.lineTo(hb.x, hb.y); g.stroke();
       g.beginPath(); g.moveTo(c.x + u.x * (w > lw ? 1 : 0), c.y + u.y * (w > lw ? 1 : 0)); g.lineTo(hb.x - u.y * h * 0.5, hb.y + u.x * h * 0.5); g.lineTo(hb.x + u.y * h * 0.5, hb.y - u.x * h * 0.5); g.closePath(); g.fill(); };
     g.save(); g.lineCap = 'butt'; g.lineJoin = 'round'; g.setLineDash([]); draw(lw + 2.4, head + 1.5, 'rgba(6,10,16,0.75)'); draw(lw, head, col); g.restore(); }
-  vectors(sim, n) { const A = this.cs, mg = n.m * G, sym = (l, s, col, rest) => { const out = [{ t: l, f: 'italic 600 14px ' + Renderer.SERIF, col }]; if (s) out.push({ t: s, f: 'italic 600 10px ' + Renderer.SERIF, col, dy: 4 }); if (rest) out.push({ t: rest, f: '700 12px ' + Renderer.MONO, col }); return out; };
+  vectors(sim, n) { const A = this.cs, mg = n.m * G, sym = (l, s, col, rest) => { if (!sim.show.nums) rest = ''; const out = [{ t: l, f: 'italic 600 14px ' + Renderer.SERIF, col }]; if (s) out.push({ t: s, f: 'italic 600 10px ' + Renderer.SERIF, col, dy: 4 }); if (rest) out.push({ t: rest, f: '700 12px ' + Renderer.MONO, col }); return out; };
     // (an arrow longer than 0.4 of the picture's height is drawn at that length: its label still gives the true size)
     const arrow = (vec, scale, col, lw, runs) => { let k = scale * this.s; const L = Math.hypot(vec.x, vec.y) * k, cap = 0.4 * this.H; if (L > cap) k *= cap / L; const B = { x: A.x + vec.x * k, y: A.y - vec.y * k }; if (Math.hypot(B.x - A.x, B.y - A.y) < 3) return;
       this.flat(A, B, col, lw, lw > 2.5 ? 9 : 8); this.labels.push({ runs, at: B, dir: { x: B.x - A.x, y: B.y - A.y }, line: [A.x, A.y, B.x, B.y] }); };

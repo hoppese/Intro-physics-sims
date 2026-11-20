@@ -98,6 +98,8 @@ class Panel {
       for (const m of g.rows) addItems.push({ header: false, isBtn: true, label: m.label, title: m.hint, iconStyle: UI.icons[m.key] || '', iconText: '', rowStyle: UI.row + cell(), onClick: () => { b.add(m.key); close(); app.refresh(); } }); }
     const presetItems = PRESETS.map((p) => ({ label: p.label, title: p.note, rowStyle: UI.row, onClick: () => { b.loadPreset(p.key); close(); app.refresh(); } }));
     const viewItems = Panel.VIEW.map(([key, label, title]) => ({ label, title, mark: b.scene.opts[key] ? '✓' : '', rowStyle: UI.row, onClick: app.run(() => b.toggleOpt(key)) }));
+    // (after the arrows: their numbers, which can go while the arrows stay)
+    viewItems.splice(1, 0, { label: 'Values', title: 'The size of each force written beside its arrow (off: just the symbol, w, n, T, f …)', mark: b.values ? '✓' : '', rowStyle: UI.row, onClick: app.run(() => b.showValues(!b.values)) });
     return { addBtnStyle: UI.drop(!!st.addOpen), addOpen: !!st.addOpen, onToggleAdd: open('addOpen'), onCloseAdd: close, addItems,
       presetBtnStyle: UI.drop(!!st.presetsOpen), presetsOpen: !!st.presetsOpen, onTogglePresets: open('presetsOpen'), onClosePresets: close, presetItems,
       viewBtnStyle: UI.drop(!!st.viewOpen), viewOpen: !!st.viewOpen, onToggleView: open('viewOpen'), onCloseView: close, viewItems,
@@ -185,7 +187,7 @@ class Panel {
     return { statusText: b.playing ? 'running' : b.started ? 'paused' : 'set up', summaryText: text }; }
 
   share() { const app = this.app, st = this.ui;
-    return { showShare: !!st.showShare, onCloseShare: () => app.setState({ showShare: false }), shareUrl: st.showShare ? ShareLink.url(this.bench.scene, st.shareHide) : '', onCopyShare: () => app.copyShare(), copyLabel: st.shareCopied ? 'Copied' : 'Copy',
+    return { showShare: !!st.showShare, onCloseShare: () => app.setState({ showShare: false }), shareUrl: st.showShare ? ShareLink.url(this.bench.scene, st.shareHide, this.bench.values) : '', onCopyShare: () => app.copyShare(), copyLabel: st.shareCopied ? 'Copied' : 'Copy',
       copyBtnStyle: "min-width:86px;flex:none;font-family:'Source Sans 3',sans-serif;font-size:12px;font-weight:700;padding:9px 15px;border-radius:8px;cursor:pointer;border:1px solid " + (st.shareCopied ? '#2f8f56' : 'rgba(224,184,90,0.5)') + ';background:' + (st.shareCopied ? '#2f8f56' : 'rgba(191,138,30,0.3)') + ';color:#fff;',
       shareHide: !!st.shareHide, onToggleShareHide: () => app.setState((s) => ({ shareHide: !s.shareHide, shareCopied: false })), selectAll: (e) => e.target.select() }; }
 

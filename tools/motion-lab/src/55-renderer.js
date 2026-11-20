@@ -59,7 +59,8 @@ class Renderer {
     const B = sim.bodies(), hideVec = sim.veiled || !sim.show.arrows;
     B.forEach((b) => { const s = b.at(sim.t), rows = two ? Renderer.ROW2[b.key] : Renderer.ROW1, x = this.px(s.x);
       if (sim.mode === 'match') this.cart(x, rows.lane, b.col); else if (sim.mode === 'diagram') this.cart(x, rows.lane, '#6fb8a0'); else this.car(x, rows.lane, b.col, Math.abs(s.v) > 1e-9 ? Math.sign(s.v) : this.facing(b));
-      this.say([...(two ? [{ t: b.key + '  ', f: '700 12px ' + Renderer.SANS, col: b.col }] : []), ...Renderer.sym('x', '', '#cfd9e3', ' = ' + Fmt.short(s.x) + ' m')], x, rows.label);
+      const tag = [...(two ? [{ t: b.key + (sim.show.nums ? '  ' : ''), f: '700 12px ' + Renderer.SANS, col: b.col }] : []), ...(sim.show.nums ? Renderer.sym('x', '', '#cfd9e3', ' = ' + Fmt.short(s.x) + ' m') : [])];
+      if (tag.length) this.say(tag, x, rows.label);      // (Values off: no x read-out; two cars keep their letters)
       if (!hideVec) this.vectors(sim, s, x, rows); });
     this.status(sim); }
   facing(b) { const m = b.motion; if (!m) return 1; const v = m.v0, a = m.knots.length ? m.knots[0].a : 0; return v > 1e-9 ? 1 : v < -1e-9 ? -1 : a < 0 ? -1 : 1; }
@@ -138,7 +139,7 @@ class Renderer {
     for (const dx of [-14, 14]) this.wheel(x + dx, y + 8, 5.4); }
   // velocity and acceleration arrows, each in its own row above (or below) the vehicle, with its value
   vectors(sim, s, x, rows) { const k = this.vecScale(sim);
-    for (const [q, col, row] of [['v', Renderer.C.v, rows.v], ['a', Renderer.C.a, rows.a]]) { const val = s[q], len = val * k[q], tip = x + len, runs = Renderer.sym(q, 'x', col, ' = ' + Fmt.short(val) + ' ' + (q === 'v' ? 'm/s' : 'm/s²'));
+    for (const [q, col, row] of [['v', Renderer.C.v, rows.v], ['a', Renderer.C.a, rows.a]]) { const val = s[q], len = val * k[q], tip = x + len, runs = Renderer.sym(q, 'x', col, sim.show.nums ? ' = ' + Fmt.short(val) + ' ' + (q === 'v' ? 'm/s' : 'm/s²') : '');
       if (Math.abs(len) >= 3) { this.fat(x, row, tip, col); const w = this.width(runs);
         // (past the tip if it fits, otherwise back on the tail's side)
         if (len > 0) { if (tip + 8 + w < this.W - 6) this.say(runs, tip + 8, row, 'left'); else this.say(runs, x - 8, row, 'right'); }

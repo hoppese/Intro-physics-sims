@@ -11,13 +11,23 @@ function look(sim, tag) { let fine = true, worst = ''; for (const [W, H] of [[60
     const o = overlaps(r.boxes); if (o && !worst) worst = W + 'x' + H + ' ' + JSON.stringify(o.map((b) => [Math.round(b.x0), Math.round(b.y0), Math.round(b.x1), Math.round(b.y1), b.what])); }
   ok(fine, tag + ': draws'); ok(!worst, tag + ': no label covers another ' + worst); }
 function runThrough(sim, tag) { look(sim, tag + ' at rest'); sim.play(); for (let i = 0; i < 1200 && sim.playing; i++) { sim.tick(1 / 60); if (i % 90 === 0) look(sim, tag + ' t=' + sim.t.toFixed(1)); } look(sim, tag + ' end');
-  for (const k of ['hints', 'dots', 'arrows']) { sim.toggleShow(k); look(sim, tag + ' ' + k); sim.toggleShow(k); } sim.seek(sim.T * 0.4); look(sim, tag + ' scrubbed back'); }
+  for (const k of ['hints', 'dots', 'arrows', 'nums']) { sim.toggleShow(k); look(sim, tag + ' ' + k); sim.toggleShow(k); } sim.seek(sim.T * 0.4); look(sim, tag + ' scrubbed back'); }
 
 // match: drive every target (with the throttle, then dragging), and sketch each graph of each
 for (const T of TARGETS) { const s = new Sim(); s.setTarget(T.key); s.throttle(0.25); runThrough(s, 'drive ' + T.key); ok(s.result && isFinite(s.result.pct), 'drive ' + T.key + ': scored');
   const d = new Sim(); d.setTarget(T.key); d.play(); for (let i = 0; i < 300; i++) { d.dragTo(1 + 0.004 * i); d.tick(1 / 60); } d.release(); look(d, 'drag ' + T.key);
   for (const k of ['x', 'v']) { const s2 = new Sim(); s2.setTask('sketch'); s2.setTarget(T.key); s2.setSketchOf(k); runThrough(s2, 'sketch ' + k + ' ' + T.key); for (let i = 0; i <= 50; i++) s2.pen(i / 5, k === 'x' ? 2 : 0.1, i === 0); s2.penUp(); ok(s2.check(), 'sketch ' + T.key + ': checks'); look(s2, 'sketch checked ' + T.key);
     const p = new Panel(app(s2)).all(); ok(p.matchScore.endsWith('%'), 'sketch ' + T.key + ': the panel shows a score'); } }
+// Values off: the arrows and the track keep their symbols but lose their numbers (the graphs keep their read-outs); on again, the numbers are back
+{ const said = []; const was = r.say; r.say = function (runs, ...a) { said.push(runs.map((x) => x.t).join('')); return was.call(this, runs, ...a); };      // (the track's labels; the graphs' read-outs stay as they are)
+  const nums = () => said.some((t) => /^([AB] +)?[xva]x? = -?[0-9]/.test(t));      // (a label on the track: not the status line's sentence)
+  for (const mode of ['match', 'cars', 'program', 'diagram']) { const s = new Sim(); s.choose(mode); s.play(); for (let i = 0; i < 90; i++) s.tick(1 / 60); s.pause && s.pause();
+    said.length = 0; r.draw(g, s, 700, 470); const on = nums(), arrowsOn = said.some((t) => /^vx/.test(t));
+    s.toggleShow('nums'); said.length = 0; r.draw(g, s, 700, 470); ok(on && !nums(), mode + ': Values off takes the numbers off the track'); ok(!arrowsOn || said.some((t) => t === 'vx'), mode + ': the arrows keep their symbols');
+    if (mode === 'cars') ok(said.includes('A') && said.includes('B'), 'cars: each car keeps its letter');
+    look(s, mode + ' values off'); s.toggleShow('nums'); said.length = 0; r.draw(g, s, 700, 470); ok(nums(), mode + ': and on again they are back'); }
+  r.say = was; }
+{ const rt = (a) => { const url = Link.url(a), b = new Sim(); Link.apply(b, url.slice(url.indexOf('?'))); return b; }; const s = new Sim(); s.choose('cars'); s.toggleShow('nums'); const b = rt(s); ok(b.show.nums === false && Link.url(s).includes('values=0'), 'share: Values off comes back off'); ok(rt(new Sim()).show.nums === true && !Link.url(new Sim()).includes('values'), 'share: on by default, and not in the link'); }
 // while sketching, nothing gives the answer away: no read-outs, no arrows, no other curves
 { const s = new Sim(); s.setTask('sketch'); s.play(); for (let i = 0; i < 120; i++) s.tick(1 / 60); const p = new Panel(app(s)).all(); ok(p.nowRows.length === 0 && p.nowHidden, 'sketching: the read-outs are hidden'); ok(s.snapshot().bodies.length === 0, 'sketching: the page reports no values'); }
 // cars, program, diagram: every preset and case

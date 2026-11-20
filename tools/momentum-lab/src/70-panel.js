@@ -162,15 +162,15 @@ class Panel {
       bugMsg: res.replace(/^(ok|err):/, ''), bugMsgColor: res.slice(0, 3) === 'ok:' ? '#7fd1a4' : '#f0a5a5' }; }
 }
 
-// ---- the address: ?mode=&preset=&restitution=&bodies=A,m,x,y,vx,vy,R;B,…&spring=E,t&rocket=fuel,rate,u,angle,start&hide=1 (SI units).
+// ---- the address: ?mode=&preset=&restitution=&bodies=A,m,x,y,vx,vy,R;B,…&spring=E,t&rocket=fuel,rate,u,angle,start&hide=1&values=0 (SI units; values=0: arrows without their numbers).
 // Full names throughout, so a cache-buster like ?v=3 is never read as a setting. Bodies are listed only when the preset was changed. ----
 const Link = {
   num: (x) => String(Number(Number(x).toPrecision(7))),
   url(lab, hide) { const s = lab.setup, q = new URLSearchParams(); q.set('mode', lab.mode); q.set('preset', s.preset);
     if (s.edited) { q.set('restitution', Link.num(s.e)); q.set('bodies', s.bodies.map((b) => [b.id, b.m, b.x, b.y, b.vx, b.vy, b.R].map((x, i) => (i ? Link.num(x) : x)).join(',')).join(';'));
       const c = s.charges[0]; if (c) q.set('spring', [c.E, c.at].map(Link.num).join(',')); const r = s.bodies.find((b) => b.rocket); if (r) q.set('rocket', [r.rocket.fuel, r.rocket.rate, r.rocket.u, r.rocket.ang, r.rocket.start].map(Link.num).join(',')); }
-    if (hide) q.set('hide', '1'); let base = ''; try { base = location.origin + location.pathname; } catch (e) {} return base + '?' + q.toString(); },
-  apply(lab, search) { let q; try { q = new URLSearchParams(search == null ? location.search : search); } catch (e) { return false; } const mode = q.get('mode');
+    if (hide) q.set('hide', '1'); if (!lab.show.nums) q.set('values', '0'); let base = ''; try { base = location.origin + location.pathname; } catch (e) {} return base + '?' + q.toString(); },
+  apply(lab, search) { let q; try { q = new URLSearchParams(search == null ? location.search : search); } catch (e) { return false; } const mode = q.get('mode'); if (q.get('values') === '0') lab.show.nums = false;
     if (!mode || !MODES[mode]) { if (q.get('hide') === '1') lab.hide(true); return false; } lab.load(mode, PRESET(mode, q.get('preset')) ? q.get('preset') : PRESETS[mode][0].key);
     const bodies = q.get('bodies'), S = lab.setup, fin = (x, lo, hi) => { x = Number(x); return isFinite(x) ? Math.max(lo, Math.min(hi, x)) : null; };
     if (bodies || q.get('restitution') != null || q.get('spring') || q.get('rocket')) lab.edit(() => {

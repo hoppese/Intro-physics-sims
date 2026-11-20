@@ -7,9 +7,10 @@
 class Lab {
   static SPEEDS = [1, 0.25, 0.05];          // full speed, a quarter, a twentieth (to watch a collision happen)
   static SHOW = [['p', 'Momentum', 'Each body’s momentum: its mass times its velocity'], ['P', 'Total momentum', 'The total momentum of everything, drawn from the centre of mass'], ['cm', 'Centre of mass', 'The centre of mass of everything, and its path'],
-    ['forces', 'Forces', 'The forces the bodies exert on each other: always in equal and opposite pairs'], ['v', 'Velocity', 'Each body’s velocity'], ['trails', 'Paths', 'Where each body has been']];
+    ['forces', 'Forces', 'The forces the bodies exert on each other: always in equal and opposite pairs'], ['v', 'Velocity', 'Each body’s velocity'], ['trails', 'Paths', 'Where each body has been'],
+    ['nums', 'Numbers', 'The size of each arrow written beside it (off: just the symbol, p, v, F, P …; the table keeps its numbers)']];
   static MAX = 6;
-  constructor() { this.view = new View(); this.show = { p: true, P: true, cm: true, forces: true, v: false, trails: true }; this.hidden = false; this.playing = false; this.speed = 1;
+  constructor() { this.view = new View(); this.show = { p: true, P: true, cm: true, forces: true, v: false, trails: true, nums: true }; this.hidden = false; this.playing = false; this.speed = 1;
     this.graph = 'momentum'; this.axis = 'x'; this.close = false; this.sel = null; this.rev = 0; this.dirty = true; this.load('track', 'equal'); }
   get M() { return MODES[this.mode]; }
   get oneD() { return this.M.oneD; }

@@ -10,7 +10,8 @@ class Sim {
   static SPEEDS = [0.25, 0.5, 1];
   static SHOW = [['forces', 'Forces', 'The weight, the normal force and friction, to scale'], ['v', 'Velocity', 'The velocity: along the track, or along the flight'],
     ['eline', 'Energy line', 'The height the cart could reach if all its kinetic energy became potential energy: it turns back where the track meets this line'],
-    ['height', 'Height', 'The cart’s height above the zero of potential energy'], ['trail', 'Trail', 'Where it has been in the last few seconds']];
+    ['height', 'Height', 'The cart’s height above the zero of potential energy'], ['trail', 'Trail', 'Where it has been in the last few seconds'],
+    ['nums', 'Values', 'The numbers on the arrows, the height and the energy bars (off: just the symbols, W, n, v, K …)']];
   static P = { m: { key: 'm', label: 'Mass', sym: 'm', unit: 'kg', min: 1, max: 200, step: 1, init: 40 }, v0: { key: 'v0', label: 'Start speed', sym: 'v_0', unit: 'm/s', min: 0, max: 15, step: 0.1, init: 0 },
     r: { key: 'r', label: 'Loop radius', sym: 'r', unit: 'm', min: CircleLoop.RMIN, max: CircleLoop.RMAX, step: 0.1, init: 4 },
     mu: { key: 'mu', label: 'Friction', sym: '\\mu_{\\text{k}}', unit: '', min: 0.02, max: 0.5, step: 0.01, init: 0.12 }, y0: { key: 'y0', label: 'Zero of', sym: 'U_g', unit: 'm', min: -1, max: 20, step: 0.1, init: 0 } };
@@ -18,7 +19,7 @@ class Sim {
   static GRAPHS = [['time', 'Energy vs time'], ['x', 'Energy vs position'], ['normal', 'Normal force'], ['off', 'Off']];
 
   constructor() { this.vals = {}; for (const k of Object.keys(Sim.P)) this.vals[k] = Sim.P[k].init; this.friction = false; this.playing = false; this.speed = 1; this.hidden = false;
-    this.show = { forces: true, v: true, eline: true, height: false, trail: true }; this.graph = 'time'; this.rev = 0; this.dirty = true; this.trail = []; this.choose('hill'); }
+    this.show = { forces: true, v: true, eline: true, height: false, trail: true, nums: true }; this.graph = 'time'; this.rev = 0; this.dirty = true; this.trail = []; this.choose('hill'); }
   bump() { this.rev++; this.dirty = true; }
 
   // ---- the track ----

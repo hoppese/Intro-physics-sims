@@ -16,7 +16,7 @@ class Graphs {
   static range(vals) { let lo = 0, hi = 0; for (const v of vals) { if (!isFinite(v)) continue; if (v < lo) lo = v; if (v > hi) hi = v; } if (hi - lo < 1e-9) return [-1, 1]; const pad = (hi - lo) * 0.08; return [lo < 0 ? lo - pad : lo, hi + pad]; }
   static index(R, t) { let lo = 0, hi = R.length - 1; if (t <= R[0].t) return 0; if (t >= R[hi].t) return hi; while (hi - lo > 1) { const m = (lo + hi) >> 1; if (R[m].t <= t) lo = m; else hi = m; } return t - R[lo].t <= R[hi].t - t ? lo : hi; }
 
-  draw(g, sim, W, H) { const C = Graphs.C, R = sim.ride.rec, M = Graphs.M, m = sim.vals.m, y0 = sim.vals.y0; this.g = g; this.W = W; this.H = H; this.area = null;
+  draw(g, sim, W, H) { const C = Graphs.C, R = sim.ride.rec, M = Graphs.M, m = sim.vals.m, y0 = sim.vals.y0; this.g = g; this.W = W; this.H = H; this.nums = sim.show.nums !== false; this.area = null;
     g.fillStyle = C.bg; g.fillRect(0, 0, W, H); if (!R.length) return;
     const kind = sim.graph, idx = Graphs.index(R, sim.time); this.idx = idx;
     if (kind !== 'normal' && sim.hidden) { this.note('Energies hidden: work them out first, then press Show energies.'); return; }
@@ -53,7 +53,7 @@ class Graphs {
     const xc = tx(o.xs[cut]); if (!o.scatter) { g.strokeStyle = C.cursor; g.lineWidth = 1.2; g.beginPath(); g.moveTo(xc, r.y0); g.lineTo(xc, r.y1); g.stroke(); }
     // the moment shown: each curve's point, emphasised with a soft ring
     for (const s of series) { if (s.noRead) continue; const v = s.vals[cut]; if (isFinite(v)) { const y = ty(v); g.beginPath(); g.arc(xc, y, 7.5, 0, 2 * Math.PI); g.fillStyle = G3.alpha(s.col, 0.22); g.fill(); g.beginPath(); g.arc(xc, y, 4, 0, 2 * Math.PI); g.fillStyle = s.col; g.fill(); g.lineWidth = 1.4; g.strokeStyle = '#0f1722'; g.stroke(); } }
-    let x = r.x0 + 4; for (const s of series) { if (s.noRead) { x = this.readout(x, r.y0 - 12, s, '') + 16; continue; } const v = s.vals[cut]; if (!isFinite(v)) continue; x = this.readout(x, r.y0 - 12, s, Fmt.num(v, Math.abs(v) >= 100 ? 0 : 1) + ' ' + o.unit) + 16; }
+    let x = r.x0 + 4; for (const s of series) { if (s.noRead) { x = this.readout(x, r.y0 - 12, s, '') + 16; continue; } const v = s.vals[cut]; if (!isFinite(v)) continue; x = this.readout(x, r.y0 - 12, s, !this.nums ? '' : Fmt.num(v, Math.abs(v) >= 100 ? 0 : 1) + ' ' + o.unit) + 16; }
     return [lo, hi]; }
   readout(x, y, s, value) { const g = this.g; g.textBaseline = 'middle'; g.textAlign = 'left'; g.font = 'italic 600 13px ' + Renderer.SERIF; g.fillStyle = s.col; g.fillText(s.l, x, y); x += g.measureText(s.l).width + 1;
     if (s.s) { g.font = 'italic 600 9px ' + Renderer.SERIF; g.fillText(s.s, x, y + 4); x += g.measureText(s.s).width + 1; } if (value) { g.font = '600 11px ' + Renderer.MONO; g.fillStyle = Graphs.C.ink; const t = ' = ' + value; g.fillText(t, x, y); x += g.measureText(t).width; } return x; }
@@ -65,7 +65,7 @@ class Graphs {
       const gr = g.createLinearGradient(x, 0, x + w, 0); gr.addColorStop(0, G3.lite(s.col, 0.25, s.k === 'E' ? 0.45 : 0.95)); gr.addColorStop(1, G3.dark(s.col, 0.3, s.k === 'E' ? 0.45 : 0.95));
       g.fillStyle = gr; g.beginPath(); if (g.roundRect) g.roundRect(x, top, w, h, [3, 3, 0, 0]); else g.rect(x, top, w, h); g.fill(); if (s.k === 'E') { g.setLineDash([3, 3]); g.strokeStyle = G3.alpha(s.col, 0.8); g.lineWidth = 1; g.stroke(); g.setLineDash([]); }
       g.fillStyle = 'rgba(255,255,255,0.35)'; g.fillRect(x + 1, top + 1, w - 2, 1.2);
-      g.font = '600 9.5px ' + Renderer.MONO; g.textAlign = 'center'; g.textBaseline = 'bottom'; g.fillStyle = C.ink; g.fillText(Fmt.num(v, 0), x + w / 2, Math.max(r.y0 + 10, (v >= 0 ? top : top + h + 12) - 2));
+      g.font = '600 9.5px ' + Renderer.MONO; g.textAlign = 'center'; g.textBaseline = 'bottom'; g.fillStyle = C.ink; if (this.nums) g.fillText(Fmt.num(v, 0), x + w / 2, Math.max(r.y0 + 10, (v >= 0 ? top : top + h + 12) - 2));
       g.font = 'italic 600 12px ' + Renderer.SERIF; g.textAlign = 'center'; g.textBaseline = 'top'; g.fillStyle = s.col; const lw = g.measureText(s.l).width; g.fillText(s.l, x + w / 2 - (s.s ? 4 : 0), r.y1 + 5);
       if (s.s) { g.font = 'italic 600 8px ' + Renderer.SERIF; g.textAlign = 'left'; g.fillText(s.s, x + w / 2 - 4 + lw / 2, r.y1 + 10); } });
     g.font = '600 10px ' + Renderer.SANS; g.fillStyle = C.text; g.textAlign = 'center'; g.textBaseline = 'bottom'; g.fillText('now (J)', (r.x0 + r.x1) / 2, r.y0 - 4); }

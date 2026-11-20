@@ -10,7 +10,7 @@ for (const key of Object.keys(PRESETS)) for (const rider of ['ball', 'car']) for
   const sim = new Sim(); sim.choose(key); sim.setRider(rider); sim.setFriction(fr); const panel = new Panel(app(sim)), tag = key + '/' + rider + (fr ? ' friction' : ''); let fine = true, worst = '';
   const look = (what) => { for (const [W, H] of [[600, 440], [360, 264]]) { try { r.draw(g, sim, W, H); for (const k of ['time', 'x', 'normal']) { sim.graph = k; gr.draw(g, sim, W, 200); } sim.graph = 'time'; panel.all(); } catch (e) { fine = false; console.log(tag, what, e.stack.split('\n').slice(0, 3).join(' | ')); return; }
       const B = r.boxes.slice(-r.labels.length); for (let i = 0; i < B.length; i++) for (let j = i + 1; j < B.length; j++) { const a = B[i], b = B[j]; if (Math.min(a.x1, b.x1) - Math.max(a.x0, b.x0) > 0.5 && Math.min(a.y1, b.y1) - Math.max(a.y0, b.y0) > 0.5 && !worst) worst = what + ' ' + W + 'x' + H; } } };
-  look('at rest'); for (const k of ['height', 'trail']) { sim.toggleShow(k); look(k); } sim.hide(true); look('hidden'); sim.hide(false);
+  look('at rest'); for (const k of ['height', 'trail', 'nums']) { sim.toggleShow(k); look(k); } sim.hide(true); look('hidden'); sim.hide(false);
   sim.play(); for (let i = 0; i < 60 * 14 && sim.playing; i++) { sim.tick(1 / 60); if (i % 50 === 0) look('running ' + sim.ride.st.mode); } look('end');
   if (sim.ride.rec.length > 4) { sim.seek(sim.ride.rec[Math.floor(sim.ride.rec.length / 2)].t); look('rewound'); }
   ok(fine, tag + ': draws in every state, toggle and graph'); ok(!worst, tag + ': no label covers another' + (worst ? ' (' + worst + ')' : '')); }
@@ -22,6 +22,20 @@ for (const key of Object.keys(PRESETS)) for (const rider of ['ball', 'car']) for
   sim.hide(true); const h = p.energy(); ok(h.nowCells.filter((c) => /J/.test(c.val)).length === 0 && !p.results().resultRows.some((x) => /sqrt/.test(x.tex)), 'panel: hidden, no energy or energy-based prediction is shown');
   ok(sim.snapshot().energy === null, 'snapshot: hidden energies are not reported'); }
 { const sim = new Sim(); sim.choose('loop'); const lines = new Panel(app(sim)).results().aheadLines.map((x) => x.t).join(' '); ok(/Lowest start/.test(lines) && /2\.5 r/.test(lines), 'panel: the loop shows its lowest start and the 2.5 r rule'); }
+
+// Values off: the arrows, the height and the energy bars keep their symbols but lose their numbers; on again, back
+{ const said = []; const rec = new Proxy(g, { get: (t, k) => k === 'fillText' ? (str) => said.push(String(str)) : t[k], set: (t, k, v) => { t[k] = v; return true; } });
+  const sim = new Sim(); sim.choose('valley'); sim.toggleShow('height'); sim.play(); for (let i = 0; i < 40; i++) sim.tick(1 / 60);
+  const draw = () => { said.length = 0; r.draw(rec, sim, 600, 440); const labels = r.labels.map((L) => L.runs.map((x) => x.t).join('')); for (const k of ['time', 'bars']) { sim.graph = k; gr.draw(rec, sim, 600, 200); } sim.graph = 'time'; return { labels, said: said.slice() }; };
+  const num = /= ?-?[0-9]/, on = draw(); ok(on.labels.some((t) => num.test(t)) && on.labels.some((t) => /^h/.test(t) && num.test(t)), 'Values on: arrow and height labels carry numbers');
+  const plain = (L) => L.filter((t) => /^-?[0-9.]+$/.test(t.trim())).length, joules = (L) => L.some((t) => /[0-9] J$/.test(t));
+  ok(joules(on.said), 'Values on: the graph read-outs carry energies in J');
+  sim.toggleShow('nums'); const off = draw(); ok(off.labels.length >= 3 && off.labels.every((t) => !/[0-9]/.test(t)), 'Values off: the arrows and the height keep their symbols, no numbers (' + off.labels.join(' | ') + ')');
+  ok(!joules(off.said) && plain(on.said) - plain(off.said) >= 3, 'Values off: the energy bars and graph read-outs lose their numbers (the axis ticks stay)');
+  ok(off.labels.some((t) => /^w/i.test(t)) && off.labels.some((t) => /^n/.test(t)) && off.labels.some((t) => /^v/.test(t)), 'Values off: W, n and v are still labelled');
+  sim.toggleShow('nums'); const back = draw(); ok(back.labels.some((t) => num.test(t)), 'Values on again: the numbers come back');
+  const a = new Sim(); a.choose('loop'); a.toggleShow('nums'); const u = Link.url(a), b = new Sim(); Link.apply(b, u.slice(u.indexOf('?'))); ok(u.includes('values=0') && b.show.nums === false, 'share link: Values off comes back off');
+  const c = new Sim(); Link.apply(c, '?track=loop'); ok(c.show.nums === true, 'Values is on by default'); }
 
 // the share link: the track (with edits), rider, settings, start and zero come back
 { const a = new Sim(); a.choose('twoHills'); a.movePoint(4, { x: 14, y: 7.9 }); a.setRider('ball'); a.set('m', 55); a.set('v0', 2.3); a.set('y0', 1.7); a.setFriction(true); a.set('mu', 0.07); a.setRelease(3.4); a.setGraph('x');

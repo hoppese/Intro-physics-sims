@@ -43,7 +43,7 @@ class Sim {
 
   constructor() { this.mode = 'match'; this.task = 'drive'; this.targetKey = TARGETS[0].key; this.sketchOf = 'v'; this.carsKey = 'chase'; this.caseKey = 'turn';
     this.cars = null; this.useCars(Sim.CARS[0]); this.prog = { build: 'a', x0: 0, v0: 0, pieces: Sim.PROGRAM.map((p) => ({ ...p })), vpieces: Sim.VPROGRAM.map((p) => ({ ...p })) }; this.diag = null; this.useCase(Sim.CASES.find((c) => c.key === 'turn'));
-    this.playing = false; this.speed = 1; this.show = { hints: false, dots: false, arrows: true }; this.driver = new Driver(1); this.rev = 0; this.dirty = true; this.reset(); }
+    this.playing = false; this.speed = 1; this.show = { hints: false, dots: false, arrows: true, nums: true }; this.driver = new Driver(1); this.rev = 0; this.dirty = true; this.reset(); }
   bump() { this.rev++; this.dirty = true; }
   static fix(spec, v) { if (v === '' || v == null) return null; v = Number(v); if (!isFinite(v)) return null; return Math.round(clamp(v, spec.min, spec.max) * 1e6) / 1e6 || 0; }
 
