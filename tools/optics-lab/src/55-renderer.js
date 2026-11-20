@@ -239,7 +239,10 @@ class Renderer {
   // ---- the selection ----
   handle(el, tool) { const g = this.g, C = Renderer.C, a = this.P(el.toWorld(el.grip)), h = this.P(tool.handle(el)); g.setLineDash([]); g.strokeStyle = 'rgba(240,200,96,0.7)'; g.lineWidth = 1.2; this.line(a, h);
     g.lineWidth = 1.6; this.dot(h, tool.overHandle || tool.turning ? 7 : 6, C.gold, '#0f1722');
-    if (tool.turning === el) this.text(Fmt.deg(el.angle), h.x, h.y - 18, { font: Renderer.LABEL, color: C.gold }); }
+    if (tool.turning === el) this.text(Fmt.deg(el.angle), h.x, h.y - 18, { font: Renderer.LABEL, color: C.gold });
+    // the stretch squares, on the element itself: white, gold while under the pointer or being dragged
+    const hot = tool.overStretch || tool.stretching === el; for (const q of tool.stretchPts(el)) { const c = this.P(q), s = hot ? 4.5 : 3.8; g.beginPath(); g.rect(c.x - s, c.y - s, 2 * s, 2 * s); g.fillStyle = hot ? C.gold : '#f4f7fa'; g.fill(); g.lineWidth = 1.4; g.strokeStyle = '#0f1722'; g.stroke(); }
+    if (tool.stretching === el) { const c = this.P(el instanceof Figure ? el.tip : el.ends[1]), u = this.D(el.across); this.text('height ' + Fmt.cm(el.height), c.x + u.x * 22 + 30, c.y + u.y * 22, { font: Renderer.LABEL, color: C.gold }); } }
 
   // "Lens 1  f = 20 cm", under the element
   label(el, name, selected) { const b = el.bounds(), c = this.P({ x: (b.x0 + b.x1) / 2, y: b.y0 }), str = name + (el.tag ? '  ' + el.tag : ''); if (c.x < -60 || c.x > this.w + 60 || c.y > this.h + 4 || c.y < -30) return;

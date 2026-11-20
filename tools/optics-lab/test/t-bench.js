@@ -114,6 +114,20 @@ ok(new Workbench().add('nonsense') === null, 'an unknown key adds nothing');
   near(L.Angle.diff(lens.angle, turned.angle), 45, 1e-6, 'turned, in 5-degree steps'); t.up(at(b, V.add(lens.pos, V.polar(a0 + 47, r)))); ok(b.history.past.length === 1, 'one undo step'); b.undo(); ok(snap(b) === s0, 'undone');
   b.select(b.scene.get(lens.id)); const h2 = t.handle(b.selected); t.down(at(b, h2)); t.move(at(b, V.add(lens.pos, V.polar(a0 + 12.4, r)), { shift: true })); near(L.Angle.diff(lens.angle, b.selected.angle), 12, 1e-6, 'Shift turns in 1-degree steps'); t.cancel(); ok(snap(b) === s0, 'cancelled'); }
 
+// ---- stretching ----
+{ const b = new Workbench(); b.view.resize(560, 400); b.edit((s) => { s.add({ t: 'lens', x: 0, y: 0, f: 20, height: 30 }); s.add({ t: 'mirror', x: 60, y: 0, flat: 0, f: 15, height: 30 }); s.add({ t: 'object', x: -40, y: 0, height: 10 }); }); b.fit(); b.history.clear();
+  const t = new PointerTool(b), [lens, mir, obj] = b.scene.els, s0 = snap(b), live = (e) => b.scene.get(e.id);
+  b.select(live(lens)); const top = at(b, { x: 0, y: 15 }); ok(t.onStretch(top) && t.onStretch(at(b, { x: 0, y: -15 })), "a lens's two ends are stretch squares"); ok(!t.onHandle(top), 'and are clear of the turning handle');
+  t.move(top); ok(t.overStretch && t.cursor === 'ns-resize', 'hovering one offers an up-down resize');
+  t.down(top); ok(t.mode === 'stretch', 'pressing it starts a stretch'); t.move(at(b, { x: 3, y: 22.3 })); near(live(lens).height, 45, 1e-9, 'dragging the top end to 22.3 cm gives a 45 cm lens (about its middle)'); ok(live(lens).x === 0 && live(lens).y === 0 && live(lens).f === 20, 'which stays put, with f unchanged');
+  t.up(at(b, { x: 3, y: 22.3 })); ok(b.history.past.length === 1, 'one undo step');
+  t.down(at(b, { x: 0, y: -22.5 })); t.move(at(b, { x: 0, y: -8.13 }, { shift: true })); near(live(lens).height, 16.3, 1e-9, 'the bottom end works too; Shift gives 0.1 cm'); t.cancel(); near(live(lens).height, 45, 1e-9, 'Escape puts it back');
+  b.select(live(mir)); const me = live(mir).ends[0]; ok(t.onStretch(at(b, me)), "a mirror's end is a stretch square"); t.down(at(b, me)); t.move(at(b, { x: 60, y: -20 })); near(live(mir).height, 40, 1e-9, 'a mirror stretches about its middle'); t.up(at(b, { x: 60, y: -20 }));
+  b.select(live(obj)); const tip = at(b, live(obj).tip); ok(t.onStretch(tip) && !t.onHandle(tip), "an object's tip is a stretch square, clear of its turning handle");
+  t.down(tip); t.move(at(b, { x: -40, y: 16 })); ok(live(obj).height === 16 && live(obj).y === 0, 'stretching the tip changes the height; the foot stays'); t.move(at(b, { x: -40, y: -5 })); ok(live(obj).height === 1, 'it cannot go below its smallest height'); t.up(at(b, { x: -40, y: -5 }));
+  b.select(null); ok(!t.onStretch(tip), 'nothing to stretch with nothing selected');
+  while (b.history.canUndo) b.undo(); ok(snap(b) === s0, 'all undone'); }
+
 // ---- dragging a focal point ----
 { const b = new Workbench(); b.view.resize(560, 400); b.edit((s) => { s.add({ t: 'lens', x: 0, y: 0, f: 20, height: 30 }); s.add({ t: 'mirror', x: 60, y: 0, flat: 0, f: 15, height: 30 }); }); b.fit(); b.history.clear();
   const t = new PointerTool(b), [lens, mir] = b.scene.els, s0 = snap(b), A = (x) => at(b, V.at(lens.pos, lens.dir, x));

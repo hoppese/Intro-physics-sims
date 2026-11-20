@@ -122,7 +122,7 @@ class Panel {
   // ---- the selected element ----
   inspector() { const app = this.app, b = this.bench, el = b.selected, st = this.ui;
     const none = { hasSel: false, noSel: true, selKind: '', selLabel: '', selFields: [], selChips: [], hasChips: false, selNote: '', hasLog: false, selLog: [], selLogHead: '',
-      noSelText: b.scene.isEmpty ? 'Use + Add Element to put a light source on the bench, then lenses, mirrors or glass in its way. Or start from a preset.' : 'Click an element to see and change its numbers. Drag it to move it; drag its gold handle to turn it.',
+      noSelText: b.scene.isEmpty ? 'Use + Add Element to put a light source on the bench, then lenses, mirrors or glass in its way. Or start from a preset.' : 'Click an element to see and change its numbers. Drag it to move it, its gold handle to turn it, its white squares to stretch it.',
       onRotL: () => {}, onRotR: () => {}, onDup: () => {}, onDelete: () => {} };
     if (!el) return none;
     const d = st.draft, text = (k) => (d && d.id === el.id && d.field === k ? d.text : String(el[k]));
