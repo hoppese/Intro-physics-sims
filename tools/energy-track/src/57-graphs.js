@@ -27,11 +27,17 @@ class Graphs {
     const roll = sim.rolling, Kr = (r) => r.Kr || 0;
     const series = [{ k: 'K', l: 'K', s: roll ? 'tr' : '', vals: R.map((r) => r.K) }, ...(roll ? [{ k: 'Kr', l: 'K', s: 'rot', vals: R.map(Kr) }] : []), { k: 'U', l: 'U', s: 'g', vals: R.map(U) }, { k: 'th', l: 'E', s: 'th', vals: R.map((r) => r.th) }, { k: 'E', l: 'E', s: 'tot', dash: [5, 4], vals: R.map((r) => r.K + Kr(r) + U(r) + r.th) }];
     series.forEach((s) => (s.col = Graphs.ECOL[s.k])); if ((!sim.friction || roll) && !R.some((r) => r.th > 0.05)) series.splice(series.findIndex((s) => s.k === 'th'), 1);
-    if (kind === 'time') { const rng = this.plot(rect, R, series, { unit: 'J', xs: R.map((r) => r.t), xlo: t0, xhi: tmax, xlabel: 't (s)', cursor: idx }); this.bars({ x0: x1 + 22, x1: W - M.r, y0: rect.y0, y1: rect.y1 }, series, rng); return; }
+    if (kind === 'time') { const rng = this.plot(rect, R, series, { unit: 'J', xs: R.map((r) => r.t), xlo: t0, xhi: tmax, xlabel: 't (s)', cursor: idx }); this.marks(rect, sim, (e) => this.tx(e.t)); this.bars({ x0: x1 + 22, x1: W - M.r, y0: rect.y0, y1: rect.y1 }, series, rng); return; }
     if (kind === 'x') { const S = sim.track.S, track = { k: 'track', l: 'U', s: 'g, track', col: Graphs.ECOL.track, vals: S.map((q) => m * G * (q.y - y0)), xs: S.map((q) => q.x), wide: true, noRead: true };
       const mech = series.find((s) => s.k === 'E'); const pts = [track, ...series.filter((s) => s.k === 'K' || s.k === 'Kr' || s.k === 'U'), { ...mech, l: 'E', s: 'mech', vals: R.map((r) => r.K + Kr(r) + U(r)) }];
-      const w = Track.WORLD, rng = this.plot(rect, R, pts, { unit: 'J', xs: R.map((r) => r.x), xlo: w.x0, xhi: w.x1, xlabel: 'x (m)', cursor: idx, scatter: true }); this.bars({ x0: x1 + 22, x1: W - M.r, y0: rect.y0, y1: rect.y1 }, series, rng); return; }
-    const mg = m * G; this.plot(rect, R, [{ k: 'n', l: 'n', s: '', col: '#6cb8ff', vals: R.map((r) => (r.mode === 'air' ? NaN : r.n)) }, { k: 'mg', l: 'mg', s: '', col: '#ff7a7a', dash: [5, 4], vals: R.map(() => mg) }], { unit: 'N', xs: R.map((r) => r.t), xlo: t0, xhi: tmax, xlabel: 't (s)', cursor: idx }); }
+      const w = Track.WORLD, rng = this.plot(rect, R, pts, { unit: 'J', xs: R.map((r) => r.x), xlo: w.x0, xhi: w.x1, xlabel: 'x (m)', cursor: idx, scatter: true }); this.marks(rect, sim, (e) => rect.x0 + (rect.x1 - rect.x0) * (e.r.x - w.x0) / (w.x1 - w.x0)); this.bars({ x0: x1 + 22, x1: W - M.r, y0: rect.y0, y1: rect.y1 }, series, rng); return; }
+    const mg = m * G; this.plot(rect, R, [{ k: 'n', l: 'n', s: '', col: '#6cb8ff', vals: R.map((r) => (r.mode === 'air' ? NaN : r.n)) }, { k: 'mg', l: 'mg', s: '', col: '#ff7a7a', dash: [5, 4], vals: R.map(() => mg) }], { unit: 'N', xs: R.map((r) => r.t), xlo: t0, xhi: tmax, xlabel: 't (s)', cursor: idx }); if (this.area) this.marks(rect, sim, (e) => this.tx(e.t)); }
+
+  // the history's events, as numbered ticks along the foot of the graph (gold: the one the clock is at)
+  marks(r, sim, X) { const g = this.g, E = sim.events, at = sim.playing ? -1 : sim.evIndex; let lastX = -Infinity; g.save(); g.font = '700 8.5px ' + Renderer.MONO; g.textAlign = 'center'; g.textBaseline = 'bottom';
+    E.forEach((e, i) => { const x = X(e), on = i === at; if (!(x >= r.x0 - 1 && x <= r.x1 + 1)) return; g.strokeStyle = on ? Graphs.C.cursor : 'rgba(240,200,96,0.5)'; g.lineWidth = on ? 2 : 1.2; g.beginPath(); g.moveTo(x, r.y1); g.lineTo(x, r.y1 - (on ? 9 : 6)); g.stroke();
+      if (on || x - lastX > 13) { g.fillStyle = on ? Graphs.C.cursor : 'rgba(240,200,96,0.7)'; g.fillText(String(i + 1), x, r.y1 - (on ? 10 : 7)); if (!on) lastX = x; } });
+    g.restore(); }
 
   tx(t) { const a = this.area; return a.x0 + (a.x1 - a.x0) * (t - a.t0) / (a.tmax - a.t0); }
   timeAt(px) { const a = this.area; if (!a) return null; return Math.max(a.t0, Math.min(a.tEnd, a.t0 + (px - a.x0) / (a.x1 - a.x0) * (a.tmax - a.t0))); }

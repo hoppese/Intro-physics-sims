@@ -25,7 +25,7 @@ class Component extends DCLogic {
 
   run(fn) { return () => { fn(); this.refresh(); }; }
   refresh() { this.shown = this.stamp; this.forceUpdate(); }
-  get stamp() { const s = this.sim; return s.rev + '|' + Math.floor(s.time * 10) + '|' + (s.ride.done ? 1 : 0) + '|' + (s.ride.event || '').length; }
+  get stamp() { const s = this.sim; return s.rev + '|' + Math.floor(s.time * 10) + '|' + (s.ride.done ? 1 : 0) + '|' + (s.ride.event || '').length + '|' + s.ride.events.length; }
 
   setCanvas = (el) => { if (el === this.canvas) return; this.canvas = el; if (!el) return; el.dataset.obResponsive = '1'; this.ctx = el.getContext('2d');
     el.addEventListener('pointerdown', this.onDown); el.addEventListener('dblclick', this.onDouble); el.addEventListener('pointermove', this.onHover); this.start(); };
@@ -80,6 +80,7 @@ class Component extends DCLogic {
     if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') { if (key === 'Enter' && e.target.blur) e.target.blur(); return; }
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     if (key === ' ' && tag !== 'BUTTON') { e.preventDefault(); this.sim.toggle(); this.refresh(); }
+    else if ((key === 'ArrowRight' || key === 'ArrowLeft') && !e.shiftKey) { e.preventDefault(); if (key === 'ArrowRight') this.sim.nextEvent(); else this.sim.prevEvent(); this.refresh(); }
     else if (key === 'Escape' && (this.state.menuOpen || this.state.tracksOpen)) this.setState({ menuOpen: false, tracksOpen: false }); };
 
   publish() { try { const s = this.sim, snap = s.snapshot(); window.simState = { sim: 'energy-track', ...snap };

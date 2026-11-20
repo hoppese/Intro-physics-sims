@@ -18,7 +18,7 @@ class Panel {
   constructor(app) { this.app = app; }
   get sim() { return this.app.sim; }
   get ui() { return this.app.state; }
-  all() { return { ...this.header(), ...this.tracks(), ...this.settings(), ...this.energy(), ...this.results(), ...this.canvas(), ...this.share(), ...this.info(), ...this.bugForm(), stop: (e) => e.stopPropagation() }; }
+  all() { return { ...this.header(), ...this.tracks(), ...this.settings(), ...this.energy(), ...this.results(), ...this.canvas(), ...this.history(), ...this.share(), ...this.info(), ...this.bugForm(), stop: (e) => e.stopPropagation() }; }
 
   header() { const app = this.app, st = this.ui, s = this.sim;
     const row = (a) => "display:flex;align-items:center;gap:8px;width:100%;font-family:'Source Sans 3',sans-serif;font-size:12.5px;font-weight:600;color:#dbe6ef;background:" + (a ? 'rgba(191,138,30,0.36)' : 'transparent') + ';border:none;border-radius:7px;padding:8px 9px;cursor:pointer;text-align:left;';
@@ -101,12 +101,21 @@ class Panel {
   canvas() { const app = this.app, s = this.sim, sp = s.speed;
     return { setCanvas: app.setCanvas, setGraphCanvas: app.setGraphCanvas,
       clockBtns: [{ label: s.playing ? '❚❚ Pause' : '▶ Run', title: s.playing ? 'Stop the clock (Space)' : 'Start the clock (Space)', style: UI.tool(s.playing), onClick: app.run(() => s.toggle()) },
-        { label: '↺', title: 'Reset: back to the start', style: UI.tool(false), onClick: app.run(() => s.reset()) }, { label: '⏭', title: 'Step on 1/30 s', style: UI.tool(false), onClick: app.run(() => s.step()) },
+        { label: '↺', title: 'Reset: back to the start', style: UI.tool(false), onClick: app.run(() => s.reset()) }, { label: '⏭', title: 'Step on 1/30 s (→ and ← jump between events)', style: UI.tool(false), onClick: app.run(() => s.step()) },
         { label: sp === 1 ? '1×' : sp === 0.5 ? '½×' : '¼×', title: 'Speed: full, half or quarter (slow motion)', style: UI.tool(sp < 1), onClick: app.run(() => { const k = Sim.SPEEDS.indexOf(sp); s.speed = Sim.SPEEDS[(k + 2) % 3]; s.bump(); }) }],
       timeStr: 't = ' + Fmt.time(s.time),
       showChips: Sim.SHOW.map(([k, label, title]) => ({ label, title, style: UI.chip(s.show[k]), onClick: app.run(() => s.toggleShow(k)) })),
       graphTabs: Sim.GRAPHS.map(([k, label]) => ({ label, style: UI.tab(s.graph === k), onClick: app.run(() => s.setGraph(k)) })), graphOn: s.graph !== 'off', graphBoxStyle: 'background:#0f1722;border-radius:0 0 10px 10px;overflow:hidden;' + (s.graph === 'off' ? 'display:none;' : ''),
       graphHint: s.graph === 'x' ? 'The green band is the potential energy the track itself gives at each x. Where the dashed mechanical-energy line meets it, K = 0: the turning points.' : s.graph === 'off' ? 'No graph' : 'Drag along the graph to go back to any moment of the run.' }; }
+
+  // ---- the history: step from one noteworthy moment of the run to the next (← →); the canvas shows what happened there and why ----
+  history() { const app = this.app, s = this.sim, E = s.events, at = s.evIndex, last = s.evLast, cur = at >= 0 ? at : last, D = cur >= 0 ? s.describe(cur) : null;
+    const btn = (on) => 'font-size:11px;font-weight:700;height:22px;min-width:24px;padding:0 6px;margin-bottom:3px;border-radius:6px;cursor:' + (on ? 'pointer' : 'default') + ';border:1px solid #d7dbe0;background:#fff;color:' + (on ? '#3a414a' : '#c3c8ce') + ';';
+    const canPrev = E.some((e) => e.t < s.time - 1e-7), canNext = !s.ride.done || E.some((e) => e.t > s.time + 1e-7);
+    return { evPrevStyle: btn(canPrev), evNextStyle: btn(canNext), onPrevEvent: app.run(() => s.prevEvent()), onNextEvent: app.run(() => s.nextEvent()),
+      evLabel: D ? (at >= 0 ? 'Event ' + (at + 1) + ' of ' + E.length + ': ' : 'After ' + (cur + 1) + ': ') + D.short : 'Events',
+      evTitle: D ? (cur + 1) + '. ' + D.title + ' — ' + D.why : 'Step through the run’s noteworthy moments',
+      evLabelStyle: "font-family:'Source Sans 3',sans-serif;font-size:11px;font-weight:700;margin-bottom:3px;padding:0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px;cursor:help;color:" + (at >= 0 ? '#8a6310' : '#8a929b') + ';' }; }
 
   share() { const app = this.app, st = this.ui;
     return { showShare: !!st.showShare, onCloseShare: () => app.setState({ showShare: false }), shareUrl: st.showShare ? Link.url(this.sim, st.shareHide) : '', onCopyShare: () => app.copyShare(), copyLabel: st.shareCopied ? 'Copied' : 'Copy',

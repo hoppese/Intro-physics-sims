@@ -18,6 +18,10 @@
 // while rolling); in the air nothing changes it, and on landing (track or ground) the contact's friction brings it
 // back to rolling, keeping the angular momentum about the contact point: v' = (v_t - beta W)/(1 + beta). Whatever
 // that takes goes with the thermal energy, like a landing jolt. `ang` is the turn of the drawn ball (radius RDRAW).
+// The history: as it runs, the ride notes the moments worth stopping at (events: { t, kind, d, r }, d the numbers that
+// explain it, r the recording at that instant, which is made exactly then so seeking to t lands on it): the start,
+// each turning point (v = 0), the fastest and slowest points of each stretch of track, leaving the track (n = 0), the
+// top of a flight, a landing (and what its jolt took), off the end, and the end of the run. Sim.describe words them.
 // =====================================================================
 const G = 9.8;
 
@@ -28,8 +32,22 @@ class Ride {
   static GRACE = 0.04;             // s: just after leaving the track, it cannot land on it again
   static RDRAW = 0.45;              // m: the ball's radius as drawn (its turn is the distance rolled over this)
   constructor(track, o) { this.track = track; this.m = o.m; this.beta = o.beta || 0; this.mu = this.beta > 0 ? 0 : o.mu || 0; this.locked = !!o.locked; this.v0 = o.v0 || 0; this.s0 = o.s0 || 0; this.reset(); }
-  reset() { const u = this.track.uAt(this.s0), g = this.track.geo(u); this.seen = {}; this.st = { mode: 'track', u, ud: this.v0 / g.sp, th: 0, tair: 0, ang: 0 }; this.t = 0; this.done = null; this.event = null; this.rec = []; this.nextRec = 0;
-    if (this.v0 === 0 && this.mu > 0) this.stuck(); this.record(); }
+  reset() { const u = this.track.uAt(this.s0), g = this.track.geo(u); this.seen = {}; this.st = { mode: 'track', u, ud: this.v0 / g.sp, th: 0, tair: 0, ang: 0 }; this.t = 0; this.done = null; this.event = null; this.rec = []; this.nextRec = 0; this.events = []; this.pending = []; this.stash = null; this.trend = 0;
+    if (this.v0 === 0 && this.mu > 0) this.stuck(); this.record(); this.events.push({ t: 0, kind: 'start', d: { v: Math.abs(this.v0), y: g.p.y }, r: this.rec[0] }); }
+  // an event in this step: written down (with its own recording) once the clock has moved on to the step's end
+  note(kind, d) { this.pending.push({ kind, d }); }
+  // A fastest (or slowest) point is held back until the speed has moved clearly away from it (by WIGGLE), so the ripples
+  // of a nearly level stretch make no events: another of the same kind meanwhile replaces it if it is more extreme, one of
+  // the other kind is a ripple and is dropped. Any other event lets it through first.
+  static wiggle(v) { return Math.max(0.15, 0.02 * v); }
+  flush() { const R = this.rec, E = this.events; if (!R.length || Math.abs(R[R.length - 1].t - this.t) > 1e-12) this.record(); const r = R[R.length - 1];
+    for (const e of this.pending) { const ev = { t: this.t, kind: e.kind, d: e.d, r }, c = this.stash;
+      if (ev.kind === 'confirm') { if (c) E.push(c); this.stash = null; continue; }
+      if (ev.kind === 'fast' || ev.kind === 'slow') { if (!c || (c.kind === ev.kind && (ev.kind === 'fast') === (ev.d.v > c.d.v))) this.stash = ev; continue; }
+      if (c) { E.push(c); this.stash = null; } const L = E[E.length - 1]; if (ev.kind === 'done' && L && L.kind === 'turn' && L.t === ev.t) E.pop(); E.push(ev); }      // (stopped by friction: the stop, not a turning point)
+    this.pending = []; }
+  // is the speed rising (1) or falling (-1) here on the track (0: neither, or not on the track)
+  trendAt(u, ud) { const a = this.forces(u, ud).at * ud; return a > 1e-6 ? 1 : a < -1e-6 ? -1 : 0; }
 
   // ---- on the track ----
   // the normal force (signed: negative means the track would have to pull) and the tangential acceleration, at (u, ud)
@@ -42,11 +60,18 @@ class Ride {
   stepTrack(h) { const s = this.st, T = this.track.T; let nx = this.rk4(s, h);
     // off an end of the track: on as a projectile from the end, at the speed energy says it has there
     if (nx.u < 0 || nx.u > T) { const end = nx.u < 0 ? 0 : T, q = this.track.geo(end), E = this.mech(s) - this.m * G * q.p.y - (nx.th - s.th), sp = Math.sqrt(Math.max(0, 2 * E / ((1 + this.beta) * this.m))), dir = nx.u < 0 ? -1 : 1;
-      this.st = { mode: 'air', p: q.p, v: { x: q.T.x * sp * dir, y: q.T.y * sp * dir }, th: nx.th, tair: 0, nrm: q.N, w: -sp * dir, ang: s.ang || 0 }; this.event = 'Off the end of the track: from here it is a projectile, with only gravity acting.'; return; }
+      this.st = { mode: 'air', p: q.p, v: { x: q.T.x * sp * dir, y: q.T.y * sp * dir }, th: nx.th, tair: 0, nrm: q.N, w: -sp * dir, ang: s.ang || 0 }; this.event = 'Off the end of the track: from here it is a projectile, with only gravity acting.'; this.trend = 0; this.note('end', { v: sp, y: q.p.y }); return; }
     // the track would have to pull: find where n reaches zero (bisecting the step), and leave there
     if (!this.locked && this.forces(nx.u, nx.ud).n < 0) { let lo = 0, hi = h; for (let i = 0; i < 40; i++) { const m = (lo + hi) / 2; if (this.forces(this.rk4(s, m).u, this.rk4(s, m).ud).n < 0) hi = m; else lo = m; }
       const at = this.rk4(s, lo), q = this.track.geo(at.u), v = q.sp * at.ud; this.st = { mode: 'air', p: q.p, v: { x: q.T.x * v, y: q.T.y * v }, th: at.th, tair: 0, nrm: q.N, w: -v, ang: s.ang || 0, left: { u: at.u, n: this.forces(at.u, at.ud).n } };
-      this.event = q.N.y < 0 ? 'Too slow up there: the track would have to pull it in (n < 0), which it cannot. It leaves the track and falls like a projectile.' : 'Too fast over the crest: staying on would take n < 0 (the track pulling it down), so it leaves the track and flies.'; return; }
+      this.event = q.N.y < 0 ? 'Too slow up there: the track would have to pull it in (n < 0), which it cannot. It leaves the track and falls like a projectile.' : 'Too fast over the crest: staying on would take n < 0 (the track pulling it down), so it leaves the track and flies.';
+      this.trend = 0; this.note('leave', { v: Math.abs(v), k: q.k, Ny: q.N.y, y: q.p.y }); return; }
+    // the moments worth stopping at: a turning point (v = 0), the fastest and the slowest point of a stretch (the speed stops rising, or falling)
+    const turn = s.ud * nx.ud < 0, tr = this.trendAt(nx.u, nx.ud), qn = this.track.geo(nx.u), vn = Math.abs(qn.sp * nx.ud);
+    if (turn) this.note('turn', { v: 0, y: qn.p.y });
+    else if (tr && this.trend && tr !== this.trend && (this.trend > 0 || vn > 0.05)) this.note(this.trend > 0 ? 'fast' : 'slow', { v: vn, y: qn.p.y, n: this.forces(nx.u, nx.ud).n, Ny: qn.N.y, k: qn.k });
+    if (tr) this.trend = tr;
+    if (this.stash && !turn && (this.stash.kind === 'fast' ? vn < this.stash.d.v - Ride.wiggle(this.stash.d.v) : vn > this.stash.d.v + Ride.wiggle(this.stash.d.v))) this.note('confirm');
     // passing a marked place (the loop's bottom and top): note n and v there, the first time
     if (this.track.marks) for (const k of this.track.marks) if (!this.seen[k.key] && (s.u - k.u) * (nx.u - k.u) < 0) { const f = (k.u - s.u) / (nx.u - s.u), ud = s.ud + f * (nx.ud - s.ud);
       this.seen[k.key] = { n: this.forces(k.u, ud).n, v: Math.abs(this.track.geo(k.u).sp * ud) }; }
@@ -58,12 +83,14 @@ class Ride {
 
   // ---- in the air ----
   stepAir(h) { const s = this.st, p0 = s.p, v0 = s.v, p1 = { x: p0.x + v0.x * h, y: p0.y + v0.y * h - G * h * h / 2 }, v1 = { x: v0.x, y: v0.y - G * h }, W = Track.WORLD; s.tair += h;
+    if (v0.y > 0 && v1.y <= 0 && p1.y > 0) this.note('apex', { vx: Math.abs(v0.x), y: p0.y + v0.y * v0.y / (2 * G) });
     // the ground
     if (p1.y <= 0) { const a = -G / 2, b = v0.y, c = p0.y, dt = c <= 0 ? 0 : (-b - Math.sqrt(Math.max(0, b * b - 4 * a * c))) / (2 * a), vy = v0.y - G * dt, x = p0.x + v0.x * dt, R = this.reroll(v0.x, s.w), loss = this.m * vy * vy / 2 + R.loss;
-      this.st = { mode: 'ground', x, vx: R.v, th: s.th + loss, tair: 0, ang: s.ang || 0 }; if (loss > 0.5) this.event = 'It hits the ground: the jolt takes ' + Fmt.J(loss) + ' (counted with the thermal energy). It rolls on along the ground.'; return; }
+      this.st = { mode: 'ground', x, vx: R.v, th: s.th + loss, tair: 0, ang: s.ang || 0 }; this.note('ground', { v: Math.hypot(v0.x, vy), vt: Math.abs(v0.x), vn: Math.abs(vy), jolt: this.m * vy * vy / 2, roll: R.loss, after: Math.abs(R.v), y: 0 }); if (loss > 0.5) this.event = 'It hits the ground: the jolt takes ' + Fmt.J(loss) + ' (counted with the thermal energy). It rolls on along the ground.'; return; }
     // the track: a crossing of any piece of it, from the riding side
     if (s.tair > Ride.GRACE) { const hit = this.cross(p0, p1); if (hit) { const q = this.track.geo(hit.u), vh = { x: v0.x, y: v0.y - G * hit.t * h }, vt = vh.x * q.T.x + vh.y * q.T.y, vn = vh.x * q.N.x + vh.y * q.N.y;
-      if (hit.front) { const R = this.reroll(vt, s.w), loss = this.m * vn * vn / 2 + R.loss, vr = R.v; this.st = { mode: 'track', u: hit.u, ud: vr / q.sp, th: s.th + loss, tair: 0, ang: s.ang || 0 }; this.event = loss > 0.5 ? 'It lands back on the track: the jolt takes ' + Fmt.J(loss) + ' (counted with the thermal energy).' : this.event;
+      if (hit.front) { const R = this.reroll(vt, s.w), loss = this.m * vn * vn / 2 + R.loss, vr = R.v; this.st = { mode: 'track', u: hit.u, ud: vr / q.sp, th: s.th + loss, tair: 0, ang: s.ang || 0 }; this.event = loss > 0.5 ? 'It lands back on the track: the jolt takes ' + Fmt.J(loss) + ' (counted with the thermal energy).' : this.event; this.trend = 0;
+        this.note('land', { v: Math.hypot(vh.x, vh.y), vt: Math.abs(vt), vn: Math.abs(vn), jolt: this.m * vn * vn / 2, roll: R.loss, after: Math.abs(vr), y: q.p.y, slope: Math.atan2(Math.abs(q.T.y), Math.abs(q.T.x)) * 180 / Math.PI, again: !this.locked && this.forces(hit.u, vr / q.sp).n < 0 });
         if (!this.locked && this.forces(hit.u, vr / q.sp).n < 0) this.st = { mode: 'air', p: q.p, v: { x: q.T.x * vr, y: q.T.y * vr }, th: s.th + loss, tair: 0, nrm: q.N, w: -vr, ang: s.ang || 0 }; return; }
       this.done = 'It struck the underside of the track.'; s.p = { x: hit.x, y: hit.y }; return; } }
     s.p = p1; s.v = v1; if (p1.x < W.x0 - 1 || p1.x > W.x1 + 1) this.done = 'It flew off the side of the picture.'; }
@@ -88,7 +115,8 @@ class Ride {
   // about the contact point, so v' = (vt - beta W)/(1 + beta); the kinetic energy that takes is returned as loss. Sliding (beta 0): v' = vt, no loss.
   reroll(vt, W) { const b = this.beta; if (!(b > 0)) return { v: vt, loss: 0 }; W = W || 0; const v = (vt - b * W) / (1 + b), m = this.m; return { v, loss: Math.max(0, m * vt * vt / 2 + b * m * W * W / 2 - (1 + b) * m * v * v / 2) }; }
   advance(dt) { if (this.done) return; const n = Math.max(1, Math.ceil(dt / Ride.H - 1e-9)), h = dt / n;
-    for (let i = 0; i < n && !this.done; i++) { this.step(h); this.t += h; if (this.t >= this.nextRec - 1e-9) this.record(); } if (this.done) this.record(); }
+    for (let i = 0; i < n && !this.done; i++) { this.step(h); this.t += h; if (this.t >= this.nextRec - 1e-9) this.record(); if (this.pending.length) this.flush(); }
+    if (this.done) { const E = this.events; if (!E.length || E[E.length - 1].kind !== 'done') { this.note('done', { text: this.done, y: this.now().p.y }); this.flush(); } else this.record(); } }
 
   // ---- what the moment looks like ----
   // p, v, the unit normal and tangent of the track there (or the ground), n (0 off the track), the forces, and the energies (U_g from y = 0)
@@ -108,9 +136,9 @@ class Ride {
 
   // ---- the recording: every REC seconds, enough to draw the graphs and to come back to that moment ----
   record() { const n = this.now(); this.rec.push({ t: this.t, x: n.p.x, y: n.p.y, K: n.K, Kr: n.Kr, th: n.th, n: n.n, mode: n.mode, st: { ...this.st, p: this.st.p ? { ...this.st.p } : undefined, v: this.st.v ? { ...this.st.v } : undefined }, done: this.done, event: this.event });
-    this.nextRec = this.t + Ride.REC; while (this.rec.length && this.rec[0].t < this.t - Ride.MAXREC) this.rec.shift(); }
+    this.nextRec = this.t + Ride.REC; while (this.rec.length && this.rec[0].t < this.t - Ride.MAXREC) this.rec.shift(); while (this.events && this.events.length && this.events[0].t < this.rec[0].t - 1e-9) this.events.shift(); }
   // go back (or forward) to the recorded moment nearest t; running on from there drops what came after
   seek(t) { const R = this.rec; if (!R.length) return; let best = R[0]; for (const r of R) if (Math.abs(r.t - t) < Math.abs(best.t - t)) best = r;
-    this.t = best.t; this.st = { ...best.st, p: best.st.p ? { ...best.st.p } : undefined, v: best.st.v ? { ...best.st.v } : undefined }; this.done = best.done; this.event = best.event; this.nextRec = this.t + Ride.REC; }
-  truncate() { const t = this.t; while (this.rec.length > 1 && this.rec[this.rec.length - 1].t > t + 1e-9) this.rec.pop(); }
+    this.t = best.t; this.st = { ...best.st, p: best.st.p ? { ...best.st.p } : undefined, v: best.st.v ? { ...best.st.v } : undefined }; this.done = best.done; this.event = best.event; this.nextRec = this.t + Ride.REC; this.pending = []; this.stash = null; this.trend = this.st.mode === 'track' ? this.trendAt(this.st.u, this.st.ud) : 0; }
+  truncate() { const t = this.t; while (this.rec.length > 1 && this.rec[this.rec.length - 1].t > t + 1e-9) this.rec.pop(); while (this.events.length > 1 && this.events[this.events.length - 1].t > t + 1e-9) this.events.pop(); this.stash = null; }
 }

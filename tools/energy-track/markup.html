@@ -43,6 +43,10 @@
       <div title="{{ editHint }}" style="font-size:10.5px;line-height:1.4;color:#8a929b;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ editHint }}</div>
       <div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:3px;margin-top:6px;border-bottom:1px solid #15212e;">
         <sc-for list="{{ graphTabs }}" as="gt" hint-placeholder-count="4"><button sc-camel-on-click="{{ gt.onClick }}" title="{{ graphHint }}" style="{{ gt.style }}">{{ gt.label }}</button></sc-for>
+        <span style="flex:1;"></span>
+        <button sc-camel-on-click="{{ onPrevEvent }}" title="Back to the event before (←)" style="{{ evPrevStyle }}">◀</button>
+        <span title="{{ evTitle }}" style="{{ evLabelStyle }}">{{ evLabel }}</span>
+        <button sc-camel-on-click="{{ onNextEvent }}" title="On to the next event: a turning point, the fastest or slowest point, leaving the track, a landing… (→)" style="{{ evNextStyle }}">▶</button>
       </div>
       <div style="{{ graphBoxStyle }}">
         <canvas ref="{{ setGraphCanvas }}" width="600" height="160" title="{{ graphHint }}" style="display:block;width:100%;height:160px;border-radius:0 0 10px 10px;touch-action:none;cursor:col-resize;"></canvas>

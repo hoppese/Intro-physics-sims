@@ -138,4 +138,40 @@ for (const k of Object.keys(PRESETS)) { const s = new Sim(); s.choose(k); const 
   ok(b.loopMode === 'circle' && b.vals.r === 4.7 && Math.abs(b.h0 - 13.9) < 0.02, 'share link: circle mode, radius and start come back');
   const c2 = new Sim(); c2.choose('loop'); c2.setLoopMode('spline'); const u2 = Link.url(c2), d2 = new Sim(); Link.apply(d2, u2.slice(u2.indexOf('?'))); ok(d2.loopMode === 'spline', 'share link: spline mode comes back'); }
 
+// ---- the history: the run's events, stepped through ----
+{ const hump = () => { const s = new Sim(); s.choose('valley'); const pts = PRESETS.valley.pts.map((p) => ({ ...p })); pts[3] = { x: 16, y: 4 }; s.setPoints(pts); s.setHeight(8.3); return s; };
+  const s = hump(); ok(s.events.length === 1 && s.events[0].kind === 'start' && s.evIndex === 0, 'history: a fresh run has its start as event 1, and the clock is at it');
+  const kinds = []; for (let i = 0; i < 6; i++) { ok(s.nextEvent(), 'history: next event ' + (i + 1) + ' found'); kinds.push(s.events[s.evIndex].kind); ok(s.evIndex === i + 1, 'history: the clock is at event ' + (i + 2)); }
+  ok(kinds.join(' ') === 'fast leave apex land turn fast', 'history: over a hump too sharp for it, the ice cube goes fastest, leaves (n = 0), tops its flight, lands, turns back (got ' + kinds.join(' ') + ')');
+  const E = s.events, E0 = (e) => e.r.K + e.r.y * s.vals.m * G + e.r.th;
+  for (const e of E) near(E0(e), E0(E[0]), 0.02 * Math.max(1, E0(E[0]) / 100), 'history: K + U_g + E_th is the same at every event (' + e.kind + ')');
+  const land = E.find((e) => e.kind === 'land'), before = E[E.indexOf(land) - 1];
+  near(land.r.th - before.r.th, land.d.jolt, 0.5, 'history: what E_th gains at the landing is the jolt, ½ m v⊥²'); near(land.d.jolt, s.vals.m * land.d.vn * land.d.vn / 2, 1e-6, 'history: the jolt is ½ m v⊥²');
+  ok(land.d.jolt > 1000, 'history: this landing is nearly head-on: most of K goes (' + land.d.jolt.toFixed(0) + ' J)');
+  const leave = E.find((e) => e.kind === 'leave'); near(s.ride.forces(s.track.nearest(leave.r).u, 0).n >= -1e9 ? leave.d.v * leave.d.v * Math.abs(leave.d.k) : 0, G * Math.abs(leave.d.Ny), 0.05, 'history: at leaving, v²/r = g cos θ (n = 0)');
+  const turn = E.find((e) => e.kind === 'turn'); near(turn.r.K, 0, 1e-3, 'history: K = 0 at the turning point');
+  for (let i = 0; i < E.length; i++) { const D = s.describe(i); ok(D && D.title && D.why && D.why.length > 20 && D.tally, 'history: event ' + (i + 1) + ' (' + E[i].kind + ') is put in words'); }
+  ok(/inelastic/.test(s.describe(E.indexOf(land)).why) && /E_th \+/.test(s.describe(E.indexOf(land)).tally), 'history: the landing says why energy went, and the tally shows E_th rising');
+  // back, and forward again over the recording (no new run)
+  const t5 = s.time, n = E.length; ok(s.prevEvent() && s.evIndex === n - 2, 'history: back one event'); ok(s.trail.length > 10, 'history: the trail is drawn back in after a jump');
+  ok(s.nextEvent() && Math.abs(s.time - t5) < 1e-9 && s.events.length === n, 'history: forward again lands on the same moment, nothing re-run');
+  s.seek(0); ok(s.evIndex === 0, 'history: seeking to 0 is the start'); s.play(); for (let i = 0; i < 30; i++) s.tick(1 / 60); ok(s.events.length < n, 'history: running on from earlier drops the events that came after');
+  s.pause(); ok(s.evLast >= 0 && s.evIndex === -1, 'history: between events: none is current, the last one passed is known');
+  // the hidden energies stay hidden in the words
+  const h = hump(); h.nextEvent(); h.hide(true); const D = h.describe(1); ok(!/[0-9] J/.test(D.why) && D.tally === '', 'history: with energies hidden, no joules in the event card');
+  // a plain valley: no ripples of fast/slow in the nearly level bottom; fast and turn alternate
+  const v = new Sim(); v.choose('valley'); for (let i = 0; i < 6; i++) v.nextEvent(); const vk = v.events.map((e) => e.kind).join(' ');
+  ok(vk === 'start fast turn fast turn fast turn', 'history: the valley alternates fastest and turning points (got ' + vk + ')');
+  for (const e of v.events.filter((e) => e.kind === 'turn')) near(e.r.y, v.h0, 0.01, 'history: without friction every turning point is at the start height');
+  // friction: turning points get lower, and the stop ends the history
+  const f = new Sim(); f.choose('valley'); f.setFriction(true); for (let i = 0; i < 40 && f.nextEvent(); i++); const fk = f.events.map((e) => e.kind);
+  ok(fk[fk.length - 1] === 'done' && !f.nextEvent(), 'history: friction stops it, the last event, and there is no next');
+  const ft = f.events.filter((e) => e.kind === 'turn'); ok(ft.length >= 2 && ft.every((e, i) => !i || e.r.y < ft[i - 1].r.y), 'history: with friction each turning point is lower than the one before');
+  // the ski jump: off the end, top of the flight, onto the ground
+  const k = new Sim(); k.choose('ski'); for (let i = 0; i < 10 && k.nextEvent(); i++); const kk = k.events.map((e) => e.kind).join(' ');
+  ok(/end apex ground/.test(kk), 'history: the ski jump goes off the end, tops its flight, hits the ground (got ' + kk + ')');
+  const ap = k.events.find((e) => e.kind === 'apex'); near(ap.r.K, k.vals.m * ap.d.vx * ap.d.vx / 2, 0.5, 'history: at the top of the flight K = ½ m v_x², not zero');
+  // a ball in the loop from too low: leaves near the top
+  const b = new Sim(); b.choose('loop'); b.setRider('ball'); for (let i = 0; i < 4; i++) b.nextEvent(); ok(b.events.some((e) => e.kind === 'leave' && e.d.Ny < -0.5), 'history: a ball from 2.5 r leaves the loop near its top'); }
+
 done('physics');

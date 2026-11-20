@@ -40,7 +40,7 @@ class Renderer {
     this.rail(sim.track); if (sim.time === 0 && !sim.playing) { this.handles(sim); this.start(sim); }
     if (sim.show.trail) this.trail(sim);
     this.rider(sim, n); if (sim.show.height) this.height(sim, n); this.vectors(sim, n);
-    const note = this.status(sim.ride, true); if (note) this.boxes.push(note); this.placeLabels(); this.status(sim.ride); }
+    const note = this.status(sim, true); if (note) this.boxes.push(note); this.placeLabels(); this.status(sim); }
 
   // ---- shading (as in Forces Lab) ----
   static tone(c, k, a) { const f = (x) => Math.round(k >= 1 ? x + (255 - x) * (k - 1) : x * k); return 'rgba(' + f(c[0]) + ',' + f(c[1]) + ',' + f(c[2]) + ',' + (a == null ? 1 : a) + ')'; }
@@ -172,12 +172,24 @@ class Renderer {
         const cost = (hits(b) ? 1000 : 0) + (crosses(b) ? 60 : 0) + r * 0.6 + Math.abs(turn) * 8; if (cost < bestCost) { bestCost = cost; best = { cx, cy, b }; } if (cost < 30) break; }
       this.boxes.push(best.b); let x = best.cx - w / 2;
       for (const pass of [0, 1]) { let xx = x; for (const r of L.runs) { g.font = r.f; g.textAlign = 'left'; g.textBaseline = 'middle'; if (!pass) { g.lineJoin = 'round'; g.lineWidth = 3.5; g.strokeStyle = 'rgba(10,16,24,0.92)'; g.strokeText(r.t, xx, best.cy + (r.dy || 0)); } else { g.fillStyle = r.col; g.fillText(r.t, xx, best.cy + (r.dy || 0)); } xx += g.measureText(r.t).width; } } } }
+  card(sim, i, measure) { const D = sim.describe(i), g = this.g, maxW = Math.min(this.W - 24, 600), pad = 10;
+    const wrap = (text, font, w) => { g.font = font; const out = []; let cur = ''; for (const word of text.split(' ')) { const t = cur ? cur + ' ' + word : word; if (g.measureText(t).width > w && cur) { out.push(cur); cur = word; } else cur = t; } if (cur) out.push(cur); return out; };
+    const F = { head: '700 12.5px ' + Renderer.SANS, body: '500 11.5px ' + Renderer.SANS, tally: '600 10px ' + Renderer.MONO };
+    const rows = [...wrap((i + 1) + ' of ' + sim.events.length + ' · ' + D.title, F.head, maxW - 2 * pad).map((t) => ({ t, f: F.head, c: '#f0c860', h: 17 })), ...wrap(D.why, F.body, maxW - 2 * pad).map((t) => ({ t, f: F.body, c: '#e6edf3', h: 15 })),
+      ...(D.tally ? wrap(D.tally, F.tally, maxW - 2 * pad).map((t, k) => ({ t, f: F.tally, c: '#9fb2c4', h: 14, gap: k === 0 ? 4 : 0 })) : [])];
+    let wd = 0; for (const r of rows) { g.font = r.f; wd = Math.max(wd, g.measureText(r.t).width); } wd += 2 * pad; const h = rows.reduce((a, r) => a + r.h + (r.gap || 0), 0) + 10, x = Math.max(12, (this.W - wd) / 2), y = 10;
+    if (measure) return { x0: x, y0: y, x1: x + wd, y1: y + h };
+    g.save(); g.fillStyle = 'rgba(14,22,33,0.93)'; g.strokeStyle = 'rgba(240,200,96,0.55)'; g.lineWidth = 1; g.beginPath(); if (g.roundRect) g.roundRect(x, y, wd, h, 8); else g.rect(x, y, wd, h); g.fill(); g.stroke();
+    g.textAlign = 'left'; g.textBaseline = 'middle'; let yy = y + 5; for (const r of rows) { yy += r.gap || 0; g.font = r.f; g.fillStyle = r.c; g.fillText(r.t, x + pad, yy + r.h / 2); yy += r.h; }
+    // and a ring round the rider, where it happened
+    const p = this.P(sim.ride.now().p); g.strokeStyle = 'rgba(240,200,96,0.9)'; g.lineWidth = 1.6; g.setLineDash([3, 3]); g.beginPath(); g.arc(p.x, p.y - (sim.ride.now().mode === 'air' ? 0 : 0), Math.max(14, Renderer.BALL * this.s + 7), 0, 2 * Math.PI); g.stroke(); g.restore(); }
   static segBox(x1, y1, x2, y2, b) { const inside = (x, y) => x > b.x0 && x < b.x1 && y > b.y0 && y < b.y1; if (inside(x1, y1) || inside(x2, y2)) return true;
     const X = (ax, ay, bx, by, cx, cy, dx, dy) => { const d = (bx - ax) * (dy - cy) - (by - ay) * (dx - cx); if (Math.abs(d) < 1e-9) return false; const t = ((cx - ax) * (dy - cy) - (cy - ay) * (dx - cx)) / d, u = ((cx - ax) * (by - ay) - (cy - ay) * (bx - ax)) / d; return t >= 0 && t <= 1 && u >= 0 && u <= 1; };
     return X(x1, y1, x2, y2, b.x0, b.y0, b.x1, b.y0) || X(x1, y1, x2, y2, b.x1, b.y0, b.x1, b.y1) || X(x1, y1, x2, y2, b.x0, b.y1, b.x1, b.y1) || X(x1, y1, x2, y2, b.x0, b.y0, b.x0, b.y1); }
 
   // ---- what has happened (it left the track, it landed, it stopped), across the top ----
-  status(ride, measure) { const text = ride.done || ride.event; if (!text) return null; const g = this.g, maxW = Math.min(this.W - 24, 520); g.font = '600 12px ' + Renderer.SANS;
+  // Paused at an event of the history, it is a card instead: what happened and why, then the energies there and what changed since the event before.
+  status(sim, measure) { const ride = sim.ride, at = sim.playing ? -1 : sim.evIndex; if (at >= 0) return this.card(sim, at, measure); const text = ride.done || ride.event; if (!text) return null; const g = this.g, maxW = Math.min(this.W - 24, 520); g.font = '600 12px ' + Renderer.SANS;
     const words = text.split(' '), lines = []; let cur = ''; for (const w of words) { const t = cur ? cur + ' ' + w : w; if (g.measureText(t).width > maxW - 20 && cur) { lines.push(cur); cur = w; } else cur = t; } if (cur) lines.push(cur);
     const h = 10 + lines.length * 16, wd = Math.max(...lines.map((l) => g.measureText(l).width)) + 20, x = Math.max(12, (this.W - wd) / 2), y = 10; if (measure) return { x0: x, y0: y, x1: x + wd, y1: y + h };
     g.save(); g.fillStyle = ride.done ? 'rgba(60,40,22,0.9)' : 'rgba(17,26,38,0.9)'; g.strokeStyle = 'rgba(240,200,96,0.45)'; g.lineWidth = 1;
