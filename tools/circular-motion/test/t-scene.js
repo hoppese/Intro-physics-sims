@@ -12,6 +12,8 @@ for (const key of Object.keys(SITUATIONS)) { const C = SITUATIONS[key]; for (con
       const B = r.boxes.slice(-r.labels.length); for (let i = 0; i < B.length; i++) for (let j = i + 1; j < B.length; j++) { const a = B[i], b = B[j]; if (Math.min(a.x1, b.x1) - Math.max(a.x0, b.x0) > 0.5 && Math.min(a.y1, b.y1) - Math.max(a.y0, b.y0) > 0.5 && !worst) worst = what + ' ' + W + 'x' + H; } } };
   for (const v of ['3d', 'top', 'side']) { sim.view(v); look(v); }
   sim.view('3d'); for (const k of ['comps', 'axes']) { sim.toggleShow(k); look(k); } sim.hide(true); look('hidden'); sim.hide(false);
+  { const has = () => r.labels.some((L) => L.runs.some((x) => / = /.test(x.t) && /[0-9]/.test(x.t) && /\b(N|m\/s|m\/s²|km\/s)\b/.test(x.t))); sim.cam.resize(600, 440); r.draw(g, sim, 600, 440); const before = has();
+    sim.toggleShow('nums'); look('no values'); r.draw(g, sim, 600, 440); ok(before && !has(), tag + ': Values off leaves the arrows with just their symbols'); sim.toggleShow('nums'); }
   sim.play(); for (let i = 0; i < 240; i++) { sim.tick(1 / 60); if (i % 40 === 0) look('running'); }
   if (key === 'puck') { sim.snip(); for (let i = 0; i < 200; i++) sim.tick(1 / 60); look('cut'); }
   if (key === 'vertical') { sim.set('vb', sim.sit.vbmin * 0.9); sim.play(); for (let i = 0; i < 180; i++) { sim.tick(1 / 60); if (i % 20 === 0) look('slack'); } }
@@ -29,6 +31,7 @@ for (const key of Object.keys(SITUATIONS)) { const sim = new Sim(); sim.choose(k
   const c = new Sim(); Link.apply(c, '?s=vertical&variant=loop&bottomspeed=999&radius=-5'); ok(c.key === 'vertical' && c.sit.variant === 'loop' && c.sit.vals.vb === 30 && c.sit.vals.r === 4, 'share link: values are clamped to the sliders');
   const o = new Sim(); o.choose('orbit'); o.set('alt', 2000); const ou = Link.url(o), o2 = new Sim(); Link.apply(o2, ou.slice(ou.indexOf('?'))); ok(o2.key === 'orbit' && o2.sit.vals.alt === 2000 && o2.sit.circular, 'share link: an orbit comes back, still circular');
   const e = new Sim(); Link.apply(e, '?v=3&s=flat'); ok(e.sit.vals.v === 15, 'share link: a cache-buster ?v=3 is not a speed');
+  const nv = new Sim(); nv.choose('ferris'); nv.toggleShow('nums'); const nu = Link.url(nv), nv2 = new Sim(); Link.apply(nv2, nu.slice(nu.indexOf('?'))); ok(nu.includes('values=0') && nv2.show.nums === false, 'share link: Values off comes back off');
   const d = new Sim(); Link.apply(d, '?s=nonsense'); ok(d.key === 'puck', 'share link: nonsense leaves the default'); }
 
 // loads paused; Run, then Reset, puts it back where it began

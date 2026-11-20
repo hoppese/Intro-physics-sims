@@ -7,9 +7,10 @@
 class Sim {
   static SPEEDS = [0.25, 0.5, 1];
   static SHOW = [['v', 'Velocity', 'The velocity: along the path, at a tangent to the circle'], ['a', 'Acceleration', 'The acceleration: toward the centre (plus a part along the path where the speed changes)'],
-    ['forces', 'Forces', 'Every force on the object'], ['comps', 'Components', 'Each force split into its part toward the centre (r) and its part along z'], ['axes', 'r, t, z axes', 'The axes that go round with the object: r toward the centre, t along the path, z across the circle']];
+    ['forces', 'Forces', 'Every force on the object'], ['comps', 'Components', 'Each force split into its part toward the centre (r) and its part along z'], ['axes', 'r, t, z axes', 'The axes that go round with the object: r toward the centre, t along the path, z across the circle'],
+    ['nums', 'Values', 'The size of each arrow written beside it (off: just the symbol, W, n, v, a …)']];
   constructor() { this.all = {}; for (const k of Object.keys(SITUATIONS)) this.all[k] = new SITUATIONS[k]();
-    this.key = 'puck'; this.playing = false; this.speed = 1; this.hidden = false; this.show = { v: true, a: true, forces: true, comps: false, axes: false };
+    this.key = 'puck'; this.playing = false; this.speed = 1; this.hidden = false; this.show = { v: true, a: true, forces: true, comps: false, axes: false, nums: true };
     this.cam = new Camera(); this.rev = 0; this.dirty = true; this.trail = []; this.frame(); }
   get sit() { return this.all[this.key]; }
   bump() { this.rev++; this.dirty = true; if (this.sit.t === 0) this.trail = []; }

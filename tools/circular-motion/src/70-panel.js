@@ -118,14 +118,14 @@ class Panel {
       bugMsg: res.replace(/^(ok|err):/, ''), bugMsgColor: res.slice(0, 3) === 'ok:' ? '#7fd1a4' : '#f0a5a5' }; }
 }
 
-// ---- the address: ?s=<situation>&variant=&road=&<setting>=<value>&hide=1 (every value clamped to its slider's range).
+// ---- the address: ?s=<situation>&variant=&road=&<setting>=<value>&hide=1&values=0 (values=0: arrows without their numbers) (every value clamped to its slider's range).
 // Settings go by full names (speed, not v), so a cache-buster like ?v=3 is never read as a speed. ----
 const Link = {
   NAMES: { m: 'mass', r: 'radius', v: 'speed', bank: 'bank', L: 'length', angle: 'angle', vb: 'bottomspeed', alt: 'height' },
   name(key) { return Link.NAMES[key] || key; },
   url(sim, hide) { const s = sim.sit, q = new URLSearchParams(); q.set('s', sim.key); if (s.variant) q.set('variant', s.variant); if (sim.key === 'flat' || sim.key === 'banked') q.set('road', s.road);
-    for (const p of s.specs) q.set(Link.name(p.key), String(s.vals[p.key])); if (hide) q.set('hide', '1'); let base = ''; try { base = location.origin + location.pathname; } catch (e) {} return base + '?' + q.toString(); },
-  apply(sim, search) { let q; try { q = new URLSearchParams(search == null ? location.search : search); } catch (e) { return false; } const k = q.get('s') || q.get('situation'); if (!k || !SITUATIONS[k]) { if (q.get('hide') === '1') sim.hide(true); return false; }
+    for (const p of s.specs) q.set(Link.name(p.key), String(s.vals[p.key])); if (hide) q.set('hide', '1'); if (!sim.show.nums) q.set('values', '0'); let base = ''; try { base = location.origin + location.pathname; } catch (e) {} return base + '?' + q.toString(); },
+  apply(sim, search) { let q; try { q = new URLSearchParams(search == null ? location.search : search); } catch (e) { return false; } const k = q.get('s') || q.get('situation'); if (q.get('values') === '0') sim.show.nums = false; if (!k || !SITUATIONS[k]) { if (q.get('hide') === '1') sim.hide(true); return false; }
     sim.choose(k); if (q.get('variant')) sim.setVariant(q.get('variant')); if (q.get('road')) sim.setRoad(q.get('road')); for (const p of sim.sit.specs) { const v = q.get(Link.name(p.key)); if (v != null && v !== '') sim.set(p.key, v); }
     if (q.get('hide') === '1') sim.hide(true); return true; },
 };

@@ -181,7 +181,7 @@ class Renderer {
     const arrow = (vec, scale, col, lw, runs, dash) => { const len = V3.len(vec) * scale; if (len < 1e-6) return; const b = V3.at(p, vec, scale), A = P(p), B = P(b);
       if (Math.hypot(B.x - A.x, B.y - A.y) < 3) return; const res = G3.arrow3(g, P, p, b, col, { lw, dash });
       if (runs) this.labels.push({ runs, at: B, dir: { x: B.x - A.x, y: B.y - A.y }, line: [A.x, A.y, B.x, B.y] }); else this.lines.push([A.x, A.y, B.x, B.y]); return res; };
-    const sym = (l, s, col, rest) => { const out = [{ t: l, f: 'italic 600 14px ' + Renderer.SERIF, col }]; if (s) out.push({ t: s, f: 'italic 600 10px ' + Renderer.SERIF, col, dy: 4 }); if (rest) out.push({ t: rest, f: '600 11.5px ' + Renderer.MONO, col }); return out; };
+    const sym = (l, s, col, rest) => { if (!sh.nums) rest = ''; const out = [{ t: l, f: 'italic 600 14px ' + Renderer.SERIF, col }]; if (s) out.push({ t: s, f: 'italic 600 10px ' + Renderer.SERIF, col, dy: 4 }); if (rest) out.push({ t: rest, f: '600 11.5px ' + Renderer.MONO, col }); return out; };
     if (sh.axes && n.rhat) { for (const [u, l] of [[n.rhat, 'r'], [n.that, 't'], [n.zhat, 'z']]) { const b = V3.at(p, u, 0.16 * sim.size), B = P(b), A = P(p); G3.arrow3(g, P, p, b, Renderer.C.axis, { lw: 1.2, dash: [3, 3] }); this.labels.push({ runs: sym(l, '', Renderer.C.axis), at: B, dir: { x: B.x - A.x, y: B.y - A.y }, small: true }); } }
     if (sh.forces && !sim.hidden) for (const f of n.forces) { const F = Renderer.FORCE[f.kind], mag = V3.len(f.F);
       if (sh.comps && n.rhat) for (const [u, l] of [[n.rhat, 'r'], [n.zhat, 'z']]) { const c = V3.dot(f.F, u); if (Math.abs(c) < 1e-6 * mag || Math.abs(Math.abs(c) - mag) < 1e-6 * mag) continue; arrow(V3.mul(u, c), k.F, G3.alpha(F.col, 0.75), 1.6, null, [4, 3]); }
