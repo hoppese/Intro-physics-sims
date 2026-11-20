@@ -7,16 +7,17 @@
 // U_g: where the track meets it the cart turns back), the coaster track (a
 // front rail and a back rail joined by cross-ties, on lit posts with shadows
 // on the ground), the control points while the track can be edited, the
-// start, the trail, the ball or coaster car, and its vectors (w, n, f_k and v,
+// start, the trail, the rider (an ice cube that slides, a ball that visibly turns as it rolls, or a coaster car),
+// and its vectors (w, n, f_k or a rolling ball's f_s, and v,
 // flat arrows with a dark edge) labelled with their sizes, placed so no label
 // covers another. Also the screen <-> world mapping the gestures use.
 // =====================================================================
 class Renderer {
   static C = { bg0: '#17283a', bg1: '#0a1119', grid: 'rgba(160,190,220,0.055)', grid5: 'rgba(160,190,220,0.13)', text: '#8fa1b3', ink: '#dfe7ef',
-    rail: '#c9d3dd', back: '#7d8996', tie: [96, 108, 122], post: [128, 142, 158], earth: [74, 64, 48], zero: '#5fd0c4', eline: '#f0c860', v: '#eef3f8', ball: '#4f9d6b', car: [192, 87, 79], start: '#f0c860' };
-  static FORCE = { weight: { l: 'w', s: '', col: '#ff7a7a' }, normal: { l: 'n', s: '', col: '#6cb8ff' }, kinetic: { l: 'f', s: 'k', col: '#ffc24d' } };
+    rail: '#c9d3dd', back: '#7d8996', tie: [96, 108, 122], post: [128, 142, 158], earth: [74, 64, 48], zero: '#5fd0c4', eline: '#f0c860', v: '#eef3f8', ball: '#4f9d6b', hollow: '#d9822b', car: [192, 87, 79], start: '#f0c860' };
+  static FORCE = { weight: { l: 'w', s: '', col: '#ff7a7a' }, normal: { l: 'n', s: '', col: '#6cb8ff' }, kinetic: { l: 'f', s: 'k', col: '#ffc24d' }, static: { l: 'f', s: 's', col: '#ffc24d' } };
   static MONO = "'JetBrains Mono', monospace"; static SERIF = "'Source Serif 4', serif"; static SANS = "'Source Sans 3', sans-serif";
-  static BALL = 0.45;                         // m: the ball's radius as drawn
+  static BALL = Ride.RDRAW;                   // m: the ball's radius as drawn (its turning is drawn for this radius)
   static FSCALE = 1.25;                       // m of arrow for a force of m g
   static VSCALE = 0.24;                       // m of arrow per m/s
 
@@ -116,7 +117,8 @@ class Renderer {
 
   // ---- the ball (riding between the rails), or a coaster car spanning them, its wheels on the front rail ----
   rider(sim, n) { const g = this.g, s = this.s;
-    if (sim.rider !== 'car') { const c = this.B(this.P(this.centre(n)), 0.5), r = Math.max(5, Renderer.BALL * s); this.cs = c; G3.sphere(g, c.x, c.y, r, Renderer.C.ball); this.boxes.push({ x0: c.x - r - 2, y0: c.y - r - 2, x1: c.x + r + 2, y1: c.y + r + 2 }); this.hit = { x: c.x, y: c.y, r: Math.max(10, r + 4) }; return; }
+    if (sim.rider === 'ice') { this.ice(n); return; }
+    if (sim.rider !== 'car') { const c = this.B(this.P(this.centre(n)), 0.5), r = Math.max(5, Renderer.BALL * s); this.cs = c; this.ball(c, r, n.ang, sim.rider === 'hollow'); this.boxes.push({ x0: c.x - r - 2, y0: c.y - r - 2, x1: c.x + r + 2, y1: c.y + r + 2 }); this.hit = { x: c.x, y: c.y, r: Math.max(10, r + 4) }; return; }
     const N = n.nrm || { x: 0, y: 1 }, Tn = { x: N.y, y: -N.x }, c = this.P(this.centre(n)), at = (a, b) => ({ x: c.x + (Tn.x * a + N.x * b) * s, y: c.y - (Tn.y * a + N.y * b) * s });
     const body = [at(-0.85, -0.2), at(0.85, -0.2), at(0.85, 0.3), at(0.5, 0.58), at(-0.85, 0.58)], seat = [at(-0.72, 0.3), at(0.42, 0.3), at(0.42, 0.5), at(-0.72, 0.5)];
     // the clamp wheels under the rail and the running wheels on it (front side only; the back ones are hidden by the car)
@@ -124,6 +126,24 @@ class Renderer {
     this.solid(body, Renderer.C.car, { shadow: true, dv: this.dv }); this.solid(seat, [70, 30, 30], { dv: { x: 0, y: 0 } });
     for (const a of [-0.55, 0.55]) { const w = at(a, -0.33); G3.sphere(g, w.x, w.y, Math.max(2.8, 0.17 * s), '#2a3038', { shadow: false }); }
     this.cs = c; let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9; for (const p of body) { x0 = Math.min(x0, p.x); x1 = Math.max(x1, p.x + Math.max(0, this.dv.x)); y0 = Math.min(y0, p.y + Math.min(0, this.dv.y)); y1 = Math.max(y1, p.y); } this.boxes.push({ x0, y0, x1, y1 }); this.hit = { x: c.x, y: c.y, r: 0.9 * s }; }
+  // a ball with a band round it and a spot, turned through `ang` (anticlockwise, radians), so its rolling shows; a hollow one is orange with a thin shell
+  ball(c, r, ang, hollow) { const g = this.g, C = Renderer.C; G3.sphere(g, c.x, c.y, r, hollow ? C.hollow : C.ball); const u = { x: Math.cos(ang), y: -Math.sin(ang) }, w = { x: -u.y, y: u.x };
+    g.save(); g.beginPath(); g.arc(c.x, c.y, r - 0.6, 0, 2 * Math.PI); g.clip(); g.lineCap = 'butt';
+    g.strokeStyle = hollow ? 'rgba(40,20,6,0.75)' : 'rgba(240,248,242,0.85)'; g.lineWidth = Math.max(1.6, r * 0.22); g.beginPath(); g.moveTo(c.x - u.x * r, c.y - u.y * r); g.lineTo(c.x + u.x * r, c.y + u.y * r); g.stroke();
+    if (hollow) { g.lineWidth = Math.max(1, r * 0.1); g.beginPath(); g.moveTo(c.x - w.x * r, c.y - w.y * r); g.lineTo(c.x + w.x * r, c.y + w.y * r); g.stroke(); }
+    g.restore(); g.beginPath(); g.arc(c.x + w.x * r * 0.55, c.y + w.y * r * 0.55, Math.max(1.4, r * 0.16), 0, 2 * Math.PI); g.fillStyle = hollow ? '#2a1606' : '#1d3a28'; g.fill();
+    if (hollow) { g.beginPath(); g.arc(c.x, c.y, r * 0.82, 0, 2 * Math.PI); g.strokeStyle = 'rgba(255,230,200,0.35)'; g.lineWidth = 1; g.stroke(); } }
+  // an ice cube: a translucent blue-white block sitting on the track, square to it; it slides without turning
+  ice(n) { const g = this.g, s = this.s, N = n.nrm || { x: 0, y: 1 }, Tn = { x: N.y, y: -N.x }, c = this.P(this.centre(n)), h = Renderer.BALL * 0.92, at = (a, b) => ({ x: c.x + (Tn.x * a + N.x * b) * s, y: c.y - (Tn.y * a + N.y * b) * s });
+    const sq = [at(-h, -h), at(h, -h), at(h, h), at(-h, h)], dv = { x: this.dv.x * 0.7, y: this.dv.y * 0.7 }, back = sq.map((p) => ({ x: p.x + dv.x, y: p.y + dv.y }));
+    g.save(); g.setLineDash([]); g.lineJoin = 'round';
+    const poly = (pts, fill, stroke) => { g.beginPath(); pts.forEach((p, i) => (i ? g.lineTo(p.x, p.y) : g.moveTo(p.x, p.y))); g.closePath(); if (fill) { g.fillStyle = fill; g.fill(); } if (stroke) { g.strokeStyle = stroke; g.lineWidth = 1; g.stroke(); } };
+    poly(back, 'rgba(170,215,245,0.35)', 'rgba(220,240,255,0.5)'); for (let i = 0; i < 4; i++) poly([sq[i], sq[(i + 1) % 4], back[(i + 1) % 4], back[i]], 'rgba(185,225,250,0.28)', 'rgba(220,240,255,0.45)');
+    const ys = sq.map((p) => p.y), gr = g.createLinearGradient(0, Math.min(...ys), 0, Math.max(...ys)); gr.addColorStop(0, 'rgba(235,248,255,0.78)'); gr.addColorStop(1, 'rgba(150,200,240,0.6)');
+    g.shadowColor = 'rgba(0,0,0,0.35)'; g.shadowBlur = 7; g.shadowOffsetY = 2; poly(sq, gr, null); g.shadowColor = 'transparent'; poly(sq, null, 'rgba(240,250,255,0.95)');
+    const a = at(-h * 0.62, h * 0.55), b = at(h * 0.1, h * 0.55), d = at(-h * 0.62, -h * 0.1); g.strokeStyle = 'rgba(255,255,255,0.85)'; g.lineWidth = 1.6; g.lineCap = 'round'; g.beginPath(); g.moveTo(b.x, b.y); g.lineTo(a.x, a.y); g.lineTo(d.x, d.y); g.stroke(); g.restore();
+    this.cs = c; let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9; for (const p of sq.concat(back)) { x0 = Math.min(x0, p.x); x1 = Math.max(x1, p.x); y0 = Math.min(y0, p.y); y1 = Math.max(y1, p.y); }
+    this.boxes.push({ x0: x0 - 2, y0: y0 - 2, x1: x1 + 2, y1: y1 + 2 }); this.hit = { x: c.x, y: c.y, r: Math.max(10, h * s + 4) }; }
   // the height above the zero of U_g, as a dimension line
   height(sim, n) { const g = this.g, x = this.X(n.p.x) - 14, y1 = this.Y(n.p.y), y0 = this.Y(sim.vals.y0); if (Math.abs(y1 - y0) < 4) return; g.save(); g.strokeStyle = 'rgba(95,208,196,0.85)'; g.lineWidth = 1.2; g.setLineDash([2, 3]);
     g.beginPath(); g.moveTo(x, y0); g.lineTo(x, y1); g.stroke(); g.setLineDash([]); for (const y of [y0, y1]) { g.beginPath(); g.moveTo(x - 4, y); g.lineTo(x + 4, y); g.stroke(); } g.restore(); this.lines.push([x, y0, x, y1]);

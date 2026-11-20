@@ -26,7 +26,7 @@ class Sim {
   choose(k) { const P = PRESETS[k]; if (!P) return false; this.key = k; this.custom = false; this.vals.v0 = 0; this.rider = P.rider; this.loopMode = k === 'loop' ? 'circle' : null;
     this.track = this.loopMode === 'circle' ? new CircleLoop(this.vals.r) : new Track(P.pts); const s = this.track.atHeight(this.loopMode === 'circle' ? CircleLoop.START : P.start, 0); this.s0 = s == null ? 0 : s; this.rebuild(); return true; }
   get preset() { return PRESETS[this.key]; }
-  rebuild() { this.ride = new Ride(this.track, { locked: this.rider === 'car', m: this.vals.m, mu: this.friction ? this.vals.mu : 0, v0: this.vals.v0, s0: this.s0 }); this.playing = false; this.trail = []; this.bump(); }
+  rebuild() { this.ride = new Ride(this.track, { locked: this.rider === 'car', beta: this.beta, m: this.vals.m, mu: this.friction && !this.rolling ? this.vals.mu : 0, v0: this.vals.v0, s0: this.s0 }); this.playing = false; this.trail = []; this.bump(); }
   // reshaping: the start stays at the same place along the curve
   edit(fn) { const f = this.track.T > 0 ? this.track.uAt(this.s0) / this.track.T : 0, out = fn(this.track); if (out === false || out === -1) return out; this.custom = true; this.s0 = this.track.sAt(f * this.track.T); this.rebuild(); return out; }
   movePoint(i, p) { return this.edit((t) => t.move(i, p)); }
@@ -46,8 +46,16 @@ class Sim {
   static LOOPS = [['circle', 'Perfect circle', 'An exact circle of radius r: the textbook results hold exactly'], ['spline', 'Editable (spline)', 'A smooth curve through points you can drag: reshape the loop']];
   setLoopMode(k) { if (this.key !== 'loop' || !Sim.LOOPS.some((x) => x[0] === k) || k === this.loopMode) return false; const h = this.h0; this.loopMode = k; this.custom = false;
     this.track = k === 'circle' ? new CircleLoop(this.vals.r) : new Track(PRESETS.loop.pts); const s = this.track.atHeight(h, 0); this.s0 = s == null ? 0 : s; this.rebuild(); return true; }
-  static RIDERS = [['ball', 'Ball on the track', 'It rests on the track and can fly off where the track would have to pull it in'], ['car', 'Coaster car', 'Its wheels clamp round the rail, so the rail can pull as well as push: it never leaves the track']];
-  setRider(k) { if (!Sim.RIDERS.some((r) => r[0] === k) || k === this.rider) return false; this.rider = k; this.rebuild(); return true; }
+  // the riders: [key, chip, name, what it does, beta = I/(m r^2) for one that rolls without slipping]
+  static RIDERS = [['ice', 'Ice cube', 'Ice cube', 'It slides without turning: all its kinetic energy is ½ m v². It rests on the track and can fly off where the track would have to pull it in', 0],
+    ['ball', 'Ball', 'Solid ball', 'It rolls without slipping, so some of its kinetic energy goes into spinning (I = 2/5 m r²): it goes slower than the ice cube from the same drop', 0.4],
+    ['hollow', 'Hollow ball', 'Hollow ball', 'A thin-walled ball rolling without slipping (I = 2/3 m r²): even more of its energy goes into spinning, so it is slower still', 2 / 3],
+    ['car', 'Coaster car', 'Coaster car', 'Its wheels clamp round the rail, so the rail can pull as well as push: it never leaves the track. (Its wheels’ spin is left out: it moves like a sliding cart)', 0]];
+  static riderOf(k) { return Sim.RIDERS.find((r) => r[0] === k) || null; }
+  get beta() { const r = Sim.riderOf(this.rider); return r ? r[4] : 0; }
+  get rolling() { return this.beta > 0; }
+  get who() { return { ice: 'ice cube', ball: 'ball', hollow: 'ball', car: 'car' }[this.rider] || 'cart'; }
+  setRider(k) { if (!Sim.riderOf(k) || k === this.rider) return false; this.rider = k; this.rebuild(); return true; }
   setFriction(on) { on = !!on; if (on === this.friction) return; this.friction = on; this.rebuild(); }
 
   // ---- the clock ----
@@ -63,10 +71,12 @@ class Sim {
   mark() { const t = this.ride.t, T = this.trail; if (T.length && T[T.length - 1].t > t) T.length = 0; T.push({ t, p: this.ride.now().p }); while (T.length && T[0].t < t - Sim.TRAIL) T.shift(); }
 
   // ---- energy, with U_g measured from y0 ----
-  energy(n) { n = n || this.ride.now(); const U = this.vals.m * G * (n.y - this.vals.y0); return { K: n.K, U, th: n.th, E: n.K + U + n.th }; }
-  get E0() { const r = this.ride.rec[0]; return r ? r.K + this.vals.m * G * (r.y - this.vals.y0) + r.th : NaN; }
+  // K is the translational part, Kr the rotational (zero unless it rolls)
+  energy(n) { n = n || this.ride.now(); const U = this.vals.m * G * (n.y - this.vals.y0); return { K: n.K, Kr: n.Kr || 0, U, th: n.th, E: n.K + (n.Kr || 0) + U + n.th }; }
+  get E0() { const r = this.ride.rec[0]; return r ? r.K + (r.Kr || 0) + this.vals.m * G * (r.y - this.vals.y0) + r.th : NaN; }
   // the energy line: the height where all of K + U_g would be U_g (only K + U_g: thermal energy is gone for good)
-  get eline() { const n = this.ride.now(); return n.y + n.K / (this.vals.m * G); }
+  // (a rolling ball turns its spin back into height too, as it slows and stops turning)
+  get eline() { const n = this.ride.now(); return n.y + (n.K + (n.mode === 'air' ? 0 : n.Kr || 0)) / (this.vals.m * G); }
   // the highest hilltop of the track ahead (the way the cart is going) before it turns back, and where it turns back (if it does)
   ahead() { const n = this.ride.now(); if (n.mode !== 'track') return null; const S = this.track.S, ud = this.ride.st.ud, yE = this.eline; if (Math.abs(ud) < 1e-9) return null;
     const dir = ud > 0 ? 1 : -1, f = n.u / this.track.T * (S.length - 1), j0 = (dir > 0 ? Math.floor(f) : Math.ceil(f)) + dir; let top = null, turn = null;
@@ -81,5 +91,5 @@ class Sim {
   // ---- what the page reports to whoever embeds it ----
   snapshot() { const n = this.ride.now(), e = this.energy(n), r = (x) => Math.round(x * 1000) / 1000;
     return { track: this.key, loop: this.loopMode || undefined, radius: this.loopMode === 'circle' ? this.vals.r : undefined, custom: this.custom, rider: this.rider, mass: this.vals.m, startHeight: r(this.h0), startSpeed: this.vals.v0, friction: this.friction ? this.vals.mu : 0, zero: this.vals.y0, t: r(this.ride.t), mode: n.mode,
-      status: this.ride.done || this.ride.event || '', x: r(n.p.x), y: r(n.p.y), speed: r(n.speed), normal: r(n.n), energy: this.hidden ? null : { K: r(e.K), Ug: r(e.U), Eth: r(e.th), E: r(e.E) } }; }
+      status: this.ride.done || this.ride.event || '', x: r(n.p.x), y: r(n.p.y), speed: r(n.speed), normal: r(n.n), energy: this.hidden ? null : { K: r(e.K), Krot: r(e.Kr), Ug: r(e.U), Eth: r(e.th), E: r(e.E) } }; }
 }

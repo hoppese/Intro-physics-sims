@@ -1,6 +1,7 @@
 // =====================================================================
 // Graphs -- the strip under the track, from the run's recording:
-//   time     K, U_g, E_th and their total against time, with bars for the moment shown
+//   time     K, U_g, E_th and their total against time, with bars for the moment shown (for a rolling ball,
+//            K is split: K_tr, the translational ½ m v², and K_rot, the spin's ½ I ω², side by side)
 //   x        energy against position: U_g of the track itself (the potential-energy curve,
 //            the track's shape scaled by m g), the total mechanical energy, and the run's K
 //            and U_g. Where the energy line meets the U_g curve, K = 0: the turning points.
@@ -10,7 +11,7 @@
 class Graphs {
   static H = 200;
   static C = { bg: '#0f1722', panel: '#121c28', grid: 'rgba(255,255,255,0.06)', zero: 'rgba(255,255,255,0.26)', text: '#8fa1b3', ink: '#dfe7ef', cursor: '#f0c860', future: 0.35 };
-  static ECOL = { K: '#6cb8ff', U: '#7fd68f', th: '#ff9f6b', E: '#e8eef4', track: '#4f7a5a' };
+  static ECOL = { K: '#6cb8ff', Kr: '#b89cff', U: '#7fd68f', th: '#ff9f6b', E: '#e8eef4', track: '#4f7a5a' };
   static M = { l: 58, r: 14, t: 26, b: 22 };
   static step(span, n) { const raw = span / Math.max(1, n), p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * p; }
   static range(vals) { let lo = 0, hi = 0; for (const v of vals) { if (!isFinite(v)) continue; if (v < lo) lo = v; if (v > hi) hi = v; } if (hi - lo < 1e-9) return [-1, 1]; const pad = (hi - lo) * 0.08; return [lo < 0 ? lo - pad : lo, hi + pad]; }
@@ -23,11 +24,12 @@ class Graphs {
     const U = (r) => m * G * (r.y - y0), barW = Math.min(150, W * 0.24), x1 = W - M.r - (kind === 'normal' ? 0 : barW + 22), rect = { x0: M.l, x1, y0: M.t, y1: H - M.b };
     const t0 = R[0].t, tEnd = R[R.length - 1].t, span = Math.max(2, tEnd - t0), ts = Graphs.step(span, 6), tmax = t0 + Math.max(2, Math.ceil(span / ts - 1e-9) * ts);
     if (kind === 'time' || kind === 'normal') this.area = { x0: rect.x0, x1, t0, tmax, tEnd };
-    const series = [{ k: 'K', l: 'K', s: '', vals: R.map((r) => r.K) }, { k: 'U', l: 'U', s: 'g', vals: R.map(U) }, { k: 'th', l: 'E', s: 'th', vals: R.map((r) => r.th) }, { k: 'E', l: 'E', s: 'tot', dash: [5, 4], vals: R.map((r) => r.K + U(r) + r.th) }];
-    series.forEach((s) => (s.col = Graphs.ECOL[s.k])); if (!sim.friction && !R.some((r) => r.th > 0.05)) series.splice(2, 1);
+    const roll = sim.rolling, Kr = (r) => r.Kr || 0;
+    const series = [{ k: 'K', l: 'K', s: roll ? 'tr' : '', vals: R.map((r) => r.K) }, ...(roll ? [{ k: 'Kr', l: 'K', s: 'rot', vals: R.map(Kr) }] : []), { k: 'U', l: 'U', s: 'g', vals: R.map(U) }, { k: 'th', l: 'E', s: 'th', vals: R.map((r) => r.th) }, { k: 'E', l: 'E', s: 'tot', dash: [5, 4], vals: R.map((r) => r.K + Kr(r) + U(r) + r.th) }];
+    series.forEach((s) => (s.col = Graphs.ECOL[s.k])); if ((!sim.friction || roll) && !R.some((r) => r.th > 0.05)) series.splice(series.findIndex((s) => s.k === 'th'), 1);
     if (kind === 'time') { const rng = this.plot(rect, R, series, { unit: 'J', xs: R.map((r) => r.t), xlo: t0, xhi: tmax, xlabel: 't (s)', cursor: idx }); this.bars({ x0: x1 + 22, x1: W - M.r, y0: rect.y0, y1: rect.y1 }, series, rng); return; }
     if (kind === 'x') { const S = sim.track.S, track = { k: 'track', l: 'U', s: 'g, track', col: Graphs.ECOL.track, vals: S.map((q) => m * G * (q.y - y0)), xs: S.map((q) => q.x), wide: true, noRead: true };
-      const mech = series.find((s) => s.k === 'E'); const pts = [track, ...series.filter((s) => s.k === 'K' || s.k === 'U'), { ...mech, l: 'E', s: 'mech', vals: R.map((r) => r.K + U(r)) }];
+      const mech = series.find((s) => s.k === 'E'); const pts = [track, ...series.filter((s) => s.k === 'K' || s.k === 'Kr' || s.k === 'U'), { ...mech, l: 'E', s: 'mech', vals: R.map((r) => r.K + Kr(r) + U(r)) }];
       const w = Track.WORLD, rng = this.plot(rect, R, pts, { unit: 'J', xs: R.map((r) => r.x), xlo: w.x0, xhi: w.x1, xlabel: 'x (m)', cursor: idx, scatter: true }); this.bars({ x0: x1 + 22, x1: W - M.r, y0: rect.y0, y1: rect.y1 }, series, rng); return; }
     const mg = m * G; this.plot(rect, R, [{ k: 'n', l: 'n', s: '', col: '#6cb8ff', vals: R.map((r) => (r.mode === 'air' ? NaN : r.n)) }, { k: 'mg', l: 'mg', s: '', col: '#ff7a7a', dash: [5, 4], vals: R.map(() => mg) }], { unit: 'N', xs: R.map((r) => r.t), xlo: t0, xhi: tmax, xlabel: 't (s)', cursor: idx }); }
 

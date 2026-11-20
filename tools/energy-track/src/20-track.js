@@ -57,7 +57,9 @@ class Track {
   // ---- the lowest height to start from (at rest, no friction) that keeps n >= 0 everywhere ----
   // n = m (k v^2 + g N_y) and v^2 = 2 g (h - y), so n >= 0 needs h >= y - N_y / (2k) wherever the track is upside
   // down (N_y < -0.5: a loop, not the slight overhang of a half-pipe's rim) and curving toward the riding side (k > 0). Null if the track never asks for that.
-  get hmin() { let best = null; for (const q of this.S) { const g = this.geo(q.u); if (g.N.y < -0.5 && g.k > 1e-6) { const h = g.p.y - g.N.y / (2 * g.k); if (best === null || h > best.h) best = { h, u: q.u, y: g.p.y, r: 1 / g.k }; } } return best; }
+  // For a ball rolling without slipping v^2 = 2 g (h - y)/(1 + beta), so the start must be higher: h >= y - (1 + beta) N_y/(2k).
+  get hmin() { return this.hminFor(0); }
+  hminFor(beta) { let best = null; for (const q of this.S) { const g = this.geo(q.u); if (g.N.y < -0.5 && g.k > 1e-6) { const h = g.p.y - (1 + beta) * g.N.y / (2 * g.k); if (best === null || h > best.h) best = { h, u: q.u, y: g.p.y, r: 1 / g.k }; } } return best; }
   // the loop, if there is one: its top (highest upside-down point), the radius of curvature there, its bottom
   get loop() { let top = null; for (const q of this.S) { const g = this.geo(q.u); if (g.N.y < -0.98 && (!top || g.p.y > top.y)) top = { y: g.p.y, x: g.p.x, u: q.u, r: g.k > 1e-9 ? 1 / g.k : Infinity }; }
     if (!top || !isFinite(top.r)) return null; let bottom = Infinity; for (const q of this.S) if (Math.abs(q.x - top.x) < 0.6 * top.r) bottom = Math.min(bottom, q.y); return { ...top, bottom }; }
@@ -116,7 +118,9 @@ class CircleLoop extends Track {
     if (q.type === 'line') return { x: q.p.x + q.d.x * s, y: q.p.y + q.d.y * s, dx: q.d.x, dy: q.d.y, ddx: 0, ddy: 0 };
     const a = q.a0 + s / q.R, c = Math.cos(a), sn = Math.sin(a); return { x: q.c.x + q.R * c, y: q.c.y + q.R * sn, dx: -sn, dy: c, ddx: -c / q.R, ddy: -sn / q.R }; }
   // exact, from the geometry
-  get hmin() { return { h: CircleLoop.BASE + 2.5 * this.r, u: this.uTop, y: CircleLoop.BASE + 2 * this.r, r: this.r, exact: true }; }
+  // from rest at the top v^2 = g r: 2 r up, plus (1 + beta) r/2 for the speed there -- 2.5 r sliding, 2.7 r for a solid ball
+  get hmin() { return this.hminFor(0); }
+  hminFor(beta) { const f = 2 + (1 + beta) / 2; return { h: CircleLoop.BASE + f * this.r, f, u: this.uTop, y: CircleLoop.BASE + 2 * this.r, r: this.r, exact: true }; }
   get loop() { return { y: CircleLoop.BASE + 2 * this.r, x: CircleLoop.CX, u: this.uTop, r: this.r, bottom: CircleLoop.BASE, exact: true }; }
   get valid() { return this.S.every((q) => isFinite(q.x) && isFinite(q.y)) && this.len > 0; }
   move() { return false; } insert() { return -1; } remove() { return false; }
@@ -125,16 +129,16 @@ class CircleLoop extends Track {
 // ---- the ready-made tracks; `start` is the release height (m), found on the first way down ----
 const circlePts = (cx, cy, r, from, to, n) => { const out = []; for (let i = 0; i <= n; i++) { const a = (from + (to - from) * i / n) * Math.PI / 180; out.push({ x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) }); } return out; };
 const PRESETS = {
-  hill: { rider: 'car', name: 'One hill', icon: '⌒', start: 12.6, note: 'Released high on the left, the coaster car runs down, over the hill, up the far slope and back. Watch kinetic and potential energy trade places; with friction off their total stays the same. Over the crest the rail has to pull the car down (n < 0): switch to a ball and it flies off there.',
+  hill: { rider: 'car', name: 'One hill', icon: '⌒', start: 12.6, note: 'Released high on the left, the coaster car runs down, over the hill, up the far slope and back. Watch kinetic and potential energy trade places; with friction off their total stays the same. Over the crest the rail has to pull the car down (n < 0): switch to an ice cube or a ball and it flies off there.',
     pts: [{ x: 1, y: 14.4 }, { x: 3.5, y: 12 }, { x: 6.5, y: 7.6 }, { x: 9.5, y: 4.8 }, { x: 12.5, y: 4.7 }, { x: 15.5, y: 6.1 }, { x: 18, y: 6.6 }, { x: 20.5, y: 6.1 }, { x: 23.5, y: 4.7 }, { x: 26.5, y: 4.9 }, { x: 29.2, y: 8.2 }, { x: 31.3, y: 14.6 }] },
   twoHills: { rider: 'car', name: 'Two hills', icon: '〰', start: 9.3, note: 'The second hill is taller than the start. The energy line shows where the cart runs out of kinetic energy: it gets over the first hill but turns back before the top of the second.',
     pts: [{ x: 1, y: 12.4 }, { x: 4, y: 9.2 }, { x: 7.5, y: 4.6 }, { x: 10.5, y: 4.6 }, { x: 13, y: 5.2 }, { x: 15.5, y: 4.8 }, { x: 18.5, y: 4.2 }, { x: 22, y: 7.2 }, { x: 25, y: 10.6 }, { x: 28, y: 7.4 }, { x: 31, y: 4 }] },
-  valley: { rider: 'ball', name: 'Valley', icon: '∪', start: 8.3, note: 'Without friction the cart rocks back and forth for ever, turning round at the same height on each side. Turn friction on and it settles at the bottom, its energy gone to thermal energy.',
+  valley: { rider: 'ice', name: 'Valley', icon: '∪', start: 8.3, note: 'Without friction the cart rocks back and forth for ever, turning round at the same height on each side. Turn friction on and it settles at the bottom, its energy gone to thermal energy.',
     pts: [{ x: 2, y: 11 }, { x: 6, y: 6 }, { x: 11, y: 1.5 }, { x: 16, y: 1 }, { x: 21, y: 1.5 }, { x: 26, y: 6 }, { x: 30, y: 11 }] },
-  loop: { rider: 'ball', name: 'Loop-the-loop', icon: '➰', start: 12.3, note: 'To stay on the track at the top of the loop the ball needs v² ≥ g r there. Starting from rest with no friction, that means starting at least 2.5 r above the bottom of the circle. Try a little lower.',
+  loop: { rider: 'ice', name: 'Loop-the-loop', icon: '➰', start: 12.3, note: 'To stay on the track at the top of the loop it needs v² ≥ g r there. A sliding ice cube starting from rest with no friction must start at least 2.5 r above the bottom of the circle. A rolling ball needs 2.7 r: some of its energy goes into spinning. Try a ball from the ice cube’s height.',
     pts: [{ x: 1, y: 15 }, { x: 4, y: 11 }, { x: 8, y: 3 }, { x: 11.5, y: 0.7 }].concat(circlePts(15, 4.6, 4, -90, 270, 12)).concat([{ x: 18.5, y: 0.7 }, { x: 23, y: 1.1 }, { x: 31, y: 1.6 }]) },
-  ski: { rider: 'ball', name: 'Ski jump', icon: '⤴', start: 7.4, note: 'The track ends in an upturned lip: the cart leaves it as a projectile. Its kinetic energy at the lip sets how far it flies; the landing jolt turns some into thermal energy.',
+  ski: { rider: 'ice', name: 'Ski jump', icon: '⤴', start: 7.4, note: 'The track ends in an upturned lip: the cart leaves it as a projectile. Its kinetic energy at the lip sets how far it flies; the landing jolt turns some into thermal energy.',
     pts: [{ x: 1, y: 13 }, { x: 4, y: 9.5 }, { x: 8, y: 3.2 }, { x: 11, y: 1.5 }, { x: 13.5, y: 1.6 }, { x: 15, y: 2.6 }] },
-  halfPipe: { rider: 'ball', name: 'Half-pipe', icon: '◡', start: 6.4, note: 'Released on one wall, the cart rises to the same height on the other. Give it a starting speed and it can fly out over the rim, straight up, and drop back in.',
+  halfPipe: { rider: 'ball', name: 'Half-pipe', icon: '◡', start: 6.4, note: 'Released on one wall, the ball rolls across and rises to the same height on the other: its spin gives back what it took. Give it a starting speed and it can fly out over the rim, straight up, and drop back in.',
     pts: [{ x: 8.85, y: 9.6 }, { x: 8.6, y: 6.5 }, { x: 9.8, y: 3.3 }, { x: 12.5, y: 1.3 }, { x: 16, y: 0.8 }, { x: 19.5, y: 1.3 }, { x: 22.2, y: 3.3 }, { x: 23.4, y: 6.5 }, { x: 23.15, y: 9.6 }] },
 };

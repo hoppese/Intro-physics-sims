@@ -6,7 +6,7 @@ const g = new Proxy({}, { get: (t, k) => k === 'measureText' ? (s) => ({ width: 
   set: (t, k, v) => { if (k === 'font') { const m = String(v).match(/(\d+(\.\d+)?)px/); if (m) font = parseFloat(m[1]); } t[k] = v; return true; } });
 const app = (sim) => ({ sim, state: {}, big: false, run: (fn) => fn, refresh() {}, setState() {}, setCanvas() {}, setGraphCanvas() {}, copyShare() {}, submitBug() {} });
 const r = new Renderer(), gr = new Graphs();
-for (const key of Object.keys(PRESETS)) for (const rider of ['ball', 'car']) for (const fr of [false, true]) {
+for (const key of Object.keys(PRESETS)) for (const rider of ['ice', 'ball', 'hollow', 'car']) for (const fr of [false, true]) {
   const sim = new Sim(); sim.choose(key); sim.setRider(rider); sim.setFriction(fr); const panel = new Panel(app(sim)), tag = key + '/' + rider + (fr ? ' friction' : ''); let fine = true, worst = '';
   const look = (what) => { for (const [W, H] of [[600, 440], [360, 264]]) { try { r.draw(g, sim, W, H); for (const k of ['time', 'x', 'normal']) { sim.graph = k; gr.draw(g, sim, W, 200); } sim.graph = 'time'; panel.all(); } catch (e) { fine = false; console.log(tag, what, e.stack.split('\n').slice(0, 3).join(' | ')); return; }
       const B = r.boxes.slice(-r.labels.length); for (let i = 0; i < B.length; i++) for (let j = i + 1; j < B.length; j++) { const a = B[i], b = B[j]; if (Math.min(a.x1, b.x1) - Math.max(a.x0, b.x0) > 0.5 && Math.min(a.y1, b.y1) - Math.max(a.y0, b.y0) > 0.5 && !worst) worst = what + ' ' + W + 'x' + H; } } };
@@ -36,6 +36,17 @@ for (const key of Object.keys(PRESETS)) for (const rider of ['ball', 'car']) for
   sim.toggleShow('nums'); const back = draw(); ok(back.labels.some((t) => num.test(t)), 'Values on again: the numbers come back');
   const a = new Sim(); a.choose('loop'); a.toggleShow('nums'); const u = Link.url(a), b = new Sim(); Link.apply(b, u.slice(u.indexOf('?'))); ok(u.includes('values=0') && b.show.nums === false, 'share link: Values off comes back off');
   const c = new Sim(); Link.apply(c, '?track=loop'); ok(c.show.nums === true, 'Values is on by default'); }
+
+// rolling: the panel splits K into K_tr and K_rot, the loop line says 2.7 r, the graphs and bars carry K_rot; Values off still strips the ball's numbers; the rider comes back in a link
+{ const sim = new Sim(); sim.choose('valley'); sim.setRider('ball'); sim.play(); for (let i = 0; i < 40; i++) sim.tick(1 / 60); const p = new Panel(app(sim)), e = p.energy(), tex = e.nowCells.map((c) => c.tex);
+  ok(tex.includes('K_{\\text{tr}}') && tex.includes('K_{\\text{rot}}') && /J$/.test(e.nowCells.find((c) => c.tex === 'K_{\\text{rot}}').val) && /conserved/.test(e.energyNote), 'panel: a rolling ball shows K_tr and K_rot, and E is conserved');
+  ok(p.results().resultRows.some((x) => /1 \+ 2\/5/.test(x.tex) && x.mark === '✓'), 'panel: the rolling speed from the drop, with β = 2/5, matches');
+  ok(/Rolls without slipping/.test(p.settings().frictionLabel), 'panel: a rolling ball has no friction switch, just the note');
+  const said = []; const rec = new Proxy(g, { get: (t, k) => k === 'fillText' ? (str) => said.push(String(str)) : t[k], set: (t, k, v) => { t[k] = v; return true; } }); gr.draw(rec, sim, 600, 200); ok(said.includes('rot'), 'graph: K_rot is drawn and labelled');
+  r.draw(g, sim, 600, 440); ok(r.labels.some((L) => L.runs.some((x) => x.t === 's')), 'picture: static friction f_s is drawn on the rolling ball');
+  sim.toggleShow('nums'); r.draw(g, sim, 600, 440); ok(r.labels.every((L) => !/[0-9]/.test(L.runs.map((x) => x.t).join(''))), 'Values off: the rolling ball\'s arrows have no numbers');
+  const l = new Sim(); l.choose('loop'); l.setRider('ball'); ok(/2\.7 r/.test(new Panel(app(l)).results().aheadLines.map((x) => x.t).join(' ')), 'panel: for a ball the loop needs 2.7 r');
+  for (const k of ['ice', 'ball', 'hollow', 'car']) { const a = new Sim(); a.choose('hill'); a.setRider(k); const u = Link.url(a), b = new Sim(); Link.apply(b, u.slice(u.indexOf('?'))); ok(u.includes('rider=' + k) && b.rider === k, 'share link: rider ' + k + ' comes back'); } }
 
 // the share link: the track (with edits), rider, settings, start and zero come back
 { const a = new Sim(); a.choose('twoHills'); a.movePoint(4, { x: 14, y: 7.9 }); a.setRider('ball'); a.set('m', 55); a.set('v0', 2.3); a.set('y0', 1.7); a.setFriction(true); a.set('mu', 0.07); a.setRelease(3.4); a.setGraph('x');

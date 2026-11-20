@@ -24,7 +24,7 @@ for (const k of Object.keys(PRESETS)) { const s = new Sim(); s.choose(k); const 
 // ---- friction on: the mechanical energy lost is exactly the thermal energy gained ----
 for (const k of Object.keys(PRESETS)) { const s = new Sim(); s.choose(k); s.setFriction(true); const E0 = s.E0; let worst = 0; s.play();
   for (let i = 0; i < 60 * 30 && s.playing; i++) { s.tick(1 / 60); worst = Math.max(worst, Math.abs(s.energy().E - E0)); }
-  ok(worst < 2e-4 * E0, k + ': with friction, K + U_g + E_th stays the same (worst ' + worst.toExponential(1) + ' J)'); ok(s.ride.now().th > 0, k + ': friction made thermal energy'); }
+  ok(worst < 2e-4 * E0, k + ': with friction, K + U_g + E_th stays the same (worst ' + worst.toExponential(1) + ' J)'); if (s.rolling) ok(s.ride.mu === 0, k + ': a rolling ball feels no kinetic friction'); else ok(s.ride.now().th > 0, k + ': friction made thermal energy'); }
 { const s = new Sim(); s.choose('valley'); s.setFriction(true); runFor(s, 120); ok(!!s.ride.done && /rest/.test(s.ride.done), 'valley with friction: comes to rest (' + s.ride.done + ')');
   const n = s.ride.now(); near(n.th, s.E0 - (n.K + s.vals.m * G * (n.p.y - s.vals.y0)), 1e-3 * s.E0, 'valley with friction: E_th = the mechanical energy lost'); ok(n.p.y < 2, 'valley with friction: it settles near the bottom'); }
 // friction off a flat start: does not start on a gentle slope
@@ -38,7 +38,7 @@ for (const k of Object.keys(PRESETS)) { const s = new Sim(); s.choose(k); s.setF
 // ---- leaving the track where n reaches zero; the loop's threshold ----
 { const s = new Sim(); s.choose('loop'); const hm = s.track.hmin, L0 = s.track.loop; ok(hm && L0, 'loop: has a lowest start and a loop top');
   near(hm.h, L0.bottom + 2.5 * L0.r, 0.06 * (hm.h - L0.bottom), 'loop: the lowest start is near 2.5 r above the bottom (' + hm.h.toFixed(2) + ' vs ' + (L0.bottom + 2.5 * L0.r).toFixed(2) + ')');
-  const tryStart = (h) => { const t = new Sim(); t.choose('loop'); t.setHeight(h); let left = null; t.play(); for (let i = 0; i < 60 * 5 && t.playing && !left; i++) { t.tick(1 / 60); if (t.ride.st.mode === 'air' && t.ride.st.left) left = t.ride.st.left; } return { t, left }; };
+  const tryStart = (h) => { const t = new Sim(); t.choose('loop'); t.setRider('ice'); t.setHeight(h); let left = null; t.play(); for (let i = 0; i < 60 * 5 && t.playing && !left; i++) { t.tick(1 / 60); if (t.ride.st.mode === 'air' && t.ride.st.left) left = t.ride.st.left; } return { t, left }; };
   const above = tryStart(hm.h * 1.01), below = tryStart(hm.h * 0.97); ok(!above.left, 'loop: from just above the lowest start, the ball stays on'); ok(!!below.left, 'loop: from just below, the ball leaves the track');
   if (below.left) { near(below.left.n, 0, 1e-3 * s.vals.m * G, 'loop: it leaves exactly where n reaches 0'); const q = s.track.geo(below.left.u); ok(q.N.y < 0, 'loop: it leaves on the upper part of the loop'); } }
 // a coaster car never leaves
@@ -55,8 +55,45 @@ for (const k of Object.keys(PRESETS)) { const s = new Sim(); s.choose(k); s.setF
 { const s = new Sim(); s.choose('halfPipe'); s.set('v0', 8); const E0 = s.E0; let air = false, back = false; s.play(); for (let i = 0; i < 60 * 12 && s.playing; i++) { s.tick(1 / 60); if (s.ride.st.mode === 'air') air = true; if (air && s.ride.st.mode === 'track') back = true; }
   ok(air, 'half-pipe: fast enough, it flies out over the rim'); ok(back, 'half-pipe: it drops back into the pipe'); ok(Math.abs(s.energy().E - E0) < 1e-3 * E0, 'half-pipe: energy still adds up'); }
 // nothing falls through the bottom of the picture
-for (const k of Object.keys(PRESETS)) for (const rider of ['ball', 'car']) for (const v0 of [0, 6, 15]) { const s = new Sim(); s.choose(k); s.setRider(rider); s.set('v0', v0); let low = Infinity; s.play();
+for (const k of Object.keys(PRESETS)) for (const rider of ['ice', 'ball', 'hollow', 'car']) for (const v0 of [0, 6, 15]) { const s = new Sim(); s.choose(k); s.setRider(rider); s.set('v0', v0); let low = Infinity; s.play();
   for (let i = 0; i < 60 * 20 && s.playing; i++) { s.tick(1 / 60); low = Math.min(low, s.ride.now().p.y); } ok(low >= -1e-9, k + '/' + rider + ' v0 = ' + v0 + ': never below the ground (' + low.toFixed(3) + ')'); }
+
+// ---- sliding or rolling: the ice cube, a solid ball (beta 2/5), a hollow one (2/3) ----
+{ const riders = { ice: 0, ball: 0.4, hollow: 2 / 3, car: 0 }; for (const [k, b] of Object.entries(riders)) { const s = new Sim(); s.setRider(k); near(s.beta, b, 1e-12, k + ': beta = ' + b.toFixed(3)); ok(s.rolling === b > 0, k + (b > 0 ? ' rolls' : ' does not roll')); } }
+// energy, with K_rot, is conserved for a rolling ball on every track; K_rot = beta K_tr while it rolls on the track
+for (const k of Object.keys(PRESETS)) for (const rider of ['ball', 'hollow']) { const s = new Sim(); s.choose(k); s.setRider(rider); const E0 = s.E0; let worst = 0, ratio = 0, air = false; s.play();
+  for (let i = 0; i < 60 * 30 && s.playing; i++) { s.tick(1 / 60); const n = s.ride.now(), e = s.energy(n); worst = Math.max(worst, Math.abs(e.E - E0)); if (n.mode === 'air') air = true; if (n.mode === 'track' && n.K > 1) ratio = Math.max(ratio, Math.abs(n.Kr / n.K - s.beta)); }
+  ok(worst < 2e-5 * E0, k + '/' + rider + ': K_tr + K_rot + U_g + E_th is conserved (worst ' + worst.toExponential(1) + ' J)'); ok(ratio < 1e-9, k + '/' + rider + ': on the track K_rot = β K_tr'); }
+{ const s = new Sim(); s.choose('valley'); s.setRider('ball'); const E0 = s.E0; runFor(s, 60); near(s.energy().E, E0, 1e-6 * E0, 'valley/ball: a minute of rolling, E unchanged'); ok(s.ride.now().th === 0, 'valley/ball: no E_th'); }
+// the speed from a drop: the ball goes √(5/7) as fast as the ice cube; the hollow ball √(3/5)
+{ const at = (rider) => { const s = new Sim(); s.choose('valley'); s.setRider(rider); s.play(); let best = { y: Infinity }; for (let i = 0; i < 600; i++) { s.tick(1 / 120); const n = s.ride.now(); if (n.p.y < best.y) best = { y: n.p.y, v: n.speed, h: s.h0 }; } return best; };
+  const ice = at('ice'), ball = at('ball'), hol = at('hollow');
+  near(ball.v, Math.sqrt(10 * G * (ball.h - ball.y) / 7), 1e-4, 'ball: v at the bottom = √(10 g Δh/7)'); near(ball.v / Math.sqrt(2 * G * (ball.h - ball.y)), Math.sqrt(5 / 7), 1e-5, 'ball/ice cube from the same drop: √(5/7)');
+  near(hol.v / Math.sqrt(2 * G * (hol.h - hol.y)), Math.sqrt(3 / 5), 1e-5, 'hollow ball/ice cube: √(3/5)'); near(ice.y, ball.y, 0.02, 'the three reach the same bottom'); }
+// it rises back to its start height on the far side (its spin gives back what it took)
+{ const s = new Sim(); s.choose('halfPipe'); s.setRider('ball'); s.play(); let top = -Infinity, x0 = s.ride.now().p.x; for (let i = 0; i < 60 * 8; i++) { s.tick(1 / 60); const n = s.ride.now(); if (Math.sign(n.p.x - 16) !== Math.sign(x0 - 16)) top = Math.max(top, n.p.y); }
+  near(top, s.h0, 3e-3, 'half-pipe/ball: rolls up to its start height on the other side'); }
+// the loop: from 2.6 r the ice cube gets round and the solid ball does not; a ball needs 2.7 r; a hollow one 2 + 5/6 r
+{ const loopRun = (rider, f) => { const t = new Sim(); t.choose('loop'); t.setRider(rider); const L = t.track.loop; t.setHeight(L.bottom + f * L.r); let left = null; t.play(); for (let i = 0; i < 60 * 6 && t.playing && !left; i++) { t.tick(1 / 60); if (t.ride.st.mode === 'air' && t.ride.st.left) left = t.ride.st.left; } return { t, left }; };
+  const s = new Sim(); s.choose('loop'); const L = s.track.loop; near(s.track.hminFor(0).h, L.bottom + 2.5 * L.r, 1e-9, 'loop: sliding needs 2.5 r'); near(s.track.hminFor(0.4).h, L.bottom + 2.7 * L.r, 1e-9, 'loop: a solid ball needs 2.7 r'); near(s.track.hminFor(2 / 3).h, L.bottom + (2 + 5 / 6) * L.r, 1e-9, 'loop: a hollow ball needs 2.83 r');
+  ok(!loopRun('ice', 2.52).left, 'loop: the ice cube from 2.52 r stays on'); ok(!!loopRun('ball', 2.52).left, 'loop: a ball from the same height leaves the track'); ok(!loopRun('ball', 2.72).left, 'loop: the ball from 2.72 r stays on'); ok(!!loopRun('ball', 2.68).left, 'loop: and from 2.68 r leaves');
+  ok(!!loopRun('hollow', 2.8).left && !loopRun('hollow', 2.86).left, 'loop: the hollow ball needs 2.83 r');
+  const b = loopRun('ball', 2.6); if (b.left) near(b.left.n, 0, 1e-3 * b.t.vals.m * G, 'loop/ball: it leaves exactly where n reaches 0');
+  // the spline loop's own threshold moves the same way
+  const sp = new Sim(); sp.choose('loop'); sp.setLoopMode('spline'); ok(sp.track.hminFor(0.4).h > sp.track.hminFor(0).h, 'spline loop: a ball needs a higher start than an ice cube'); }
+// rolling: no kinetic friction, and the friction switch does nothing to it; static friction is drawn, along the track
+{ const s = new Sim(); s.choose('valley'); s.setRider('ball'); s.setFriction(true); ok(s.ride.mu === 0, 'a rolling ball ignores the kinetic-friction switch'); s.play(); for (let i = 0; i < 20; i++) s.tick(1 / 60);
+  const n = s.ride.now(), fs = n.forces.find((f) => f.kind === 'static'); ok(!!fs, 'rolling down a slope: static friction acts'); if (fs) { near(Math.abs(fs.F.x * n.N.x + fs.F.y * n.N.y), 0, 1e-9, 'static friction is along the track');
+    const sum = n.forces.reduce((a, f) => ({ x: a.x + f.F.x, y: a.y + f.F.y }), { x: 0, y: 0 }), F = s.ride.forces(s.ride.st.u, s.ride.st.ud); near((sum.x * n.T.x + sum.y * n.T.y) / n.m, F.at, 1e-9, 'the forces add up to m a along the track'); }
+  const c = new Sim(); c.choose('valley'); c.setRider('ice'); c.play(); c.tick(1 / 60); ok(!c.ride.now().forces.some((f) => f.kind === 'static'), 'an ice cube feels no static friction'); }
+// the drawn ball turns by the distance rolled over its drawn radius
+{ const s = new Sim(); s.choose('valley'); s.setRider('ball'); s.play(); let d = 0, last = s.ride.now().p; for (let i = 0; i < 30; i++) { s.tick(1 / 60); const p = s.ride.now().p; d += Math.hypot(p.x - last.x, p.y - last.y); last = p; }
+  near(Math.abs(s.ride.now().ang), d / Ride.RDRAW, 0.01 * d / Ride.RDRAW + 1e-3, 'the ball turns through (distance rolled)/(drawn radius)'); const c = new Sim(); c.choose('valley'); c.play(); for (let i = 0; i < 30; i++) c.tick(1 / 60); ok(c.ride.now().ang === 0, 'the ice cube does not turn'); }
+// landing: a spinning ball that lands is brought back to rolling, keeping angular momentum about the contact; the jolt goes to E_th, E still adds up
+{ const r = new Ride(new Track(PRESETS.ski.pts), { beta: 0.4, m: 10 }); const R = r.reroll(5, 0); near(R.v, 5 / 1.4, 1e-12, 'a ball landing without spin rolls on at v/(1 + β)'); near(R.loss, 10 * 25 / 2 - 1.4 * 10 * (5 / 1.4) ** 2 / 2, 1e-9, 'and the energy that takes is the loss');
+  const same = r.reroll(5, -5); near(same.v, 5, 1e-12, 'already rolling: unchanged'); near(same.loss, 0, 1e-9, 'with no loss'); }
+{ const s = new Sim(); s.choose('ski'); s.setRider('ball'); const E0 = s.E0; let worst = 0, seen = new Set(); s.play(); for (let i = 0; i < 60 * 10 && s.playing; i++) { s.tick(1 / 60); seen.add(s.ride.st.mode); worst = Math.max(worst, Math.abs(s.energy().E - E0)); }
+  ok(seen.has('air') && seen.has('ground'), 'ski jump/ball: flies and lands'); ok(worst < 2e-5 * E0, 'ski jump/ball: K_tr + K_rot + U_g + E_th still adds up (worst ' + worst.toExponential(1) + ' J)'); }
 
 // ---- moving the zero of U_g changes U_g and E, never K or the motion ----
 { const a = new Sim(), b = new Sim(); a.choose('hill'); b.choose('hill'); b.set('y0', 4.3); runFor(a, 2); runFor(b, 2); const na = a.ride.now(), nb = b.ride.now();
