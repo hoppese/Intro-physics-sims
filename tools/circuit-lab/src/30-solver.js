@@ -12,11 +12,13 @@
 // solve() is pure: it returns a Solution and changes nothing, so the display
 // can be refreshed after an edit without moving time on. step() solves one
 // time step and commits it. How a step is discretised is the parts' own
-// business (see Capacitor / Inductor): second order normally, first order
-// when env.first asks for a restart.
+// business (see Element.stepFormula): of the order env.order asks for (second
+// if it does not say), first order when env.first asks for a restart.
 // =====================================================================
 class Solution {
-  constructor(find) { this.find = find; this.nodeV = new Map(); this.branchI = new Map(); this.flows = new Map(); this.group = new Map(); this.groundedGroups = new Set(); this.shorted = false; this.solved = true; }
+  constructor(find) { this.find = find; this.nodeV = new Map(); this.branchI = new Map(); this.flows = new Map(); this.group = new Map(); this.groundedGroups = new Set(); this.dead = new Set(); this.loose = new Set(); this.shorted = false; this.clash = false; this.solved = true; }
+  // true where the circuit `p` is part of has no answer (see dead() in Solver.solve)
+  stuck(p) { return this.dead.has(this.group.get(this.node(p))); }
   node(p) { return this.find(P.key(p)); }
   grounded(p) { return this.groundedGroups.has(this.group.get(this.node(p))); }
   sameGroup(p, q) { const a = this.group.get(this.node(p)), b = this.group.get(this.node(q)); return a !== undefined && a === b; }
@@ -28,6 +30,10 @@ class Solution {
   flow(el) { const f = this.flows.get(el.id); return isFinite(f) ? f : 0; }
   // the current to report for an element: a source reports what it delivers out of its + end
   current(el) { const I = this.branchI.has(el.id) ? this.branchI.get(el.id) : this.flows.get(el.id); return isFinite(I) ? I : (el.open ? 0 : NaN); }
+  // Step back to no step at all: this is the instant solved with a step h, `b` and `c` the same with 2h and 4h,
+  // and the parabola through the three is followed back to h = 0.
+  back(b, c) { for (const k of ['nodeV', 'branchI', 'flows']) for (const [id, v] of this[k]) { const w = b[k].get(id), u = c[k].get(id);
+      if (isFinite(v) && isFinite(w) && isFinite(u)) this[k].set(id, (8 * v - 6 * w + u) / 3); } return this; }
   measure(el) { const t = el.terminals(); return { dV: t.length > 1 ? this.drop(t[0].p, t[t.length > 2 ? (el.position || 1) : 1].p) : NaN, I: this.current(el) }; }
 }
 
@@ -59,7 +65,18 @@ class Solver {
     for (const bs of byGroup.values()) {
       // a grounded node goes first: it is the reference (0 V)
       const nodes = [...new Set(bs.flatMap((b) => [b.ra, b.rb]))].sort((x, y) => (groundRoots.has(x) ? 0 : 1) - (groundRoots.has(y) ? 0 : 1));
-      const idx = new Map(nodes.map((n, i) => [n, i])), srcs = bs.filter((b) => b.b.src), n = nodes.length, m = (n - 1) + srcs.length;
+      // Ideal sources wired straight across each other would make the equations singular (their currents are
+      // not pinned down one by one). If they agree -- identical batteries in parallel -- one stands in for the
+      // set and they share its current equally, which is what any equal internal resistance gives however
+      // small. If they disagree there is no answer at all, and the circuit is marked as a clash.
+      const sets = new Map(), srcs = []; let clash = false;
+      for (const br of bs) { if (!br.b.src) continue; if (br.b.ri > 1e-6 || br.ra === br.rb) { srcs.push(br); continue; }
+        const fwd = br.ra < br.rb, key = fwd ? br.ra + '|' + br.rb : br.rb + '|' + br.ra, V = fwd ? br.b.V : -br.b.V, set = sets.get(key);
+        if (!set) { sets.set(key, { V, fwd, lead: br, rest: [] }); srcs.push(br); } else { set.rest.push({ br, same: fwd === set.fwd }); if (Math.abs(V - set.V) > 1e-9 * Math.max(1, Math.abs(V), Math.abs(set.V))) clash = true; } }
+      // a group with no answer: no potentials and no currents to read off it (the dots along its wires stand still)
+      const dead = () => { sol.solved = false; sol.dead.add(sol.group.get(bs[0].ra)); for (const nd of nodes) sol.nodeV.set(nd, NaN); for (const br of bs) sol.branchI.set(br.el.id, NaN); };
+      if (clash) { sol.clash = true; dead(); continue; }
+      const idx = new Map(nodes.map((n, i) => [n, i])), n = nodes.length, m = (n - 1) + srcs.length;
       const A = Array.from({ length: m }, () => new Array(m).fill(0)), z = new Array(m).fill(0), ni = (rt) => idx.get(rt) - 1;
       for (const br of bs) { if (br.b.src) continue; const p = ni(br.ra), q = ni(br.rb), g = br.b.g, J = br.b.J;
         if (p >= 0) A[p][p] += g; if (q >= 0) A[q][q] += g; if (p >= 0 && q >= 0) { A[p][q] -= g; A[q][p] -= g; }
@@ -67,15 +84,22 @@ class Solver {
       srcs.forEach((br, k) => { const jc = (n - 1) + k, p = ni(br.ra), q = ni(br.rb); if (br.ra === br.rb && !(br.b.ri > 1e-6)) sol.shorted = true;
         if (p >= 0) { A[p][jc] += 1; A[jc][p] += 1; } if (q >= 0) { A[q][jc] -= 1; A[jc][q] -= 1; } A[jc][jc] -= (br.b.ri || 0); z[jc] += br.b.V; });
       const x = Solver.gauss(A, z);
-      if (!x) { sol.solved = false; for (const nd of nodes) sol.nodeV.set(nd, NaN); continue; }
+      if (!x) { dead(); continue; }
       nodes.forEach((nd, i) => sol.nodeV.set(nd, i === 0 ? 0 : x[i - 1]));
       for (const br of bs) if (!br.b.src) sol.branchI.set(br.el.id, br.b.g * (sol.nodeV.get(br.ra) - sol.nodeV.get(br.rb)) + br.b.J);
       // the unknown solved for each source is the current INTO its + end; report what it delivers
       srcs.forEach((br, k) => sol.branchI.set(br.el.id, -x[(n - 1) + k]));
+      for (const set of sets.values()) if (set.rest.length) { const share = sol.branchI.get(set.lead.el.id) / (1 + set.rest.length);
+        sol.branchI.set(set.lead.el.id, share); for (const o of set.rest) sol.branchI.set(o.br.el.id, o.same ? share : -share); }
     }
     if (!opts || opts.flows !== false) Solver.wireFlows(circuit, mode, sol, branches);
+    sol.loose = Solver.loose(circuit);
     return sol;
   }
+
+  // The ammeters with a lead that touches nothing: they are not wired in, so have nothing to read. (One wired
+  // into a string that goes nowhere, or behind an open switch, is in the circuit and reads a true 0.)
+  static loose(circuit) { return new Set(circuit.ofType(Ammeter).filter((m) => !circuit.wired(m)).map((m) => m.id)); }
 
   // How the current splits among the ideal conductors inside each node. Every
   // zero-resistance link gets the same small resistance, the currents the
@@ -96,8 +120,17 @@ class Solver {
       for (const l of links) sol.flows.set(l.el.id, wv.get(l.a) - wv.get(l.b)); }
   }
 
+  // This very instant, with nothing moved on. A solve needs a step, however short, and in a step of length dt
+  // an inductor gains V dt / L of current and a capacitor I dt / C of voltage -- enough to show as microamps the
+  // moment a switch closes on a small coil, and to creep when every edit made while paused adds another. Solving
+  // for dt, 2 dt and 4 dt and following the answers back to no step at all takes that out; what really does jump
+  // (a cut coil, shared charge) is the same in all three and stays.
+  static instant(circuit, env, opts) { const sol = Solver.solve(circuit, env, opts); if (env.mode !== 'tran' || !sol.solved) return sol;
+    const at = (k) => Solver.solve(circuit, Object.assign({}, env, { dt: k * env.dt }), opts), b = at(2), c = at(4); return b.solved && c.solved ? sol.back(b, c) : sol; }
+
   // one step of length env.dt ending at time env.t; parts take their new state
-  static step(circuit, env, opts) { const sol = Solver.solve(circuit, env, opts);
+  static step(circuit, env, opts) { return Solver.commit(circuit, Solver.solve(circuit, env, opts)); }
+  static commit(circuit, sol) {
     for (const el of circuit.elements) { if (!el.reactive) continue; const t = el.terminals(); if (t.length !== 2) continue;
       const dV = sol.nodeV.get(sol.node(t[0].p)) - sol.nodeV.get(sol.node(t[1].p)); el.commit(dV, sol.branchI.get(el.id)); }
     return sol; }

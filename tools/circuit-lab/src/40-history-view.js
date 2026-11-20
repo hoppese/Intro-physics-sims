@@ -64,11 +64,12 @@ class View {
   panTo(ox, oy) { this.ox = ox; this.oy = oy; this.auto = false; this.clamp(); }
   // centre a world-pixel box {x0,y0,x1,y1}; from then on the view re-fits itself when the canvas resizes.
   // `lift`: canvas pixels along the bottom edge to keep free (see Workbench.fit)
+  // `side`: canvas pixels down the right-hand edge to keep free
   // (an empty bench shows the middle of the board, so there is room to build in every direction)
-  fit(box, lift) { this.auto = true; if (!box) { const b = this.board; this.scale = this.fitMax; this.ox = b ? this.w / 2 - (b.x0 + b.x1) / 2 * this.scale : 0; this.oy = b ? this.h / 2 - (b.y0 + b.y1) / 2 * this.scale : 0; this.clamp(); return; }
-    const bw = Math.max(1, box.x1 - box.x0), bh = Math.max(1, box.y1 - box.y0), pad = 10, H = this.h - (lift || 0);
-    this.scale = Math.max(View.MIN, Math.min(this.fitMax, (this.w - 2 * pad) / bw, (H - 2 * pad) / bh));
-    this.ox = (this.w - bw * this.scale) / 2 - box.x0 * this.scale; this.oy = (H - bh * this.scale) / 2 - box.y0 * this.scale; this.clamp(); }
+  fit(box, lift, side) { this.auto = true; if (!box) { const b = this.board; this.scale = this.fitMax; this.ox = b ? this.w / 2 - (b.x0 + b.x1) / 2 * this.scale : 0; this.oy = b ? this.h / 2 - (b.y0 + b.y1) / 2 * this.scale : 0; this.clamp(); return; }
+    const bw = Math.max(1, box.x1 - box.x0), bh = Math.max(1, box.y1 - box.y0), pad = 10, H = this.h - (lift || 0), W = this.w - (side || 0);
+    this.scale = Math.max(View.MIN, Math.min(this.fitMax, (W - 2 * pad) / bw, (H - 2 * pad) / bh));
+    this.ox = (W - bw * this.scale) / 2 - box.x0 * this.scale; this.oy = (H - bh * this.scale) / 2 - box.y0 * this.scale; this.clamp(); }
   // the part of the grid on screen, in whole grid points
   visibleGrid() { const a = this.toWorld(0, 0), b = this.toWorld(this.w, this.h), ga = View.grid(a.x, a.y), gb = View.grid(b.x, b.y);
     return { c0: Math.ceil(ga.c), c1: Math.floor(gb.c), r0: Math.ceil(ga.r), r1: Math.floor(gb.r) }; }
@@ -79,6 +80,10 @@ const Fmt = {
   none: '– – –',                       // "nothing to read": spaced out so it cannot be taken for a minus sign
   V(v) { if (!isFinite(v)) return '—'; if (Math.abs(v) < 0.005) return '0.00 V'; return (v > 0 ? '+' : '−') + Math.abs(v).toFixed(2) + ' V'; },
   absV(v) { return isFinite(v) ? Math.abs(v).toFixed(2) + ' V' : '—'; },
+  // What the clock face says. It sits in the toolbar beside the Pause button, so it must not grow as the run
+  // gets long: hundredths up to 1000 s, tenths to 10 000 s, whole seconds after -- never more than six characters
+  // of number (the chip's min-width in the markup is that much text).
+  clock(t) { let s = t.toFixed(2); if (s.length > 6) s = t.toFixed(1); if (s.length > 6) s = t.toFixed(0); return 't = ' + s + ' s'; },
   // a number from 0 to 1000 to three significant figures (never more than two decimals)
   sig3(x) { return x.toFixed(x < 9.995 ? 2 : x < 99.95 ? 1 : 0); },
   // A current, to three figures in whichever of µA, mA and A suits it: resistors run from 0.5 Ω to
@@ -87,6 +92,13 @@ const Fmt = {
   A(i) { if (!isFinite(i)) return '—'; const a = Math.abs(i); if (a < Fmt.ZERO_A) return '0 mA'; return a < 0.9995e-3 ? Fmt.sig3(a * 1e6) + ' µA' : a < 0.9995 ? Fmt.sig3(a * 1e3) + ' mA' : Fmt.sig3(a) + ' A'; },
   // a signed current, for an ammeter (which has a direction)
   signedA(i) { if (!isFinite(i)) return '—'; const s = Fmt.A(i); return (i < 0 && s !== '0 mA' ? '−' : '') + s; },
-  Q(q) { if (!isFinite(q)) return '—'; const a = Math.abs(q), s = q < 0 ? '−' : ''; if (a < 5e-10) return '0 mC'; if (a >= 1e-3) return s + (a * 1e3).toFixed(2) + ' mC'; if (a >= 1e-6) return s + (a * 1e6).toFixed(1) + ' µC'; return s + (a * 1e9).toFixed(0) + ' nC'; },
+  // a charge, to three figures in nC, µC, mC or C (a 200 mF capacitor at 24 V holds 4.8 C)
+  Q(q) { if (!isFinite(q)) return '—'; const a = Math.abs(q), s = q < 0 ? '−' : ''; if (a < 5e-10) return '0 mC';
+    return s + (a < 0.9995e-6 ? Fmt.sig3(a * 1e9) + ' nC' : a < 0.9995e-3 ? Fmt.sig3(a * 1e6) + ' µC' : a < 0.9995 ? Fmt.sig3(a * 1e3) + ' mC' : Fmt.sig3(a) + ' C'); },
+  // an energy, to three figures in nJ, µJ, mJ, J or kJ (20 H carrying 20 A holds 4 kJ)
+  J(u) { if (!isFinite(u)) return '—'; const a = Math.abs(u); if (a < 5e-10) return '0 mJ';
+    return a < 0.9995e-6 ? Fmt.sig3(a * 1e9) + ' nJ' : a < 0.9995e-3 ? Fmt.sig3(a * 1e6) + ' µJ' : a < 0.9995 ? Fmt.sig3(a * 1e3) + ' mJ' : a < 999.5 ? Fmt.sig3(a) + ' J' : Fmt.sig3(a / 1e3) + ' kJ'; },
+  // a plain number to three significant figures, with no trailing zeros: 5.03, 0.629, 126, 0.05
+  fig3(x) { return String(Number(x.toPrecision(3))); },
   num(x, d) { const p = Math.pow(10, d == null ? 2 : d); return (Math.round(x * p) / p).toString(); },
 };

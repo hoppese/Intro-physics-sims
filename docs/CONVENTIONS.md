@@ -539,6 +539,111 @@ it works with each sim's own camera — perspective or orthographic.
   "start hidden" box starts at the current mode and the link follows the
   box.
 
+### Circuit Lab behaviour (added 2026-11-17; change deliberately)
+
+- **A wire joins only what its two ends touch.** It is never laid along a
+  wire that belongs to neither end (that would join a third node): it takes
+  the other elbow, then goes round, and if neither works it is refused with
+  a red preview, a ring where it would touch, and the reason ("it would run
+  along another wire (wires that touch are joined)"). A rail drawn over bare
+  part ends still picks each of them up.
+- **Dropping a part on a wire means "in this wire".** A loose part dropped
+  across a straight wire turns to lie along it and is spliced in; a part
+  that is already wired, and an arrow-key nudge, never turn. A wire needs 4
+  squares of straight run to take a part, and the presets leave that much
+  wherever a worked example puts a meter. An ammeter is the exception: on
+  a shorter stretch it goes in two squares long ("Shortened to fit this
+  stretch of wire"), because the leads of a circuit built by hand from the
+  menu are only three squares long and the meter must have somewhere to
+  go. Two squares is the least; no other part changes length. A staircase lead left behind by a
+  move is re-laid as the plainest path of the same length.
+- **No two parts side by side.** A move made by hand (a drag or an arrow
+  key) is refused if it would leave the part parallel to another on the very
+  next row or column, overlapping along their length: the symbols and their
+  labels would run into each other, and a meter there reads as if it were
+  wired across the part when it is not. The refusal names the neighbour and
+  says what to do ("C₁ would be right beside it (leave a clear row between
+  them)"). Parts already beside each other may slide or leave; turning a
+  part, and circuits loaded from a link, are not held to the rule. No
+  preset has two parts side by side.
+- **A turn can always be taken back.** Four quarter turns of a part, or a
+  turn and the opposite turn, give back the circuit exactly as it was: the
+  same wires on the same squares, the part the same way round, what it was
+  doing (a capacitor's charge, an inductor's current, a meter's sign)
+  unchanged. The bench remembers the wiring for each way the part has lain
+  during a run of turns (`Workbench.spin`); any other change to the layout
+  ends the run. A turn that leaves a battery, AC source or meter connected
+  the other way round says so — and so does the turn that puts it right
+  again; the notice comes down at the next turn.
+- **Leads after a move or turn**: a lead that ran straight to the part is
+  re-laid straight to it (no staircase hung on the end of the old wire); a
+  wire the user took the long way round stays the long way round. Of the
+  shortest paths, the one with fewest corners, trying each direction out
+  of the terminal.
+- **Refusals name the obstacle**: "Put back where it was — can't go there:
+  L₁ is in the way"; "Can't draw that wire — it would run through L₁" (or
+  "along R₁").
+- **Which elbow a drawn wire takes**: the one that leaves a part's end
+  straight out, in line with the part, and comes straight in to the end it
+  is going to (battery + up to a resistor on the row above: up, then
+  across — never sideways out of the battery). Where the two elbows are as
+  good as each other, the way the pointer first set off. Either way, only
+  a legal one.
+- **Sources in parallel**: ideal sources of the same voltage wired straight
+  across each other are an ordinary circuit and share the current equally
+  (two identical batteries each deliver half). Ideal sources of different
+  voltages across each other — or the same voltage back to back — are a
+  contradiction: the summary says "sources clash" and how to fix it, and
+  every reading in that circuit is "—", never 0. One internal resistance
+  makes it an ordinary circuit again. A circuit that cannot be solved for
+  any other reason also reads "—", not 0.
+- **Names**: one battery is ε; several are ε₁, ε₂ (never ε and ε₂).
+- **Clock face**: t = 0 is the instant the circuit last came to life — a
+  switch thrown, or an edit that closes a dead loop (including a loop with
+  an inductor in it, where the current is still zero at that instant). The
+  AC phase is not re-zeroed by that; only ↻ t=0 does. The clock text never
+  exceeds "t = 999.99 s" in length (tenths from 1000 s, whole seconds from
+  10 000 s) and its chip is that wide, so Pause and ↻ never move.
+- **The clock is only there when something changes with time**: a
+  capacitor, inductor or AC source in the circuit, or a graph switched on.
+  A clock that comes up comes up at zero: an edit that brings it back (a
+  capacitor dropped back into a quiet loop, an undo, a wire redrawn) or
+  the first graph on a DC circuit starts it from 0.00 s, never from the
+  age of an earlier run. An edit that leaves the clock up (a value typed,
+  a nudge, a second graph) does not touch it.
+- **Summary line**: says "running" only when something is flowing or about
+  to; an open switch with every branch dead is "Switch open"; two EMFs that
+  cancel are told apart from a gap in the loop.
+- **Selected-part card**: a battery says whether it is supplying or being
+  charged; a capacitor or inductor shows its stored energy; an AC source
+  shows ω and T. The card keeps a fixed minimum height so the panel does
+  not jump as the selection changes.
+- **AC frequency** changes are phase-continuous (no jump in the trace).
+  The AC preset opens with both graphs on.
+- **Graph**: spans the canvas at any size; on a canvas narrower than 480 px
+  it goes under the circuit as a 140 px strip instead of beside the zoom
+  control. Kept points are plotted at their true times; the value axis has
+  at least 3 marks and its unit follows the meters. The canvas under the
+  dock is painted in the dock's ground.
+- **A trace has a gap where there was nothing to read** (a meter not in a
+  circuit, sources that clash): the graph lifts the pen there and never
+  draws a line across the gap or down to zero; the value axis ignores it.
+- **Tab title**: the page names itself "Circuit Lab" ("Circuit Lab
+  (Probe)" in the variant); `openbig.js` appends " — enlarged". The other
+  sims still have an empty title in normal mode (their bundles say
+  "Bundled Page" and the template has no `<title>`).
+- **Worked examples** quote numbers from exact expressions (1 − 1/e, not a
+  sampled value).
+- **Integration accuracy** (see `Element.stepFormula`, `Simulation.start`):
+  fourth-order backward differentiation once a run is under way; after any
+  jump (switch, edit, reset, change of step) two first-order steps, each
+  taken as 16 short ones, then order 2, 3, 4 — no formula reaches back
+  across the jump. Where the circuit can swing faster than the shortest
+  step resolves, order 2 only. Targets the tests hold it to: an LC period
+  right to 2 parts in a million, a tank 0.1 % off resonance within 0.3 % in
+  current, an RLC step response within 0.3 mV at every step, and no
+  overshoot above 0.1 mV on a decay far faster than the step.
+
 ## Process conventions (how, not what)
 
 - **Bundle editing**: sims are generated single-file bundles — extract,

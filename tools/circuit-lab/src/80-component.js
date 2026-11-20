@@ -8,6 +8,8 @@ class Component extends DCLogic {
   state = { hide: false, peek: {}, menuOpen: false, addOpen: false, presetOpen: false, showShare: false, shareCopied: false, shareHide: false, showInfo: false, showExample: false, showSol: false,
     showBug: false, bugText: '', bugEmail: '', bugSending: false, bugResult: '', draft: null, graphBig: false };
   big = false;
+  static SLIM = 480;     // a canvas narrower than this (CSS px) puts the graph under the circuit...
+  static UNDER = 140;    // ...in a strip this high
   _obBig = /[?&]big=1(&|$)/.test((typeof location !== 'undefined' && location.search) || '');
   bench = new Workbench();
   tool = new PointerTool(this.bench);
@@ -21,6 +23,8 @@ class Component extends DCLogic {
 
   // ---- lifecycle ----
   componentDidMount() { window.__circuitLab = this; const b = this.bench, link = ShareLink.read(); let loaded = false;
+    // (the bundle's template has no <title>: without this the browser tab shows the bare address)
+    if (!document.title) document.title = 'Circuit Lab' + (Scope.on ? ' (Probe)' : '');
     if (link) { try { const c = Circuit.decode(link.net, Workbench.NC, Workbench.NR); if (!c.isEmpty) { b.replace(c); loaded = true; if (link.hide) this.setState({ hide: true }); } } catch (e) {} }
     if (!loaded) b.loadPreset('series');
     b.history.clear(); this.publish(); this.forceUpdate(); }
@@ -45,10 +49,19 @@ class Component extends DCLogic {
     const over = (e) => { this.ghover = e.clientX - el.getBoundingClientRect().left; };
     el.addEventListener('pointermove', over); el.addEventListener('pointerdown', over); el.addEventListener('pointerleave', () => { this.ghover = null; }); };
   // how much of the canvas the graph takes while it is docked, and whether it is showing / enlarged
-  get dock() { const on = this.bench.sim.graphing, ch = this._ch || 400; return { on, big: on && !!this.state.graphBig, h: on ? Math.round(Math.max(126, Math.min(210, ch * 0.38))) : 0, full: ch }; }
+  // (on a slim canvas the graph is added below the circuit instead of taken out of it: see obResize)
+  get dock() { const on = this.bench.sim.graphing, ch = this._ch || 400; return { on, big: on && !!this.state.graphBig, h: on ? this._under || Math.round(Math.max(126, Math.min(210, ch * 0.38))) : 0, full: ch }; }
   // keep the drawing buffer matched to the canvas's size on the page (taller in ?big=1)
   obResize() { const c = this.canvas; if (!c) return; const dpr = window.devicePixelRatio || 1;
     if (this._obBig) { const wNow = Math.round(c.clientWidth) || 560, th = Math.round(Math.max(400, Math.min(wNow * 0.62, (window.innerHeight || 820) - 210))); if (c.style.height !== th + 'px') c.style.height = th + 'px'; }
+    // A slim canvas (a phone, a narrow embed) is too short to share with the graph -- the circuit would be left
+    // a strip it cannot be read in. There the circuit keeps the whole of its usual height and the canvas grows
+    // by the graph's. (Only the height this code set itself is ever taken off again.)
+    // (A height the user dragged out with the corner handle is a stylesheet rule marked important, so it wins;
+    // then the graph goes back to taking its share of whatever height that is.)
+    else { const wNow = Math.round(c.clientWidth) || 560, slim = wNow < Component.SLIM && this.bench.sim.graphing, px = slim ? Math.round(wNow * 400 / 560) + Component.UNDER : 0, want = px ? px + 'px' : '';
+      if ((this._slimH || '') !== want) { c.style.height = want; this._slimH = want; }
+      this._under = px && Math.abs(Math.round(c.clientHeight) - px) <= 2 ? Component.UNDER : 0; }
     const w = Math.round(c.clientWidth) || 560, h = Math.round(c.clientHeight) || 400; this._cw = w; this._ch = h;
     if (c.width !== Math.round(w * dpr) || c.height !== Math.round(h * dpr)) { c.width = Math.round(w * dpr); c.height = Math.round(h * dpr); }
     this.dpr = dpr; }
@@ -76,15 +89,21 @@ class Component extends DCLogic {
       else turn = { id: T.id, pivot: T.pivot, settled: T.ok ? u : 1, angle: T.ok ? -T.dir * (Math.PI / 2) * (1 - u) ** 2.4 : T.dir * 0.3 * Math.sin(Math.PI * u) * (1 - u) }; }
     const scene = { circuit: b.circuit, view: b.view, sol: b.sol, dpr: this.dpr, names: b.circuit.labels(), selId: b.selId, hide: !!st.hide, revealed: (id) => !!st.peek[id], flowing: true,
       probe: b.probe, probeV: b.probeV, turn,
-      message: b.notice ? { text: b.notice.text, bad: b.notice.bad, alpha: fade((life - (now - b.notice.at)) / 400) } : null,
+      message: b.notice ? { text: b.notice.text, bad: b.notice.bad, at: b.notice.at, alpha: fade((life - (now - b.notice.at)) / 400) } : null,
       flash: b.flash ? { segs: b.flash.segs, alpha: fade(1 - (now - b.flash.at) / 700) } : null };
     this.tool.decorate(scene); this.renderer.draw(g, scene);
+    // the strip the graph sits over is painted in the graph's own ground, so a frame in which the page has
+    // not yet caught up with a change of size shows dark there, never the white of the card behind
+    if (dock.on) { g.setTransform(this.dpr, 0, 0, this.dpr, 0, 0); g.fillStyle = '#0b121b'; g.fillRect(0, this._ch - dock.h, this._cw, dock.h); }
     const cur = this.tool.cursor; if (this.canvas.style.cursor !== cur) this.canvas.style.cursor = cur;
     if (this.gctx && dock.on) this.drawGraph(scene.names, dock); }
-  // the graph keeps its own buffer matched to its box, which changes size as it is enlarged
-  drawGraph(names, dock) { const c = this.gcanvas, b = this.bench, st = this.state, dpr = window.devicePixelRatio || 1, w = Math.round(c.clientWidth), h = Math.round(c.clientHeight); if (!(w > 40 && h > 40)) return;
+  // the graph keeps its own buffer matched to its box, which changes size as it is enlarged.
+  // (openbig.js pins every canvas after the first to the width it had at load, so that a companion strip
+  // does not balloon; this one is meant to span its dock at any size, so the pin is taken off again.)
+  drawGraph(names, dock) { const c = this.gcanvas, b = this.bench, st = this.state, dpr = window.devicePixelRatio || 1; if (c.style.maxWidth) c.style.removeProperty('max-width');
+    const w = Math.round(c.clientWidth), h = Math.round(c.clientHeight); if (!(w > 40 && h > 40)) return;
     if (c.width !== Math.round(w * dpr) || c.height !== Math.round(h * dpr)) { c.width = Math.round(w * dpr); c.height = Math.round(h * dpr); }
-    this.graphs.draw(this.gctx, { dpr, w, h, top: dock.big ? 30 : 0, clear: dock.big ? 0 : 28, t: b.sim.t, origin: b.sim.origin, hover: this.ghover, empty: Scope.on ? 'Click any part to see its trace.' : '',
+    this.graphs.draw(this.gctx, { dpr, w, h, top: dock.big ? 30 : 0, clear: dock.big ? 0 : 66, t: b.sim.t, origin: b.sim.origin, hover: this.ghover, empty: Scope.on ? 'Click any part to see its trace.' : '',
       traces: b.traces().map((tr) => ({ ...tr, name: (names.get(tr.id) || {}).text || 'Wire', shown: !st.hide || !!st.peek[tr.id] })) }); }
 
   // ---- pointer ----
@@ -102,7 +121,9 @@ class Component extends DCLogic {
   // The wheel zooms -- except inside a frame (a Moodle page), where a plain wheel
   // has to stay the page's scroll: there only a pinch or Ctrl/Cmd+wheel zooms.
   get framed() { try { return window.self !== window.top; } catch (err) { return true; } }
-  onWheel = (e) => { if (this.framed && !e.ctrlKey && !e.metaKey) return; e.preventDefault(); const p = this.at(e); this.bench.view.zoomAbout(p.sx, p.sy, Math.exp(e.ctrlKey ? -Math.max(-25, Math.min(25, e.deltaY)) * 0.01 : -e.deltaY * 0.0015)); this.dirty = true; };
+  onWheel = (e) => { if (this.framed && !e.ctrlKey && !e.metaKey) return; e.preventDefault(); const p = this.at(e); this.bench.view.zoomAbout(p.sx, p.sy, Math.exp(e.ctrlKey ? -Math.max(-25, Math.min(25, e.deltaY)) * 0.01 : -e.deltaY * 0.0015));
+    // (the grid has moved under a pointer that has not: the hover ring goes to whatever is under it now)
+    if (!this.tool.gesture) this.tool.move(this.at(e)); this.dirty = true; };
   onWindowBlur = () => { this.tool.space = false; this.tool.touches.clear(); };
 
   // ---- keyboard ----
@@ -142,7 +163,7 @@ class Component extends DCLogic {
       meters: c.ofType(Meter).map((m) => { const v = sol ? m.number(sol) : NaN; return { label: label(m), type: m.type, value: isFinite(v) ? +v.toFixed(m instanceof Voltmeter ? 3 : 4) : null }; }),
       solved: !!(sol && sol.solved) }; }
   publish() { try { const snap = this.snapshot(), sim = this.bench.sim; window.simState = { sim: 'circuit-lab', ...snap };
-    window.simAPI = { get: () => this.snapshot(), set: () => {}, hideValues: (on) => this.setState({ hide: !!on, peek: {} }), play: (on) => { sim.playing = on !== false; this.refresh(); }, reset: () => { sim.reset(); this.refresh(); },
+    window.simAPI = { get: () => this.snapshot(), set: () => {}, hideValues: (on) => this.setState({ hide: !!on, peek: {} }), play: (on) => { sim.playing = on !== false; this.refresh(); }, reset: () => { this.bench.restart(); this.refresh(); },
       share: () => ShareLink.url(this.bench.circuit, this.state.hide) };
     if (window.parent && window.parent !== window) window.parent.postMessage({ type: 'sim-state', sim: 'circuit-lab', ...snap }, '*'); } catch (e) {} }
 

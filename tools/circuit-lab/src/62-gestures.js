@@ -34,8 +34,11 @@ class PinchGesture extends Gesture {
   get cursor() { return 'grabbing'; }
 }
 
-// Lay a wire from a grid point: straight, or with one corner. The corner goes
-// the way the pointer first set off, unless only the other way round is legal.
+// Lay a wire from a grid point: straight, or with one corner. Of the two corners
+// the one laid is the one that leaves a part's end straight out and comes
+// straight in to the end it is going to (a lead sideways out of the top of a
+// battery looks like a mistake); where they are as good as each other, the way
+// the pointer first set off; and either way, the one that is legal.
 class WireGesture extends Gesture {
   constructor(bench, at, from, onClick) { super(bench, at, onClick); this.from = from; this.pts = [from]; this.ok = false; this.why = ''; this.axis = null; }
   drag(at) { const g = View.grid(at.x, at.y), to = { c: Math.round(g.c), r: Math.round(g.r) }, from = this.from;
@@ -43,12 +46,15 @@ class WireGesture extends Gesture {
     const aim = P.key(to); if (aim === this.aim) return; this.aim = aim;
     if (!this.axis) this.axis = Math.abs(g.c - from.c) >= Math.abs(g.r - from.r) ? 'h' : 'v';
     const H = [from, { c: to.c, r: from.r }, to], V = [from, { c: from.c, r: to.r }, to];
-    const tries = P.aligned(from, to) ? [[from, to]] : (this.axis === 'h' ? [H, V] : [V, H]); let pick = null;
-    for (const pts of tries) { const r = this.bench.circuit.checkPath(pts); if (r.ok) { pick = { pts, ok: true, why: '' }; break; } if (!pick) pick = { pts, ok: false, why: r.why }; }
-    if (!pick.ok) { const round = this.bench.circuit.detour(from, to); if (round) pick = { pts: round, ok: true, why: '' }; }   // neither elbow fits: go round
-    this.pts = pick.pts; this.ok = pick.ok; this.why = pick.why; }
+    const c = this.bench.circuit, tidy = (pts) => c.inLine(from, pts[1]) + c.inLine(to, pts[1]), lean = P.aligned(from, to) ? 0 : tidy(H) - tidy(V);
+    const tries = P.aligned(from, to) ? [[from, to]] : ((lean ? lean > 0 : this.axis === 'h') ? [H, V] : [V, H]); let pick = null, cross = null;
+    // an elbow that would cross a wire belonging to neither end is passed over: a wire joins only what its ends touch
+    for (const pts of tries) { const r = c.checkPath(pts), x = r.ok ? c.crossings(pts) : [];
+      if (r.ok && !x.length) { pick = { pts, ok: true, why: '' }; break; } if (r.ok && !cross) cross = { pts, ok: false, why: x.why, at: x }; if (!r.ok && !pick) pick = { pts, ok: false, why: r.why }; }
+    if (!pick || !pick.ok) { const round = c.detour(from, to); if (round) pick = { pts: round, ok: true, why: '' }; else if (cross) pick = cross; }   // neither elbow fits: go round
+    this.pts = pick.pts; this.ok = pick.ok; this.why = pick.why; this.at = pick.at || []; }
   drop() { if (this.pts.length > 1) this.bench.drawWire(this.pts); }
-  decorate(scene) { if (this.pts.length > 1) scene.wire = { pts: this.pts, ok: this.ok }; }
+  decorate(scene) { if (this.pts.length > 1) scene.wire = { pts: this.pts, ok: this.ok, at: this.at || [] }; }
   get cursor() { return 'crosshair'; }
 }
 
@@ -65,15 +71,15 @@ class MoveGesture extends Gesture {
     if (dc === this.want.dc && dr === this.want.dr) return; this.want = { dc, dr }; this.place(dc, dr); }
   // put the part at start + (dc, dr); returns the edit result
   apply(dc, dr) { const c = this.bench.circuit; c.restoreLayout(this.before); const el = c.byId(this.id0); if (!el) return { ok: false, why: 'it is gone' };
-    if (!dc && !dr) return { ok: true, el }; const r = c.move(el, dc, dr); if (!r.ok) c.restoreLayout(this.before); return r; }
+    if (!dc && !dr) return { ok: true, el }; const r = c.moveOnto(el, dc, dr); if (!r.ok) c.restoreLayout(this.before); return r; }
   place(dc, dr) { const b = this.bench, r = this.apply(dc, dr); this.ghost = null; this.refused = null;
-    if (r.ok) { this.good = { dc, dr }; b.selId = r.el ? r.el.id : this.id0; b.hush(); }
+    if (r.ok) { this.good = { dc, dr }; this.turned = !!r.turned; this.lifted = !!r.lifted; this.squeezed = !!r.squeezed; b.selId = r.el ? r.el.id : this.id0; b.hush(); }
     else { const el = b.circuit.byId(this.id0); if (el) this.ghost = el.clone().setGeometry(el.translated(dc, dr));
       const back = this.apply(this.good.dc, this.good.dr); b.selId = back.el ? back.el.id : this.id0; this.refused = r.why || 'it does not fit'; b.refuse('move it there', r.why); }
-    b.sim.refresh(); }
+    b.sim.refresh(true); }
   drop() { const b = this.bench; this.ghost = null;
     if (this.refused) { const why = this.refused; this.cancel(); b.say('Put back where it was — can’t go there: ' + why, true); return; }
-    if (this.good.dc || this.good.dr) { b.history.record(this.before); b.settle(); b.keepInView(); } }
+    if (this.good.dc || this.good.dr) { b.history.record(this.before); b.settle(); b.keepInView(); if (this.lifted) b.say('Moved into this wire — the wire it came out of has closed up'); else if (this.squeezed) b.say('Shortened to fit this stretch of wire'); else if (this.turned) b.say('Turned to go in line with the wire'); } }
   cancel() { const b = this.bench; b.circuit.restoreLayout(this.before); b.selId = this.id0; this.ghost = null; b.settle(); }
   decorate(scene) { scene.ghost = this.ghost; }
   get cursor() { return 'grabbing'; }
@@ -96,7 +102,7 @@ class PointerTool {
     let best = null;
     for (const el of c.parts) for (const t of el.terminals()) { const d = dist(t.p); if (d <= Math.min(7 * k / s, (coarse ? 0.5 : 0.4) * G) && (!best || d < best.d)) best = { kind: 'terminal', el, p: t.p, d }; }
     if (best) return best;
-    for (const el of c.parts) { const d = PAINTERS[el.type].distance(el, x, y); if (d <= 11 * k / s && (!best || d < best.d)) best = { kind: 'part', el, d, press: PAINTERS[el.type].press(el, x, y) }; }
+    for (const el of c.parts) { const d = PAINTERS[el.type].distance(el, x, y); if (d <= 11 * k / s && (!best || d < best.d)) best = { kind: 'part', el, d, press: PAINTERS[el.type].press(el, x, y, k / s) }; }
     if (best) return best;
     for (const el of c.wires) { const d = Draw.segDist(x, y, View.xy(el.a), View.xy(el.b)); if (d <= 6 * k / s && (!best || d < best.d)) best = { kind: 'wire', el, d }; }
     const dot = View.dot(x, y, Infinity);

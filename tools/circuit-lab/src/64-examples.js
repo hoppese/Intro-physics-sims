@@ -70,7 +70,7 @@ WorkedExample.KINDS = {
       steps: [['Time constant', '\\tau = RC = ' + T.sig(tau) + T.s],
         ['Initial current', 'I_0 = \\dfrac{' + T.eps + '}{R} = ' + T.cur(v.emf / v.R)(v.emf / v.R), 'an empty capacitor starts out like a wire'],
         ['Charging law', T.DV + '_C = ' + T.eps + '\\left(1 - e^{-t/\\tau}\\right)'],
-        ['At one τ', T.DV + '_C(\\tau) \\approx 0.63\\,' + T.eps + ' = ' + T.f(0.632 * v.emf) + T.V, 'read this at t = τ']] }; } },
+        ['At one τ', T.DV + '_C(\\tau) \\approx 0.63\\,' + T.eps + ' = ' + T.f((1 - Math.exp(-1)) * v.emf) + T.V, 'read this at t = τ']] }; } },
   rl: { title: 'RL current ramp', preset: 'rl',
     blurb: 'An inductor resists sudden current change; the current climbs toward its final value with time constant τ = L/R.',
     tip: 'Build it, turn on the ammeter graph, close the switch, and watch I climb toward ε/R.',

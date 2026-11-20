@@ -82,7 +82,7 @@ class Panel {
       onUndo: app.run(() => b.undo()), onRedo: app.run(() => b.redo()), undoStyle: UI.step(b.history.canUndo), redoStyle: UI.step(b.history.canRedo),
       showTime: sim.timed, onPlay: app.run(() => { sim.playing = !sim.playing; }), playLabel: playing ? '❚❚ Pause' : '▶ Run',
       playStyle: 'font-size:11px;font-weight:700;padding:6px 11px;border-radius:8px;cursor:pointer;border:1px solid ' + (playing ? '#bf8a1e' : '#5a9e3a') + ';background:' + (playing ? '#f6f0db' : '#eef7e6') + ';color:' + (playing ? '#8a6310' : '#4a8a2c') + ';',
-      onResetTime: app.run(() => sim.reset()), timeStr: 't = ' + sim.shown.toFixed(2) + ' s',
+      onResetTime: app.run(() => b.restart()), timeStr: Fmt.clock(sim.shown),
       zoomBtns: [zoom('−', 'Zoom out', () => b.view.zoomBy(1 / 1.25)), zoom('⤡', 'Fit the circuit in view', () => b.fit()), zoom('+', 'Zoom in', () => b.view.zoomBy(1.25))], zoomPct: b.view.percent }; }
 
   // ---- the "Selected component" card ----
@@ -90,6 +90,15 @@ class Panel {
     const I = el.info, K = el.constructor, name = b.circuit.labels().get(el.id), hide = this.hidden(el), m = b.sol ? b.sol.measure(el) : { dV: NaN, I: NaN };
     const field = (f) => { const d = this.ui.draft; return d && d.id === el.id && d.field === f ? d.text : String(el[f]); }, type = (f) => (e) => app.typeField(f, e.target.value);
     const canFlip = !!el.flipped(), secret = (s) => hide ? '?' : s;
+    // A battery with current through it is either supplying energy (the current leaves at its + end, `a`) or
+    // being charged by a stronger one (the current is pushed in at +). An AC source swaps every half cycle.
+    const out = el.constructor === Battery && b.sol && b.sol.solved ? -b.sol.flow(el) : 0;
+    const sourceNote = hide || !(Math.abs(out) >= Fmt.ZERO_A) ? '' : out > 0 ? 'Supplying energy (current leaves at +)' : 'Being charged (current enters at +)';
+    // What a capacitor or an inductor is holding, from the same ΔV and I the card shows.
+    const stores = el instanceof Capacitor ? { tex: 'U_C = \\tfrac{1}{2}\\,C\\,(\\Delta V)^2', u: 0.5 * el.farads * el.vc * el.vc }
+      : el instanceof Inductor ? { tex: 'U_L = \\tfrac{1}{2}\\,L\\,I^2', u: 0.5 * el.henries * m.I * m.I } : null;
+    // An AC source is set in hertz; the formulas (ω₀ = 1/√(LC), X = ωL …) want rad/s. Given data: never hidden.
+    const derived = el instanceof AcSource ? ['\\omega = ' + Fmt.fig3(2 * Math.PI * el.freq) + '\\ \\text{rad/s}', 'T = ' + Fmt.fig3(1 / el.freq) + '\\ \\text{s}'] : null;
     return { hasSel: true, noSel: false, selKind: I.name, selSym: name ? name.tex : '', selHasSym: !!(name && name.tex),
       selCanDelete: true, onDeleteSel: app.run(() => b.remove()), selCanRotate: !!I.rotatable, onRotateCW: app.run(() => b.rotate(1)), onRotateCCW: app.run(() => b.rotate(-1)),
       selHasValue: !!I.hasValue, selValLabel: I.valueLabel || '', selUnit: I.unit || '', selMin: I.min, selMax: I.max, selStep: I.step, selVal: I.hasValue ? field('value') : '', onSelValue: type('value'), onSelBlur: () => app.endField(false),
@@ -99,6 +108,8 @@ class Panel {
       onFlipSel: app.run(() => b.flip()), selFlipInRow: canFlip && !!I.hasValue, selFlipBelow: canFlip && !I.hasValue, selFlipLabel: I.isThrow ? '⇄ Flip orientation' : '⇄ Swap + and − leads',
       selFlipTitle: I.isThrow ? 'Mirror which side the two contacts sit on' : 'Swap the + and − ends',
       selShowMeas: !!I.showMeas, selVdrop: secret(Fmt.absV(m.dV)), selCurrent: secret(Fmt.A(m.I)),
+      selHasSourceNote: !!sourceNote, selSourceNote: sourceNote,
+      selHasEnergy: !!stores, selEnergyTex: stores ? stores.tex : '', selEnergy: stores ? secret(Fmt.J(stores.u)) : '', selHasDerived: !!derived, selDerivedTex: derived ? derived[0] : '', selDerived2Tex: derived ? derived[1] : '',
       selIsCap: el instanceof Capacitor, selCharge: el instanceof Capacitor ? secret(Fmt.Q(Math.abs(el.charge))) : '',
       selIsSwitch: !!I.isSwitch, switchClosed: !!el.closed, onToggleSwitch: app.run(() => b.toggle(el)),
       switchBtnLabel: I.isThrow ? '◉ Position ' + el.position + ' — click for position ' + (3 - el.position) : (el.closed ? '● Closed — click to open' : '○ Open — click to close'),
@@ -143,25 +154,41 @@ class Panel {
     const size = { label: d.big ? '✕' : '⤢', title: d.big ? 'Back to the circuit (Esc)' : 'Enlarge the graph', style: btn + (d.big ? '' : 'height:20px;padding:0 6px;font-size:12px;'), onClick: () => app.setState((s) => ({ graphBig: !s.graphBig })) };
     // docked, the button sits in the top row against the plot's corner, clear of the numbers of a current axis
     const inset = d.big ? 'top:5px;right:6px;' : 'top:1px;right:' + GraphPainter.gutter(d.h, b.traces().some((tr) => tr.kind === 'amm')) + 'px;';
-    return { showGraph: d.on, setGraphCanvas: app.setGraphCanvas, graphBtns: [...switches, size], graphBtnsStyle: 'position:absolute;' + inset + 'display:flex;align-items:center;gap:6px;', graphTip: d.big ? 'Click to go back to the circuit' : 'Click to enlarge',
+    // how many seconds the plot is across: each click shows less, for a closer look at a fast swing, then round again
+    const sp = app.graphs.span, span = { label: sp + ' s', title: 'The graph shows the last ' + sp + ' s — click to change', style: btn + (d.big ? '' : 'height:20px;padding:0 6px;'), onClick: () => { app.graphs.shorter(); app.setState((s) => ({ span: app.graphs.span })); } };
+    return { showGraph: d.on, setGraphCanvas: app.setGraphCanvas, graphBtns: [...switches, span, size], graphBtnsStyle: 'position:absolute;' + inset + 'display:flex;align-items:center;gap:6px;', graphTip: d.big ? 'Click to go back to the circuit' : 'Click to enlarge',
       graphDockStyle: 'position:absolute;left:0;right:0;bottom:0;z-index:3;overflow:hidden;height:' + (d.big ? d.full : d.h) + 'px;transition:height 0.2s ease;background:#0b121b;'
         + 'border-radius:' + (d.big ? '10px' : '0 0 10px 10px') + ';box-shadow:0 -1px 0 rgba(255,255,255,0.16);cursor:' + (d.big ? 'zoom-out' : 'zoom-in') + ';',
       zoomBoxStyle: 'position:absolute;bottom:' + (d.h + 10) + 'px;right:10px;display:flex;align-items:center;gap:4px;background:rgba(15,23,34,0.78);border:1px solid rgba(255,255,255,0.14);border-radius:8px;padding:4px;' }; }
+
+  // Is some battery in a complete loop (through resistors, other batteries and whatever the wiring shorts
+  // together)? With every current zero, that is not a gap: the EMFs round the loop add up to nothing.
+  static balanced(c, sol) { const edges = c.parts.filter((e) => e instanceof Resistor || e instanceof Battery).map((e) => [e, sol.node(e.a), sol.node(e.b)]);
+    return edges.some(([e, a, b]) => { if (!(e instanceof Battery)) return false; const up = new Map(), root = (x) => { while (up.has(x) && up.get(x) !== x) x = up.get(x); return x; };
+      for (const [o, u, v] of edges) if (o !== e) up.set(root(u), root(v)); return root(a) === root(b); }); }
 
   // ---- one line on what the circuit is doing ----
   summary() { const b = this.bench, c = b.circuit, sol = b.sol, sim = b.sim, n = (K) => c.ofType(K).length, plural = (k, one, many) => k ? k + ' ' + (k > 1 ? many : one) : '';
     if (c.isEmpty) return { statusText: 'empty', summaryText: 'Use + Add Element to put parts on the grid, or load a preset above.' };
     if (sol && sol.shorted) return { statusText: 'short circuit', summaryText: 'A source is shorted by a zero-resistance path — current would be unlimited. Add a resistor in that loop.' };
+    // (the words fit what is on the bench: an AC source has a frequency to differ in and no internal resistance to give)
+    if (sol && sol.clash) { const ac = n(AcSource) > 0, bat = n(Battery) > 0;
+      return { statusText: 'sources clash', summaryText: 'Two sources wired straight across each other disagree about the voltage between those two points (' + (!ac ? 'different EMFs' : bat ? 'a battery across an AC source, or different EMFs' : 'different amplitudes or frequencies') + ', or one of them is the other way round), so the current between them would be unlimited. ' + (bat ? 'Give a battery some internal resistance, or put a resistor between them.' : 'Put a resistor between them.') }; }
     if (!sol || !sol.solved) return { statusText: 'no solution', summaryText: 'Part of the circuit can’t be solved as wired — look for a loop with a source or an inductor and no resistance in it.' };
     const bits = [plural(n(Resistor), 'resistor', 'resistors'), plural(n(Battery), 'battery', 'batteries'), plural(n(AcSource), 'AC source', 'AC sources'), plural(n(Capacitor), 'capacitor', 'capacitors'), plural(n(Inductor), 'inductor', 'inductors')].filter(Boolean);
     // an open switch only matters once it is wired in; "running" only means something once a part is
     const open = c.ofType(Switch).some((s) => !s.closed && c.wired(s)), switches = n(Switch) + n(ThrowSwitch), wiredUp = c.parts.some((e) => !(e instanceof Ground) && c.wired(e));
+    // every reading zero in a battery circuit: say why, rather than leave the reader to hunt for the gap
+    // (zero as the readouts show it: a charged capacitor in an open string leaks a fraction of a nanoamp)
+    const dead = wiredUp && !open && !c.clocked && n(Battery) + n(AcSource) > 0 && c.parts.every((e) => !(Math.abs(sol.current(e)) > Fmt.ZERO_A));
     let text = (open ? 'Switch open — click its lever to close the loop. ' : '') + (bits.join(', ') || 'No source or load yet');
     if (!wiredUp) text += ' — nothing is wired up yet. Drag from a terminal to lay wire.';
-    else if (c.reactive) text += sim.playing ? ' — running.' + (open ? '' : ' ' + (switches ? 'Throw a switch or press' : 'Press') + ' ↻ t=0 to watch the transient from the start.') : ' — paused. Press Play to run the transient.';
+    // (an open switch that leaves every branch without current is waiting, not running)
+    else if (c.clocked) text += sim.playing ? (open && c.parts.every((e) => !(Math.abs(sol.current(e)) > Fmt.ZERO_A)) ? '.' : ' — running.') + (open ? '' : ' ' + (switches ? 'Throw a switch or press' : 'Press') + ' ↻ t=0 to watch the transient from the start.') : ' — paused. Press ▶ Run to carry on.';
+    else if (dead) text += '. No current is flowing — ' + (Panel.balanced(c, sol) ? 'the loop is complete, but the batteries face each other and their EMFs cancel.' : 'look for a gap in the loop.');
     else text += c.ofType(Meter).length ? '.' : ' — add meters to read any branch, or click a part to see its ΔV and I.';
     if (!c.ofType(Ground).length) text += ' Add a ground if you want to probe node potentials.';
-    return { statusText: sim.timed ? 't = ' + sim.shown.toFixed(2) + ' s' : 'DC solved', summaryText: text }; }
+    return { statusText: sim.timed ? Fmt.clock(sim.shown) : 'DC solved', summaryText: text }; }
 
   // ---- overlays ----
   share() { const app = this.app, st = this.ui;
@@ -174,7 +201,11 @@ class Panel {
       { expr: '\\Delta V_R = IR', desc: 'Ohm’s law for each resistor' },
       { expr: 'I_C = C\\,\\dfrac{d(\\Delta V_C)}{dt}', desc: 'capacitor current follows the rate of voltage change' },
       { expr: '\\Delta V_L = L\\,\\dfrac{dI}{dt}', desc: 'inductor voltage follows the rate of current change' },
-      { expr: '\\textstyle\\sum I_{\\text{in}}=\\sum I_{\\text{out}}', desc: 'Kirchhoff’s current law at every node' }] }; }
+      { expr: '\\textstyle\\sum I_{\\text{in}}=\\sum I_{\\text{out}}', desc: 'Kirchhoff’s junction law at every node' },
+      { expr: '\\textstyle\\sum \\Delta V_{\\text{loop}} = 0', desc: 'Kirchhoff’s loop law around every closed loop' },
+      { expr: '\\tau = RC', desc: 'time constant of a charging or discharging capacitor' },
+      { expr: '\\tau = \\dfrac{L}{R}', desc: 'time constant of the current in an RL loop' },
+      { expr: '\\omega_0 = \\dfrac{1}{\\sqrt{LC}}', desc: 'natural angular frequency of an LC loop; a series RLC loop driven at it resonates' }] }; }
 
   exampleCard() { const app = this.app, st = this.ui, ex = app.example, m = st.showExample ? ex.model() : null, pick = (kind) => () => { app.example = new WorkedExample(kind); app.setState({ showSol: false }); };
     const exKinds = WorkedExample.ORDER.map(([k, label]) => ({ label, onClick: pick(k), style: 'font-size:11.5px;font-weight:700;padding:6px 12px;border-radius:8px;cursor:pointer;border:1px solid ' + (ex.kind === k ? 'rgba(240,185,207,0.7)' : 'rgba(224,165,192,0.25)') + ';background:' + (ex.kind === k ? 'rgba(240,185,207,0.28)' : 'rgba(255,255,255,0.05)') + ';color:#fff;' }));

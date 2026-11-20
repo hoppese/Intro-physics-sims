@@ -93,17 +93,22 @@ class ResistorPainter extends Painter {
 class CapacitorPainter extends Painter {
   half() { return 5; } extent() { return 15; } get gap() { return true; } get signed() { return true; }
   // the glow between the plates and the + / − marks are part of the answer, so they go when it is hidden
+  // (the glow deepens with the voltage but stops short of half strength: any stronger and a charged capacitor is a gold block, not two plates)
   paint(g, el, st) { const f = this.leads(g, el, st), ph = 14, frac = Math.min(1, Math.abs(el.vc) / 12), charged = Math.abs(el.vc) > 0.02 && !st.hide;
-    if (charged) { g.fillStyle = 'rgba(224,184,90,' + (0.05 + 0.8 * frac).toFixed(3) + ')'; const c = [f.pt(-5, -ph), f.pt(5, -ph), f.pt(5, ph), f.pt(-5, ph)]; g.beginPath(); c.forEach((p, i) => (i ? g.lineTo(p.x, p.y) : g.moveTo(p.x, p.y))); g.closePath(); g.fill(); }
+    if (charged) { g.fillStyle = 'rgba(224,184,90,' + (0.06 + 0.4 * frac).toFixed(3) + ')'; const c = [f.pt(-5, -ph), f.pt(5, -ph), f.pt(5, ph), f.pt(-5, ph)]; g.beginPath(); c.forEach((p, i) => (i ? g.lineTo(p.x, p.y) : g.moveTo(p.x, p.y))); g.closePath(); g.fill(); }
     g.strokeStyle = this.color(st); g.lineWidth = 3; g.lineCap = 'butt'; Draw.line(g, f.pt(-5, -ph), f.pt(-5, ph)); Draw.line(g, f.pt(5, -ph), f.pt(5, ph)); g.lineCap = 'round';
     if (charged) { const pos = el.vc > 0 ? -1 : 1; this.sign(g, f, pos * 13, 9, '+', st, 10, 'rgba(224,184,90,0.95)'); this.sign(g, f, -pos * 13, 9, '−', st, 10, 'rgba(224,184,90,0.95)'); } }
   label(el, name, st) { return { ...this.valueLabel(el, name, ['Q = ' + (st.hide ? '?' : Fmt.Q(Math.abs(el.charge)))]), room: 12 }; }
 }
 
+// A coil: four humps standing on the line of the leads, one unbroken stroke from lead to lead
+// (the textbook symbol -- and the one on the Add menu).
 class InductorPainter extends Painter {
-  half() { return 14; } extent() { return 12; }
-  paint(g, el, st) { const f = this.leads(g, el, st), seg = 28 / 3, r = seg * 0.62; g.strokeStyle = this.color(st); g.lineWidth = st.sel ? 2.4 : 2;
-    for (let i = 0; i < 3; i++) Draw.ring(g, f.pt(-14 + seg * (i + 0.5), -r * 0.9), r); }
+  static HUMPS = 4; static RX = 4.5; static RY = 7;
+  half() { return InductorPainter.HUMPS * InductorPainter.RX; } extent() { return 9; }
+  paint(g, el, st) { const f = this.leads(g, el, st), { HUMPS, RX, RY } = InductorPainter, pts = [], N = 10; g.strokeStyle = this.color(st); g.lineWidth = st.sel ? 2.6 : 2.2;
+    for (let i = 0; i < HUMPS; i++) for (let k = i ? 1 : 0; k <= N; k++) { const th = Math.PI * k / N; pts.push(f.pt(-HUMPS * RX + RX * (2 * i + 1) - RX * Math.cos(th), -RY * Math.sin(th))); }
+    Draw.poly(g, pts); }
   label(el, name) { return this.valueLabel(el, name); }
 }
 
@@ -153,10 +158,12 @@ class SwitchPainter extends Painter {
     g.strokeStyle = st.sel ? INK.sel : (el.closed ? INK.on : INK.off); g.lineWidth = st.sel ? 3 : 2.6; Draw.line(g, p1, tip);
     g.fillStyle = 'rgba(210,222,234,0.9)'; Draw.dot(g, p1, 3.2); Draw.dot(g, p2, 3.2); }
   // is a world point on the lever (the part you click to open / close it)?
-  press(el, x, y) { return this.onLever(el, x, y) ? {} : null; }
+  // `reach` (>= 1) widens the target when the view is zoomed out or the pointer is a finger, so that
+  // the lever is as many screen pixels to hit at 50 % as at 100 %
+  press(el, x, y, reach) { return this.onLever(el, x, y, reach) ? {} : null; }
   // (between the two contacts only: the leads on either side are for grabbing and wiring)
-  onLever(el, x, y) { const { f, p1, p2, tip } = this.ends(el), s = (x - f.mx) * f.ux + (y - f.my) * f.uy; if (Math.abs(s) > 0.18 * f.L + 4) return false;
-    return Math.min(Draw.segDist(x, y, p1, tip), Draw.segDist(x, y, p1, p2)) < 12; }
+  onLever(el, x, y, reach) { const { f, p1, p2, tip } = this.ends(el), s = (x - f.mx) * f.ux + (y - f.my) * f.uy; if (Math.abs(s) > 0.18 * f.L + 4) return false;
+    return Math.min(Draw.segDist(x, y, p1, tip), Draw.segDist(x, y, p1, p2)) < 12 * Math.max(1, reach || 1); }
   distance(el, x, y) { const { f, p1, tip } = this.ends(el); return Math.min(Draw.segDist(x, y, f.a, f.b), Draw.segDist(x, y, p1, tip)); }
 }
 
@@ -173,11 +180,17 @@ class ThrowSwitchPainter extends Painter {
     const d = Math.hypot(q.t1.x - q.t2.x, q.t1.y - q.t2.y) || 1, ox = (q.t1.x - q.t2.x) / d * 11, oy = (q.t1.y - q.t2.y) / d * 11;
     Draw.text(g, '1', { x: q.t1.x + ox, y: q.t1.y + oy }, mono(8.5, true), INK.dim); Draw.text(g, '2', { x: q.t2.x - ox, y: q.t2.y - oy }, mono(8.5, true), INK.dim); }
   // which throw (1 or 2) a world point is on, or 0
-  contactAt(el, x, y) { const q = this.pts(el); if (Math.hypot(x - q.t1.x, y - q.t1.y) < 9) return 1; if (Math.hypot(x - q.t2.x, y - q.t2.y) < 9) return 2; return 0; }
-  press(el, x, y) { const k = this.contactAt(el, x, y); return k ? { position: k } : (this.onLever(el, x, y) ? {} : null); }
-  onLever(el, x, y) { const q = this.pts(el); return Draw.segDist(x, y, q.pivot, el.position === 1 ? q.t1 : q.t2) < 9; }
+  contactAt(el, x, y, reach) { const q = this.pts(el), R = Math.min(20, 9 * Math.max(1, reach || 1)); if (Math.hypot(x - q.t1.x, y - q.t1.y) < R) return 1; if (Math.hypot(x - q.t2.x, y - q.t2.y) < R) return 2; return 0; }
+  // a click on a contact sends the lever to it; one on the lever, or anywhere in the mouth between
+  // the pole and the two throws, sends it to the other one (the leads are for grabbing and wiring)
+  press(el, x, y, reach) { const k = this.contactAt(el, x, y, reach); return k ? { position: k } : (this.onLever(el, x, y, reach) || this.inMouth(el, x, y) ? {} : null); }
+  // (never behind the pivot, however wide the reach: the pole's lead is one square long and is for grabbing)
+  onLever(el, x, y, reach) { const q = this.pts(el), mx = (q.t1.x + q.t2.x) / 2 - q.pivot.x, my = (q.t1.y + q.t2.y) / 2 - q.pivot.y; if ((x - q.pivot.x) * mx + (y - q.pivot.y) * my < -3 * Math.hypot(mx, my)) return false;
+    return Draw.segDist(x, y, q.pivot, el.position === 1 ? q.t1 : q.t2) < 9 * Math.max(1, reach || 1); }
+  inMouth(el, x, y) { const q = this.pts(el), side = (a, b) => (b.x - a.x) * (y - a.y) - (b.y - a.y) * (x - a.x), d = [side(q.pivot, q.t1), side(q.t1, q.t2), side(q.t2, q.pivot)];
+    return d.every((v) => v >= 0) || d.every((v) => v <= 0); }
   track(el) { const q = this.pts(el), one = el.position === 1; return { pts: [q.a, q.pivot, one ? q.t1 : q.t2, one ? q.b1 : q.b2], gaps: [], arrow: 12 }; }
-  distance(el, x, y) { const q = this.pts(el); return Math.min(Draw.segDist(x, y, q.a, q.pivot), Draw.segDist(x, y, q.t1, q.b1), Draw.segDist(x, y, q.t2, q.b2), Draw.segDist(x, y, q.pivot, el.position === 1 ? q.t1 : q.t2), Draw.segDist(x, y, q.t1, q.t2) + 4); }
+  distance(el, x, y) { const q = this.pts(el); if (this.inMouth(el, x, y)) return 0; return Math.min(Draw.segDist(x, y, q.a, q.pivot), Draw.segDist(x, y, q.t1, q.b1), Draw.segDist(x, y, q.t2, q.b2), Draw.segDist(x, y, q.pivot, el.position === 1 ? q.t1 : q.t2), Draw.segDist(x, y, q.t1, q.t2) + 4); }
   box(el) { const q = this.pts(el), xs = [q.a.x, q.b1.x, q.b2.x], ys = [q.a.y, q.b1.y, q.b2.y]; return { x0: Math.min(...xs) - 6, x1: Math.max(...xs) + 6, y0: Math.min(...ys) - 6, y1: Math.max(...ys) + 6 }; }
 }
 
