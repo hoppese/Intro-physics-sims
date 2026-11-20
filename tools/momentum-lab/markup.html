@@ -1,0 +1,284 @@
+<div style="display:flex;gap:14px;align-items:flex-start;font-family:'Source Sans 3',system-ui,sans-serif;">
+<sc-if value="{{ big }}" hint-placeholder-val="{{ false }}">
+  <div style="width:212px;flex:none;background:#15212e;border:1px solid #dde1e5;border-radius:14px;padding:12px 11px;display:flex;flex-direction:column;gap:7px;">
+    <div style="font-family:'Source Serif 4',serif;font-weight:600;font-size:13px;color:#d9b968;padding:3px 5px 6px;">Tools &amp; help</div>
+    <sc-for list="{{ menuItems }}" as="mi" hint-placeholder-count="5">
+      <button sc-camel-on-click="{{ mi.onClick }}" style="{{ mi.sideStyle }}"><span style="width:20px;text-align:center;font-size:15px;flex:none;">{{ mi.icon }}</span><span style="flex:1;text-align:left;">{{ mi.label }}</span><span style="{{ mi.dotStyle }}"></span></button>
+    </sc-for>
+  </div>
+</sc-if>
+
+<div style="width:918px;background:#fff;border:1px solid #dde1e5;border-radius:14px;overflow:hidden;position:relative;color:#23262b;">
+
+  <div style="background:#15212e;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="display:inline-block;width:11px;height:11px;border-radius:3px;background:#c9a43a;flex:none;"></span>
+        <div>
+          <div style="font-family:'Source Serif 4',serif;font-weight:600;font-size:15.5px;">Momentum Lab</div>
+          <div style="font-size:10.5px;font-weight:600;letter-spacing:0.02em;color:#e0c98a;">Collisions, explosions, rockets and orbits</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;"><button sc-camel-on-click="{{ onToggleHide }}" title="{{ hideTitle }}" style="display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer;border:1px solid rgba(255,255,255,0.22);background:rgba(255,255,255,0.09);color:#fff;white-space:nowrap;">{{ hideLabel }}</button><div style="position:relative;display:flex;align-items:center;"><button sc-camel-on-click="{{ onToggleMenu }}" title="Menu" style="{{ menuBtnStyle }}">☰</button><sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+        <div sc-camel-on-click="{{ onCloseMenu }}" style="position:fixed;inset:0;z-index:39;"></div>
+        <div style="position:absolute;top:38px;right:0;z-index:40;background:#1b2836;border:1px solid rgba(255,255,255,0.14);border-radius:11px;padding:6px;min-width:196px;box-shadow:0 14px 34px rgba(0,0,0,0.45);display:flex;flex-direction:column;gap:2px;">
+          <sc-for list="{{ menuItems }}" as="mi" hint-placeholder-count="5">
+            <button sc-camel-on-click="{{ mi.onClick }}" style="{{ mi.rowStyle }}"><span style="width:18px;text-align:center;flex:none;">{{ mi.icon }}</span><span style="flex:1;text-align:left;">{{ mi.label }}</span><span style="{{ mi.dotStyle }}"></span></button>
+          </sc-for>
+        </div>
+      </sc-if></div></div>
+    </div>
+
+  <div style="display:flex;gap:0;align-items:stretch;flex-wrap:wrap;">
+
+    <div style="padding:13px 14px;flex:0 1 588px;min-width:min(330px,100%);">
+      <div style="position:relative;user-select:none;-webkit-user-select:none;">
+        <canvas ref="{{ setCanvas }}" width="600" height="400" style="{{ canvasStyle }}"></canvas>
+        <div style="{{ clockBoxStyle }}">
+          <sc-for list="{{ clockBtns }}" as="cb" hint-placeholder-count="4">
+            <button sc-camel-on-click="{{ cb.onClick }}" title="{{ cb.title }}" style="{{ cb.style }}">{{ cb.label }}</button>
+          </sc-for>
+          <span title="{{ timeTitle }}" style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:#f0c860;min-width:74px;padding:0 4px;">{{ timeStr }}</span>
+        </div>
+        <div style="{{ viewBoxStyle }}">
+          <sc-for list="{{ viewBtns }}" as="vb" hint-placeholder-count="3">
+            <button sc-camel-on-click="{{ vb.onClick }}" title="{{ vb.title }}" style="{{ vb.style }}">{{ vb.label }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-top:9px;">
+        <span style="font-size:9.5px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#9aa2ab;margin-right:3px;">Show</span>
+        <sc-for list="{{ showChips }}" as="sc" hint-placeholder-count="6"><button sc-camel-on-click="{{ sc.onClick }}" title="{{ sc.title }}" style="{{ sc.style }}">{{ sc.label }}</button></sc-for>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-top:9px;">
+        <span style="font-size:9.5px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#9aa2ab;margin-right:3px;">Graphs</span>
+        <sc-for list="{{ graphTabs }}" as="gt" hint-placeholder-count="4"><button sc-camel-on-click="{{ gt.onClick }}" title="{{ gt.title }}" style="{{ gt.style }}">{{ gt.label }}</button></sc-for>
+        <sc-if value="{{ hasAxes }}" hint-placeholder-val="{{ true }}"><span style="width:1px;height:16px;background:#dfe3e7;margin:0 4px;"></span><span style="font-size:11px;color:#9aa2ab;margin-right:2px;">parts along</span>
+          <sc-for list="{{ axisChips }}" as="ac" hint-placeholder-count="2"><button sc-camel-on-click="{{ ac.onClick }}" title="{{ ac.title }}" style="{{ ac.style }}">{{ ac.label }}</button></sc-for></sc-if>
+        <sc-if value="{{ hasClose }}" hint-placeholder-val="{{ false }}"><button sc-camel-on-click="{{ onClose }}" title="Zoom the time axis in on the last collision" style="{{ closeStyle }}">{{ closeLabel }}</button></sc-if>
+      </div>
+      <canvas ref="{{ setGraph }}" width="560" height="200" style="{{ graphStyle }}"></canvas>
+    </div>
+
+    <div style="flex:1;border-left:1px solid #e8ebee;padding:12px 14px;display:flex;flex-direction:column;gap:8px;min-width:294px;">
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <div style="display:flex;gap:4px;"><sc-for list="{{ modeTabs }}" as="mt" hint-placeholder-count="3"><button sc-camel-on-click="{{ mt.onClick }}" title="{{ mt.title }}" style="{{ mt.style }}">{{ mt.label }}</button></sc-for></div>
+        <div style="position:relative;">
+          <button sc-camel-on-click="{{ onTogglePresets }}" title="Choose a preset" style="{{ presetBtnStyle }}"><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ presetName }}</span><span style="font-size:10px;color:#8a929b;">▾</span></button>
+          <sc-if value="{{ presetsOpen }}" hint-placeholder-val="{{ false }}">
+            <div sc-camel-on-click="{{ onClosePresets }}" style="position:fixed;inset:0;z-index:39;"></div>
+            <div style="position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:40;background:#fff;border:1px solid #d3d8dd;border-radius:10px;padding:5px;box-shadow:0 10px 28px rgba(0,0,0,0.18);display:flex;flex-direction:column;gap:2px;">
+              <sc-for list="{{ presetItems }}" as="pi" hint-placeholder-count="7"><button sc-camel-on-click="{{ pi.onClick }}" title="{{ pi.title }}" style="{{ pi.style }}">{{ pi.label }}</button></sc-for>
+            </div>
+          </sc-if>
+        </div>
+        <div title="{{ presetNote }}" style="font-size:11px;line-height:1.35;color:#6f7781;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:help;">{{ presetNote }}</div>
+      </div>
+
+      <sc-if value="{{ hasE }}" hint-placeholder-val="{{ true }}">
+        <div title="{{ eNote }}" style="display:flex;flex-wrap:wrap;align-items:center;gap:5px 6px;">
+          <span style="display:flex;align-items:baseline;gap:4px;font-size:11px;font-weight:600;color:#525a63;white-space:nowrap;">Collisions <x-formula data-tex="e" style="font-size:12.5px;color:#3a414a;"></x-formula></span>
+          <input type="range" min="0" max="1" step="0.05" value="{{ eValue }}" sc-camel-on-input="{{ onE }}" style="flex:1;min-width:70px;accent-color:#bf8a1e;">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:600;color:#8a6310;">{{ eText }}</span>
+          <div style="display:flex;flex-wrap:wrap;gap:4px;width:100%;"><sc-for list="{{ eChips }}" as="ec" hint-placeholder-count="3"><button sc-camel-on-click="{{ ec.onClick }}" title="{{ ec.title }}" style="{{ ec.style }}">{{ ec.label }}</button></sc-for></div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ hasSpaceNote }}" hint-placeholder-val="{{ false }}"><div style="font-size:11px;line-height:1.35;color:#6f7781;">{{ spaceNote }}</div></sc-if>
+
+      <sc-if value="{{ hasCharge }}" hint-placeholder-val="{{ false }}">
+        <div title="{{ chargeTitle }}" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+          <span style="font-size:11px;font-weight:600;color:#525a63;">Spring</span>
+          <sc-for list="{{ chargeFields }}" as="cf" hint-placeholder-count="2">
+            <span title="{{ cf.label }}" style="display:flex;align-items:center;gap:3px;"><x-formula data-tex="{{ cf.tex }}" style="font-size:12.5px;color:#3a414a;"></x-formula><input type="text" inputmode="decimal" value="{{ cf.text }}" sc-camel-on-change="{{ cf.onType }}" sc-camel-on-blur="{{ cf.onCommit }}" style="width:54px;height:23px;box-sizing:border-box;border:1px solid #d7dbe0;border-radius:6px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:600;color:#8a6310;background:#fff;outline:none;"><span style="font-size:10.5px;color:#b89a5a;font-family:'JetBrains Mono',monospace;">{{ cf.unit }}</span></span>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <div>
+        <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;">
+          <span style="font-size:10px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#9aa2ab;">Bodies</span>
+          <sc-for list="{{ bodyChips }}" as="bc" hint-placeholder-count="2"><button sc-camel-on-click="{{ bc.onClick }}" title="Click to edit" style="{{ bc.style }}">{{ bc.label }}</button></sc-for>
+          <sc-if value="{{ canAdd }}" hint-placeholder-val="{{ true }}"><button sc-camel-on-click="{{ onAdd }}" title="Add another body" style="font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;cursor:pointer;border:1px dashed #c7cdd3;background:#fff;color:#525a63;">+ Add</button></sc-if>
+          <sc-if value="{{ noSel }}" hint-placeholder-val="{{ true }}"><span title="{{ selNote }}" style="font-size:10.5px;color:#9aa2ab;cursor:help;">ⓘ how to edit</span></sc-if>
+        </div>
+        <sc-if value="{{ hasSel }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#f6f8fa;border:1px solid #e4e8ec;border-radius:9px;padding:7px 9px;display:flex;flex-direction:column;gap:5px;margin-top:6px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;"><span style="font-size:12px;font-weight:700;color:{{ selCol }};">{{ selTitle }}</span>
+              <span style="display:flex;gap:4px;"><sc-if value="{{ canDelete }}" hint-placeholder-val="{{ true }}"><button sc-camel-on-click="{{ onDelete }}" style="font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:6px;cursor:pointer;border:1px solid #e0b9b9;background:#fbf1f1;color:#93343c;">Delete</button></sc-if><button sc-camel-on-click="{{ onDeselect }}" title="Close" style="font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:6px;cursor:pointer;border:1px solid #d7dbe0;background:#fff;color:#525a63;">Done</button></span></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px 10px;">
+              <sc-for list="{{ selFields }}" as="sf" hint-placeholder-count="2">
+                <div title="{{ sf.label }}" style="display:flex;align-items:center;gap:4px;min-width:0;">
+                  <x-formula data-tex="{{ sf.tex }}" style="font-size:12.5px;color:#3a414a;flex:none;min-width:14px;"></x-formula>
+                  <input type="text" inputmode="decimal" value="{{ sf.text }}" sc-camel-on-change="{{ sf.onType }}" sc-camel-on-blur="{{ sf.onCommit }}" style="flex:1;min-width:0;width:100%;height:23px;box-sizing:border-box;border:1px solid #d7dbe0;border-radius:6px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:600;color:#8a6310;background:#fff;outline:none;">
+                  <span style="font-size:10px;color:#b89a5a;font-family:'JetBrains Mono',monospace;flex:none;">{{ sf.unit }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <sc-for list="{{ vecFields }}" as="vf" hint-placeholder-count="2">
+              <div title="{{ vf.title }}" style="display:flex;align-items:center;gap:3px;min-width:0;">
+                <x-formula data-tex="{{ vf.tex }}" style="font-size:13.5px;color:#3a414a;flex:none;width:22px;"></x-formula>
+                <span style="color:#8a929b;font-size:14px;flex:none;">⟨</span>
+                <sc-for list="{{ vf.comps }}" as="vc" hint-placeholder-count="3">
+                  <sc-if value="{{ vc.isInput }}" hint-placeholder-val="{{ true }}"><input type="text" inputmode="decimal" value="{{ vc.value }}" sc-camel-on-change="{{ vc.onType }}" sc-camel-on-blur="{{ vc.onCommit }}" style="flex:1;min-width:0;width:100%;height:23px;box-sizing:border-box;border:1px solid #d7dbe0;border-radius:6px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:600;color:#8a6310;background:#fff;outline:none;"></sc-if>
+                  <sc-if value="{{ vc.isFixed }}" hint-placeholder-val="{{ false }}"><span title="{{ vc.title }}" style="flex:0.5;min-width:0;height:23px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;border:1px dashed #dfe3e7;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:600;color:#b4bac1;background:#fff;">{{ vc.value }}</span></sc-if>
+                  <span style="color:#8a929b;font-size:12px;flex:none;">{{ vc.sep }}</span>
+                </sc-for>
+                <span style="color:#8a929b;font-size:14px;flex:none;">⟩</span>
+                <span style="font-size:10px;color:#b89a5a;font-family:'JetBrains Mono',monospace;flex:none;min-width:24px;">{{ vf.unit }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+
+      <div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px;"><span style="font-size:10px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#9aa2ab;">Before → now</span><span style="font-size:10px;color:#9aa2ab;">{{ tableNote }}</span></div>
+        <div style="display:grid;grid-template-columns:{{ briefCols }};column-gap:8px;row-gap:2px;align-items:baseline;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#2a3038;">
+          <span></span><span style="font-family:'Source Sans 3',sans-serif;font-size:10px;color:#9aa2ab;font-weight:600;">{{ vHead }}</span><span style="font-family:'Source Sans 3',sans-serif;font-size:10px;color:#9aa2ab;font-weight:600;">{{ pHead }}</span>
+          <sc-for list="{{ briefRows }}" as="br" hint-placeholder-count="4">
+            <span title="{{ br.title }}" style="{{ br.nameStyle }}">{{ br.name }}</span><sc-if value="{{ br.isTex }}" hint-placeholder-val="{{ false }}"><x-formula data-tex="{{ br.tex }}" style="font-size:12px;color:#3a414a;"></x-formula></sc-if><sc-if value="{{ br.isText }}" hint-placeholder-val="{{ true }}"><span style="white-space:nowrap;">{{ br.v }}</span></sc-if><span style="white-space:nowrap;">{{ br.p }}</span>
+          </sc-for>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:2px;margin-top:4px;">
+          <sc-for list="{{ tableChecks }}" as="ck" hint-placeholder-count="3">
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:11px;color:#3a414a;"><x-formula data-tex="{{ ck.tex }}" style="font-size:12px;"></x-formula><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;">{{ ck.val }}</span><span style="font-size:10.5px;color:#2f8f56;font-weight:600;">{{ ck.mark }}</span><span style="font-size:10.5px;color:#8a929b;">{{ ck.text }}</span></div>
+          </sc-for>
+        </div>
+        <button sc-camel-on-click="{{ onToggleDetail }}" style="margin-top:4px;font-size:10.5px;font-weight:700;padding:0;border:none;background:none;color:#8a6310;cursor:pointer;">{{ detailLabel }}</button>
+        <sc-if value="{{ showDetail }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:{{ tableCols }};column-gap:6px;row-gap:2px;align-items:baseline;font-size:11px;margin-top:3px;">
+            <span></span><span style="font-size:10px;color:#9aa2ab;font-weight:600;text-align:right;">{{ beforeHead }}</span><span style="font-size:10px;color:#9aa2ab;font-weight:600;text-align:right;">{{ nowHead }}</span>
+            <sc-for list="{{ tableRows }}" as="tr" hint-placeholder-count="6">
+              <sc-if value="{{ tr.isHead }}" hint-placeholder-val="{{ false }}"><div style="{{ tr.headStyle }}">{{ tr.head }}</div></sc-if>
+              <sc-if value="{{ tr.isTex }}" hint-placeholder-val="{{ false }}"><div style="grid-column:1/-1;margin-top:1px;"><x-formula data-tex="{{ tr.tex }}" style="font-size:12px;color:#3a414a;"></x-formula></div></sc-if>
+              <sc-if value="{{ tr.isPair }}" hint-placeholder-val="{{ false }}"><span style="font-size:10px;color:#9aa2ab;padding-left:8px;">{{ tr.label }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;text-align:right;color:#2a3038;white-space:nowrap;">{{ tr.val }}</span></sc-if>
+              <sc-if value="{{ tr.isRow }}" hint-placeholder-val="{{ true }}"><x-formula data-tex="{{ tr.tex }}" style="font-size:12px;color:#3a414a;white-space:nowrap;"></x-formula><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;text-align:right;color:#6f7781;white-space:nowrap;">{{ tr.before }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;text-align:right;color:#2a3038;font-weight:600;white-space:nowrap;">{{ tr.now }}</span></sc-if>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+
+      <div style="display:grid;grid-template-columns:{{ barCols }};gap:10px;">
+        <sc-for list="{{ barGroups }}" as="bg" hint-placeholder-count="1">
+          <div style="min-width:0;">
+            <div style="font-size:10px;color:#9aa2ab;font-weight:600;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="Before faint, now solid">{{ bg.title }}</div>
+            <sc-for list="{{ bg.rows }}" as="br" hint-placeholder-count="3">
+              <div style="display:flex;align-items:center;gap:5px;margin-bottom:2px;"><span style="{{ br.nameStyle }}">{{ br.name }}</span>
+                <div style="position:relative;flex:1;height:15px;border-radius:4px;background:linear-gradient(90deg,transparent calc(50% - 0.5px),#aab3bc calc(50% - 0.5px),#aab3bc calc(50% + 0.5px),transparent calc(50% + 0.5px)),#f3f5f7;"><div style="{{ br.wasStyle }}"></div><div style="{{ br.nowStyle }}"></div></div></div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{ showShare }}" hint-placeholder-val="{{ false }}">
+    <div sc-camel-on-click="{{ onCloseShare }}" style="position:absolute;inset:0;background:rgba(15,23,34,0.82);backdrop-filter:blur(3px);z-index:32;display:flex;align-items:center;justify-content:center;padding:24px;cursor:pointer;">
+      <div sc-camel-on-click="{{ stop }}" style="max-width:448px;width:100%;color:#eef2f6;font-family:'Source Sans 3',sans-serif;background:rgba(17,26,38,0.94);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:20px 22px;cursor:default;">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;">
+          <div style="font-family:'Source Serif 4',serif;font-weight:600;font-size:17px;color:#fff;">Share this setup</div>
+          <button sc-camel-on-click="{{ onCloseShare }}" title="Close" style="width:26px;height:26px;flex:none;border-radius:7px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.06);color:#dce6f2;font-size:16px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;">×</button>
+        </div>
+        <div style="font-size:12px;line-height:1.55;color:#b7c2cd;margin-bottom:14px;">This link opens this world and setup, at t = 0.</div>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:13px;">
+          <input readonly="" value="{{ shareUrl }}" sc-camel-on-focus="{{ selectAll }}" style="flex:1;min-width:0;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#cfe0f2;background:rgba(0,0,0,0.28);border:1px solid rgba(255,255,255,0.14);border-radius:8px;padding:9px 11px;outline:none;">
+          <button sc-camel-on-click="{{ onCopyShare }}" style="{{ copyBtnStyle }}">{{ copyLabel }}</button>
+        </div>
+        <label style="display:flex;align-items:center;gap:9px;cursor:pointer;font-size:12.5px;color:#d7e0e8;">
+          <input type="checkbox" checked="{{ shareHide }}" sc-camel-on-change="{{ onToggleShareHide }}" style="width:15px;height:15px;accent-color:#bf8a1e;cursor:pointer;">
+          <span>Open with the values hidden, so students predict first</span>
+        </label>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showInfo }}" hint-placeholder-val="{{ false }}">
+    <div sc-camel-on-click="{{ onCloseInfo }}" style="position:absolute;inset:0;background:rgba(15,23,34,0.82);backdrop-filter:blur(3px);z-index:30;display:flex;align-items:center;justify-content:center;padding:24px;cursor:pointer;">
+      <div style="max-width:860px;width:100%;color:#eef2f6;font-family:'Source Sans 3',sans-serif;background:rgba(17,26,38,0.72);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:22px 26px;max-height:100%;overflow:auto;box-sizing:border-box;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.28) transparent;">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px;">
+          <div style="font-family:'Source Serif 4',serif;font-weight:600;font-size:20px;color:#fff;">Momentum Lab: momentum is shared, never lost</div>
+          <button sc-camel-on-click="{{ onCloseInfo }}" title="Close" style="width:26px;height:26px;flex:none;border-radius:7px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.06);color:#dce6f2;font-size:16px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;">×</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:0 24px;">
+          <div style="padding-right:22px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#ffd66b;margin:0 0 9px;">What this shows</div>
+            <ul style="margin:0;padding-left:16px;font-size:12.5px;line-height:1.55;color:#d7e0e8;">
+              <li style="margin-bottom:6px;">Three worlds: carts on an <b>air track</b> (one dimension), pucks on an <b>air table</b> (two), and bodies in <b>space</b> pulling on each other by gravity.</li>
+              <li style="margin-bottom:6px;">Every force here acts between two bodies, equally and oppositely. So whatever happens (a bounce, a stick, an explosion, a rocket firing, an orbit) the <b>total momentum stays the same</b>, and the centre of mass moves in a straight line at a steady speed.</li>
+              <li style="margin-bottom:6px;">Kinetic energy is a different story: kept in an elastic collision (e = 1), partly lost in an inelastic one, mostly lost when they stick, and gained from a spring or a rocket’s fuel.</li>
+              <li>The models are ideal: no friction on the track or table, bodies that never spin, and collisions as stiff springs that squash a little (bumpers about a centimetre, pucks a few millimetres) and push back. On big scales the small bodies are drawn larger than life.</li>
+            </ul>
+          </div>
+          <div style="padding:0 22px;border-left:1px solid rgba(255,255,255,0.12);">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#ffd66b;margin:0 0 9px;">How to use</div>
+            <ul style="margin:0;padding-left:16px;font-size:12.5px;line-height:1.55;color:#d7e0e8;">
+              <li style="margin-bottom:6px;">Pick a world and a preset on the right. <b>Click a body</b> to type its mass, starting position <x-formula data-tex="\vec r_0"></x-formula> and velocity <x-formula data-tex="\vec v_0"></x-formula>; <b>+ Add</b> puts in another.</li>
+              <li style="margin-bottom:6px;">Before the start, <b>drag a body</b> to move it, and <b>drag the tip of its arrow</b> to set its velocity. Any change starts again from t = 0.</li>
+              <li style="margin-bottom:6px;"><b>▶ Run</b> (or Space) starts the clock; <b>↺</b> goes back; <b>1×</b> switches to slow motion, down to a twentieth, to watch a collision happen.</li>
+              <li style="margin-bottom:6px;">The graphs show momentum, force or energy against time. On the force graph the shaded areas are the impulses; <b>Close-up</b> zooms in on the last collision.</li>
+              <li><b>Hide values</b> hides everything after the start (arrows, numbers, graphs), so students predict first.</li>
+            </ul>
+          </div>
+          <div style="grid-column:1/-1;border-top:1px solid rgba(255,255,255,0.12);margin-top:14px;padding-top:15px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#ffd66b;margin:0 0 12px;">Relevant relationships</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px 26px;">
+              <sc-for list="{{ infoFormulas }}" as="fm" hint-placeholder-count="6">
+                <div style="margin-bottom:10px;">
+                  <x-formula style="font-family:'Source Serif 4',serif;font-style:italic;font-size:15px;color:#fff;display:block;line-height:1.5;">{{ fm.expr }}</x-formula>
+                  <div style="font-size:11.5px;color:#b7c2cd;margin-top:3px;">{{ fm.desc }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="grid-column:1/-1;border-top:1px solid rgba(255,255,255,0.12);margin-top:2px;padding-top:15px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#ffd66b;margin:0 0 12px;">Learn more</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:12px 26px;">
+              <div>
+                <div style="font-size:11px;color:#9fb0bf;margin:0 0 5px;">OpenStax <em>University&nbsp;Physics</em> — calculus</div>
+                <ul style="margin:0;padding-left:15px;color:#d7e0e8;font-size:12px;line-height:1.55;">
+                  <li><a href="https://openstax.org/books/university-physics-volume-1/pages/9-1-linear-momentum" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">Vol 1 · 9.1 Linear Momentum</a></li>
+                  <li><a href="https://openstax.org/books/university-physics-volume-1/pages/9-2-impulse-and-collisions" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">Vol 1 · 9.2 Impulse and Collisions</a></li>
+                  <li><a href="https://openstax.org/books/university-physics-volume-1/pages/9-3-conservation-of-linear-momentum" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">Vol 1 · 9.3 Conservation of Linear Momentum</a></li>
+                  <li><a href="https://openstax.org/books/university-physics-volume-1/pages/9-4-types-of-collisions" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">Vol 1 · 9.4 Types of Collisions</a></li>
+                  <li><a href="https://openstax.org/books/university-physics-volume-1/pages/9-5-collisions-in-multiple-dimensions" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">Vol 1 · 9.5 Collisions in Multiple Dimensions</a></li>
+                  <li><a href="https://openstax.org/books/university-physics-volume-1/pages/9-6-center-of-mass" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">Vol 1 · 9.6 Center of Mass</a></li>
+                  <li><a href="https://openstax.org/books/university-physics-volume-1/pages/9-7-rocket-propulsion" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">Vol 1 · 9.7 Rocket Propulsion</a></li>
+                </ul>
+              </div>
+              <div>
+                <div style="font-size:11px;color:#9fb0bf;margin:0 0 5px;">OpenStax <em>College&nbsp;Physics</em> — algebra</div>
+                <ul style="margin:0;padding-left:15px;color:#d7e0e8;font-size:12px;line-height:1.55;">
+                  <li><a href="https://openstax.org/books/college-physics-2e/pages/8-1-linear-momentum-and-force" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">8.1 Linear Momentum and Force</a></li>
+                  <li><a href="https://openstax.org/books/college-physics-2e/pages/8-2-impulse" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">8.2 Impulse</a></li>
+                  <li><a href="https://openstax.org/books/college-physics-2e/pages/8-3-conservation-of-momentum" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">8.3 Conservation of Momentum</a></li>
+                  <li><a href="https://openstax.org/books/college-physics-2e/pages/8-4-elastic-collisions-in-one-dimension" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">8.4 Elastic Collisions in One Dimension</a></li>
+                  <li><a href="https://openstax.org/books/college-physics-2e/pages/8-5-inelastic-collisions-in-one-dimension" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">8.5 Inelastic Collisions in One Dimension</a></li>
+                  <li><a href="https://openstax.org/books/college-physics-2e/pages/8-6-collisions-of-point-masses-in-two-dimensions" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">8.6 Collisions of Point Masses in Two Dimensions</a></li>
+                  <li><a href="https://openstax.org/books/college-physics-2e/pages/8-7-introduction-to-rocket-propulsion" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">8.7 Introduction to Rocket Propulsion</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showBug }}" hint-placeholder-val="{{ false }}">
+    <div sc-camel-on-click="{{ onCloseBug }}" style="position:absolute;inset:0;background:rgba(15,23,34,0.82);backdrop-filter:blur(3px);z-index:60;display:flex;align-items:center;justify-content:center;padding:24px;cursor:pointer;">
+      <div sc-camel-on-click="{{ stopBug }}" style="max-width:460px;width:100%;color:#eef2f6;font-family:'Source Sans 3',sans-serif;background:rgba(17,26,38,0.96);border:1px solid rgba(255,255,255,0.14);border-radius:14px;padding:20px 22px;cursor:default;">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;">
+          <div style="font-family:'Source Serif 4',serif;font-weight:600;font-size:17px;color:#fff;">Report a problem</div>
+          <button sc-camel-on-click="{{ onCloseBug }}" title="Close" style="width:26px;height:26px;flex:none;border-radius:7px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.06);color:#dce6f2;font-size:16px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;">×</button>
+        </div>
+        <div style="font-size:12px;line-height:1.55;color:#b7c2cd;margin-bottom:12px;">Say what looks wrong or confusing. The current setup and your browser are attached automatically.</div>
+        <textarea sc-camel-on-input="{{ onBugText }}" rows="4" placeholder="What happened? What did you expect?" style="width:100%;box-sizing:border-box;font-family:'Source Sans 3',sans-serif;font-size:13px;line-height:1.5;color:#eef2f6;background:rgba(0,0,0,0.28);border:1px solid rgba(255,255,255,0.14);border-radius:8px;padding:9px 11px;outline:none;resize:vertical;margin-bottom:9px;"></textarea>
+        <input sc-camel-on-input="{{ onBugEmail }}" placeholder="Email (optional, for a reply)" style="width:100%;box-sizing:border-box;font-family:'Source Sans 3',sans-serif;font-size:12.5px;color:#cfe0f2;background:rgba(0,0,0,0.28);border:1px solid rgba(255,255,255,0.14);border-radius:8px;padding:8px 11px;outline:none;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <button sc-camel-on-click="{{ onSubmitBug }}" style="{{ bugBtnStyle }}">{{ bugBtnLabel }}</button>
+          <div style="font-size:12px;line-height:1.4;color:{{ bugMsgColor }};">{{ bugMsg }}</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</div>

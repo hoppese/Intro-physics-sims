@@ -1,0 +1,288 @@
+<div style="display:flex;gap:14px;align-items:flex-start;font-family:'Source Sans 3',system-ui,sans-serif;">
+<sc-if value="{{ big }}" hint-placeholder-val="{{ false }}">
+  <div style="width:212px;flex:none;background:#15212e;border:1px solid #dde1e5;border-radius:14px;padding:12px 11px;display:flex;flex-direction:column;gap:7px;">
+    <div style="font-family:'Source Serif 4',serif;font-weight:600;font-size:13px;color:#d9b968;padding:3px 5px 6px;">Tools &amp; help</div>
+    <sc-for list="{{ menuItems }}" as="mi" hint-placeholder-count="5">
+      <button sc-camel-on-click="{{ mi.onClick }}" style="{{ mi.sideStyle }}"><span style="width:20px;text-align:center;font-size:15px;flex:none;">{{ mi.icon }}</span><span style="flex:1;text-align:left;">{{ mi.label }}</span><span style="{{ mi.dotStyle }}"></span></button>
+    </sc-for>
+  </div>
+</sc-if>
+
+<div style="width:918px;background:#fff;border:1px solid #dde1e5;border-radius:14px;overflow:hidden;position:relative;color:#23262b;">
+
+  <div style="background:#15212e;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="display:inline-block;width:11px;height:11px;border-radius:3px;background:#3f9d8a;flex:none;"></span>
+        <div>
+          <div style="font-family:'Source Serif 4',serif;font-weight:600;font-size:15.5px;">Motion Lab</div>
+          <div style="font-size:10.5px;font-weight:600;letter-spacing:0.02em;color:#e0c98a;">Position, velocity and acceleration along a line</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;"><div style="position:relative;display:flex;align-items:center;"><button sc-camel-on-click="{{ onToggleMenu }}" title="Menu" style="{{ menuBtnStyle }}">☰</button><sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+        <div sc-camel-on-click="{{ onCloseMenu }}" style="position:fixed;inset:0;z-index:39;"></div>
+        <div style="position:absolute;top:38px;right:0;z-index:40;background:#1b2836;border:1px solid rgba(255,255,255,0.14);border-radius:11px;padding:6px;min-width:196px;box-shadow:0 14px 34px rgba(0,0,0,0.45);display:flex;flex-direction:column;gap:2px;">
+          <sc-for list="{{ menuItems }}" as="mi" hint-placeholder-count="5">
+            <button sc-camel-on-click="{{ mi.onClick }}" style="{{ mi.rowStyle }}"><span style="width:18px;text-align:center;flex:none;">{{ mi.icon }}</span><span style="flex:1;text-align:left;">{{ mi.label }}</span><span style="{{ mi.dotStyle }}"></span></button>
+          </sc-for>
+        </div>
+      </sc-if></div></div>
+    </div>
+
+  <div style="display:flex;gap:0;align-items:stretch;flex-wrap:wrap;">
+
+    <div data-ml-col="1" style="padding:11px 13px;flex:0 1 590px;min-width:min(330px,100%);">
+      <div style="position:relative;user-select:none;-webkit-user-select:none;">
+        <canvas ref="{{ setCanvas }}" width="600" height="600" style="display:block;width:100%;height:600px;border-radius:10px;touch-action:none;"></canvas>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-top:7px;">
+        <sc-for list="{{ clockBtns }}" as="cb" hint-placeholder-count="4"><button sc-camel-on-click="{{ cb.onClick }}" title="{{ cb.title }}" style="{{ cb.style }}">{{ cb.label }}</button></sc-for>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:600;color:#8a6310;min-width:72px;padding:0 6px;">{{ timeStr }}</span>
+        <span style="flex:1;"></span>
+        <sc-for list="{{ showChips }}" as="sc" hint-placeholder-count="3"><button sc-camel-on-click="{{ sc.onClick }}" title="{{ sc.title }}" style="{{ sc.style }}">{{ sc.label }}</button></sc-for>
+      </div>
+      <sc-if value="{{ isDriving }}" hint-placeholder-val="{{ true }}">
+        <div title="Or drag the cart along the track (let go and it stops). Keys: hold → or ← to speed up toward +x or −x, ↓ to stop, Space to run or pause." style="display:flex;align-items:center;gap:9px;margin-top:7px;background:#f6f8fa;border:1px solid #e4e8ec;border-radius:9px;padding:4px 10px;">
+          <span style="display:flex;align-items:baseline;gap:5px;font-size:11.5px;font-weight:600;color:#525a63;white-space:nowrap;">Throttle <x-formula data-tex="v_x" style="font-size:13px;color:#3a414a;"></x-formula></span>
+          <input type="range" min="-1.5" max="1.5" step="0.05" value="{{ thrValue }}" sc-camel-on-input="{{ onThrottle }}" style="flex:1;min-width:90px;accent-color:#2f8f56;">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:#226b40;min-width:70px;text-align:right;">{{ thrText }}</span>
+          <button sc-camel-on-click="{{ onStopCart }}" title="Stop the cart (↓)" style="font-size:11px;font-weight:700;height:24px;padding:0 9px;border-radius:6px;cursor:pointer;border:1px solid #d7a8a8;background:#fbefef;color:#93343c;">■ Stop</button>
+          <span style="font-size:10.5px;color:#9aa2ab;white-space:nowrap;">or drag the cart · ← → ↓</span>
+        </div>
+      </sc-if>
+      <div title="{{ noteFull }}" style="font-size:11.5px;line-height:1.4;color:#8a929b;margin-top:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:help;">{{ note }}</div>
+    </div>
+
+    <div style="flex:1;border-left:1px solid #e8ebee;padding:12px 14px;display:flex;flex-direction:column;gap:9px;min-width:294px;">
+        <div style="position:relative;">
+          <button sc-camel-on-click="{{ actMenu.onToggle }}" title="Choose an activity" style="{{ actMenu.btnStyle }}"><span style="width:16px;text-align:center;flex:none;color:#8a6310;font-family:'JetBrains Mono',monospace;font-size:11px;">{{ actMenu.icon }}</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ actMenu.label }}</span><span style="font-size:10px;color:#c39b3a;flex:none;">{{ actMenu.tag }}</span><span style="font-size:10px;color:#8a929b;flex:none;">▾</span></button>
+          <sc-if value="{{ actMenu.open }}" hint-placeholder-val="{{ false }}">
+            <div sc-camel-on-click="{{ actMenu.onClose }}" style="position:fixed;inset:0;z-index:39;"></div>
+            <div style="position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:40;background:#fff;border:1px solid #d3d8dd;border-radius:10px;padding:5px;box-shadow:0 10px 28px rgba(0,0,0,0.18);display:flex;flex-direction:column;gap:2px;max-height:420px;overflow:auto;">
+              <sc-for list="{{ actMenu.items }}" as="mi" hint-placeholder-count="4"><button sc-camel-on-click="{{ mi.onClick }}" title="{{ mi.title }}" style="{{ mi.style }}"><span style="width:30px;flex:none;color:#8a6310;font-family:'JetBrains Mono',monospace;font-size:10.5px;">{{ mi.icon }}</span><span style="flex:1;">{{ mi.label }}</span><span style="font-size:10px;color:#c39b3a;flex:none;letter-spacing:0.05em;">{{ mi.tag }}</span></button></sc-for>
+            </div>
+          </sc-if>
+        </div>
+
+      <sc-if value="{{ isMatch }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;flex-wrap:wrap;gap:5px;"><sc-for list="{{ taskChips }}" as="tc" hint-placeholder-count="2"><button sc-camel-on-click="{{ tc.onClick }}" style="{{ tc.style }}">{{ tc.label }}</button></sc-for></div>
+          <div style="font-size:10px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#9aa2ab;">{{ targetHead }}</div>
+        <div style="position:relative;">
+          <button sc-camel-on-click="{{ targetMenu.onToggle }}" title="Choose a graph to match" style="{{ targetMenu.btnStyle }}"><span style="width:16px;text-align:center;flex:none;color:#8a6310;font-family:'JetBrains Mono',monospace;font-size:11px;">{{ targetMenu.icon }}</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ targetMenu.label }}</span><span style="font-size:10px;color:#c39b3a;flex:none;">{{ targetMenu.tag }}</span><span style="font-size:10px;color:#8a929b;flex:none;">▾</span></button>
+          <sc-if value="{{ targetMenu.open }}" hint-placeholder-val="{{ false }}">
+            <div sc-camel-on-click="{{ targetMenu.onClose }}" style="position:fixed;inset:0;z-index:39;"></div>
+            <div style="position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:40;background:#fff;border:1px solid #d3d8dd;border-radius:10px;padding:5px;box-shadow:0 10px 28px rgba(0,0,0,0.18);display:flex;flex-direction:column;gap:2px;max-height:420px;overflow:auto;">
+              <sc-for list="{{ targetMenu.items }}" as="mi" hint-placeholder-count="9"><button sc-camel-on-click="{{ mi.onClick }}" title="{{ mi.title }}" style="{{ mi.style }}"><span style="width:30px;flex:none;color:#8a6310;font-family:'JetBrains Mono',monospace;font-size:10.5px;">{{ mi.icon }}</span><span style="flex:1;">{{ mi.label }}</span><span style="font-size:10px;color:#c39b3a;flex:none;letter-spacing:0.05em;">{{ mi.tag }}</span></button></sc-for>
+            </div>
+          </sc-if>
+        </div>
+
+          <sc-if value="{{ isSketching }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:5px;"><sc-for list="{{ sketchChips }}" as="kc" hint-placeholder-count="2"><button sc-camel-on-click="{{ kc.onClick }}" style="{{ kc.style }}">{{ kc.label }}</button></sc-for>
+              <span style="flex:1;"></span><button sc-camel-on-click="{{ onClearSketch }}" style="{{ clearStyle }}">Clear</button><button sc-camel-on-click="{{ onCheck }}" style="{{ checkStyle }}">✓ Check</button></div>
+          </sc-if>
+          <div style="display:flex;align-items:baseline;gap:10px;background:#f6f8fa;border:1px solid #e4e8ec;border-radius:9px;padding:6px 11px;">
+            <span style="font-size:10px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#9aa2ab;">Match</span><span style="{{ scoreStyle }}">{{ matchScore }}</span><span style="font-size:12px;color:#525a63;font-weight:600;">{{ matchVerdict }}</span>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isCars }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:7px;">
+        <div style="position:relative;">
+          <button sc-camel-on-click="{{ carsMenu.onToggle }}" title="Choose a setup" style="{{ carsMenu.btnStyle }}"><span style="width:16px;text-align:center;flex:none;color:#8a6310;font-family:'JetBrains Mono',monospace;font-size:11px;">{{ carsMenu.icon }}</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ carsMenu.label }}</span><span style="font-size:10px;color:#c39b3a;flex:none;">{{ carsMenu.tag }}</span><span style="font-size:10px;color:#8a929b;flex:none;">▾</span></button>
+          <sc-if value="{{ carsMenu.open }}" hint-placeholder-val="{{ false }}">
+            <div sc-camel-on-click="{{ carsMenu.onClose }}" style="position:fixed;inset:0;z-index:39;"></div>
+            <div style="position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:40;background:#fff;border:1px solid #d3d8dd;border-radius:10px;padding:5px;box-shadow:0 10px 28px rgba(0,0,0,0.18);display:flex;flex-direction:column;gap:2px;max-height:420px;overflow:auto;">
+              <sc-for list="{{ carsMenu.items }}" as="mi" hint-placeholder-count="4"><button sc-camel-on-click="{{ mi.onClick }}" title="{{ mi.title }}" style="{{ mi.style }}"><span style="width:30px;flex:none;color:#8a6310;font-family:'JetBrains Mono',monospace;font-size:10.5px;">{{ mi.icon }}</span><span style="flex:1;">{{ mi.label }}</span><span style="font-size:10px;color:#c39b3a;flex:none;letter-spacing:0.05em;">{{ mi.tag }}</span></button></sc-for>
+            </div>
+          </sc-if>
+        </div>
+
+          <div title="{{ carNote }}" style="font-size:11px;line-height:1.35;color:#8a929b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:help;">{{ carNote }}</div>
+          <div style="display:grid;grid-template-columns:auto 1fr 1fr 32px;align-items:center;gap:5px 8px;background:#f6f8fa;border:1px solid #e4e8ec;border-radius:9px;padding:7px 10px;">
+            <span></span><span style="display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:#3a414a;"><span style="display:inline-block;width:9px;height:9px;border-radius:3px;background:#e2685f;"></span>Car A</span><span style="display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:#3a414a;"><span style="display:inline-block;width:9px;height:9px;border-radius:3px;background:#5aa8f0;"></span>Car B</span><span></span>
+            <sc-for list="{{ carRows }}" as="cr" hint-placeholder-count="3">
+              <span title="{{ cr.label }}" style="display:flex;align-items:baseline;gap:5px;font-size:11.5px;font-weight:600;color:#525a63;white-space:nowrap;">{{ cr.label }} <x-formula data-tex="{{ cr.tex }}" style="font-size:13px;color:#3a414a;"></x-formula></span>
+              <input type="number" min="{{ cr.A.min }}" max="{{ cr.A.max }}" step="{{ cr.A.step }}" value="{{ cr.A.text }}" sc-camel-on-input="{{ cr.A.onType }}" sc-camel-on-change="{{ cr.A.onCommit }}" title="{{ cr.A.title }}" style="width:100%;height:24px;box-sizing:border-box;border:1px solid #d7dbe0;border-radius:6px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:#8a6310;background:#fff;outline:none;">
+              <input type="number" min="{{ cr.B.min }}" max="{{ cr.B.max }}" step="{{ cr.B.step }}" value="{{ cr.B.text }}" sc-camel-on-input="{{ cr.B.onType }}" sc-camel-on-change="{{ cr.B.onCommit }}" title="{{ cr.B.title }}" style="width:100%;height:24px;box-sizing:border-box;border:1px solid #d7dbe0;border-radius:6px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:#8a6310;background:#fff;outline:none;">
+              <span style="font-size:10.5px;color:#b89a5a;font-family:'JetBrains Mono',monospace;">{{ cr.unit }}</span>
+            </sc-for>
+            <span style="font-size:11.5px;font-weight:600;color:#525a63;white-space:nowrap;">{{ timeField.label }}</span>
+            <input type="number" min="{{ timeField.min }}" max="{{ timeField.max }}" step="{{ timeField.step }}" value="{{ timeField.text }}" sc-camel-on-input="{{ timeField.onType }}" sc-camel-on-change="{{ timeField.onCommit }}" title="{{ timeField.title }}" style="width:100%;height:24px;box-sizing:border-box;border:1px solid #d7dbe0;border-radius:6px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:#8a6310;background:#fff;outline:none;"><span></span>
+            <span style="font-size:10.5px;color:#b89a5a;font-family:'JetBrains Mono',monospace;">{{ timeField.unit }}</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:10px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#9aa2ab;">When and where they meet</span><button sc-camel-on-click="{{ onToggleWork }}" style="font-size:11px;font-weight:600;color:#8a6310;background:none;border:none;cursor:pointer;padding:0;">{{ workLabel }}</button></div>
+          <div style="display:flex;flex-direction:column;gap:3px;">
+            <sc-for list="{{ meetLines }}" as="ml" hint-placeholder-count="3"><div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 8px;"><x-formula data-tex="{{ ml.tex }}" style="font-size:12.5px;color:#2a3038;"></x-formula><span style="font-size:10.5px;color:#8a929b;">{{ ml.note }}</span></div></sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isProgram }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:5px;"><span style="font-size:11.5px;font-weight:600;color:#525a63;margin-right:2px;">Build from</span><sc-for list="{{ buildChips }}" as="bc" hint-placeholder-count="2"><button sc-camel-on-click="{{ bc.onClick }}" style="{{ bc.style }}">{{ bc.label }}</button></sc-for></div>
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;">
+            <sc-for list="{{ progFields }}" as="f" hint-placeholder-count="2"><span style="display:flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;color:#525a63;white-space:nowrap;">{{ f.label }} <x-formula data-tex="{{ f.tex }}" style="font-size:13px;color:#3a414a;"></x-formula><input type="number" min="{{ f.min }}" max="{{ f.max }}" step="{{ f.step }}" value="{{ f.text }}" sc-camel-on-input="{{ f.onType }}" sc-camel-on-change="{{ f.onCommit }}" title="{{ f.title }}" style="width:56px;height:24px;box-sizing:border-box;border:1px solid #d7dbe0;border-radius:6px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:#8a6310;background:#fff;outline:none;"><span style="font-size:10.5px;color:#b89a5a;font-family:'JetBrains Mono',monospace;">{{ f.unit }}</span></span></sc-for>
+          </div>
+          <div style="font-size:10px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#9aa2ab;">{{ pieceHead }}</div>
+          <sc-for list="{{ pieceRows }}" as="pr" hint-placeholder-count="3">
+            <div style="{{ pr.rowStyle }}">
+              <div style="display:flex;align-items:center;gap:6px;">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:#8a6310;width:12px;">{{ pr.n }}</span>
+                <x-formula data-tex="{{ pr.q.tex }}" style="font-size:13px;color:#3a414a;"></x-formula><input type="number" min="{{ pr.q.min }}" max="{{ pr.q.max }}" step="{{ pr.q.step }}" value="{{ pr.q.text }}" sc-camel-on-input="{{ pr.q.onType }}" sc-camel-on-change="{{ pr.q.onCommit }}" title="{{ pr.q.title }}" style="width:60px;height:24px;box-sizing:border-box;border:1px solid #d7dbe0;border-radius:6px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:#8a6310;background:#fff;outline:none;"><span style="font-size:10.5px;color:#b89a5a;font-family:'JetBrains Mono',monospace;">{{ pr.q.unit }}</span>
+                <span style="font-size:11px;color:#9aa2ab;">for</span><input type="number" min="{{ pr.d.min }}" max="{{ pr.d.max }}" step="{{ pr.d.step }}" value="{{ pr.d.text }}" sc-camel-on-input="{{ pr.d.onType }}" sc-camel-on-change="{{ pr.d.onCommit }}" title="{{ pr.d.title }}" style="width:52px;height:24px;box-sizing:border-box;border:1px solid #d7dbe0;border-radius:6px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:#8a6310;background:#fff;outline:none;"><span style="font-size:10.5px;color:#b89a5a;font-family:'JetBrains Mono',monospace;">s</span>
+                <span style="flex:1;"></span>
+                <sc-if value="{{ pr.canRemove }}" hint-placeholder-val="{{ true }}"><button sc-camel-on-click="{{ pr.onRemove }}" title="Remove this piece" style="width:20px;height:20px;border-radius:5px;border:1px solid #e4e8ec;background:#fff;color:#93343c;cursor:pointer;font-size:12px;line-height:1;padding:0;">×</button></sc-if>
+              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:2px 10px;font-size:10.5px;color:#525a63;font-family:'JetBrains Mono',monospace;padding-left:18px;"><sc-for list="{{ pr.facts }}" as="fa" hint-placeholder-count="3"><span>{{ fa.t }}</span></sc-for></div>
+            </div>
+          </sc-for>
+          <div style="display:flex;align-items:center;gap:8px;"><sc-if value="{{ canAdd }}" hint-placeholder-val="{{ true }}"><button sc-camel-on-click="{{ onAdd }}" style="{{ addStyle }}">+ Add a piece</button></sc-if><span title="{{ jumpNote }}" style="flex:1;font-size:11px;color:#8a6310;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:help;">{{ jumpShort }}</span></div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px 14px;border-top:1px solid #e8ebee;padding-top:6px;">
+            <sc-for list="{{ progTotals }}" as="kv" hint-placeholder-count="3"><span style="display:flex;align-items:baseline;gap:5px;"><x-formula data-tex="{{ kv.tex }}" style="font-size:12.5px;color:#3a414a;"></x-formula><span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:600;color:#2a3038;">{{ kv.val }}</span></span></sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isDiagram }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:7px;">
+        <div style="position:relative;">
+          <button sc-camel-on-click="{{ caseMenu.onToggle }}" title="Choose a case" style="{{ caseMenu.btnStyle }}"><span style="width:16px;text-align:center;flex:none;color:#8a6310;font-family:'JetBrains Mono',monospace;font-size:11px;">{{ caseMenu.icon }}</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ caseMenu.label }}</span><span style="font-size:10px;color:#c39b3a;flex:none;">{{ caseMenu.tag }}</span><span style="font-size:10px;color:#8a929b;flex:none;">▾</span></button>
+          <sc-if value="{{ caseMenu.open }}" hint-placeholder-val="{{ false }}">
+            <div sc-camel-on-click="{{ caseMenu.onClose }}" style="position:fixed;inset:0;z-index:39;"></div>
+            <div style="position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:40;background:#fff;border:1px solid #d3d8dd;border-radius:10px;padding:5px;box-shadow:0 10px 28px rgba(0,0,0,0.18);display:flex;flex-direction:column;gap:2px;max-height:420px;overflow:auto;">
+              <sc-for list="{{ caseMenu.items }}" as="mi" hint-placeholder-count="6"><button sc-camel-on-click="{{ mi.onClick }}" title="{{ mi.title }}" style="{{ mi.style }}"><span style="width:30px;flex:none;color:#8a6310;font-family:'JetBrains Mono',monospace;font-size:10.5px;">{{ mi.icon }}</span><span style="flex:1;">{{ mi.label }}</span><span style="font-size:10px;color:#c39b3a;flex:none;letter-spacing:0.05em;">{{ mi.tag }}</span></button></sc-for>
+            </div>
+          </sc-if>
+        </div>
+
+          <div style="background:#f6f8fa;border:1px solid #e4e8ec;border-radius:9px;padding:7px 10px;display:flex;flex-direction:column;gap:5px;">
+            <sc-for list="{{ diagFields }}" as="f" hint-placeholder-count="3">
+              <div style="display:grid;grid-template-columns:minmax(96px,auto) minmax(50px,1fr) 56px 32px;align-items:center;gap:6px;">
+                <span title="{{ f.label }}" style="display:flex;align-items:baseline;gap:5px;font-size:11.5px;font-weight:600;color:#525a63;white-space:nowrap;">{{ f.label }} <x-formula data-tex="{{ f.tex }}" style="font-size:13px;color:#3a414a;"></x-formula></span>
+                <input type="range" min="{{ f.min }}" max="{{ f.max }}" step="{{ f.step }}" value="{{ f.value }}" sc-camel-on-input="{{ f.onSlide }}" style="width:100%;accent-color:#bf8a1e;">
+                <input type="number" min="{{ f.min }}" max="{{ f.max }}" step="{{ f.step }}" value="{{ f.text }}" sc-camel-on-input="{{ f.onType }}" sc-camel-on-change="{{ f.onCommit }}" style="width:100%;height:24px;box-sizing:border-box;border:1px solid #d7dbe0;border-radius:6px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:#8a6310;background:#fff;outline:none;">
+                <span style="font-size:10.5px;color:#b89a5a;font-family:'JetBrains Mono',monospace;">{{ f.unit }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;">
+            <sc-for list="{{ signRows }}" as="sr" hint-placeholder-count="2"><span style="display:flex;align-items:baseline;gap:6px;"><x-formula data-tex="{{ sr.tex }}" style="font-size:12.5px;color:#3a414a;"></x-formula><span style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;color:#2a3038;">{{ sr.val }}</span></span></sc-for>
+          </div>
+          <div style="font-size:12px;color:#226b40;"><b>{{ signHow }}</b> <span style="color:#8a929b;">{{ signWhy }}</span></div>
+          <div style="font-size:11px;color:#8a6310;">{{ turnNote }}</div>
+        </div>
+      </sc-if>
+
+      <div style="border-top:1px solid #e8ebee;padding-top:7px;">
+        <div style="font-size:10px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#9aa2ab;margin-bottom:4px;">{{ nowHead }}</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px 10px;">
+          <sc-for list="{{ nowRows }}" as="nr" hint-placeholder-count="3"><div style="display:flex;align-items:baseline;gap:6px;white-space:nowrap;"><x-formula data-tex="{{ nr.tex }}" style="font-size:12px;color:#3a414a;"></x-formula><span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:600;color:#2a3038;">{{ nr.val }}</span></div></sc-for>
+        </div>
+        <div style="font-size:11px;color:#8a929b;">{{ nowHidden }}</div>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{ showShare }}" hint-placeholder-val="{{ false }}">
+    <div sc-camel-on-click="{{ onCloseShare }}" style="position:absolute;inset:0;background:rgba(15,23,34,0.82);backdrop-filter:blur(3px);z-index:32;display:flex;align-items:center;justify-content:center;padding:24px;cursor:pointer;">
+      <div sc-camel-on-click="{{ stop }}" style="max-width:448px;width:100%;color:#eef2f6;font-family:'Source Sans 3',sans-serif;background:rgba(17,26,38,0.94);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:20px 22px;cursor:default;">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;">
+          <div style="font-family:'Source Serif 4',serif;font-weight:600;font-size:17px;color:#fff;">Share this setup</div>
+          <button sc-camel-on-click="{{ onCloseShare }}" title="Close" style="width:26px;height:26px;flex:none;border-radius:7px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.06);color:#dce6f2;font-size:16px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;">×</button>
+        </div>
+        <div style="font-size:12px;line-height:1.55;color:#b7c2cd;margin-bottom:14px;">This link opens this activity with these settings, at t = 0.</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input readonly="" value="{{ shareUrl }}" sc-camel-on-focus="{{ selectAll }}" style="flex:1;min-width:0;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#cfe0f2;background:rgba(0,0,0,0.28);border:1px solid rgba(255,255,255,0.14);border-radius:8px;padding:9px 11px;outline:none;">
+          <button sc-camel-on-click="{{ onCopyShare }}" style="{{ copyBtnStyle }}">{{ copyLabel }}</button>
+        </div>
+        
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showInfo }}" hint-placeholder-val="{{ false }}">
+    <div sc-camel-on-click="{{ onCloseInfo }}" style="position:absolute;inset:0;background:rgba(15,23,34,0.82);backdrop-filter:blur(3px);z-index:30;display:flex;align-items:center;justify-content:center;padding:24px;cursor:pointer;">
+      <div style="max-width:860px;width:100%;color:#eef2f6;font-family:'Source Sans 3',sans-serif;background:rgba(17,26,38,0.72);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:22px 26px;max-height:100%;overflow:auto;box-sizing:border-box;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.28) transparent;">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px;">
+          <div style="font-family:'Source Serif 4',serif;font-weight:600;font-size:20px;color:#fff;">Motion Lab: motion along a line</div>
+          <button sc-camel-on-click="{{ onCloseInfo }}" title="Close" style="width:26px;height:26px;flex:none;border-radius:7px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.06);color:#dce6f2;font-size:16px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;">×</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:0 24px;">
+                    <div style="padding-right:22px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#ffd66b;margin:0 0 9px;">What this shows</div>
+            <ul style="margin:0;padding-left:16px;font-size:12.5px;line-height:1.55;color:#d7e0e8;">
+              <li style="margin-bottom:6px;">Motion along a straight line, before forces come in: position <i>x</i>, velocity <i>v<sub>x</sub></i> and acceleration <i>a<sub>x</sub></i>, each a signed number (positive toward +x, to the right).</li>
+              <li style="margin-bottom:6px;"><b>Match the graph</b>: drive a cart in front of a motion sensor so its x–t or v–t graph follows a target, or watch a motion and sketch its graph.</li>
+              <li style="margin-bottom:6px;"><b>Two cars, one road</b>: each with its own start, velocity and acceleration. A braking car (aₓ opposite to vₓ) slows to a stop and stays there: nothing pushes it backward. Where the x–t graphs cross, the cars meet.</li>
+              <li style="margin-bottom:6px;"><b>Program the motion</b>: build the a–t graph (or the v–t graph) from pieces; the other graphs follow. Where velocity pieces meet, vₓ jumps at once: the a–t graph marks it with a spike, since no finite acceleration does that.</li>
+              <li><b>Motion diagram</b>: a dot every 0.5 s, with velocity arrows, and the signs that say whether it speeds up or slows down. The models are ideal; cars are drawn larger than life on a long road.</li>
+            </ul>
+          </div>
+          <div style="padding:0 22px;border-left:1px solid rgba(255,255,255,0.12);">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#ffd66b;margin:0 0 9px;">How to use</div>
+            <ul style="margin:0;padding-left:16px;font-size:12.5px;line-height:1.55;color:#d7e0e8;">
+              <li style="margin-bottom:6px;"><b>▶ Run</b> (or Space) starts the clock; <b>↺</b> goes back to the start; <b>⏭</b> steps; <b>1×</b> switches to slow motion.</li>
+              <li style="margin-bottom:6px;"><b>Drag along the graphs</b> to move the clock to any moment already run.</li>
+              <li style="margin-bottom:6px;">Driving: drag the cart (let go and it stops: nothing keeps it going), or set the <b>throttle</b>; hold <b>→</b> or <b>←</b> to change the velocity steadily, <b>↓</b> to stop.</li>
+              <li style="margin-bottom:6px;">Sketching: press and drag across the marked graph to draw; <b>✓ Check</b> shows the real graph and a score.</li>
+              <li><b>Slope &amp; area</b> draws the tangent to x–t (its slope is <i>v<sub>x</sub></i>) and shades the area under v–t (Δ<i>x</i>) and a–t (Δ<i>v<sub>x</sub></i>).</li>
+            </ul>
+          </div>
+<div style="grid-column:1/-1;border-top:1px solid rgba(255,255,255,0.12);margin-top:14px;padding-top:15px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#ffd66b;margin:0 0 12px;">Relevant relationships</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px 26px;">
+              <sc-for list="{{ infoFormulas }}" as="fm" hint-placeholder-count="6">
+                <div style="margin-bottom:10px;">
+                  <x-formula style="font-family:'Source Serif 4',serif;font-style:italic;font-size:15px;color:#fff;display:block;line-height:1.5;">{{ fm.expr }}</x-formula>
+                  <div style="font-size:11.5px;color:#b7c2cd;margin-top:3px;">{{ fm.desc }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="grid-column:1/-1;border-top:1px solid rgba(255,255,255,0.12);margin-top:2px;padding-top:15px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#ffd66b;margin:0 0 12px;">Learn more</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:12px 26px;">
+              <div>
+                <div style="font-size:11px;color:#9fb0bf;margin:0 0 5px;">OpenStax <em>University&nbsp;Physics</em> — calculus</div>
+                <ul style="margin:0;padding-left:15px;color:#d7e0e8;font-size:12px;line-height:1.55;">
+                  <li><a href="https://openstax.org/books/university-physics-volume-1/pages/3-1-position-displacement-and-average-velocity" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">Vol 1 · 3.1 Position, Displacement, and Average Velocity</a></li>
+                  <li><a href="https://openstax.org/books/university-physics-volume-1/pages/3-2-instantaneous-velocity-and-speed" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">Vol 1 · 3.2 Instantaneous Velocity and Speed</a></li>
+                  <li><a href="https://openstax.org/books/university-physics-volume-1/pages/3-3-average-and-instantaneous-acceleration" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">Vol 1 · 3.3 Average and Instantaneous Acceleration</a></li>
+                  <li><a href="https://openstax.org/books/university-physics-volume-1/pages/3-4-motion-with-constant-acceleration" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">Vol 1 · 3.4 Motion with Constant Acceleration</a></li>
+                </ul>
+              </div>
+              <div>
+                <div style="font-size:11px;color:#9fb0bf;margin:0 0 5px;">OpenStax <em>College&nbsp;Physics</em> — algebra</div>
+                <ul style="margin:0;padding-left:15px;color:#d7e0e8;font-size:12px;line-height:1.55;">
+                  <li><a href="https://openstax.org/books/college-physics-2e/pages/2-5-motion-equations-for-constant-acceleration-in-one-dimension" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">2.5 Motion Equations for Constant Acceleration in One Dimension</a></li>
+                  <li><a href="https://openstax.org/books/college-physics-2e/pages/2-8-graphical-analysis-of-one-dimensional-motion" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">2.8 Graphical Analysis of One-Dimensional Motion</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showBug }}" hint-placeholder-val="{{ false }}">
+    <div sc-camel-on-click="{{ onCloseBug }}" style="position:absolute;inset:0;background:rgba(15,23,34,0.82);backdrop-filter:blur(3px);z-index:60;display:flex;align-items:center;justify-content:center;padding:24px;cursor:pointer;">
+      <div sc-camel-on-click="{{ stopBug }}" style="max-width:460px;width:100%;color:#eef2f6;font-family:'Source Sans 3',sans-serif;background:rgba(17,26,38,0.96);border:1px solid rgba(255,255,255,0.14);border-radius:14px;padding:20px 22px;cursor:default;">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;">
+          <div style="font-family:'Source Serif 4',serif;font-weight:600;font-size:17px;color:#fff;">Report a problem</div>
+          <button sc-camel-on-click="{{ onCloseBug }}" title="Close" style="width:26px;height:26px;flex:none;border-radius:7px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.06);color:#dce6f2;font-size:16px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;">×</button>
+        </div>
+        <div style="font-size:12px;line-height:1.55;color:#b7c2cd;margin-bottom:12px;">Say what looks wrong or confusing. The current setup and your browser are attached automatically.</div>
+        <textarea sc-camel-on-input="{{ onBugText }}" rows="4" placeholder="What happened? What did you expect?" style="width:100%;box-sizing:border-box;font-family:'Source Sans 3',sans-serif;font-size:13px;line-height:1.5;color:#eef2f6;background:rgba(0,0,0,0.28);border:1px solid rgba(255,255,255,0.14);border-radius:8px;padding:9px 11px;outline:none;resize:vertical;margin-bottom:9px;"></textarea>
+        <input sc-camel-on-input="{{ onBugEmail }}" placeholder="Email (optional, for a reply)" style="width:100%;box-sizing:border-box;font-family:'Source Sans 3',sans-serif;font-size:12.5px;color:#cfe0f2;background:rgba(0,0,0,0.28);border:1px solid rgba(255,255,255,0.14);border-radius:8px;padding:8px 11px;outline:none;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <button sc-camel-on-click="{{ onSubmitBug }}" style="{{ bugBtnStyle }}">{{ bugBtnLabel }}</button>
+          <div style="font-size:12px;line-height:1.4;color:{{ bugMsgColor }};">{{ bugMsg }}</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</div>

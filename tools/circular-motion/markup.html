@@ -1,0 +1,218 @@
+<div style="display:flex;gap:14px;align-items:flex-start;font-family:'Source Sans 3',system-ui,sans-serif;">
+<sc-if value="{{ big }}" hint-placeholder-val="{{ false }}">
+  <div style="width:212px;flex:none;background:#15212e;border:1px solid #dde1e5;border-radius:14px;padding:12px 11px;display:flex;flex-direction:column;gap:7px;">
+    <div style="font-family:'Source Serif 4',serif;font-weight:600;font-size:13px;color:#d9b968;padding:3px 5px 6px;">Tools &amp; help</div>
+    <sc-for list="{{ menuItems }}" as="mi" hint-placeholder-count="5">
+      <button sc-camel-on-click="{{ mi.onClick }}" style="{{ mi.sideStyle }}"><span style="width:20px;text-align:center;font-size:15px;flex:none;">{{ mi.icon }}</span><span style="flex:1;text-align:left;">{{ mi.label }}</span><span style="{{ mi.dotStyle }}"></span></button>
+    </sc-for>
+  </div>
+</sc-if>
+
+<div style="width:918px;background:#fff;border:1px solid #dde1e5;border-radius:14px;overflow:hidden;position:relative;color:#23262b;">
+
+  <div style="background:#15212e;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="display:inline-block;width:11px;height:11px;border-radius:3px;background:#8a63b8;flex:none;"></span>
+        <div>
+          <div style="font-family:'Source Serif 4',serif;font-weight:600;font-size:15.5px;">Circular Motion</div>
+          <div style="font-size:10.5px;font-weight:600;letter-spacing:0.02em;color:#e0c98a;">What makes things go round</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;"><button sc-camel-on-click="{{ onToggleHide }}" title="{{ hideTitle }}" style="display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer;border:1px solid rgba(255,255,255,0.22);background:rgba(255,255,255,0.09);color:#fff;white-space:nowrap;">{{ hideLabel }}</button><div style="position:relative;display:flex;align-items:center;"><button sc-camel-on-click="{{ onToggleMenu }}" title="Menu" style="{{ menuBtnStyle }}">☰</button><sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+        <div sc-camel-on-click="{{ onCloseMenu }}" style="position:fixed;inset:0;z-index:39;"></div>
+        <div style="position:absolute;top:38px;right:0;z-index:40;background:#1b2836;border:1px solid rgba(255,255,255,0.14);border-radius:11px;padding:6px;min-width:196px;box-shadow:0 14px 34px rgba(0,0,0,0.45);display:flex;flex-direction:column;gap:2px;">
+          <sc-for list="{{ menuItems }}" as="mi" hint-placeholder-count="5">
+            <button sc-camel-on-click="{{ mi.onClick }}" style="{{ mi.rowStyle }}"><span style="width:18px;text-align:center;flex:none;">{{ mi.icon }}</span><span style="flex:1;text-align:left;">{{ mi.label }}</span><span style="{{ mi.dotStyle }}"></span></button>
+          </sc-for>
+        </div>
+      </sc-if></div></div>
+    </div>
+
+  <div style="display:flex;gap:0;align-items:stretch;flex-wrap:wrap;">
+
+    <div style="padding:13px 14px;flex:0 1 588px;min-width:min(330px,100%);">
+      <div style="position:relative;user-select:none;-webkit-user-select:none;">
+        <canvas ref="{{ setCanvas }}" width="600" height="440" style="display:block;width:100%;height:auto;aspect-ratio:600/440;border-radius:10px;cursor:grab;touch-action:none;"></canvas>
+        <div style="{{ clockBoxStyle }}">
+          <sc-for list="{{ clockBtns }}" as="cb" hint-placeholder-count="4">
+            <button sc-camel-on-click="{{ cb.onClick }}" title="{{ cb.title }}" style="{{ cb.style }}">{{ cb.label }}</button>
+          </sc-for>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:#f0c860;min-width:66px;padding:0 4px;">{{ timeStr }}</span>
+        </div>
+        <div style="{{ viewBoxStyle }}">
+          <sc-for list="{{ viewBtns }}" as="vb" hint-placeholder-count="3">
+            <button sc-camel-on-click="{{ vb.onClick }}" title="{{ vb.title }}" style="{{ vb.style }}">{{ vb.label }}</button>
+          </sc-for>
+          <span style="width:1px;height:18px;background:rgba(255,255,255,0.16);margin:0 2px;"></span>
+          <sc-for list="{{ zoomBtns }}" as="z" hint-placeholder-count="2">
+            <button sc-camel-on-click="{{ z.onClick }}" title="{{ z.title }}" style="{{ z.style }}">{{ z.label }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-top:9px;">
+        <span style="font-size:9.5px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#9aa2ab;margin-right:3px;">Show</span>
+        <sc-for list="{{ showChips }}" as="sc" hint-placeholder-count="5"><button sc-camel-on-click="{{ sc.onClick }}" title="{{ sc.title }}" style="{{ sc.style }}">{{ sc.label }}</button></sc-for>
+      </div>
+      <div style="font-size:11.5px;line-height:1.5;color:#8a929b;margin-top:9px;">{{ sitNote }}</div>
+    </div>
+
+    <div style="flex:1;border-left:1px solid #e8ebee;padding:12px 14px;display:flex;flex-direction:column;gap:9px;min-width:294px;">
+      <div>
+        <div style="position:relative;">
+          <button sc-camel-on-click="{{ onToggleSits }}" title="Choose a situation" style="{{ sitBtnStyle }}"><span style="width:16px;text-align:center;flex:none;color:#8a6310;">{{ sitIcon }}</span><span style="flex:1;">{{ sitName }}</span><span style="font-size:10px;color:#8a929b;">▾</span></button>
+          <sc-if value="{{ sitsOpen }}" hint-placeholder-val="{{ false }}">
+            <div sc-camel-on-click="{{ onCloseSits }}" style="position:fixed;inset:0;z-index:39;"></div>
+            <div style="position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:40;background:#fff;border:1px solid #d3d8dd;border-radius:10px;padding:5px;box-shadow:0 10px 28px rgba(0,0,0,0.18);display:flex;flex-direction:column;gap:2px;">
+              <sc-for list="{{ sitItems }}" as="si" hint-placeholder-count="7"><button sc-camel-on-click="{{ si.onClick }}" style="{{ si.style }}"><span style="width:16px;text-align:center;flex:none;color:#8a6310;">{{ si.icon }}</span><span>{{ si.label }}</span></button></sc-for>
+            </div>
+          </sc-if>
+        </div>
+        <sc-if value="{{ hasVariants }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;"><sc-for list="{{ variantChips }}" as="vc" hint-placeholder-count="2"><button sc-camel-on-click="{{ vc.onClick }}" style="{{ vc.style }}">{{ vc.label }}</button></sc-for></div></sc-if>
+        <sc-if value="{{ hasRoads }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-top:6px;"><sc-for list="{{ roadChips }}" as="rc" hint-placeholder-count="3"><button sc-camel-on-click="{{ rc.onClick }}" title="{{ rc.title }}" style="{{ rc.style }}">{{ rc.label }}</button></sc-for><span style="font-size:11px;color:#9aa2ab;margin-left:3px;">{{ roadNote }}</span></div></sc-if>
+      </div>
+
+      <div style="background:#f6f8fa;border:1px solid #e4e8ec;border-radius:10px;padding:7px 10px;display:flex;flex-direction:column;gap:3px;">
+        <sc-for list="{{ fields }}" as="f" hint-placeholder-count="3">
+          <div style="display:grid;grid-template-columns:auto minmax(70px,1fr) 54px 30px;align-items:center;gap:6px;">
+            <span style="display:flex;align-items:baseline;gap:5px;font-size:11.5px;font-weight:600;color:#525a63;white-space:nowrap;">{{ f.label }} <x-formula data-tex="{{ f.tex }}" style="font-size:13px;color:#3a414a;"></x-formula></span>
+            <input type="range" min="{{ f.min }}" max="{{ f.max }}" step="{{ f.step }}" value="{{ f.value }}" sc-camel-on-input="{{ f.onSlide }}" style="width:100%;accent-color:#bf8a1e;">
+            <input type="number" min="{{ f.min }}" max="{{ f.max }}" step="{{ f.step }}" value="{{ f.text }}" sc-camel-on-input="{{ f.onType }}" sc-camel-on-change="{{ f.onCommit }}" style="width:100%;height:25px;box-sizing:border-box;border:1px solid #d7dbe0;border-radius:6px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:#8a6310;background:#fff;outline:none;">
+            <span style="font-size:11px;color:#b89a5a;font-family:'JetBrains Mono',monospace;">{{ f.unit }}</span>
+          </div>
+        </sc-for>
+        <sc-if value="{{ hasSnip }}" hint-placeholder-val="{{ true }}"><button sc-camel-on-click="{{ onSnip }}" title="{{ snipTitle }}" style="{{ snipStyle }}">{{ snipLabel }}</button></sc-if>
+      </div>
+
+      <div>
+        <div style="font-size:10.5px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#9aa2ab;margin-bottom:3px;">Why it goes round</div>
+        <sc-if value="{{ hasTable }}" hint-placeholder-val="{{ true }}">
+          <div style="display:grid;grid-template-columns:1.25fr 1fr 1fr 1fr;column-gap:6px;row-gap:3px;align-items:baseline;font-size:11.5px;">
+            <span style="font-size:10.5px;color:#9aa2ab;font-weight:600;">Force</span><span style="font-size:10.5px;color:#9aa2ab;font-weight:600;text-align:right;">size</span>
+            <span style="font-size:10.5px;color:#9aa2ab;font-weight:600;text-align:right;">along <x-formula data-tex="{{ colA }}" style="font-size:12px;"></x-formula></span><span style="font-size:10.5px;color:#9aa2ab;font-weight:600;text-align:right;">along <x-formula data-tex="{{ colB }}" style="font-size:12px;"></x-formula></span>
+            <sc-for list="{{ forceRows }}" as="fr" hint-placeholder-count="3">
+              <span title="{{ fr.what }}" style="cursor:help;"><x-formula data-tex="{{ fr.tex }}" style="font-size:14px;color:{{ fr.col }};"></x-formula></span>
+              <span style="font-family:'JetBrains Mono',monospace;text-align:right;color:#2a3038;">{{ fr.mag }}</span>
+              <span style="font-family:'JetBrains Mono',monospace;text-align:right;color:#525a63;">{{ fr.c1 }}</span>
+              <span style="font-family:'JetBrains Mono',monospace;text-align:right;color:#525a63;">{{ fr.c2 }}</span>
+            </sc-for>
+          </div>
+          <div style="border-top:1px dashed #e4e8ec;margin-top:4px;padding-top:4px;display:flex;flex-direction:column;gap:1px;">
+            <sc-for list="{{ checks }}" as="ck" hint-placeholder-count="3">
+              <div style="display:flex;align-items:center;gap:7px;font-size:11.5px;color:#3a414a;"><x-formula data-tex="{{ ck.tex }}" style="font-size:13px;"></x-formula><span style="font-family:'JetBrains Mono',monospace;font-weight:600;">{{ ck.val }}</span><span style="font-size:11px;color:#2f8f56;font-weight:600;">{{ ck.mark }}</span><span style="font-size:11.5px;color:#8a929b;">{{ ck.text }}</span></div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <div style="font-size:11.5px;line-height:1.45;color:#8a929b;">{{ hiddenNote }}</div>
+      </div>
+
+      <div style="border-top:1px solid #e8ebee;padding-top:6px;display:flex;flex-direction:column;gap:1px;">
+        <sc-for list="{{ keys }}" as="kv" hint-placeholder-count="3">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;"><x-formula data-tex="{{ kv.tex }}" style="font-size:13px;color:#3a414a;"></x-formula><span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:#2a3038;white-space:nowrap;">{{ kv.val }}</span></div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{ showShare }}" hint-placeholder-val="{{ false }}">
+    <div sc-camel-on-click="{{ onCloseShare }}" style="position:absolute;inset:0;background:rgba(15,23,34,0.82);backdrop-filter:blur(3px);z-index:32;display:flex;align-items:center;justify-content:center;padding:24px;cursor:pointer;">
+      <div sc-camel-on-click="{{ stop }}" style="max-width:448px;width:100%;color:#eef2f6;font-family:'Source Sans 3',sans-serif;background:rgba(17,26,38,0.94);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:20px 22px;cursor:default;">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;">
+          <div style="font-family:'Source Serif 4',serif;font-weight:600;font-size:17px;color:#fff;">Share this setup</div>
+          <button sc-camel-on-click="{{ onCloseShare }}" title="Close" style="width:26px;height:26px;flex:none;border-radius:7px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.06);color:#dce6f2;font-size:16px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;">×</button>
+        </div>
+        <div style="font-size:12px;line-height:1.55;color:#b7c2cd;margin-bottom:14px;">This link opens this situation with these settings, at t = 0.</div>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:13px;">
+          <input readonly="" value="{{ shareUrl }}" sc-camel-on-focus="{{ selectAll }}" style="flex:1;min-width:0;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#cfe0f2;background:rgba(0,0,0,0.28);border:1px solid rgba(255,255,255,0.14);border-radius:8px;padding:9px 11px;outline:none;">
+          <button sc-camel-on-click="{{ onCopyShare }}" style="{{ copyBtnStyle }}">{{ copyLabel }}</button>
+        </div>
+        <label style="display:flex;align-items:center;gap:9px;cursor:pointer;font-size:12.5px;color:#d7e0e8;">
+          <input type="checkbox" checked="{{ shareHide }}" sc-camel-on-change="{{ onToggleShareHide }}" style="width:15px;height:15px;accent-color:#bf8a1e;cursor:pointer;">
+          <span>Open with the forces hidden, so students draw the free-body diagram first</span>
+        </label>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showInfo }}" hint-placeholder-val="{{ false }}">
+    <div sc-camel-on-click="{{ onCloseInfo }}" style="position:absolute;inset:0;background:rgba(15,23,34,0.82);backdrop-filter:blur(3px);z-index:30;display:flex;align-items:center;justify-content:center;padding:24px;cursor:pointer;">
+      <div style="max-width:860px;width:100%;color:#eef2f6;font-family:'Source Sans 3',sans-serif;background:rgba(17,26,38,0.72);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:22px 26px;max-height:100%;overflow:auto;box-sizing:border-box;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.28) transparent;">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px;">
+          <div style="font-family:'Source Serif 4',serif;font-weight:600;font-size:20px;color:#fff;">Circular Motion: what makes it go round</div>
+          <button sc-camel-on-click="{{ onCloseInfo }}" title="Close" style="width:26px;height:26px;flex:none;border-radius:7px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.06);color:#dce6f2;font-size:16px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;">×</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:0 24px;">
+          <div style="padding-right:22px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#ffd66b;margin:0 0 9px;">What this shows</div>
+            <ul style="margin:0;padding-left:16px;font-size:12.5px;line-height:1.55;color:#d7e0e8;">
+              <li style="margin-bottom:6px;">Seven classic situations: a <b>puck on a string</b>, a <b>car on a flat curve</b>, a <b>car on a banked curve</b>, a <b>conical pendulum</b>, a <b>vertical circle</b> (a ball on a string, or a roller-coaster car in a perfectly circular loop), a <b>Ferris wheel</b>, and a <b>satellite in orbit</b>. In the loop the track pushes toward the centre and gravity changes the speed; on the Ferris wheel the speed is steady and the level seat pushes up and grips sideways.</li>
+              <li style="margin-bottom:6px;">Going round a circle at speed v takes an acceleration v²/r toward the centre. No special force does it: the real forces (tension, friction, the normal force, gravity) have parts toward the centre that add up to m v²/r.</li>
+              <li style="margin-bottom:6px;">When the forces cannot supply it, the motion changes: a cut string or a skidding car goes straight on along its velocity, not outward; a string or track at the top of a loop goes slack, and the object falls like a projectile. A satellite that is too slow or too fast for a circle goes into an ellipse (or crashes, or escapes).</li>
+              <li>The models are ideal: no air resistance, a massless string, a car treated as a point with all its weight on the road. On the big curves the car is drawn larger than life, or it would be a speck; so is the satellite. In orbit the clock runs fast (one circular orbit in about 12 s) and reads in minutes.</li>
+            </ul>
+          </div>
+          <div style="padding:0 22px;border-left:1px solid rgba(255,255,255,0.12);">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#ffd66b;margin:0 0 9px;">How to use</div>
+            <ul style="margin:0;padding-left:16px;font-size:12.5px;line-height:1.55;color:#d7e0e8;">
+              <li style="margin-bottom:6px;">Choose a situation from the menu on the right and set its values with the sliders (or type them). Changing anything starts the motion again from the beginning.</li>
+              <li style="margin-bottom:6px;"><b>▶ Run</b> (or Space) starts the clock; <b>↺</b> goes back; <b>⏭</b> steps; <b>1×</b> switches to slow motion.</li>
+              <li style="margin-bottom:6px;"><b>Drag</b> the picture to turn it; <b>3D / Top / Side</b> are set views; the wheel or <b>−/+</b> zooms.</li>
+              <li style="margin-bottom:6px;">The table splits every force along <b>r</b> (toward the centre) and <b>z</b> (up; along the path, <b>t</b>, for a vertical circle), and sets ΣF_r beside m v²/r. <b>Components</b> and <b>r, t, z axes</b> draw the same split on the picture.</li>
+              <li><b>Hide forces</b> takes away the forces, the acceleration and their values, so students draw the free-body diagram first.</li>
+            </ul>
+          </div>
+          <div style="grid-column:1/-1;border-top:1px solid rgba(255,255,255,0.12);margin-top:14px;padding-top:15px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#ffd66b;margin:0 0 12px;">Relevant relationships</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px 26px;">
+              <sc-for list="{{ infoFormulas }}" as="fm" hint-placeholder-count="6">
+                <div style="margin-bottom:10px;">
+                  <x-formula style="font-family:'Source Serif 4',serif;font-style:italic;font-size:15px;color:#fff;display:block;line-height:1.5;">{{ fm.expr }}</x-formula>
+                  <div style="font-size:11.5px;color:#b7c2cd;margin-top:3px;">{{ fm.desc }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="grid-column:1/-1;border-top:1px solid rgba(255,255,255,0.12);margin-top:2px;padding-top:15px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#ffd66b;margin:0 0 12px;">Learn more</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:12px 26px;">
+              <div>
+                <div style="font-size:11px;color:#9fb0bf;margin:0 0 5px;">OpenStax <em>University&nbsp;Physics</em> — calculus</div>
+                <ul style="margin:0;padding-left:15px;color:#d7e0e8;font-size:12px;line-height:1.55;">
+                  <li><a href="https://openstax.org/books/university-physics-volume-1/pages/4-4-uniform-circular-motion" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">Vol 1 · 4.4 Uniform Circular Motion</a></li>
+                  <li><a href="https://openstax.org/books/university-physics-volume-1/pages/6-3-centripetal-force" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">Vol 1 · 6.3 Centripetal Force</a></li>
+                  <li><a href="https://openstax.org/books/university-physics-volume-1/pages/13-4-satellite-orbits-and-energy" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">Vol 1 · 13.4 Satellite Orbits and Energy</a></li>
+                </ul>
+              </div>
+              <div>
+                <div style="font-size:11px;color:#9fb0bf;margin:0 0 5px;">OpenStax <em>College&nbsp;Physics</em> — algebra</div>
+                <ul style="margin:0;padding-left:15px;color:#d7e0e8;font-size:12px;line-height:1.55;">
+                  <li><a href="https://openstax.org/books/college-physics-2e/pages/6-2-centripetal-acceleration" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">6.2 Centripetal Acceleration</a></li>
+                  <li><a href="https://openstax.org/books/college-physics-2e/pages/6-3-centripetal-force" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">6.3 Centripetal Force</a></li>
+                  <li><a href="https://openstax.org/books/college-physics-2e/pages/6-6-satellites-and-keplers-laws-an-argument-for-simplicity" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">6.6 Satellites and Kepler’s Laws</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showBug }}" hint-placeholder-val="{{ false }}">
+    <div sc-camel-on-click="{{ onCloseBug }}" style="position:absolute;inset:0;background:rgba(15,23,34,0.82);backdrop-filter:blur(3px);z-index:60;display:flex;align-items:center;justify-content:center;padding:24px;cursor:pointer;">
+      <div sc-camel-on-click="{{ stopBug }}" style="max-width:460px;width:100%;color:#eef2f6;font-family:'Source Sans 3',sans-serif;background:rgba(17,26,38,0.96);border:1px solid rgba(255,255,255,0.14);border-radius:14px;padding:20px 22px;cursor:default;">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;">
+          <div style="font-family:'Source Serif 4',serif;font-weight:600;font-size:17px;color:#fff;">Report a problem</div>
+          <button sc-camel-on-click="{{ onCloseBug }}" title="Close" style="width:26px;height:26px;flex:none;border-radius:7px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.06);color:#dce6f2;font-size:16px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;">×</button>
+        </div>
+        <div style="font-size:12px;line-height:1.55;color:#b7c2cd;margin-bottom:12px;">Say what looks wrong or confusing. The current setup and your browser are attached automatically.</div>
+        <textarea sc-camel-on-input="{{ onBugText }}" rows="4" placeholder="What happened? What did you expect?" style="width:100%;box-sizing:border-box;font-family:'Source Sans 3',sans-serif;font-size:13px;line-height:1.5;color:#eef2f6;background:rgba(0,0,0,0.28);border:1px solid rgba(255,255,255,0.14);border-radius:8px;padding:9px 11px;outline:none;resize:vertical;margin-bottom:9px;"></textarea>
+        <input sc-camel-on-input="{{ onBugEmail }}" placeholder="Email (optional, for a reply)" style="width:100%;box-sizing:border-box;font-family:'Source Sans 3',sans-serif;font-size:12.5px;color:#cfe0f2;background:rgba(0,0,0,0.28);border:1px solid rgba(255,255,255,0.14);border-radius:8px;padding:8px 11px;outline:none;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <button sc-camel-on-click="{{ onSubmitBug }}" style="{{ bugBtnStyle }}">{{ bugBtnLabel }}</button>
+          <div style="font-size:12px;line-height:1.4;color:{{ bugMsgColor }};">{{ bugMsg }}</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</div>

@@ -1,0 +1,288 @@
+<div style="display:flex;gap:14px;align-items:flex-start;font-family:'Source Sans 3',system-ui,sans-serif;">
+<sc-if value="{{ big }}" hint-placeholder-val="{{ false }}">
+  <div style="width:212px;flex:none;background:#15212e;border:1px solid #dde1e5;border-radius:14px;padding:12px 11px;display:flex;flex-direction:column;gap:7px;">
+    <div style="font-family:'Source Serif 4',serif;font-weight:600;font-size:13px;color:#d9b968;padding:3px 5px 6px;">Tools &amp; help</div>
+    <sc-for list="{{ menuItems }}" as="mi" hint-placeholder-count="5">
+      <button sc-camel-on-click="{{ mi.onClick }}" style="{{ mi.sideStyle }}"><span style="width:20px;text-align:center;font-size:15px;flex:none;">{{ mi.icon }}</span><span style="flex:1;text-align:left;">{{ mi.label }}</span><span style="{{ mi.dotStyle }}"></span></button>
+    </sc-for>
+  </div>
+</sc-if>
+
+<div style="width:918px;background:#fff;border:1px solid #dde1e5;border-radius:14px;overflow:hidden;position:relative;color:#23262b;">
+
+  <div style="background:#15212e;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="display:inline-block;width:11px;height:11px;border-radius:3px;background:#bf8a1e;flex:none;"></span>
+        <div>
+          <div style="font-family:'Source Serif 4',serif;font-weight:600;font-size:15.5px;">Optics Lab</div>
+          <div style="font-size:10.5px;font-weight:600;letter-spacing:0.02em;color:#e0c98a;">{{ variantNote }}</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;"><button sc-camel-on-click="{{ onToggleHide }}" title="{{ hideTitle }}" style="display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer;border:1px solid rgba(255,255,255,0.22);background:rgba(255,255,255,0.09);color:#fff;white-space:nowrap;">{{ hideLabel }}</button><div style="position:relative;display:flex;align-items:center;"><button sc-camel-on-click="{{ onToggleMenu }}" title="Menu" style="{{ menuBtnStyle }}">☰</button><sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+        <div sc-camel-on-click="{{ onCloseMenu }}" style="position:fixed;inset:0;z-index:39;"></div>
+        <div style="position:absolute;top:38px;right:0;z-index:40;background:#1b2836;border:1px solid rgba(255,255,255,0.14);border-radius:11px;padding:6px;min-width:196px;box-shadow:0 14px 34px rgba(0,0,0,0.45);display:flex;flex-direction:column;gap:2px;">
+          <sc-for list="{{ menuItems }}" as="mi" hint-placeholder-count="5">
+            <button sc-camel-on-click="{{ mi.onClick }}" style="{{ mi.rowStyle }}"><span style="width:18px;text-align:center;flex:none;">{{ mi.icon }}</span><span style="flex:1;text-align:left;">{{ mi.label }}</span><span style="{{ mi.dotStyle }}"></span></button>
+          </sc-for>
+        </div>
+      </sc-if></div></div>
+    </div>
+
+  <div style="display:flex;gap:0;align-items:stretch;flex-wrap:wrap;">
+
+    <div style="padding:13px 14px;flex:0 1 588px;min-width:min(330px,100%);">
+      <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:10px;">
+        <div style="position:relative;">
+          <button sc-camel-on-click="{{ onToggleAdd }}" style="{{ addBtnStyle }}">+ Add Element <span style="font-size:9px;">▾</span></button>
+          <sc-if value="{{ addOpen }}" hint-placeholder-val="{{ false }}">
+            <div sc-camel-on-click="{{ onCloseAdd }}" style="position:fixed;inset:0;z-index:39;"></div>
+            <div style="position:absolute;top:32px;left:0;z-index:40;background:#fff;border:1px solid #d3d8dd;border-radius:10px;padding:6px 8px 8px;box-shadow:0 10px 28px rgba(0,0,0,0.18);display:grid;grid-template-columns:auto auto;column-gap:10px;row-gap:1px;white-space:nowrap;">
+              <sc-for list="{{ addItems }}" as="it" hint-placeholder-count="19">
+                <sc-if value="{{ it.header }}" hint-placeholder-val="{{ false }}">
+                  <div style="{{ it.rowStyle }}">{{ it.label }}</div>
+                </sc-if>
+                <sc-if value="{{ it.isBtn }}" hint-placeholder-val="{{ true }}">
+                  <button sc-camel-on-click="{{ it.onClick }}" title="{{ it.title }}" style="{{ it.rowStyle }}"><span style="{{ it.iconStyle }}">{{ it.iconText }}</span><span>{{ it.label }}</span></button>
+                </sc-if>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+        <div style="position:relative;">
+          <button sc-camel-on-click="{{ onTogglePresets }}" style="{{ presetBtnStyle }}">Presets <span style="font-size:9px;">▾</span></button>
+          <sc-if value="{{ presetsOpen }}" hint-placeholder-val="{{ false }}">
+            <div sc-camel-on-click="{{ onClosePresets }}" style="position:fixed;inset:0;z-index:39;"></div>
+            <div style="position:absolute;top:32px;left:0;z-index:40;background:#fff;border:1px solid #d3d8dd;border-radius:10px;padding:6px;min-width:190px;box-shadow:0 10px 28px rgba(0,0,0,0.18);display:flex;flex-direction:column;gap:1px;white-space:nowrap;">
+              <sc-for list="{{ presetItems }}" as="pr" hint-placeholder-count="14">
+                <button sc-camel-on-click="{{ pr.onClick }}" title="{{ pr.title }}" style="{{ pr.rowStyle }}">{{ pr.label }}</button>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+        <div style="position:relative;">
+          <button sc-camel-on-click="{{ onToggleView }}" style="{{ viewBtnStyle }}">View <span style="font-size:9px;">▾</span></button>
+          <sc-if value="{{ viewOpen }}" hint-placeholder-val="{{ false }}">
+            <div sc-camel-on-click="{{ onCloseView }}" style="position:fixed;inset:0;z-index:39;"></div>
+            <div style="position:absolute;top:32px;left:0;z-index:40;background:#fff;border:1px solid #d3d8dd;border-radius:10px;padding:6px;min-width:180px;box-shadow:0 10px 28px rgba(0,0,0,0.18);display:flex;flex-direction:column;gap:1px;white-space:nowrap;">
+              <sc-for list="{{ viewItems }}" as="vi" hint-placeholder-count="5">
+                <button sc-camel-on-click="{{ vi.onClick }}" title="{{ vi.title }}" style="{{ vi.rowStyle }}"><span style="width:13px;flex:none;text-align:center;color:#a8760f;font-weight:700;">{{ vi.mark }}</span><span>{{ vi.label }}</span></button>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+        <button sc-camel-on-click="{{ onNew }}" title="Clear the bench and start again" style="font-size:11px;font-weight:600;padding:6px 10px;border-radius:8px;cursor:pointer;border:1px solid #d3d8dd;background:#fff;color:#525a63;">New</button>
+        <label title="{{ realTitle }}" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:#525a63;cursor:pointer;margin-left:4px;"><input type="checkbox" checked="{{ realOn }}" sc-camel-on-change="{{ onToggleReal }}" style="width:14px;height:14px;margin:0;accent-color:#bf8a1e;cursor:pointer;"><span>Real</span></label>
+        <label title="{{ chromaTitle }}" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:#525a63;cursor:pointer;"><input type="checkbox" checked="{{ chromaOn }}" sc-camel-on-change="{{ onToggleChroma }}" style="width:14px;height:14px;margin:0;accent-color:#bf8a1e;cursor:pointer;"><span>Chromatic</span></label>
+        <span style="flex:1;"></span>
+        <span style="display:inline-flex;gap:7px;flex:none;">
+          <button sc-camel-on-click="{{ onUndo }}" title="Undo (Ctrl/⌘ + Z)" style="{{ undoStyle }}">↶</button>
+          <button sc-camel-on-click="{{ onRedo }}" title="Redo (Shift + Ctrl/⌘ + Z)" style="{{ redoStyle }}">↷</button>
+        </span>
+      </div>
+
+      <div style="position:relative;user-select:none;-webkit-user-select:none;">
+        <canvas ref="{{ setCanvas }}" width="560" height="400" style="display:block;width:100%;height:auto;aspect-ratio:560/400;border-radius:10px;cursor:default;touch-action:none;"></canvas>
+        <div style="{{ zoomBoxStyle }}">
+          <sc-for list="{{ toolBtns }}" as="tb" hint-placeholder-count="2">
+            <button sc-camel-on-click="{{ tb.onClick }}" title="{{ tb.title }}" style="{{ tb.style }}">{{ tb.label }}</button>
+          </sc-for>
+          <span style="width:1px;height:18px;background:rgba(255,255,255,0.16);margin:0 2px;"></span>
+          <sc-for list="{{ zoomBtns }}" as="z" hint-placeholder-count="3">
+            <button sc-camel-on-click="{{ z.onClick }}" title="{{ z.title }}" style="{{ z.style }}">{{ z.label }}</button>
+          </sc-for>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#b7c2cd;min-width:32px;text-align:center;">{{ zoomPct }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="flex:1;border-left:1px solid #e8ebee;padding:15px 16px;display:flex;flex-direction:column;min-width:294px;">
+      <div style="font-size:10.5px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#9aa2ab;margin-bottom:8px;">Selected</div>
+      <sc-if value="{{ hasSel }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#f6f8fa;border:1px solid #e4e8ec;border-radius:10px;padding:11px 12px;margin-bottom:14px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;">
+            <div style="display:flex;align-items:baseline;gap:7px;min-width:0;"><span style="font-size:13px;font-weight:700;color:#3a414a;">{{ selKind }}</span><span style="font-size:11px;color:#9aa2ab;white-space:nowrap;">{{ selLabel }}</span></div>
+            <div style="display:flex;align-items:center;gap:4px;">
+              <button sc-camel-on-click="{{ onRotL }}" title="Turn 15° counter-clockwise (R)" style="font-size:13px;font-weight:600;color:#525a63;background:#eef1f4;border:1px solid #d7dbe0;border-radius:7px;padding:5px 9px;cursor:pointer;">↺</button>
+              <button sc-camel-on-click="{{ onRotR }}" title="Turn 15° clockwise (Shift + R)" style="font-size:13px;font-weight:600;color:#525a63;background:#eef1f4;border:1px solid #d7dbe0;border-radius:7px;padding:5px 9px;cursor:pointer;">↻</button>
+              <button sc-camel-on-click="{{ onDup }}" title="Make a copy (D)" style="font-size:11px;font-weight:600;color:#525a63;background:#eef1f4;border:1px solid #d7dbe0;border-radius:7px;padding:6px 9px;cursor:pointer;">Copy</button>
+              <button sc-camel-on-click="{{ onDelete }}" title="Remove it (Delete)" style="font-size:11px;font-weight:600;color:#a8323f;background:#fbe9eb;border:1px solid #f0c8ce;border-radius:7px;padding:6px 9px;cursor:pointer;">Delete</button>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px 10px;margin-top:10px;">
+            <sc-for list="{{ selFields }}" as="f" hint-placeholder-count="5">
+              <label style="display:block;min-width:0;">
+                <span style="display:block;font-size:10.5px;font-weight:600;color:#6b737c;margin-bottom:3px;white-space:nowrap;">{{ f.label }}</span>
+                <span style="display:flex;align-items:center;gap:4px;">
+                  <input type="number" min="{{ f.min }}" max="{{ f.max }}" step="{{ f.step }}" value="{{ f.value }}" sc-camel-on-change="{{ f.onChange }}" sc-camel-on-blur="{{ f.onBlur }}" style="flex:1;min-width:0;width:100%;height:27px;box-sizing:border-box;border:1px solid #d7dbe0;border-radius:7px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:600;color:#8a6310;background:#fff;outline:none;">
+                  <span style="font-size:11px;color:#b89a5a;font-family:'JetBrains Mono',monospace;flex:none;min-width:17px;">{{ f.unit }}</span>
+                </span>
+              </label>
+            </sc-for>
+          </div>
+          <sc-if value="{{ hasChips }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-top:9px;">
+              <sc-for list="{{ selChips }}" as="c" hint-placeholder-count="4">
+                <sc-if value="{{ c.isHead }}" hint-placeholder-val="{{ false }}"><div style="{{ c.style }}">{{ c.label }}</div></sc-if>
+                <sc-if value="{{ c.isChip }}" hint-placeholder-val="{{ true }}"><button sc-camel-on-click="{{ c.onClick }}" title="{{ c.title }}" style="{{ c.style }}">{{ c.label }}</button></sc-if>
+              </sc-for>
+            </div>
+          </sc-if>
+          <div style="font-size:11.5px;line-height:1.45;color:#8a929b;margin-top:9px;">{{ selNote }}</div>
+          <sc-if value="{{ hasLog }}" hint-placeholder-val="{{ false }}">
+            <div style="border-top:1px solid #e4e8ec;margin-top:9px;padding-top:8px;">
+              <div style="font-size:9px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:#9aa2ab;margin-bottom:5px;">{{ selLogHead }}</div>
+              <sc-for list="{{ selLog }}" as="lg" hint-placeholder-count="3">
+                <div style="margin-bottom:5px;">
+                  <div style="font-size:11.5px;color:#525a63;"><span style="font-weight:700;color:#3a414a;">{{ lg.where }}</span> <span>{{ lg.note }}</span></div>
+                  <sc-if value="{{ lg.hasTex }}" hint-placeholder-val="{{ true }}"><x-formula style="font-family:'Source Serif 4',serif;font-size:12px;line-height:1.3;color:#8a6310;display:block;" data-tex="{{ lg.tex }}"></x-formula></sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+      <sc-if value="{{ noSel }}" hint-placeholder-val="{{ true }}">
+        <div style="background:#f6f8fa;border:1px dashed #dfe4e9;border-radius:10px;padding:11px 12px;margin-bottom:14px;font-size:11.5px;line-height:1.5;color:#8a929b;">{{ noSelText }}</div>
+      </sc-if>
+
+      <div style="font-size:10.5px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#9aa2ab;margin-bottom:8px;">Images</div>
+      <sc-if value="{{ hasImages }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <sc-for list="{{ imageList }}" as="im" hint-placeholder-count="1">
+            <div style="display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border-radius:9px;border:1px solid #eceef0;background:#fff;">
+              <span style="{{ im.dotStyle }}"></span>
+              <div style="min-width:0;flex:1;">
+                <div style="display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;"><span style="font-size:12.5px;font-weight:700;color:#3a414a;">{{ im.label }}</span><span style="font-size:11px;font-weight:600;color:#a8760f;">{{ im.kind }}</span><span style="font-size:11px;color:#9aa2ab;">{{ im.where }}</span></div>
+                <sc-if value="{{ im.hasTex }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-wrap:wrap;column-gap:13px;row-gap:1px;margin-top:3px;"><x-formula style="font-family:'Source Serif 4',serif;font-size:12px;line-height:1.35;color:#525a63;white-space:nowrap;" data-tex="{{ im.texS }}"></x-formula><x-formula style="font-family:'Source Serif 4',serif;font-size:12px;line-height:1.35;color:#525a63;white-space:nowrap;" data-tex="{{ im.texSp }}"></x-formula><sc-if value="{{ im.hasM }}" hint-placeholder-val="{{ true }}"><x-formula style="font-family:'Source Serif 4',serif;font-size:12px;line-height:1.35;color:#525a63;white-space:nowrap;" data-tex="{{ im.texM }}"></x-formula></sc-if></div></sc-if>
+              </div>
+            </div>
+          </sc-for>
+          <div style="font-size:11px;color:#9aa2ab;">{{ imagesMore }}</div>
+        </div>
+      </sc-if>
+      <div style="font-size:11.5px;line-height:1.5;color:#8a929b;">{{ noImagesText }}</div>
+
+      <div style="flex:1;min-height:6px;"></div>
+      <div style="height:1px;background:#eceef0;margin:10px 0 10px;"></div>
+      <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;">
+        <div style="font-size:10.5px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#9aa2ab;">Bench summary</div>
+        <div style="font-size:11px;font-family:'JetBrains Mono',monospace;color:#9aa2ab;">{{ statusText }}</div>
+      </div>
+      <div style="font-size:12px;line-height:1.55;color:#525a63;margin-top:7px;min-height:38px;">{{ summaryText }}</div>
+    </div>
+  </div>
+
+  <sc-if value="{{ showShare }}" hint-placeholder-val="{{ false }}">
+    <div sc-camel-on-click="{{ onCloseShare }}" style="position:absolute;inset:0;background:rgba(15,23,34,0.82);backdrop-filter:blur(3px);z-index:32;display:flex;align-items:center;justify-content:center;padding:24px;cursor:pointer;">
+      <div sc-camel-on-click="{{ stop }}" style="max-width:448px;width:100%;color:#eef2f6;font-family:'Source Sans 3',sans-serif;background:rgba(17,26,38,0.94);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:20px 22px;cursor:default;">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;">
+          <div style="font-family:'Source Serif 4',serif;font-weight:600;font-size:17px;color:#fff;">Share this bench</div>
+          <button sc-camel-on-click="{{ onCloseShare }}" title="Close" style="width:26px;height:26px;flex:none;border-radius:7px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.06);color:#dce6f2;font-size:16px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;">×</button>
+        </div>
+        <div style="font-size:12px;line-height:1.55;color:#b7c2cd;margin-bottom:14px;">This link opens the bench exactly as it is now: every element, where it sits, and what the View menu shows.</div>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:13px;">
+          <input readonly="" value="{{ shareUrl }}" sc-camel-on-focus="{{ selectAll }}" style="flex:1;min-width:0;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#cfe0f2;background:rgba(0,0,0,0.28);border:1px solid rgba(255,255,255,0.14);border-radius:8px;padding:9px 11px;outline:none;">
+          <button sc-camel-on-click="{{ onCopyShare }}" style="{{ copyBtnStyle }}">{{ copyLabel }}</button>
+        </div>
+        <label style="display:flex;align-items:center;gap:9px;cursor:pointer;font-size:12.5px;color:#d7e0e8;">
+          <input type="checkbox" checked="{{ shareHide }}" sc-camel-on-change="{{ onToggleShareHide }}" style="width:15px;height:15px;accent-color:#bf8a1e;cursor:pointer;">
+          <span>Open with the rays hidden, so students predict first</span>
+        </label>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showInfo }}" hint-placeholder-val="{{ false }}">
+    <div sc-camel-on-click="{{ onCloseInfo }}" style="position:absolute;inset:0;background:rgba(15,23,34,0.82);backdrop-filter:blur(3px);z-index:30;display:flex;align-items:center;justify-content:center;padding:24px;cursor:pointer;">
+      <div style="max-width:860px;width:100%;color:#eef2f6;font-family:'Source Sans 3',sans-serif;background:rgba(17,26,38,0.72);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:22px 26px;max-height:100%;overflow:auto;box-sizing:border-box;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.28) transparent;">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px;">
+          <div style="font-family:'Source Serif 4',serif;font-weight:600;font-size:20px;color:#fff;">Optics Lab: build a ray diagram</div>
+          <button sc-camel-on-click="{{ onCloseInfo }}" title="Close" style="width:26px;height:26px;flex:none;border-radius:7px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.06);color:#dce6f2;font-size:16px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;">×</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:0 24px;">
+          <div style="padding-right:22px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#ffd66b;margin:0 0 9px;">What this shows</div>
+            <ul style="margin:0;padding-left:16px;font-size:12.5px;line-height:1.55;color:#d7e0e8;">
+              <li style="margin-bottom:6px;">Light leaves a source in straight rays. Each thing a ray meets applies one rule: a mirror reflects it, a glass surface refracts it by Snell’s law, an ideal thin lens bends it toward or away from its axis.</li>
+              <li style="margin-bottom:6px;">A <b>laser</b> is one ray of one colour. A <b>white</b> source sends eleven colours along the same line. Glass has a slightly larger index for violet than for red, so a prism spreads white light into a spectrum.</li>
+              <li style="margin-bottom:6px;">A <b>point source</b> stands for one point of an object. Where its rays cross again is a <b>real image</b> (filled dot); where they only seem to come from is a <b>virtual image</b> (hollow dot, dashed lines). The side panel gives <i>s</i>, <i>s′</i> and <i>m</i> for each lens or mirror. An <b>object</b> (an arrow, a tree or a dog) sends rays from its tip, and its whole image is drawn, so you can see whether it is upright or inverted, larger or smaller.</li>
+              <li style="margin-bottom:6px;">Lenses and mirrors start <b>ideal</b>: every ray obeys the thin-lens or mirror equation, however far from the axis. Tick <b>Real</b> to make them true spherical surfaces (a lens becomes a piece of glass refracting at both faces): rays far from the axis miss the focus (<b>spherical aberration</b>), and a strong real lens cannot be very tall. Tick <b>Chromatic</b> to let a lens’s glass disperse, so each colour has its own focal length (<b>chromatic aberration</b>). A mirror has none; prisms and blocks always disperse.</li>
+              <li>Not modelled: diffraction, interference, polarization, and absorption in the glass. The bench is a flat slice through the apparatus.</li>
+            </ul>
+          </div>
+          <div style="padding:0 22px;border-left:1px solid rgba(255,255,255,0.12);">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#ffd66b;margin:0 0 9px;">How to use</div>
+            <ul style="margin:0;padding-left:16px;font-size:12.5px;line-height:1.55;color:#d7e0e8;">
+              <li style="margin-bottom:6px;"><b>+ Add Element</b> puts a source, lens, mirror, piece of glass or screen on the bench. <b>Presets</b> loads a finished set-up to start from.</li>
+              <li style="margin-bottom:6px;"><b>Drag</b> an element to move it (it snaps to 1 cm; hold Shift for 0.1 cm). Drag its <b>gold handle</b> to turn it (5° steps; Shift for 1°).</li>
+              <li style="margin-bottom:6px;"><b>Click</b> an element to type exact values: position, angle, focal length, index of refraction, wavelength.</li>
+              <li style="margin-bottom:6px;">Keys for the selected element: arrows nudge, <b>R</b> turns, <b>D</b> copies, <b>Delete</b> removes. <b>Ctrl/⌘ + Z</b> undoes, <b>Esc</b> deselects.</li>
+              <li style="margin-bottom:6px;"><b>📏 Tape</b> (bottom of the bench) puts out a tape measure: drag its ends to pull it out (0.5 cm steps; Shift for 0.1 cm). <b>∠ Angle</b> measures the angle between two lines: click two rays or flat surfaces (a mirror, a lens, a glass face, the tape). The angle is the one on the side you clicked; the other side is given too.</li>
+              <li style="margin-bottom:6px;">Drag the empty bench to pan; scroll or pinch to zoom; <b>⤡</b> brings everything back into view.</li>
+              <li style="margin-bottom:6px;"><b>Real</b> and <b>Chromatic</b> (beside New) switch every lens and mirror between ideal and real. <b>View</b> turns on extended rays, the angles at each surface (for a single ray), and the faint partial reflections.</li>
+              <li><b>Hide rays</b> stops every ray at the first thing it meets, so you can predict before you look. <b>Share link</b> saves the whole bench in a URL.</li>
+            </ul>
+          </div>
+          <div style="grid-column:1/-1;border-top:1px solid rgba(255,255,255,0.12);margin-top:14px;padding-top:15px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#ffd66b;margin:0 0 12px;">Relevant relationships</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px 26px;">
+              <sc-for list="{{ infoFormulas }}" as="fm" hint-placeholder-count="6">
+                <div style="margin-bottom:10px;">
+                  <x-formula style="font-family:'Source Serif 4',serif;font-style:italic;font-size:15px;color:#fff;display:block;line-height:1.5;">{{ fm.expr }}</x-formula>
+                  <div style="font-size:11.5px;color:#b7c2cd;margin-top:3px;">{{ fm.desc }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="grid-column:1/-1;border-top:1px solid rgba(255,255,255,0.12);margin-top:2px;padding-top:15px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#ffd66b;margin:0 0 12px;">Learn more</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:12px 26px;">
+              <div>
+                <div style="font-size:11px;color:#9fb0bf;margin:0 0 5px;">OpenStax <em>University&nbsp;Physics</em> — calculus</div>
+                <ul style="margin:0;padding-left:15px;color:#d7e0e8;font-size:12px;line-height:1.55;">
+                  <li><a href="https://openstax.org/books/university-physics-volume-3/pages/1-2-the-law-of-reflection" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">Vol 3 · 1.2 The Law of Reflection</a></li>
+                  <li><a href="https://openstax.org/books/university-physics-volume-3/pages/1-3-refraction" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">Vol 3 · 1.3 Refraction</a></li>
+                  <li><a href="https://openstax.org/books/university-physics-volume-3/pages/1-4-total-internal-reflection" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">Vol 3 · 1.4 Total Internal Reflection</a></li>
+                  <li><a href="https://openstax.org/books/university-physics-volume-3/pages/1-5-dispersion" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">Vol 3 · 1.5 Dispersion</a></li>
+                  <li><a href="https://openstax.org/books/university-physics-volume-3/pages/2-1-images-formed-by-plane-mirrors" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">Vol 3 · 2.1 Images Formed by Plane Mirrors</a></li>
+                  <li><a href="https://openstax.org/books/university-physics-volume-3/pages/2-2-spherical-mirrors" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">Vol 3 · 2.2 Spherical Mirrors</a></li>
+                  <li><a href="https://openstax.org/books/university-physics-volume-3/pages/2-4-thin-lenses" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">Vol 3 · 2.4 Thin Lenses</a></li>
+                </ul>
+              </div>
+              <div>
+                <div style="font-size:11px;color:#9fb0bf;margin:0 0 5px;">OpenStax <em>College&nbsp;Physics</em> — algebra</div>
+                <ul style="margin:0;padding-left:15px;color:#d7e0e8;font-size:12px;line-height:1.55;">
+                  <li><a href="https://openstax.org/books/college-physics-2e/pages/25-2-the-law-of-reflection" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">25.2 The Law of Reflection</a></li>
+                  <li><a href="https://openstax.org/books/college-physics-2e/pages/25-3-the-law-of-refraction" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">25.3 The Law of Refraction</a></li>
+                  <li><a href="https://openstax.org/books/college-physics-2e/pages/25-4-total-internal-reflection" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">25.4 Total Internal Reflection</a></li>
+                  <li><a href="https://openstax.org/books/college-physics-2e/pages/25-5-dispersion-the-rainbow-and-prisms" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">25.5 Dispersion: The Rainbow and Prisms</a></li>
+                  <li><a href="https://openstax.org/books/college-physics-2e/pages/25-6-image-formation-by-lenses" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">25.6 Image Formation by Lenses</a></li>
+                  <li><a href="https://openstax.org/books/college-physics-2e/pages/25-7-image-formation-by-mirrors" target="_blank" rel="noopener" style="color:#8fc7ff;text-decoration:none;">25.7 Image Formation by Mirrors</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showBug }}" hint-placeholder-val="{{ false }}">
+    <div sc-camel-on-click="{{ onCloseBug }}" style="position:absolute;inset:0;background:rgba(15,23,34,0.82);backdrop-filter:blur(3px);z-index:60;display:flex;align-items:center;justify-content:center;padding:24px;cursor:pointer;">
+      <div sc-camel-on-click="{{ stopBug }}" style="max-width:460px;width:100%;color:#eef2f6;font-family:'Source Sans 3',sans-serif;background:rgba(17,26,38,0.96);border:1px solid rgba(255,255,255,0.14);border-radius:14px;padding:20px 22px;cursor:default;">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;">
+          <div style="font-family:'Source Serif 4',serif;font-weight:600;font-size:17px;color:#fff;">Report a problem</div>
+          <button sc-camel-on-click="{{ onCloseBug }}" title="Close" style="width:26px;height:26px;flex:none;border-radius:7px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.06);color:#dce6f2;font-size:16px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;">×</button>
+        </div>
+        <div style="font-size:12px;line-height:1.55;color:#b7c2cd;margin-bottom:12px;">Say what looks wrong or confusing. The current bench and your browser are attached automatically.</div>
+        <textarea sc-camel-on-input="{{ onBugText }}" rows="4" placeholder="What happened? What did you expect?" style="width:100%;box-sizing:border-box;font-family:'Source Sans 3',sans-serif;font-size:13px;line-height:1.5;color:#eef2f6;background:rgba(0,0,0,0.28);border:1px solid rgba(255,255,255,0.14);border-radius:8px;padding:9px 11px;outline:none;resize:vertical;margin-bottom:9px;"></textarea>
+        <input sc-camel-on-input="{{ onBugEmail }}" placeholder="Email (optional, for a reply)" style="width:100%;box-sizing:border-box;font-family:'Source Sans 3',sans-serif;font-size:12.5px;color:#cfe0f2;background:rgba(0,0,0,0.28);border:1px solid rgba(255,255,255,0.14);border-radius:8px;padding:8px 11px;outline:none;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <button sc-camel-on-click="{{ onSubmitBug }}" style="{{ bugBtnStyle }}">{{ bugBtnLabel }}</button>
+          <div style="font-size:12px;line-height:1.4;color:{{ bugMsgColor }};">{{ bugMsg }}</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</div>
