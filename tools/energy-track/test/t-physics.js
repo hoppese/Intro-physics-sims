@@ -174,4 +174,17 @@ for (const k of Object.keys(PRESETS)) { const s = new Sim(); s.choose(k); const 
   // a ball in the loop from too low: leaves near the top
   const b = new Sim(); b.choose('loop'); b.setRider('ball'); for (let i = 0; i < 4; i++) b.nextEvent(); ok(b.events.some((e) => e.kind === 'leave' && e.d.Ny < -0.5), 'history: a ball from 2.5 r leaves the loop near its top'); }
 
+// ---- landings that keep their energy (unphysical, to compare) ----
+{ const mk = (soft, rider) => { const s = new Sim(); s.choose('valley'); const pts = PRESETS.valley.pts.map((p) => ({ ...p })); pts[3] = { x: 16, y: 4 }; s.setPoints(pts); s.setHeight(8.3); if (rider) s.setRider(rider); s.setSoftLanding(soft); return s; };
+  const a = mk(false), b = mk(true); ok(!a.softLanding && new Sim().softLanding === false, 'landings lose energy by default');
+  for (const s of [a, b]) for (let i = 0; i < 12 && s.nextEvent(); i++);
+  const la = a.events.find((e) => e.kind === 'land'), lb = b.events.find((e) => e.kind === 'land');
+  ok(la && la.d.jolt > 1000 && la.r.th > 1000, 'real landing: the jolt goes to E_th'); ok(lb && lb.d.jolt === 0 && lb.r.th === 0 && b.ride.rec.every((r) => r.th === 0), 'keep-energy landing: nothing goes to E_th, ever');
+  near(lb.d.after, lb.d.v, 1e-9, 'keep-energy landing: the whole speed is turned along the track');
+  const tb = b.events.filter((e) => e.kind === 'turn'); ok(tb.length && tb.every((e) => Math.abs(e.r.y - 8.3) < 0.05), 'keep-energy landings: every turning point is back at the start height');
+  ok(/not physical/.test(b.describe(b.events.indexOf(lb)).why) && /unphysical/.test(b.describe(b.events.indexOf(lb)).title), 'keep-energy landing: the card says it is unphysical');
+  const c = mk(true, 'ball'); for (let i = 0; i < 12 && c.nextEvent(); i++); ok(c.ride.rec.every((r) => r.th === 0), 'keep-energy landing, rolling ball: nothing lost either');
+  const P = new Panel({ sim: b, state: {}, run: (f) => f }), L = P.landing(); ok(/unphysical/.test(L.landNote) && /c23b3b/.test(L.landNoteStyle), 'keep-energy landings: a red warning');
+  const u = Link.url(b), d = new Sim(); Link.apply(d, u.slice(u.indexOf('?'))); ok(d.softLanding && /landing=keep/.test(u), 'share link carries keep-energy landings'); ok(!/landing=/.test(Link.url(a)), 'share link: default landings not written'); }
+
 done('physics');

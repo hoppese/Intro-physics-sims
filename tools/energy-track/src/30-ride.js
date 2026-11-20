@@ -31,7 +31,7 @@ class Ride {
   static MAXREC = 120;             // s of recording kept
   static GRACE = 0.04;             // s: just after leaving the track, it cannot land on it again
   static RDRAW = 0.45;              // m: the ball's radius as drawn (its turn is the distance rolled over this)
-  constructor(track, o) { this.track = track; this.m = o.m; this.beta = o.beta || 0; this.mu = this.beta > 0 ? 0 : o.mu || 0; this.locked = !!o.locked; this.v0 = o.v0 || 0; this.s0 = o.s0 || 0; this.reset(); }
+  constructor(track, o) { this.track = track; this.m = o.m; this.beta = o.beta || 0; this.mu = this.beta > 0 ? 0 : o.mu || 0; this.locked = !!o.locked; this.soft = !!o.soft; this.v0 = o.v0 || 0; this.s0 = o.s0 || 0; this.reset(); }
   reset() { const u = this.track.uAt(this.s0), g = this.track.geo(u); this.seen = {}; this.st = { mode: 'track', u, ud: this.v0 / g.sp, th: 0, tair: 0, ang: 0 }; this.t = 0; this.done = null; this.event = null; this.rec = []; this.nextRec = 0; this.events = []; this.pending = []; this.stash = null; this.trend = 0;
     if (this.v0 === 0 && this.mu > 0) this.stuck(); this.record(); this.events.push({ t: 0, kind: 'start', d: { v: Math.abs(this.v0), y: g.p.y }, r: this.rec[0] }); }
   // an event in this step: written down (with its own recording) once the clock has moved on to the step's end
@@ -85,12 +85,12 @@ class Ride {
   stepAir(h) { const s = this.st, p0 = s.p, v0 = s.v, p1 = { x: p0.x + v0.x * h, y: p0.y + v0.y * h - G * h * h / 2 }, v1 = { x: v0.x, y: v0.y - G * h }, W = Track.WORLD; s.tair += h;
     if (v0.y > 0 && v1.y <= 0 && p1.y > 0) this.note('apex', { vx: Math.abs(v0.x), y: p0.y + v0.y * v0.y / (2 * G) });
     // the ground
-    if (p1.y <= 0) { const a = -G / 2, b = v0.y, c = p0.y, dt = c <= 0 ? 0 : (-b - Math.sqrt(Math.max(0, b * b - 4 * a * c))) / (2 * a), vy = v0.y - G * dt, x = p0.x + v0.x * dt, R = this.reroll(v0.x, s.w), loss = this.m * vy * vy / 2 + R.loss;
-      this.st = { mode: 'ground', x, vx: R.v, th: s.th + loss, tair: 0, ang: s.ang || 0 }; this.note('ground', { v: Math.hypot(v0.x, vy), vt: Math.abs(v0.x), vn: Math.abs(vy), jolt: this.m * vy * vy / 2, roll: R.loss, after: Math.abs(R.v), y: 0 }); if (loss > 0.5) this.event = 'It hits the ground: the jolt takes ' + Fmt.J(loss) + ' (counted with the thermal energy). It rolls on along the ground.'; return; }
+    if (p1.y <= 0) { const a = -G / 2, b = v0.y, c = p0.y, dt = c <= 0 ? 0 : (-b - Math.sqrt(Math.max(0, b * b - 4 * a * c))) / (2 * a), vy = v0.y - G * dt, x = p0.x + v0.x * dt, R = this.touch(v0.x, vy, s.w), loss = R.jolt + R.roll;
+      this.st = { mode: 'ground', x, vx: R.v, th: s.th + loss, tair: 0, ang: s.ang || 0 }; this.note('ground', { v: Math.hypot(v0.x, vy), vt: Math.abs(v0.x), vn: Math.abs(vy), jolt: R.jolt, roll: R.roll, after: Math.abs(R.v), y: 0, soft: this.soft }); if (loss > 0.5) this.event = 'It hits the ground: the jolt takes ' + Fmt.J(loss) + ' (counted with the thermal energy). It rolls on along the ground.'; return; }
     // the track: a crossing of any piece of it, from the riding side
     if (s.tair > Ride.GRACE) { const hit = this.cross(p0, p1); if (hit) { const q = this.track.geo(hit.u), vh = { x: v0.x, y: v0.y - G * hit.t * h }, vt = vh.x * q.T.x + vh.y * q.T.y, vn = vh.x * q.N.x + vh.y * q.N.y;
-      if (hit.front) { const R = this.reroll(vt, s.w), loss = this.m * vn * vn / 2 + R.loss, vr = R.v; this.st = { mode: 'track', u: hit.u, ud: vr / q.sp, th: s.th + loss, tair: 0, ang: s.ang || 0 }; this.event = loss > 0.5 ? 'It lands back on the track: the jolt takes ' + Fmt.J(loss) + ' (counted with the thermal energy).' : this.event; this.trend = 0;
-        this.note('land', { v: Math.hypot(vh.x, vh.y), vt: Math.abs(vt), vn: Math.abs(vn), jolt: this.m * vn * vn / 2, roll: R.loss, after: Math.abs(vr), y: q.p.y, slope: Math.atan2(Math.abs(q.T.y), Math.abs(q.T.x)) * 180 / Math.PI, again: !this.locked && this.forces(hit.u, vr / q.sp).n < 0 });
+      if (hit.front) { const R = this.touch(vt, vn, s.w), loss = R.jolt + R.roll, vr = R.v; this.st = { mode: 'track', u: hit.u, ud: vr / q.sp, th: s.th + loss, tair: 0, ang: s.ang || 0 }; this.event = loss > 0.5 ? 'It lands back on the track: the jolt takes ' + Fmt.J(loss) + ' (counted with the thermal energy).' : this.event; this.trend = 0;
+        this.note('land', { v: Math.hypot(vh.x, vh.y), vt: Math.abs(vt), vn: Math.abs(vn), jolt: R.jolt, roll: R.roll, soft: this.soft, after: Math.abs(vr), y: q.p.y, slope: Math.atan2(Math.abs(q.T.y), Math.abs(q.T.x)) * 180 / Math.PI, again: !this.locked && this.forces(hit.u, vr / q.sp).n < 0 });
         if (!this.locked && this.forces(hit.u, vr / q.sp).n < 0) this.st = { mode: 'air', p: q.p, v: { x: q.T.x * vr, y: q.T.y * vr }, th: s.th + loss, tair: 0, nrm: q.N, w: -vr, ang: s.ang || 0 }; return; }
       this.done = 'It struck the underside of the track.'; s.p = { x: hit.x, y: hit.y }; return; } }
     s.p = p1; s.v = v1; if (p1.x < W.x0 - 1 || p1.x > W.x1 + 1) this.done = 'It flew off the side of the picture.'; }
@@ -114,6 +114,12 @@ class Ride {
   // touching down with tangential speed vt and spin W: friction at the contact brings it to rolling, keeping the angular momentum
   // about the contact point, so v' = (vt - beta W)/(1 + beta); the kinetic energy that takes is returned as loss. Sliding (beta 0): v' = vt, no loss.
   reroll(vt, W) { const b = this.beta; if (!(b > 0)) return { v: vt, loss: 0 }; W = W || 0; const v = (vt - b * W) / (1 + b), m = this.m; return { v, loss: Math.max(0, m * vt * vt / 2 + b * m * W * W / 2 - (1 + b) * m * v * v / 2) }; }
+  // touching down with velocity vt along the surface and vn into it (and spin W). Normally the surface stops vn at once
+  // (the jolt, ½ m vn², to thermal energy) and a ball is brought back to rolling (reroll). With `soft` landings (an
+  // unphysical choice, to compare against) the whole speed is turned along the surface instead and nothing is lost.
+  touch(vt, vn, W) { if (this.soft) { const b = this.beta, K = this.m * (vt * vt + vn * vn) / 2 + b * this.m * (W || 0) * (W || 0) / 2, dir = vt < 0 ? -1 : 1;
+      return { v: dir * Math.sqrt(2 * K / ((1 + b) * this.m)), jolt: 0, roll: 0 }; }
+    const R = this.reroll(vt, W); return { v: R.v, jolt: this.m * vn * vn / 2, roll: R.loss }; }
   advance(dt) { if (this.done) return; const n = Math.max(1, Math.ceil(dt / Ride.H - 1e-9)), h = dt / n;
     for (let i = 0; i < n && !this.done; i++) { this.step(h); this.t += h; if (this.t >= this.nextRec - 1e-9) this.record(); if (this.pending.length) this.flush(); }
     if (this.done) { const E = this.events; if (!E.length || E[E.length - 1].kind !== 'done') { this.note('done', { text: this.done, y: this.now().p.y }); this.flush(); } else this.record(); } }

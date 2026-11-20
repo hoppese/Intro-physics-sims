@@ -18,7 +18,7 @@ class Panel {
   constructor(app) { this.app = app; }
   get sim() { return this.app.sim; }
   get ui() { return this.app.state; }
-  all() { return { ...this.header(), ...this.tracks(), ...this.settings(), ...this.energy(), ...this.results(), ...this.canvas(), ...this.history(), ...this.share(), ...this.info(), ...this.bugForm(), stop: (e) => e.stopPropagation() }; }
+  all() { return { ...this.header(), ...this.tracks(), ...this.settings(), ...this.energy(), ...this.results(), ...this.canvas(), ...this.history(), ...this.landing(), ...this.share(), ...this.info(), ...this.bugForm(), stop: (e) => e.stopPropagation() }; }
 
   header() { const app = this.app, st = this.ui, s = this.sim;
     const row = (a) => "display:flex;align-items:center;gap:8px;width:100%;font-family:'Source Sans 3',sans-serif;font-size:12.5px;font-weight:600;color:#dbe6ef;background:" + (a ? 'rgba(191,138,30,0.36)' : 'transparent') + ';border:none;border-radius:7px;padding:8px 9px;cursor:pointer;text-align:left;';
@@ -56,6 +56,13 @@ class Panel {
       frictionTitle: 'Static friction at the contact makes it turn, but the contact point is not sliding, so it does no work: K_tr + K_rot + U_g stays the same. (Kinetic friction is for something that slides: try the ice cube.)', onFriction: () => {} };
     return { fields, frictionLabel: s.friction ? '✓ Friction on' : 'Friction off', frictionStyle: UI.chip(s.friction), frictionNote: s.friction ? 'kinetic friction turns mechanical energy into thermal' : 'no energy lost',
       frictionTitle: s.friction ? 'Turn friction off: no energy is lost' : 'Turn kinetic friction on: it turns mechanical energy into thermal energy', onFriction: app.run(() => s.setFriction(!s.friction)) }; }
+
+  // landings: lose energy (the default, physical) or keep it (unphysical: the warning is red)
+  landing() { const app = this.app, s = this.sim, soft = s.softLanding;
+    return { landLabel: soft ? '⚠ Landings keep energy' : 'Landings lose energy', landStyle: UI.chip(false) + (soft ? 'border-color:#c23b3b;background:#fdecec;color:#b02a2a;' : ''),
+      landNote: soft ? 'unphysical: a real landing jolt always takes energy' : '½ m v⊥² goes to E_th', landNoteStyle: 'font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;' + (soft ? 'color:#c23b3b;font-weight:700;' : 'color:#9aa2ab;'),
+      landTitle: soft ? 'Now: on landing its whole speed is turned along the track and nothing is lost. Unphysical. Click for real landings, where the part of v into the track is stopped and ½ m v⊥² becomes thermal energy.' : 'Now: a landing stops the part of the velocity into the track, and ½ m v⊥² becomes thermal energy (it does not bounce). Click to compare with landings that lose nothing (unphysical).',
+      onLanding: app.run(() => s.setSoftLanding(!soft)) }; }
 
   // ---- now: the energies (U_g from the zero line) beside the height, speed and forces, in one grid ----
   energy() { const s = this.sim, n = s.ride.now(), e = s.energy(n), E0 = s.E0, hid = s.hidden, mg = n.m * G, roll = s.rolling, th = (s.friction && !roll) || e.th > 0.05, H = '•••', blank = { tex: '', col: '#23262b', val: '', what: '' };
@@ -146,7 +153,7 @@ class Panel {
 // (full names, so a cache-buster like ?v=3 is never read; every value clamped to its slider) ----
 const Link = {
   url(sim, hide) { const q = new URLSearchParams(), r2 = (x) => String(Math.round(x * 100) / 100); q.set('track', sim.key); q.set('rider', sim.rider); if (sim.loopMode) q.set('loop', sim.loopMode); if (sim.loopMode === 'circle') q.set('radius', String(sim.vals.r)); q.set('mass', String(sim.vals.m)); q.set('along', r2(sim.s0)); q.set('speed', String(sim.vals.v0));
-    q.set('zero', String(sim.vals.y0)); q.set('friction', sim.friction ? String(sim.vals.mu) : '0'); if (sim.custom) q.set('points', sim.track.pts.map((p) => r2(p.x) + ':' + r2(p.y)).join(','));
+    q.set('zero', String(sim.vals.y0)); q.set('friction', sim.friction ? String(sim.vals.mu) : '0'); if (sim.softLanding) q.set('landing', 'keep'); if (sim.custom) q.set('points', sim.track.pts.map((p) => r2(p.x) + ':' + r2(p.y)).join(','));
     if (sim.graph !== 'time') q.set('graph', sim.graph); if (hide) q.set('hide', '1'); if (!sim.show.nums) q.set('values', '0'); let base = ''; try { base = location.origin + location.pathname; } catch (e) {} return base + '?' + q.toString(); },
   apply(sim, search) { let q; try { q = new URLSearchParams(search == null ? location.search : search); } catch (e) { return false; } const has = (k) => q.get(k) != null && q.get(k) !== '';
     let any = false; if (has('track') && PRESETS[q.get('track')]) { sim.choose(q.get('track')); any = true; }
@@ -154,6 +161,7 @@ const Link = {
     if (has('loop') && !has('points')) sim.setLoopMode(q.get('loop')); if (has('radius')) sim.set('r', q.get('radius'));
     if (has('rider')) sim.setRider(q.get('rider')); if (has('mass')) sim.set('m', q.get('mass')); if (has('speed')) sim.set('v0', q.get('speed')); if (has('zero')) sim.set('y0', q.get('zero'));
     if (has('friction')) { const f = Number(q.get('friction')); if (f > 0) { sim.set('mu', f); sim.setFriction(true); } else sim.setFriction(false); }
+    if (q.get('landing') === 'keep') sim.setSoftLanding(true);
     if (has('along')) { const a = Number(q.get('along')); if (isFinite(a)) sim.setRelease(a); }
     if (has('graph')) sim.setGraph(q.get('graph')); if (q.get('hide') === '1') sim.hide(true); if (q.get('values') === '0') sim.show.nums = false; return any; },
 };

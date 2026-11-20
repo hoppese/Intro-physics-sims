@@ -18,7 +18,7 @@ class Sim {
   static TRAIL = 3;
   static GRAPHS = [['time', 'Energy vs time'], ['x', 'Energy vs position'], ['normal', 'Normal force'], ['off', 'Off']];
 
-  constructor() { this.vals = {}; for (const k of Object.keys(Sim.P)) this.vals[k] = Sim.P[k].init; this.friction = false; this.playing = false; this.speed = 1; this.hidden = false;
+  constructor() { this.vals = {}; for (const k of Object.keys(Sim.P)) this.vals[k] = Sim.P[k].init; this.friction = false; this.softLanding = false; this.playing = false; this.speed = 1; this.hidden = false;
     this.show = { forces: true, v: true, eline: true, height: false, trail: true, nums: true }; this.graph = 'time'; this.rev = 0; this.dirty = true; this.trail = []; this.choose('hill'); }
   bump() { this.rev++; this.dirty = true; }
 
@@ -26,7 +26,7 @@ class Sim {
   choose(k) { const P = PRESETS[k]; if (!P) return false; this.key = k; this.custom = false; this.vals.v0 = 0; this.rider = P.rider; this.loopMode = k === 'loop' ? 'circle' : null;
     this.track = this.loopMode === 'circle' ? new CircleLoop(this.vals.r) : new Track(P.pts); const s = this.track.atHeight(this.loopMode === 'circle' ? CircleLoop.START : P.start, 0); this.s0 = s == null ? 0 : s; this.rebuild(); return true; }
   get preset() { return PRESETS[this.key]; }
-  rebuild() { this.ride = new Ride(this.track, { locked: this.rider === 'car', beta: this.beta, m: this.vals.m, mu: this.friction && !this.rolling ? this.vals.mu : 0, v0: this.vals.v0, s0: this.s0 }); this.playing = false; this.trail = []; this.bump(); }
+  rebuild() { this.ride = new Ride(this.track, { soft: this.softLanding, locked: this.rider === 'car', beta: this.beta, m: this.vals.m, mu: this.friction && !this.rolling ? this.vals.mu : 0, v0: this.vals.v0, s0: this.s0 }); this.playing = false; this.trail = []; this.bump(); }
   // reshaping: the start stays at the same place along the curve
   edit(fn) { const f = this.track.T > 0 ? this.track.uAt(this.s0) / this.track.T : 0, out = fn(this.track); if (out === false || out === -1) return out; this.custom = true; this.s0 = this.track.sAt(f * this.track.T); this.rebuild(); return out; }
   movePoint(i, p) { return this.edit((t) => t.move(i, p)); }
@@ -56,6 +56,8 @@ class Sim {
   get rolling() { return this.beta > 0; }
   get who() { return { ice: 'ice cube', ball: 'ball', hollow: 'ball', car: 'car' }[this.rider] || 'cart'; }
   setRider(k) { if (!Sim.riderOf(k) || k === this.rider) return false; this.rider = k; this.rebuild(); return true; }
+  // landings: lose energy (a real, perfectly inelastic jolt: the default), or keep it all (unphysical, to compare)
+  setSoftLanding(on) { on = !!on; if (on === this.softLanding) return; this.softLanding = on; this.rebuild(); }
   setFriction(on) { on = !!on; if (on === this.friction) return; this.friction = on; this.rebuild(); }
 
   // ---- the clock ----
@@ -107,8 +109,9 @@ class Sim {
     else if (ev.kind === 'apex') { title = 'Top of the flight';
       why = 'The vertical velocity is zero, but it still moves sideways at v_x = ' + v(d.vx) + ': nothing acts sideways in flight. So K = ½ m v_x² = ' + J(r.K) + ' is smallest but not zero, and it peaks at h = ' + h + ', below the height it could reach with all of K turned into U_g.' + (roll ? ' Its spin (K_rot = ' + J(r.Kr || 0) + ') is unchanged in flight.' : ''); }
     else if (ev.kind === 'land' || ev.kind === 'ground') { const loss = d.jolt + d.roll, on = ev.kind === 'land' ? 'the track' : 'the ground', along = ev.kind === 'land' ? 'along the track' : 'along the ground';
-      title = (ev.kind === 'land' ? 'Lands' : 'Hits the ground') + (loss > 0.5 ? ': the jolt takes ' + J(loss) : ' smoothly');
-      if (d.jolt > 0.5) why = 'Just before landing it moves at v = ' + v(d.v) + ': ' + v(d.vt) + ' ' + along + ' and ' + v(d.vn) + ' into it. ' + on[0].toUpperCase() + on.slice(1) + ' stops the part into it at once (' + (this.rider === 'ice' ? 'an ice cube does not bounce' : 'it does not bounce') + ': the landing is perfectly inelastic), so ½ m v⊥² = ½ × ' + Fmt.kg(m) + ' × (' + v(d.vn) + ')² = ' + J(d.jolt) + ' of kinetic energy becomes thermal energy: heat, sound, a dent. It keeps only the ' + v(d.vt) + ' ' + along + '.';
+      title = (ev.kind === 'land' ? 'Lands' : 'Hits the ground') + (d.soft ? ': no energy lost (unphysical)' : loss > 0.5 ? ': the jolt takes ' + J(loss) : ' smoothly');
+      if (d.soft) why = 'Just before landing it moves at v = ' + v(d.v) + ': ' + v(d.vt) + ' ' + along + ' and ' + v(d.vn) + ' into it. Landings are set to lose no energy, so its whole speed is turned ' + along + ': it goes on at ' + v(d.after) + '. This is not physical: a real landing always stops the part of v into the surface, and that energy goes to E_th.';
+      else if (d.jolt > 0.5) why = 'Just before landing it moves at v = ' + v(d.v) + ': ' + v(d.vt) + ' ' + along + ' and ' + v(d.vn) + ' into it. ' + on[0].toUpperCase() + on.slice(1) + ' stops the part into it at once (' + (this.rider === 'ice' ? 'an ice cube does not bounce' : 'it does not bounce') + ': the landing is perfectly inelastic), so ½ m v⊥² = ½ × ' + Fmt.kg(m) + ' × (' + v(d.vn) + ')² = ' + J(d.jolt) + ' of kinetic energy becomes thermal energy: heat, sound, a dent. It keeps only the ' + v(d.vt) + ' ' + along + '.';
       else why = 'It comes down almost ' + along + ' (only ' + v(d.vn) + ' into it), so the jolt takes next to nothing.';
       if (d.roll > 0.5) why += ' Its spin did not match its new speed, so friction at the contact slides it back into rolling: another ' + J(d.roll) + '.';
       if (loss > 0.5) why += ' The total K + U_g + E_th is unchanged, but K + U_g is ' + J(loss) + ' less: from here it cannot get as high as before.';
@@ -142,6 +145,6 @@ class Sim {
 
   // ---- what the page reports to whoever embeds it ----
   snapshot() { const n = this.ride.now(), e = this.energy(n), r = (x) => Math.round(x * 1000) / 1000;
-    return { track: this.key, loop: this.loopMode || undefined, radius: this.loopMode === 'circle' ? this.vals.r : undefined, custom: this.custom, rider: this.rider, mass: this.vals.m, startHeight: r(this.h0), startSpeed: this.vals.v0, friction: this.friction ? this.vals.mu : 0, zero: this.vals.y0, t: r(this.ride.t), mode: n.mode,
+    return { track: this.key, landing: this.softLanding ? 'keep' : 'lose', loop: this.loopMode || undefined, radius: this.loopMode === 'circle' ? this.vals.r : undefined, custom: this.custom, rider: this.rider, mass: this.vals.m, startHeight: r(this.h0), startSpeed: this.vals.v0, friction: this.friction ? this.vals.mu : 0, zero: this.vals.y0, t: r(this.ride.t), mode: n.mode,
       status: this.ride.done || this.ride.event || '', x: r(n.p.x), y: r(n.p.y), speed: r(n.speed), normal: r(n.n), energy: this.hidden ? null : { K: r(e.K), Krot: r(e.Kr), Ug: r(e.U), Eth: r(e.th), E: r(e.E) } }; }
 }
