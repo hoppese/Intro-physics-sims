@@ -50,6 +50,21 @@ recorded here.
 - **Add-object pattern** (charges, sources, etc.): a scrollable card list
   in the side panel, "+ Add [object]" button (capped at a sane max, e.g. 6),
   a delete (×) per card, click a card to select and expand its detail panel.
+- **The side panel never makes the page scroll** (Seth, 2026-11-23). The
+  shared `openbig.js` blob in every bundle ("panel-fit" part) does this for
+  every sim with no wiring: while the panel sits beside the canvas column
+  it may run past the canvas as far as the window (or the iframe, in an
+  embed) allows; only what still does not fit scrolls inside the panel
+  (thin scrollbar, soft fade at the bottom while more is below, overscroll
+  contained). It is never shorter than the canvas column. The canvas never
+  moves; a click that adds something out of view scrolls the panel to it.
+  When the layout wraps (phones) nothing is capped. Optional markup:
+  `data-panel-head` on the panel's top block (mode tabs, preset chooser)
+  pins it while the rest scrolls under it; `data-panel-scroll="off"` on the
+  panel opts a sim out (`e-fields-conductors-and-insulators` does, and
+  applies the same rule itself in `setPanelScroll`, keeping its fixed top
+  block). Condensing is still the first fix; the scroll is the backstop.
+  `__panelfit` in the console shows the panel, column, height and state.
 - **Sign-carrying magnitude stepper**: one bidirectional stepper (▲/▼) that
   can cross zero to flip sign — never two separate +/− object types or a
   separate sign toggle.

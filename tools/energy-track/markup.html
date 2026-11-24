@@ -54,7 +54,7 @@
     </div>
 
     <div style="flex:1;border-left:1px solid #e8ebee;padding:11px 13px;display:flex;flex-direction:column;gap:8px;min-width:286px;">
-      <div style="display:flex;flex-direction:column;gap:6px;">
+      <div data-panel-head="" style="display:flex;flex-direction:column;gap:6px;">
         <div style="position:relative;">
           <button sc-camel-on-click="{{ onToggleTracks }}" title="Choose a track" style="{{ trackBtnStyle }}"><span style="width:16px;text-align:center;flex:none;color:#8a6310;">{{ trackIcon }}</span><span style="flex:1;">{{ trackName }}</span><span style="font-size:10px;color:#8a929b;">▾</span></button>
           <sc-if value="{{ tracksOpen }}" hint-placeholder-val="{{ false }}">

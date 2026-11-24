@@ -57,7 +57,7 @@
     </div>
 
     <div style="flex:1;border-left:1px solid #e8ebee;padding:12px 14px;display:flex;flex-direction:column;gap:9px;min-width:294px;">
-      <div>
+      <div data-panel-head="">
         <div style="position:relative;">
           <button sc-camel-on-click="{{ onToggleSits }}" title="Choose a situation" style="{{ sitBtnStyle }}"><span style="width:16px;text-align:center;flex:none;color:#8a6310;">{{ sitIcon }}</span><span style="flex:1;">{{ sitName }}</span><span style="font-size:10px;color:#8a929b;">▾</span></button>
           <sc-if value="{{ sitsOpen }}" hint-placeholder-val="{{ false }}">

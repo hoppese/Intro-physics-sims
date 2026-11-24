@@ -53,7 +53,7 @@
     </div>
 
     <div style="flex:1;border-left:1px solid #e8ebee;padding:12px 14px;display:flex;flex-direction:column;gap:9px;min-width:294px;">
-        <div style="position:relative;">
+        <div data-panel-head="" style="position:relative;">
           <button sc-camel-on-click="{{ actMenu.onToggle }}" title="Choose an activity" style="{{ actMenu.btnStyle }}"><span style="width:16px;text-align:center;flex:none;color:#8a6310;font-family:'JetBrains Mono',monospace;font-size:11px;">{{ actMenu.icon }}</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ actMenu.label }}</span><span style="font-size:10px;color:#c39b3a;flex:none;">{{ actMenu.tag }}</span><span style="font-size:10px;color:#8a929b;flex:none;">▾</span></button>
           <sc-if value="{{ actMenu.open }}" hint-placeholder-val="{{ false }}">
             <div sc-camel-on-click="{{ actMenu.onClose }}" style="position:fixed;inset:0;z-index:39;"></div>

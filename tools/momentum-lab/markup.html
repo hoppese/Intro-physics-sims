@@ -60,7 +60,7 @@
     </div>
 
     <div style="flex:1;border-left:1px solid #e8ebee;padding:12px 14px;display:flex;flex-direction:column;gap:8px;min-width:294px;">
-      <div style="display:flex;flex-direction:column;gap:6px;">
+      <div data-panel-head="" style="display:flex;flex-direction:column;gap:6px;">
         <div style="display:flex;gap:4px;"><sc-for list="{{ modeTabs }}" as="mt" hint-placeholder-count="3"><button sc-camel-on-click="{{ mt.onClick }}" title="{{ mt.title }}" style="{{ mt.style }}">{{ mt.label }}</button></sc-for></div>
         <div style="position:relative;">
           <button sc-camel-on-click="{{ onTogglePresets }}" title="Choose a preset" style="{{ presetBtnStyle }}"><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ presetName }}</span><span style="font-size:10px;color:#8a929b;">▾</span></button>
